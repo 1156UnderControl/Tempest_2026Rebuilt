@@ -219,9 +219,9 @@ public class TalonFXMotor implements MotorIO {
   }
 
   @Override
-  public void configureFeedForward(double Kg, double Ks, double Kv) {
+  public void configureFeedForward(double kG, double kS, double kV, double kA) {
     talonConfigurator.refresh(talonConfiguration.Slot0);
-    talonConfigurator.apply(talonConfiguration.Slot0.withKG(Kg).withKS(Ks).withKV(Kv));
+    talonConfigurator.apply(talonConfiguration.Slot0.withKG(kG).withKS(kS).withKV(kV).withKA(kA));
   }
 
   @Override
@@ -255,7 +255,8 @@ public class TalonFXMotor implements MotorIO {
 
   @Override
   public void setFollower(int leaderIDcan, boolean invert) {
-    motor.setControl(new Follower(leaderIDcan, invert ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned));
+    MotorAlignmentValue alignmentValue = invert ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned;
+    motor.setControl(new Follower(leaderIDcan, alignmentValue));
   }
 
   @Override

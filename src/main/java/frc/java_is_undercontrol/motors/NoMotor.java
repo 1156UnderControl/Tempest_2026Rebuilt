@@ -37,7 +37,7 @@ public class NoMotor implements MotorIO {
   }
 
   @Override
-  public void configureFeedForward(double Kg, double Ks, double Kv) {
+  public void configureFeedForward(double kG, double kS, double kV, double kA) {
     return;
   }
 

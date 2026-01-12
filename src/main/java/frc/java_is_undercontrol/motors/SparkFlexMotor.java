@@ -8,13 +8,13 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.REVLibError;
 import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -61,6 +61,7 @@ public class SparkFlexMotor implements MotorIO {
   private SimpleMotorFeedforward feedforward;
 
   private double velocityFF;
+  
   private String motorName;
 
   private final MutVoltage m_appliedVoltage = Volts.mutable(0);
@@ -148,8 +149,8 @@ public class SparkFlexMotor implements MotorIO {
   // To implement the Kg, Ks and Kv its necessary to wait until revlib 2025 is
   // officially launched
   @Override
-  public void configureFeedForward(double Kg, double Ks, double Kv) {
-    config.closedLoop.velocityFF(Kg);
+  public void configureFeedForward(double kG, double kS, double kV, double kA) {
+    config.closedLoop.feedForward.kA(kA).kG(kG).kS(kS).kV(kV).sv(kS, kV);
   }
 
   @Override
@@ -170,7 +171,8 @@ public class SparkFlexMotor implements MotorIO {
 
   @Override
   public void configurePIDF(double P, double I, double D, double F) {
-    config.closedLoop.pidf(P, I, D, F);
+    config.closedLoop.feedForward.kS(F);
+    config.closedLoop.pid(P, I, D);
   }
 
   @Override
@@ -231,7 +233,7 @@ public class SparkFlexMotor implements MotorIO {
   @Override
   public void setPositionReference(double position) {
     if (this.getPosition() != position) {
-      motor.getClosedLoopController().setReference(position, SparkBase.ControlType.kPosition);
+      motor.getClosedLoopController().setSetpoint(position, SparkBase.ControlType.kPosition);
     }
     this.targetPercentage = Double.NaN;
     this.targetVelocity = Double.NaN;
@@ -243,7 +245,7 @@ public class SparkFlexMotor implements MotorIO {
     if (this.getPosition() != position) {
       motor
           .getClosedLoopController()
-          .setReference(position, SparkBase.ControlType.kPosition, ClosedLoopSlot.kSlot0, ArbFF);
+          .setSetpoint(position, SparkBase.ControlType.kPosition, ClosedLoopSlot.kSlot0, ArbFF);
     }
     this.targetPercentage = Double.NaN;
     this.targetVelocity = Double.NaN;
@@ -264,9 +266,9 @@ public class SparkFlexMotor implements MotorIO {
     config
         .closedLoop
         .maxMotion
-        .maxVelocity(maxVelocity, ClosedLoopSlot.kSlot0)
+        .cruiseVelocity(maxVelocity, ClosedLoopSlot.kSlot0)
         .maxAcceleration(maxAcceleration, ClosedLoopSlot.kSlot0)
-        .allowedClosedLoopError(positionErrorAllowed, ClosedLoopSlot.kSlot0);
+        .allowedProfileError(positionErrorAllowed, ClosedLoopSlot.kSlot0);
     config
         .closedLoop
         .p(P, ClosedLoopSlot.kSlot0)
@@ -293,7 +295,7 @@ public class SparkFlexMotor implements MotorIO {
     if (this.getVelocity() != velocity) {
       motor
           .getClosedLoopController()
-          .setReference(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0, feedforward);
+          .setSetpoint(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0, feedforward);
     }
     this.targetPercentage = Double.NaN;
     this.targetVelocity = velocity;
@@ -303,7 +305,7 @@ public class SparkFlexMotor implements MotorIO {
   public void setPositionReferenceMotionProfiling(double position, double arbFF) {
     motor
         .getClosedLoopController()
-        .setReference(
+        .setSetpoint(
             position,
             SparkBase.ControlType.kMAXMotionPositionControl,
             ClosedLoopSlot.kSlot0,

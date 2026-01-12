@@ -31,7 +31,7 @@ public interface MotorIO {
 
   void clearStickyFaults();
 
-  void configureFeedForward(double Kg, double Ks, double Kv);
+  void configureFeedForward(double kG, double kS, double kV, double kA);
 
   void setMaxMotorOutput(double maxOutput);
 
