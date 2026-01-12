@@ -1,0 +1,347 @@
+package frc.java_is_undercontrol.swerve.base;
+
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
+import com.ctre.phoenix6.Utils;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.java_is_undercontrol.swerve.Drive;
+import frc.java_is_undercontrol.swerve.SwerveDevices;
+import frc.java_is_undercontrol.swerve.configs.BaseSwerveConfig;
+import frc.java_is_undercontrol.swerve.configs.SwervePathPlannerConfig;
+import frc.java_is_undercontrol.swerve.constants.SwerveConstants;
+import frc.java_is_undercontrol.util.AllianceFlipUtil;
+import frc.java_is_undercontrol.util.CustomMath;
+import frc.java_is_undercontrol.util.Util;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
+
+public class BaseSwerveSubsystem extends SubsystemBase {
+
+  public double MaxSpeed = SwerveConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  protected double MaxAngularRate;
+
+  protected final double driveBaseRadius =
+      Math.hypot(
+          SwerveConstants.FrontLeft.LocationX + SwerveConstants.FrontRight.LocationX / 2,
+          SwerveConstants.FrontLeft.LocationY + SwerveConstants.BackLeft.LocationY / 2);
+
+  private final SwervePathPlannerConfig pathPlannerConfig;
+
+  private Matrix<N3, N1> actualVisionStdDev = VecBuilder.fill(0.7, 0.7, Double.POSITIVE_INFINITY);
+
+  @AutoLogOutput private ChassisSpeeds targetSpeeds = new ChassisSpeeds();
+
+  @AutoLogOutput private double targetHeadingDegrees = Double.NaN;
+
+  @AutoLogOutput private double targetHeadingRadians = Double.NaN;
+
+  @AutoLogOutput private double lastDesiredJoystickAngleRadians;
+
+  ProfiledPIDController angleController;
+
+  double translationDeadband;
+  double joystickAimDeadband;
+
+  private Drive drive;
+
+  protected BaseSwerveSubsystem(SwerveDevices devices, BaseSwerveConfig config) {
+
+    drive = new Drive(devices, this);
+
+    angleController =
+        new ProfiledPIDController(
+            config.headingPidConfig.kP,
+            config.headingPidConfig.kI,
+            config.headingPidConfig.kD,
+            new TrapezoidProfile.Constraints(
+                drive.getMaxAngularSpeedRadPerSec(), config.headingPidConfig.maxAcceleration));
+    angleController.enableContinuousInput(-Math.PI, Math.PI);
+    MaxAngularRate =
+        RotationsPerSecond.of(config.maxRotationRate)
+            .in(RadiansPerSecond); // fraction of a rotation per second
+    pathPlannerConfig = config.pathPlannerConfig;
+    configureAutoBuilder();
+    this.lastDesiredJoystickAngleRadians = AllianceFlipUtil.shouldFlip() ? 0 : Math.PI;
+    this.translationDeadband = config.deadbandsConfig.translationDeadband;
+    this.joystickAimDeadband = config.deadbandsConfig.joystickAimDeadband;
+  }
+
+  /**
+   * Runs the SysId Quasistatic test in the given direction for the routine specified by {@link
+   * #m_sysIdRoutineToApply}.
+   *
+   * @param direction Direction of the SysId Quasistatic test
+   * @return Command to run
+   */
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return drive.sysIdQuasistatic(direction);
+  }
+
+  /**
+   * Runs the SysId Dynamic test in the given direction for the routine specified by {@link
+   * #m_sysIdRoutineToApply}.
+   *
+   * @param direction Direction of the SysId Dynamic test
+   * @return Command to run
+   */
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return drive.sysIdDynamic(direction);
+  }
+
+  private void configureAutoBuilder() {
+    try {
+      var config = RobotConfig.fromGUISettings();
+      // Configure AutoBuilder last
+      AutoBuilder.configure(
+          this::getPose, // Robot pose supplier
+          drive::setPose, // Method to reset odometry (will be called if your auto has a starting
+          // pose)
+          drive::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+          drive::runVelocity,
+          new PPHolonomicDriveController( // PPHolonomicController is the built in path following
+              // controller for
+              // holonomic drive trains
+              pathPlannerConfig.translationPid, // Translation PID constants
+              pathPlannerConfig.anglePid // Rotation PID constants
+              ),
+          config, // The robot configuration
+          () -> {
+            // Boolean supplier that controls when the path will be mirrored for the red
+            // alliance
+            // This will flip the path being followed to the red side of the field.
+            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) {
+              return alliance.get() == DriverStation.Alliance.Red;
+            }
+            return false;
+          },
+          this // Reference to this subsystem to set requirements
+          );
+    } catch (Exception ex) {
+      DriverStation.reportError(
+          "Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
+    }
+  }
+
+  public void resetOdometry(Pose2d initialHolonomicPose) {
+    drive.setPose(initialHolonomicPose);
+  }
+
+  public void resetTranslation(Translation2d translationToReset) {
+    Pose2d poseToReset = new Pose2d(translationToReset, getHeading());
+    this.resetOdometry(poseToReset);
+  }
+
+  public void zeroGyro() {
+    Pose2d poseToReset = new Pose2d(getPose().getTranslation(), new Rotation2d());
+    this.resetOdometry(poseToReset);
+  }
+
+  public void setMotorBrake(boolean brake) {
+    if (brake) {
+      drive.setBrakeToModules();
+    } else {
+      drive.setCoastToModules();
+    }
+  }
+
+  protected Pose2d getPose() {
+    return drive.getPose();
+  }
+
+  public void addVisionMeasurement(
+      Pose2d visionRobotPoseMeters,
+      double timestampSeconds,
+      Matrix<N3, N1> visionMeasurementStdDevs) {
+    drive.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
+    if (visionMeasurementStdDevs.isEqual(actualVisionStdDev, 0)) {
+      return;
+    }
+    actualVisionStdDev = visionMeasurementStdDevs;
+  }
+
+  public void addVisionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
+    this.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds));
+  }
+
+  protected Pose2d getEarlyPoseMoving(double dt) {
+    Pose2d actualPose = getPose();
+    Translation2d earlyTranslation =
+        new Translation2d(
+            actualPose.getX() + getFieldOrientedRobotVelocity().vxMetersPerSecond * dt,
+            actualPose.getY() + getFieldOrientedRobotVelocity().vyMetersPerSecond * dt);
+    Pose2d earlyPoseMoving = new Pose2d(earlyTranslation, actualPose.getRotation());
+    return earlyPoseMoving;
+  }
+
+  protected Pose2d getEarlyPoseMovingWithOmega(double dt) {
+    Pose2d actualPose = getPose();
+    Translation2d earlyTranslation =
+        new Translation2d(
+            actualPose.getX() + getFieldOrientedRobotVelocity().vxMetersPerSecond * dt,
+            actualPose.getY() + getFieldOrientedRobotVelocity().vyMetersPerSecond * dt);
+    Rotation2d earlyRotation =
+        new Rotation2d(
+            actualPose.getRotation().getRadians()
+                + getFieldOrientedRobotVelocity().omegaRadiansPerSecond * dt);
+    Pose2d earlyPoseMoving = new Pose2d(earlyTranslation, earlyRotation);
+    return earlyPoseMoving;
+  }
+
+  protected void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
+    this.targetSpeeds = chassisSpeeds;
+    drive.runVelocity(chassisSpeeds);
+  }
+
+  protected ChassisSpeeds getRobotVelocity() {
+    return drive.getChassisSpeeds();
+  }
+
+  protected ChassisSpeeds getFieldOrientedRobotVelocity() {
+    return ChassisSpeeds.fromRobotRelativeSpeeds(drive.getChassisSpeeds(), getHeading());
+  }
+
+  protected double getAbsoluteRobotVelocity() {
+    return CustomMath.toAbsoluteSpeed(this.getRobotVelocity());
+  }
+
+  protected Rotation2d getHeading() {
+    return drive.getRotation();
+  }
+
+  public void lock() {
+    drive.stopWithX();
+  }
+
+  @Override
+  public void periodic() {
+    drive.periodic();
+    Logger.recordOutput("TargetHeadingDegrees", this.targetHeadingDegrees);
+    Logger.recordOutput("TargetHeadingRadians", this.targetHeadingRadians);
+  }
+
+  protected void driveFieldOrientedLockedAngle(ChassisSpeeds speeds, Rotation2d targetHeading) {
+    boolean isFlipped =
+        DriverStation.getAlliance().isPresent()
+            && DriverStation.getAlliance().get() == Alliance.Red;
+    Rotation2d targetRotation = isFlipped ? targetHeading.plus(Rotation2d.kPi) : targetHeading;
+    this.lastDesiredJoystickAngleRadians = targetRotation.getRadians();
+    this.targetHeadingDegrees = targetRotation.getDegrees();
+    this.targetHeadingRadians = targetRotation.getRadians();
+    double omega =
+        angleController.calculate(getHeading().getRadians(), targetRotation.getRadians());
+    ChassisSpeeds adjustedSpeeds =
+        new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, omega);
+    driveFieldOriented(adjustedSpeeds);
+  }
+
+  protected Translation2d getLinearVelocityFromJoysticks(double x, double y) {
+    double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), translationDeadband);
+    Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
+    linearMagnitude = linearMagnitude * linearMagnitude;
+    Translation2d joystickTranslation =
+        new Pose2d(new Translation2d(), linearDirection)
+            .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
+            .getTranslation();
+
+    return new Translation2d(
+        joystickTranslation.getX() * drive.getMaxLinearSpeedMetersPerSec(),
+        joystickTranslation.getY() * drive.getMaxLinearSpeedMetersPerSec());
+  }
+
+  protected void driveFieldOrientedLockedJoystickAngle(
+      ChassisSpeeds speeds, double xHeading, double yHeading) {
+    double angle =
+        Util.withinHypotDeadband(xHeading, yHeading, joystickAimDeadband)
+            ? lastDesiredJoystickAngleRadians
+            : Math.atan2(xHeading, yHeading);
+    // It has to be de pre-inverted angle
+    this.lastDesiredJoystickAngleRadians = angle;
+    boolean isFlipped =
+        DriverStation.getAlliance().isPresent()
+            && DriverStation.getAlliance().get() == Alliance.Red;
+    Rotation2d targetRotation =
+        isFlipped
+            ? Rotation2d.fromRadians(angle).plus(Rotation2d.kPi)
+            : Rotation2d.fromRadians(angle);
+    Logger.recordOutput("IsFlipped", isFlipped);
+    this.targetHeadingDegrees = targetRotation.getDegrees();
+    this.targetHeadingRadians = targetRotation.getRadians();
+    double omega =
+        angleController.calculate(drive.getRotation().getRadians(), targetHeadingRadians);
+    ChassisSpeeds adjustedSpeeds =
+        new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, omega);
+    driveFieldOriented(adjustedSpeeds);
+  }
+
+  protected void driveFieldOrientedLockedJoystickAngle(
+      Translation2d speeds, double xHeading, double yHeading) {
+    ChassisSpeeds speedsWithTranslation = new ChassisSpeeds(speeds.getX(), speeds.getY(), 0);
+    driveFieldOrientedLockedJoystickAngle(speedsWithTranslation, xHeading, yHeading);
+  }
+
+  protected void driveFieldOriented(ChassisSpeeds speeds) {
+    this.targetSpeeds = speeds;
+    boolean isFlipped =
+        DriverStation.getAlliance().isPresent()
+            && DriverStation.getAlliance().get() == Alliance.Red;
+    drive.runVelocity(
+        ChassisSpeeds.fromFieldRelativeSpeeds(
+            speeds,
+            isFlipped ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation()));
+  }
+
+  protected void driveRobotOriented(ChassisSpeeds speeds) {
+    this.targetSpeeds = speeds;
+    this.targetHeadingDegrees = Double.NaN;
+    this.targetHeadingRadians = Double.NaN;
+    drive.runVelocity(speeds);
+  }
+
+  protected ChassisSpeeds inputsToChassisSpeeds(double xInput, double yInput, double AngularRate) {
+    return new ChassisSpeeds(
+        xInput * this.MaxSpeed, yInput * this.MaxSpeed, AngularRate * this.MaxAngularRate);
+  }
+
+  protected ChassisSpeeds inputsToChassisSpeeds(double xInput, double yInput) {
+    return new ChassisSpeeds(xInput * this.MaxSpeed, yInput * this.MaxSpeed, 0);
+  }
+
+  protected boolean isAtTargetHeading(double toleranceDegrees) {
+    if (this.targetHeadingDegrees == Double.NaN) {
+      return false;
+    }
+    Rotation2d targetHeading = Rotation2d.fromDegrees(this.targetHeadingDegrees);
+    Rotation2d currentHeading = this.getHeading();
+    double headingDifferenceDegrees = Math.abs(targetHeading.minus(currentHeading).getDegrees());
+    boolean isAtHeading = headingDifferenceDegrees <= toleranceDegrees;
+    return isAtHeading;
+  }
+
+  public double[] getWheelRadiusCharacterizationPositions() {
+    return drive.getWheelRadiusCharacterizationPositions();
+  }
+}
