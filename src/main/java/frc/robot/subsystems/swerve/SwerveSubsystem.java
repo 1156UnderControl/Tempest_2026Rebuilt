@@ -100,6 +100,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     return estimatorMultiCamera;
   }
 
+  @Override
   public void resetOdometryLimelight(Translation2d defaultPosition) {
     PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-left", false, false, 2);
     Optional<PoseEstimation> limelightPoseEstimation =
@@ -139,15 +140,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     this.driveFieldOriented(desiredSpeeds);
   }
 
-  public Command goToPoseWithPathfind(Pose2d pose) {
-    return driveToPoseWithPathfinding(pose);
-  }
-
-  public Command goToPoseWithPathfind(Pose3d pose) {
-    this.state = "PATHFIND_TO_POSE";
-    return driveToPoseWithPathfinding(pose.toPose2d());
-  }
-
   @Override
   public void periodic() {
     super.periodic();
@@ -185,10 +177,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
         () -> isAtTargetPose(this.goToPoseTranslationDeadband, this.goToPoseTranslationDeadband));
   }
 
-  public void driveToPoseTest() {
-    driveToPose(new Pose2d(15, 2, new Rotation2d(Units.degreesToRadians(180))));
-  }
-
   @Override
   public void stopSwerve() {
     this.driveRobotOriented(new ChassisSpeeds());
@@ -204,6 +192,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
         desiredSpeeds, controller.getCOS_Joystick(), controller.getSIN_Joystick());
   }
 
+  @Override
   public void driveAimingAtPoseTest() {
     Pose2d target = new Pose2d(8.272, 4.132, new Rotation2d());
     this.state = "DRIVE_AIMING_POSITION_TEST";
