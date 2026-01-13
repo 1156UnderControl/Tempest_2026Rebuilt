@@ -26,6 +26,7 @@ import frc.java_is_undercontrol.vision.odometry.LimelightPoseEstimator;
 import frc.java_is_undercontrol.vision.odometry.MultiCameraPoseEstimator;
 import frc.java_is_undercontrol.vision.odometry.PoseEstimation;
 import frc.java_is_undercontrol.vision.odometry.PoseEstimator;
+import frc.robot.constants.JoystickConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.joysticks.DriverController;
 import java.util.ArrayList;
@@ -78,11 +79,11 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     super(
         new OdometryEnabledSwerveConfig(
             0.75,
-            new SwerveDeadbandsConfig(0.1, 0.5),
+            new SwerveDeadbandsConfig(JoystickConstants.DEADBAND, 0.5),
             pathPlannerConfig,
             configureMulticameraPoseEstimation(),
             configureMulticameraPoseEstimation(),
-            new ProfiledPIDConfig(6, 0, 0, 5, 8),
+            new ProfiledPIDConfig(7, 0, 0, 80, 50),
             new MoveToPosePIDConfig(
                 SwerveConstants.MOVE_TO_POSE_TRANSLATION_PID,
                 SwerveConstants.MOVE_TO_POSE_Y_CONSTRAINTS)),
@@ -127,7 +128,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
       return;
     }
     Translation2d desiredSpeeds =
-        this.getLinearVelocityFromJoysticks(controller.getLeftY(), controller.getLeftX());
+        this.getLinearVelocityFromJoysticks(controller.getXtranslation(), controller.getYtranslation());
     this.state = "DRIVE_ALIGN_ANGLE_JOY";
     this.driveFieldOrientedLockedJoystickAngle(
         desiredSpeeds, controller.getCOS_Joystick(), controller.getSIN_Joystick());
@@ -136,7 +137,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   public void driveRotating(boolean rotateRight) {
     ChassisSpeeds desiredSpeeds =
         this.inputsToChassisSpeeds(
-            controller.getLeftY(), controller.getLeftX(), rotateRight ? -1.5 : 1.5);
+            controller.getXtranslation(), controller.getYtranslation(), rotateRight ? -1.5 : 1.5);
     this.state = "DRIVE_ALIGN_ANGLE_ROTATING_RIGHT?:" + Boolean.toString(rotateRight);
     this.driveFieldOriented(desiredSpeeds);
   }
@@ -187,7 +188,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   @Override
   public void driveAlignAngleJoystickSuperSlow() {
     ChassisSpeeds desiredSpeeds =
-        this.inputsToChassisSpeeds(controller.getLeftY(), controller.getLeftX()).times(0.12);
+        this.inputsToChassisSpeeds(controller.getXtranslation(), controller.getYtranslation()).times(0.12);
     this.state = "DRIVE_ALIGN_ANGLE_JOY_SUPER_SLOW";
     this.driveFieldOrientedLockedJoystickAngle(
         desiredSpeeds, controller.getCOS_Joystick(), controller.getSIN_Joystick());
@@ -198,27 +199,28 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     Pose2d target = new Pose2d(8.272, 4.132, new Rotation2d());
     this.state = "DRIVE_AIMING_POSITION_TEST";
     Translation2d desiredSpeeds =
-        this.getLinearVelocityFromJoysticks(controller.getLeftY(), controller.getLeftX());
+        this.getLinearVelocityFromJoysticks(controller.getXtranslation(), controller.getYtranslation());
     this.driveAimingAtPosition(desiredSpeeds, target.getTranslation());
   }
 
   @Override
-  public void runSysIdQuasistaticForward(){
-    super.sysIdQuasistatic(Direction.kForward);
+  public Command runSysIdQuasistaticForward(){
+    System.out.println("comecei a rodar");
+    return super.sysIdQuasistatic(Direction.kForward);
   }
 
   @Override
-  public void runSysIdQuasistaticReversed(){
-    super.sysIdQuasistatic(Direction.kReverse);
+  public Command runSysIdQuasistaticReversed(){
+    return super.sysIdQuasistatic(Direction.kReverse);
   }
 
   @Override
-  public void runSysIdDynamicForward(){
-    super.sysIdDynamic(Direction.kForward);
+  public Command runSysIdDynamicForward(){
+    return super.sysIdDynamic(Direction.kForward);
   }
 
   @Override
-  public void runSysIdDynamicReversed(){
-    super.sysIdDynamic(Direction.kReverse);
+  public Command runSysIdDynamicReversed(){
+    return super.sysIdDynamic(Direction.kReverse);
   }
 }

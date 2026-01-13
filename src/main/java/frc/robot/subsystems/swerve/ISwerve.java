@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public interface ISwerve {
 
@@ -18,11 +19,11 @@ public interface ISwerve {
 
   void driveAimingAtPoseTest();
 
-  void runSysIdQuasistaticForward();
+  Command runSysIdQuasistaticForward();
 
-  void runSysIdQuasistaticReversed();
+  Command runSysIdQuasistaticReversed();
 
-  void runSysIdDynamicForward();
+  Command runSysIdDynamicForward();
 
-  void runSysIdDynamicReversed();
+  Command runSysIdDynamicReversed();
 }
