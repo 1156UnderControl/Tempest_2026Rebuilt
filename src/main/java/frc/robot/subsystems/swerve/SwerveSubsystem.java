@@ -12,6 +12,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.java_is_undercontrol.control.ProfiledPIDConfig;
 import frc.java_is_undercontrol.swerve.configs.MoveToPosePIDConfig;
 import frc.java_is_undercontrol.swerve.configs.OdometryEnabledSwerveConfig;
@@ -199,5 +200,25 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     Translation2d desiredSpeeds =
         this.getLinearVelocityFromJoysticks(controller.getLeftY(), controller.getLeftX());
     this.driveAimingAtPosition(desiredSpeeds, target.getTranslation());
+  }
+
+  @Override
+  public void runSysIdQuasistaticForward(){
+    super.sysIdQuasistatic(Direction.kForward);
+  }
+
+  @Override
+  public void runSysIdQuasistaticReversed(){
+    super.sysIdQuasistatic(Direction.kReverse);
+  }
+
+  @Override
+  public void runSysIdDynamicForward(){
+    super.sysIdDynamic(Direction.kForward);
+  }
+
+  @Override
+  public void runSysIdDynamicReversed(){
+    super.sysIdDynamic(Direction.kReverse);
   }
 }

@@ -113,7 +113,10 @@ public class RobotContainer {
     // Default command, normal field-relative drive
     drive.setDefaultCommand(Commands.run(() -> drive.driveAlignAngleJoystick(), drive));
 
-    driverController.a().whileTrue(Commands.run(() -> drive.driveAimingAtPoseTest(), drive));
+    driverController.a().whileTrue(Commands.run(() -> drive.runSysIdQuasistaticForward(), drive));
+    driverController.b().whileTrue(Commands.run(() -> drive.runSysIdQuasistaticReversed(), drive));
+    driverController.x().whileTrue(Commands.run(() -> drive.runSysIdDynamicForward(), drive));
+    driverController.y().whileTrue(Commands.run(() -> drive.runSysIdDynamicReversed(), drive));
   }
 
   /**

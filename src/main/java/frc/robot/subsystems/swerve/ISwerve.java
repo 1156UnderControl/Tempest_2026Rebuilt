@@ -17,4 +17,12 @@ public interface ISwerve {
   boolean isAtTargetPositionWithoutHeading();
 
   void driveAimingAtPoseTest();
+
+  void runSysIdQuasistaticForward();
+
+  void runSysIdQuasistaticReversed();
+
+  void runSysIdDynamicForward();
+
+  void runSysIdDynamicReversed();
 }
