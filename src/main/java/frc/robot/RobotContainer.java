@@ -96,11 +96,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // Default command, normal field-relative drive
-    driverController.a().whileTrue(drive.runSysIdQuasistaticForward());
-    driverController.b().whileTrue(drive.runSysIdQuasistaticReversed());
-    driverController.x().whileTrue(drive.runSysIdDynamicForward());
-    driverController.y().whileTrue(drive.runSysIdDynamicReversed());
+    drive.setDefaultCommand(Commands.run(() -> drive.driveAlignAngleJoystick(), drive));
   }
 
   /**
