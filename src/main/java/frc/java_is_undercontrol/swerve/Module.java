@@ -92,10 +92,13 @@ public class Module {
   }
 
   /** Runs the module with the specified output while controlling to zero degrees. */
-  public void runCharacterization(double output) {
-    System.out.println("Rodando o output "+output);
+  public void runCharacterizationDrive(double output) {
     io.setDriveOpenLoop(output);
     io.setTurnPosition(new Rotation2d());
+  }
+
+  public void runCharacterizationSteer(double output) {
+    io.setTurnOpenLoop(output);
   }
 
   /** Disables all outputs to motors. */

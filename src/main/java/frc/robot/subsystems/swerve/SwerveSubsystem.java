@@ -205,7 +205,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   @Override
   public Command runSysIdQuasistaticForward(){
-    System.out.println("comecei a rodar");
     return super.sysIdQuasistatic(Direction.kForward);
   }
 

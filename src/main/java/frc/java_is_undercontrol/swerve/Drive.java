@@ -142,7 +142,7 @@ public class Drive {
                 null,
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
-                (voltage) -> runCharacterization(voltage.in(Volts)), null, mainSwerveSubsystem));
+                (voltage) -> runCharacterizationSteer(voltage.in(Volts)), null, mainSwerveSubsystem));
   }
 
   public void periodic() {
@@ -234,10 +234,15 @@ public class Drive {
   }
 
   /** Runs the drive in a straight line with the specified drive output. */
-  public void runCharacterization(double output) {
+  public void runCharacterizationDrive(double output) {
     for (int i = 0; i < 4; i++) {
-      System.out.print(output);
-      modules[i].runCharacterization(output);
+      modules[i].runCharacterizationDrive(output);
+    }
+  }
+
+  public void runCharacterizationSteer(double output) {
+    for (int i = 0; i < 4; i++) {
+      modules[i].runCharacterizationSteer(output);
     }
   }
 
