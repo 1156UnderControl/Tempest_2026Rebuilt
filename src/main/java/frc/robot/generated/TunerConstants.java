@@ -49,9 +49,9 @@ public class TunerConstants {
           .withKP(40)
           .withKI(0)
           .withKD(0)
-          .withKS(0)
-          .withKV(0)
-          .withKA(0)
+          .withKS(0.17692)
+          .withKV(0.27981)
+          .withKA(0.018027)
           .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
   private static final Slot0Configs kdriveGains =
