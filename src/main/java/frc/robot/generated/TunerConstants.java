@@ -46,16 +46,16 @@ public class TunerConstants {
 
   private static final Slot0Configs ksteerGains =
       new Slot0Configs()
-          .withKP(50)
+          .withKP(40)
           .withKI(0)
           .withKD(0)
-          .withKS(0.1)
-          .withKV(0.159)
-          .withKA(0)
+          .withKS(0.17692)
+          .withKV(0.27981)
+          .withKA(0.018027)
           .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
   private static final Slot0Configs kdriveGains =
-      new Slot0Configs().withKP(0.3).withKI(0).withKD(0).withKS(0.074247).withKV(0.12407);
+      new Slot0Configs().withKP(1.6).withKI(0).withKD(0).withKS(0.13516).withKV(0.10521).withKA(0.0044303);
 
   private static final ClosedLoopOutputType kSteerClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
@@ -148,7 +148,7 @@ public class TunerConstants {
   private static final int kFrontRightDriveMotorId = 5;
   private static final int kFrontRightSteerMotorId = 43;
   private static final int kFrontRightEncoderId = 2;
-  private static final Angle kFrontRightEncoderOffset = Rotations.of(0.39111328125);
+  private static final Angle kFrontRightEncoderOffset = Rotations.of(0.30761728);
   private static final boolean kFrontRightSteerMotorInverted = true;
   private static final boolean kFrontRightEncoderInverted = false;
   private static final Distance kFrontRightXPos = Inches.of(10.43);

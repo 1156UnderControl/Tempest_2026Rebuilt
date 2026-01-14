@@ -142,7 +142,7 @@ public class Drive {
                 null,
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
-                (voltage) -> runCharacterization(voltage.in(Volts)), null, mainSwerveSubsystem));
+                (voltage) -> runCharacterizationSteer(voltage.in(Volts)), null, mainSwerveSubsystem));
   }
 
   public void periodic() {
@@ -234,9 +234,15 @@ public class Drive {
   }
 
   /** Runs the drive in a straight line with the specified drive output. */
-  public void runCharacterization(double output) {
+  public void runCharacterizationDrive(double output) {
     for (int i = 0; i < 4; i++) {
-      modules[i].runCharacterization(output);
+      modules[i].runCharacterizationDrive(output);
+    }
+  }
+
+  public void runCharacterizationSteer(double output) {
+    for (int i = 0; i < 4; i++) {
+      modules[i].runCharacterizationSteer(output);
     }
   }
 
@@ -260,16 +266,13 @@ public class Drive {
 
   /** Returns a command to run a quasistatic test in the specified direction. */
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return Commands.run(() -> runCharacterization(0.0), mainSwerveSubsystem)
-        .withTimeout(1.0)
-        .andThen(sysId.quasistatic(direction));
+    System.out.println("To no drive");
+    return sysId.quasistatic(direction);
   }
 
   /** Returns a command to run a dynamic test in the specified direction. */
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return Commands.run(() -> runCharacterization(0.0), mainSwerveSubsystem)
-        .withTimeout(1.0)
-        .andThen(sysId.dynamic(direction));
+    return sysId.dynamic(direction);
   }
 
   /** Returns the module states (turn angles and drive velocities) for all of the modules. */

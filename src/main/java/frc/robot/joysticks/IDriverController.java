@@ -3,15 +3,17 @@ package frc.robot.joysticks;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public interface IDriverController {
-  double getLeftX();
+  double getXtranslation();
 
-  double getLeftY();
+  double getYtranslation();
 
   double getCOS_Joystick();
 
   double getSIN_Joystick();
 
   Trigger turboActivate();
+
+  Trigger slowActivate();
 
   boolean notUsingJoystick();
 
@@ -33,7 +35,13 @@ public interface IDriverController {
 
   Trigger isForcingDriverControl();
 
-  Trigger cancelAction();
+  Trigger leftArrow();
+
+  Trigger rightArrow();
+
+  Trigger upArrow();
+
+  Trigger downArrow();
 
   Trigger setHasAlgae();
 

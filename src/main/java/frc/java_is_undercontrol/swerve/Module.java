@@ -92,9 +92,13 @@ public class Module {
   }
 
   /** Runs the module with the specified output while controlling to zero degrees. */
-  public void runCharacterization(double output) {
+  public void runCharacterizationDrive(double output) {
     io.setDriveOpenLoop(output);
     io.setTurnPosition(new Rotation2d());
+  }
+
+  public void runCharacterizationSteer(double output) {
+    io.setTurnOpenLoop(output);
   }
 
   /** Disables all outputs to motors. */
@@ -130,6 +134,7 @@ public class Module {
 
   /** Returns the module positions received this cycle. */
   public SwerveModulePosition[] getOdometryPositions() {
+
     return odometryPositions;
   }
 
