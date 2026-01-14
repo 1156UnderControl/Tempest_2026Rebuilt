@@ -46,7 +46,7 @@ public class TunerConstants {
 
   private static final Slot0Configs ksteerGains =
       new Slot0Configs()
-          .withKP(40)
+          .withKP(20)
           .withKI(0)
           .withKD(0)
           .withKS(0.17692)
@@ -55,7 +55,7 @@ public class TunerConstants {
           .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
   private static final Slot0Configs kdriveGains =
-      new Slot0Configs().withKP(1.6).withKI(0).withKD(0).withKS(0.13516).withKV(0.10521).withKA(0.0044303);
+      new Slot0Configs().withKP(2.7).withKI(0).withKD(0).withKS(0.13516).withKV(0.10521).withKA(0.0044303);
 
   private static final ClosedLoopOutputType kSteerClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
@@ -84,7 +84,7 @@ public class TunerConstants {
 
   public static final CANBus kCANBus = new CANBus("Swerve", ".logs/example.hoot");
 
-  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(5);
+  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(3.8);
 
   private static final double kCoupleRatio = 3.5714285714285716;
   private static final double kDriveGearRatio = 5.9028;
