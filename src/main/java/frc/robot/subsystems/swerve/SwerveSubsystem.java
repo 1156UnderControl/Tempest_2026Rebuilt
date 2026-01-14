@@ -83,7 +83,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
             pathPlannerConfig,
             configureMulticameraPoseEstimation(),
             configureMulticameraPoseEstimation(),
-            new ProfiledPIDConfig(7, 0, 0, 80, 50),
+            new ProfiledPIDConfig(7, 0, 0.1, 80, 50),
             new MoveToPosePIDConfig(
                 SwerveConstants.MOVE_TO_POSE_TRANSLATION_PID,
                 SwerveConstants.MOVE_TO_POSE_Y_CONSTRAINTS)),

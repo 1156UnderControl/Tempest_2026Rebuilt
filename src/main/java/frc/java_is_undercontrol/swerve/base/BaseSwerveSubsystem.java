@@ -259,7 +259,7 @@ public class BaseSwerveSubsystem extends SubsystemBase {
   }
 
   protected Translation2d getLinearVelocityFromJoysticks(double x, double y) {
-    double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), translationDeadband);
+    double linearMagnitude = Math.hypot(x, y);
     Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
     linearMagnitude = linearMagnitude * linearMagnitude;
     Translation2d joystickTranslation =
@@ -305,6 +305,7 @@ public class BaseSwerveSubsystem extends SubsystemBase {
 
   protected void driveFieldOriented(ChassisSpeeds speeds) {
     this.targetSpeeds = speeds;
+    System.out.println(this.targetSpeeds.vxMetersPerSecond+" x, "+this.targetSpeeds.vyMetersPerSecond+" y");
     boolean isFlipped =
         DriverStation.getAlliance().isPresent()
             && DriverStation.getAlliance().get() == Alliance.Red;
