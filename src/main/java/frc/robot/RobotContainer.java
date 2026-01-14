@@ -85,20 +85,6 @@ public class RobotContainer {
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    // Set up SysId routines
-    autoChooser.addOption(
-        "Drive Wheel Radius Characterization", drive.wheelRadiusCharacterization());
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -111,12 +97,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-    drive.setDefaultCommand(Commands.run(() -> drive.driveAlignAngleJoystick(), drive));
-
-    driverController.a().whileTrue(Commands.run(() -> drive.runSysIdQuasistaticForward(), drive));
-    driverController.b().whileTrue(Commands.run(() -> drive.runSysIdQuasistaticReversed(), drive));
-    driverController.x().whileTrue(Commands.run(() -> drive.runSysIdDynamicForward(), drive));
-    driverController.y().whileTrue(Commands.run(() -> drive.runSysIdDynamicReversed(), drive));
+    driverController.a().whileTrue(drive.runSysIdQuasistaticForward());
+    driverController.b().whileTrue(drive.runSysIdQuasistaticReversed());
+    driverController.x().whileTrue(drive.runSysIdDynamicForward());
+    driverController.y().whileTrue(drive.runSysIdDynamicReversed());
   }
 
   /**

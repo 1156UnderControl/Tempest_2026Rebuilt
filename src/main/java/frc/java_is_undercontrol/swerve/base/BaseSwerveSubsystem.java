@@ -95,6 +95,7 @@ public class BaseSwerveSubsystem extends SubsystemBase {
    * @return Command to run
    */
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    System.out.println("to no baseswerve");
     return drive.sysIdQuasistatic(direction);
   }
 

@@ -93,6 +93,7 @@ public class Module {
 
   /** Runs the module with the specified output while controlling to zero degrees. */
   public void runCharacterization(double output) {
+    System.out.println("Rodando o output "+output);
     io.setDriveOpenLoop(output);
     io.setTurnPosition(new Rotation2d());
   }
@@ -130,6 +131,7 @@ public class Module {
 
   /** Returns the module positions received this cycle. */
   public SwerveModulePosition[] getOdometryPositions() {
+
     return odometryPositions;
   }
 

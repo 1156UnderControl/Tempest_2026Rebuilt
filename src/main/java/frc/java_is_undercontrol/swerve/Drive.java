@@ -236,6 +236,7 @@ public class Drive {
   /** Runs the drive in a straight line with the specified drive output. */
   public void runCharacterization(double output) {
     for (int i = 0; i < 4; i++) {
+      System.out.print(output);
       modules[i].runCharacterization(output);
     }
   }
@@ -260,16 +261,13 @@ public class Drive {
 
   /** Returns a command to run a quasistatic test in the specified direction. */
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return Commands.run(() -> runCharacterization(0.0), mainSwerveSubsystem)
-        .withTimeout(1.0)
-        .andThen(sysId.quasistatic(direction));
+    System.out.println("To no drive");
+    return sysId.quasistatic(direction);
   }
 
   /** Returns a command to run a dynamic test in the specified direction. */
   public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-    return Commands.run(() -> runCharacterization(0.0), mainSwerveSubsystem)
-        .withTimeout(1.0)
-        .andThen(sysId.dynamic(direction));
+    return sysId.dynamic(direction);
   }
 
   /** Returns the module states (turn angles and drive velocities) for all of the modules. */
