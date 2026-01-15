@@ -84,6 +84,8 @@ public class RobotContainer {
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    autoChooser.addOption("wheelRadiusCharacterization", drive.wheelRadiusCharacterization());
+    autoChooser.addOption("feedForwardCharacterization", drive.feedforwardCharacterization());
 
     // Configure the button bindings
     configureButtonBindings();
