@@ -266,7 +266,6 @@ public class Drive {
 
   /** Returns a command to run a quasistatic test in the specified direction. */
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    System.out.println("To no drive");
     return sysId.quasistatic(direction);
   }
 

@@ -222,4 +222,10 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   public Command runSysIdDynamicReversed(){
     return super.sysIdDynamic(Direction.kReverse);
   }
+
+  public Command runWheelRadiusCharacterization(){
+    return super.wheelRadiusCharacterization();
+  }
+
+  
 }
