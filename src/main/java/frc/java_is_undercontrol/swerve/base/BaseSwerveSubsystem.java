@@ -305,7 +305,6 @@ public class BaseSwerveSubsystem extends SubsystemBase {
 
   protected void driveFieldOriented(ChassisSpeeds speeds) {
     this.targetSpeeds = speeds;
-    System.out.println(this.targetSpeeds.vxMetersPerSecond+" x, "+this.targetSpeeds.vyMetersPerSecond+" y");
     boolean isFlipped =
         DriverStation.getAlliance().isPresent()
             && DriverStation.getAlliance().get() == Alliance.Red;
