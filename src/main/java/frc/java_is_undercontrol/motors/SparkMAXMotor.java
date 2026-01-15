@@ -169,7 +169,8 @@ public class SparkMAXMotor implements MotorIO {
 
   @Override
   public void configurePIDF(double P, double I, double D, double F) {
-    config.closedLoop.pidf(P, I, D, F);
+    config.closedLoop.feedForward.kS(F);
+    config.closedLoop.pid(P, I, D);
   }
 
   @Override
