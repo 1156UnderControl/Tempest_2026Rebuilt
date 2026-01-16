@@ -64,7 +64,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    switch (Constants.currentMode) {
+    switch (Constants.getMode()) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
         drive = new SwerveSubsystem(talonFxSwervedevices);
