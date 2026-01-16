@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Example Path"
+            "pathName": "3 Meter Rotating"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Tuning",
   "choreoAuto": false
 }
