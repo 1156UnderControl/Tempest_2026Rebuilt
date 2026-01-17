@@ -1,9 +1,10 @@
 package frc.robot.constants;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.Constants;
@@ -49,5 +50,10 @@ public class FieldConstants {
 
     private final AprilTagFieldLayout layout;
     private final String layoutString;
+  }
+
+  public class FieldStructurePoses{
+    public static final Pose2d BLUE_HUB_POSE = new Pose2d(4.626, 4.035, new Rotation2d());
+    public static final Pose2d RED_HUB_POSE = new Pose2d(11.915, 4.035, new Rotation2d());
   }
 }
