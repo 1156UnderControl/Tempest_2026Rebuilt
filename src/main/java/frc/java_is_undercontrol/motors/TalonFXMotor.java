@@ -255,7 +255,8 @@ public class TalonFXMotor implements MotorIO {
 
   @Override
   public void setFollower(int leaderIDcan, boolean invert) {
-    MotorAlignmentValue alignmentValue = invert ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned;
+    MotorAlignmentValue alignmentValue =
+        invert ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned;
     motor.setControl(new Follower(leaderIDcan, alignmentValue));
   }
 

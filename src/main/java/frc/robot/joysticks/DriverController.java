@@ -33,39 +33,47 @@ public class DriverController implements IDriverController {
   @Override
   public double getXtranslation() {
     if (turboActivate().getAsBoolean()) {
-      return MathUtil.applyDeadband(-performAllianceInputDirectionCorrection(driverController.getLeftY()), deadBand)
-        * 1.0;
-    } else if(this.slowActivate().getAsBoolean()){
-      return MathUtil.applyDeadband(-performAllianceInputDirectionCorrection(driverController.getLeftY()), deadBand)
-        * 0.4;
+      return MathUtil.applyDeadband(
+              -performAllianceInputDirectionCorrection(driverController.getLeftY()), deadBand)
+          * 1.0;
+    } else if (this.slowActivate().getAsBoolean()) {
+      return MathUtil.applyDeadband(
+              -performAllianceInputDirectionCorrection(driverController.getLeftY()), deadBand)
+          * 0.4;
     } else {
-      return MathUtil.applyDeadband(-performAllianceInputDirectionCorrection(driverController.getLeftY()), deadBand)
-        * 0.7;
+      return MathUtil.applyDeadband(
+              -performAllianceInputDirectionCorrection(driverController.getLeftY()), deadBand)
+          * 0.7;
     }
   }
 
   @Override
   public double getYtranslation() {
     if (turboActivate().getAsBoolean()) {
-      return MathUtil.applyDeadband(-performAllianceInputDirectionCorrection(driverController.getLeftX()), deadBand)
-        * 1.0;
-    } else if(this.slowActivate().getAsBoolean()){
-      return MathUtil.applyDeadband(-performAllianceInputDirectionCorrection(driverController.getLeftX()), deadBand)
-        * 0.4;
+      return MathUtil.applyDeadband(
+              -performAllianceInputDirectionCorrection(driverController.getLeftX()), deadBand)
+          * 1.0;
+    } else if (this.slowActivate().getAsBoolean()) {
+      return MathUtil.applyDeadband(
+              -performAllianceInputDirectionCorrection(driverController.getLeftX()), deadBand)
+          * 0.4;
     } else {
-      return MathUtil.applyDeadband(-performAllianceInputDirectionCorrection(driverController.getLeftX()), deadBand)
-        * 0.7;
+      return MathUtil.applyDeadband(
+              -performAllianceInputDirectionCorrection(driverController.getLeftX()), deadBand)
+          * 0.7;
     }
   }
 
   @Override
   public double getCOS_Joystick() {
-    return -performAllianceInputDirectionCorrection(MathUtil.applyDeadband(driverController.getRightX(), deadBandRotation));
+    return -performAllianceInputDirectionCorrection(
+        MathUtil.applyDeadband(driverController.getRightX(), deadBandRotation));
   }
 
   @Override
   public double getSIN_Joystick() {
-    return -performAllianceInputDirectionCorrection(MathUtil.applyDeadband(driverController.getRightY(), deadBandRotation));
+    return -performAllianceInputDirectionCorrection(
+        MathUtil.applyDeadband(driverController.getRightY(), deadBandRotation));
   }
 
   @Override
@@ -136,17 +144,17 @@ public class DriverController implements IDriverController {
 
   @Override
   public Trigger rightArrow() {
-      return driverController.povRight();
+    return driverController.povRight();
   }
 
   @Override
   public Trigger upArrow() {
-      return driverController.povUp();
+    return driverController.povUp();
   }
 
   @Override
   public Trigger downArrow() {
-      return driverController.povDown();
+    return driverController.povDown();
   }
 
   @Override
