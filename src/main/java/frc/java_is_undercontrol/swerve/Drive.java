@@ -16,7 +16,6 @@ package frc.java_is_undercontrol.swerve;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.CANBus;
-import com.ctre.phoenix6.swerve.jni.SwerveJNI.DriveState;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.pathfinding.Pathfinding;
@@ -41,12 +40,11 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.java_is_undercontrol.swerve.io.gyro.GyroIOInputsAutoLogged;
-import frc.java_is_undercontrol.swerve.io.gyro.GyroIO;
 import frc.java_is_undercontrol.swerve.base.odometry.PhoenixOdometryThread;
+import frc.java_is_undercontrol.swerve.io.gyro.GyroIO;
+import frc.java_is_undercontrol.swerve.io.gyro.GyroIOInputsAutoLogged;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.generated.TunerConstants;
@@ -142,7 +140,9 @@ public class Drive {
                 null,
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
-                (voltage) -> runCharacterizationSteer(voltage.in(Volts)), null, mainSwerveSubsystem));
+                (voltage) -> runCharacterizationSteer(voltage.in(Volts)),
+                null,
+                mainSwerveSubsystem));
   }
 
   public void periodic() {

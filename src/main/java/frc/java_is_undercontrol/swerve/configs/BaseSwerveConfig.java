@@ -9,7 +9,7 @@ public class BaseSwerveConfig {
   public final SwervePathPlannerConfig pathPlannerConfig;
 
   public final ProfiledPIDConfig headingPidConfig;
-  
+
   public final SwerveDeadbandsConfig deadbandsConfig = new SwerveDeadbandsConfig(0.05, 0.5);
 
   public BaseSwerveConfig(

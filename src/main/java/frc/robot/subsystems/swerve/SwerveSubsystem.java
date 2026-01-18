@@ -4,7 +4,6 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -14,12 +13,12 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.java_is_undercontrol.control.ProfiledPIDConfig;
+import frc.java_is_undercontrol.swerve.SwerveDevices;
+import frc.java_is_undercontrol.swerve.base.odometry.OdometryEnabledSwerveSubsystem;
 import frc.java_is_undercontrol.swerve.configs.MoveToPosePIDConfig;
 import frc.java_is_undercontrol.swerve.configs.OdometryEnabledSwerveConfig;
 import frc.java_is_undercontrol.swerve.configs.SwerveDeadbandsConfig;
 import frc.java_is_undercontrol.swerve.configs.SwervePathPlannerConfig;
-import frc.java_is_undercontrol.swerve.base.odometry.OdometryEnabledSwerveSubsystem;
-import frc.java_is_undercontrol.swerve.SwerveDevices;
 import frc.java_is_undercontrol.util.StabilizeChecker;
 import frc.java_is_undercontrol.vision.deprecated.Cameras.LimelightHelpers;
 import frc.java_is_undercontrol.vision.odometry.LimelightPoseEstimator;
@@ -126,7 +125,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
       return;
     }
     Translation2d desiredSpeeds =
-        this.getLinearVelocityFromJoysticks(controller.getXtranslation(), controller.getYtranslation());
+        this.getLinearVelocityFromJoysticks(
+            controller.getXtranslation(), controller.getYtranslation());
     this.state = "DRIVE_ALIGN_ANGLE_JOY";
     this.driveFieldOrientedLockedJoystickAngle(
         desiredSpeeds, controller.getCOS_Joystick(), controller.getSIN_Joystick());
@@ -186,7 +186,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   @Override
   public void driveAlignAngleJoystickSuperSlow() {
     ChassisSpeeds desiredSpeeds =
-        this.inputsToChassisSpeeds(controller.getXtranslation(), controller.getYtranslation()).times(0.12);
+        this.inputsToChassisSpeeds(controller.getXtranslation(), controller.getYtranslation())
+            .times(0.12);
     this.state = "DRIVE_ALIGN_ANGLE_JOY_SUPER_SLOW";
     this.driveFieldOrientedLockedJoystickAngle(
         desiredSpeeds, controller.getCOS_Joystick(), controller.getSIN_Joystick());
@@ -197,33 +198,32 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     Pose2d target = new Pose2d(8.272, 4.132, new Rotation2d());
     this.state = "DRIVE_AIMING_POSITION_TEST";
     Translation2d desiredSpeeds =
-        this.getLinearVelocityFromJoysticks(controller.getXtranslation(), controller.getYtranslation());
+        this.getLinearVelocityFromJoysticks(
+            controller.getXtranslation(), controller.getYtranslation());
     this.driveAimingAtPosition(desiredSpeeds, target.getTranslation());
   }
 
   @Override
-  public Command runSysIdQuasistaticForward(){
+  public Command runSysIdQuasistaticForward() {
     return super.sysIdQuasistatic(Direction.kForward);
   }
 
   @Override
-  public Command runSysIdQuasistaticReversed(){
+  public Command runSysIdQuasistaticReversed() {
     return super.sysIdQuasistatic(Direction.kReverse);
   }
 
   @Override
-  public Command runSysIdDynamicForward(){
+  public Command runSysIdDynamicForward() {
     return super.sysIdDynamic(Direction.kForward);
   }
 
   @Override
-  public Command runSysIdDynamicReversed(){
+  public Command runSysIdDynamicReversed() {
     return super.sysIdDynamic(Direction.kReverse);
   }
 
-  public Command runWheelRadiusCharacterization(){
+  public Command runWheelRadiusCharacterization() {
     return super.wheelRadiusCharacterization();
   }
-
-  
 }

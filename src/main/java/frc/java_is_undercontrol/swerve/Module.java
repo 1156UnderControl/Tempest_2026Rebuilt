@@ -22,9 +22,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import frc.java_is_undercontrol.swerve.io.module.ModuleIOInputsAutoLogged;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIO;
-
+import frc.java_is_undercontrol.swerve.io.module.ModuleIOInputsAutoLogged;
 import org.littletonrobotics.junction.Logger;
 
 public class Module {
