@@ -55,7 +55,7 @@ public interface MotorIO {
 
   void set(Voltage percentOutput);
 
-  void setPositionReference(Object position);
+  void setPositionReference(double position);
 
   void setPositionReference(double position, double arbFF);
 
@@ -116,7 +116,7 @@ public interface MotorIO {
 
   void setVelocityFactorExternalEncoder(double factor);
 
-  void setPosition(Object position);
+  void setPosition(double position);
 
   void configExternalEncoder();
 
