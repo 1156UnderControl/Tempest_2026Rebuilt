@@ -224,18 +224,24 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   }
 
   @Override
-  public void goToClimbPoseRight(){
-    if(DriverStation.getAlliance() != null){
-      super.driveToPose(DriverStation.getAlliance().get() == Alliance.Blue ? FieldConstants.FieldStructurePoses.BLUE_RIGHT_TOWER : FieldConstants.FieldStructurePoses.RED_RIGHT_TOWER);
+  public void goToClimbPoseRight() {
+    if (DriverStation.getAlliance() != null) {
+      super.driveToPose(
+          DriverStation.getAlliance().get() == Alliance.Blue
+              ? FieldConstants.FieldStructurePoses.BLUE_RIGHT_TOWER
+              : FieldConstants.FieldStructurePoses.RED_RIGHT_TOWER);
     } else {
       super.driveToPose(FieldConstants.FieldStructurePoses.RED_RIGHT_TOWER);
     }
   }
 
   @Override
-  public void goToClimbPoseLeft(){
-    if(DriverStation.getAlliance() != null){
-      super.driveToPose(DriverStation.getAlliance().get() == Alliance.Blue ? FieldConstants.FieldStructurePoses.BLUE_LEFT_TOWER : FieldConstants.FieldStructurePoses.RED_LEFT_TOWER);
+  public void goToClimbPoseLeft() {
+    if (DriverStation.getAlliance() != null) {
+      super.driveToPose(
+          DriverStation.getAlliance().get() == Alliance.Blue
+              ? FieldConstants.FieldStructurePoses.BLUE_LEFT_TOWER
+              : FieldConstants.FieldStructurePoses.RED_LEFT_TOWER);
     } else {
       super.driveToPose(FieldConstants.FieldStructurePoses.RED_LEFT_TOWER);
     }

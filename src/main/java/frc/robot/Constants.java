@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.RobotBase;
  * on a roboRIO. Change the value of "simMode" to switch between "sim" (physics sim) and "replay"
  * (log replay from a file).
  */
-
 public final class Constants {
   public static final RobotType robot = RobotType.COMPBOT;
   public static final boolean tuningMode = false;
