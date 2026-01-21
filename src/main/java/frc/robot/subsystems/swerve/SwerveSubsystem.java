@@ -10,6 +10,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.java_is_undercontrol.control.ProfiledPIDConfig;
@@ -25,6 +27,7 @@ import frc.java_is_undercontrol.vision.odometry.LimelightPoseEstimator;
 import frc.java_is_undercontrol.vision.odometry.MultiCameraPoseEstimator;
 import frc.java_is_undercontrol.vision.odometry.PoseEstimation;
 import frc.java_is_undercontrol.vision.odometry.PoseEstimator;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.JoystickConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.joysticks.DriverController;
@@ -92,7 +95,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   private static PoseEstimator configureMulticameraPoseEstimation() {
     List<PoseEstimator> listOfEstimators = new ArrayList<PoseEstimator>();
-    PoseEstimator limelightCenter = new LimelightPoseEstimator("limelight-center", false, false, 2);
+    PoseEstimator limelightCenter = new LimelightPoseEstimator("limelight-center", false, true, 2);
     listOfEstimators.add(limelightCenter);
     PoseEstimator estimatorMultiCamera =
         new MultiCameraPoseEstimator(listOfEstimators, "Teleop Multi Pose Estimator");
@@ -101,7 +104,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   @Override
   public void resetOdometryLimelight(Translation2d defaultPosition) {
-    PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-left", false, false, 2);
+    PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-center", false, true, 2);
     Optional<PoseEstimation> limelightPoseEstimation =
         limelightLeft.getEstimatedPose(this.getPose());
     if (limelightPoseEstimation.isEmpty()) {
@@ -144,15 +147,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   public void periodic() {
     super.periodic();
     LimelightHelpers.SetRobotOrientation(
-        "limelight-left",
-        OdometryEnabledSwerveSubsystem.robotOrientation,
-        OdometryEnabledSwerveSubsystem.robotAngularVelocity,
-        0,
-        0,
-        0,
-        0);
-    LimelightHelpers.SetRobotOrientation(
-        "limelight-right",
+        "limelight-center",
         OdometryEnabledSwerveSubsystem.robotOrientation,
         OdometryEnabledSwerveSubsystem.robotAngularVelocity,
         0,
@@ -223,7 +218,26 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     return super.sysIdDynamic(Direction.kReverse);
   }
 
+  @Override
   public Command runWheelRadiusCharacterization() {
     return super.wheelRadiusCharacterization();
+  }
+
+  @Override
+  public void goToClimbPoseRight(){
+    if(DriverStation.getAlliance() != null){
+      super.driveToPose(DriverStation.getAlliance().get() == Alliance.Blue ? FieldConstants.FieldStructurePoses.BLUE_RIGHT_TOWER : FieldConstants.FieldStructurePoses.RED_RIGHT_TOWER);
+    } else {
+      super.driveToPose(FieldConstants.FieldStructurePoses.RED_RIGHT_TOWER);
+    }
+  }
+
+  @Override
+  public void goToClimbPoseLeft(){
+    if(DriverStation.getAlliance() != null){
+      super.driveToPose(DriverStation.getAlliance().get() == Alliance.Blue ? FieldConstants.FieldStructurePoses.BLUE_LEFT_TOWER : FieldConstants.FieldStructurePoses.RED_LEFT_TOWER);
+    } else {
+      super.driveToPose(FieldConstants.FieldStructurePoses.RED_LEFT_TOWER);
+    }
   }
 }

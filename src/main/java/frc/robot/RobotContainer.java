@@ -98,6 +98,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     drive.setDefaultCommand(Commands.run(() -> drive.driveAlignAngleJoystick(), drive));
+    driverController.rightArrow().onTrue(Commands.run(() -> drive.goToClimbPoseRight(), drive));
+    driverController.leftArrow().onTrue(Commands.run(() -> drive.goToClimbPoseLeft(), drive));
   }
 
   /**
