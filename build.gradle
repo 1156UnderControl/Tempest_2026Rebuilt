@@ -168,7 +168,7 @@ spotless {
     java {
         target fileTree('.') {
             include '**/*.java'
-            exclude '**/build/**', '**/build-*/**', '**/bin/**'
+            exclude '**/build/**', '**/build-*/**', '**/bin/**', '**/BuildConstants.java'
         }
         toggleOffOn()
         googleJavaFormat()
@@ -205,4 +205,8 @@ spotless {
         indentWithSpaces(2)
         endWithNewline()
     }
+}
+
+tasks.named('build') {
+    dependsOn 'spotlessApply'
 }
