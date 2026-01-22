@@ -95,7 +95,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   private static PoseEstimator configureMulticameraPoseEstimation() {
     List<PoseEstimator> listOfEstimators = new ArrayList<PoseEstimator>();
-    PoseEstimator limelightCenter = new LimelightPoseEstimator("limelight-center", false, true, 2);
+    PoseEstimator limelightCenter = new LimelightPoseEstimator("limelight-center", false, false, 2);
     listOfEstimators.add(limelightCenter);
     PoseEstimator estimatorMultiCamera =
         new MultiCameraPoseEstimator(listOfEstimators, "Teleop Multi Pose Estimator");
@@ -104,7 +104,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   @Override
   public void resetOdometryLimelight(Translation2d defaultPosition) {
-    PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-center", false, true, 2);
+    PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-center", false, false, 2);
     Optional<PoseEstimation> limelightPoseEstimation =
         limelightLeft.getEstimatedPose(this.getPose());
     if (limelightPoseEstimation.isEmpty()) {
@@ -149,7 +149,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     LimelightHelpers.SetRobotOrientation(
         "limelight-center",
         OdometryEnabledSwerveSubsystem.robotOrientation,
-        OdometryEnabledSwerveSubsystem.robotAngularVelocity,
+        0,
         0,
         0,
         0,

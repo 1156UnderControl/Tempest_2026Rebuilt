@@ -22,6 +22,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Optional;
 
+import org.littletonrobotics.junction.AutoLogOutput;
+
 public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem {
 
   public static double robotOrientation;
@@ -40,7 +42,7 @@ public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem
 
   private PIDController moveToPoseYAxisPid;
 
-  private Pose2d targetPose;
+  @AutoLogOutput private Pose2d targetPose;
 
   private Pose2d targetAimPose;
 
