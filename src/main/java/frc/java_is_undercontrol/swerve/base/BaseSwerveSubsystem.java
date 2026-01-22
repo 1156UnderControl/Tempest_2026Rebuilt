@@ -263,7 +263,6 @@ public class BaseSwerveSubsystem extends SubsystemBase {
    * @param targetHeading Target field heading to maintain
    * @param allianceBasedVelocities Whether the heading should account for alliance orientation
    */
-  
   protected void driveFieldOrientedLockedAngle(
       ChassisSpeeds speeds, Rotation2d targetHeading, boolean allianceBasedVelocities) {
     boolean isFlipped =
