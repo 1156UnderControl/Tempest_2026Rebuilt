@@ -22,13 +22,13 @@ public class ControlBoard implements IDriverController, IOperatorController {
   }
 
   @Override
-  public double getXtranslation() {
-    return mDriverController.getXtranslation();
+  public double getLeftX() {
+    return mDriverController.getLeftX();
   }
 
   @Override
-  public double getYtranslation() {
-    return mDriverController.getYtranslation();
+  public double getLeftY() {
+    return mDriverController.getLeftY();
   }
 
   @Override
@@ -118,25 +118,21 @@ public class ControlBoard implements IDriverController, IOperatorController {
 
   @Override
   public Trigger leftArrow() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'leftArrow'");
+    return mDriverController.leftArrow();
   }
 
   @Override
   public Trigger rightArrow() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'rightArrow'");
+    return mDriverController.rightArrow();
   }
 
   @Override
   public Trigger upArrow() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'upArrow'");
+    return mDriverController.upArrow();
   }
 
   @Override
   public Trigger downArrow() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'downArrow'");
+    return mDriverController.downArrow();
   }
 }

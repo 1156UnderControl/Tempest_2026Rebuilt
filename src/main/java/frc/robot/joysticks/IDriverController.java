@@ -3,9 +3,9 @@ package frc.robot.joysticks;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public interface IDriverController {
-  double getXtranslation();
+  double getLeftX();
 
-  double getYtranslation();
+  double getLeftY();
 
   double getCOS_Joystick();
 
