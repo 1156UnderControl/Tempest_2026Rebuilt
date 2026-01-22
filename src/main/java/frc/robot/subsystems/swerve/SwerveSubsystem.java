@@ -128,8 +128,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
       return;
     }
     Translation2d desiredSpeeds =
-        this.getLinearVelocityFromJoysticks(
-            controller.getXtranslation(), controller.getYtranslation());
+        this.getLinearVelocityFromJoysticksTranslation(
+            controller.getLeftY(), controller.getLeftX());
     this.state = "DRIVE_ALIGN_ANGLE_JOY";
     this.driveFieldOrientedLockedJoystickAngle(
         desiredSpeeds, controller.getCOS_Joystick(), controller.getSIN_Joystick());
@@ -138,7 +138,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   public void driveRotating(boolean rotateRight) {
     ChassisSpeeds desiredSpeeds =
         this.inputsToChassisSpeeds(
-            controller.getXtranslation(), controller.getYtranslation(), rotateRight ? -1.5 : 1.5);
+            controller.getLeftY(), controller.getLeftX(), rotateRight ? -1.5 : 1.5);
     this.state = "DRIVE_ALIGN_ANGLE_ROTATING_RIGHT?:" + Boolean.toString(rotateRight);
     this.driveFieldOriented(desiredSpeeds);
   }
@@ -147,13 +147,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   public void periodic() {
     super.periodic();
     LimelightHelpers.SetRobotOrientation(
-        "limelight-center",
-        OdometryEnabledSwerveSubsystem.robotOrientation,
-        0,
-        0,
-        0,
-        0,
-        0);
+        "limelight-center", OdometryEnabledSwerveSubsystem.robotOrientation, 0, 0, 0, 0, 0);
   }
 
   @Override
@@ -180,9 +174,11 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   @Override
   public void driveAlignAngleJoystickSuperSlow() {
+
     ChassisSpeeds desiredSpeeds =
-        this.inputsToChassisSpeeds(controller.getXtranslation(), controller.getYtranslation())
-            .times(0.12);
+        this.getLinearVelocityFromJoysticksChassisSpeeds(
+                controller.getLeftY(), controller.getLeftX())
+            .times(0.15);
     this.state = "DRIVE_ALIGN_ANGLE_JOY_SUPER_SLOW";
     this.driveFieldOrientedLockedJoystickAngle(
         desiredSpeeds, controller.getCOS_Joystick(), controller.getSIN_Joystick());
@@ -193,8 +189,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     Pose2d target = new Pose2d(8.272, 4.132, new Rotation2d());
     this.state = "DRIVE_AIMING_POSITION_TEST";
     Translation2d desiredSpeeds =
-        this.getLinearVelocityFromJoysticks(
-            controller.getXtranslation(), controller.getYtranslation());
+        this.getLinearVelocityFromJoysticksTranslation(
+            controller.getLeftY(), controller.getLeftX());
     this.driveAimingAtPosition(desiredSpeeds, target.getTranslation());
   }
 
