@@ -21,7 +21,6 @@ import frc.java_is_undercontrol.vision.odometry.PoseEstimator;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Optional;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 
 public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem {
@@ -122,7 +121,7 @@ public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem
   protected void driveAimingAtPosition(
       double dt, ChassisSpeeds targetSpeeds, Translation2d targetPosition, Rotation2d offsetAngle) {
     Rotation2d targetAngle = this.getHeadingAimingAtPosition(dt, targetPosition, offsetAngle);
-    this.driveFieldOrientedLockedAngle(targetSpeeds, targetAngle);
+    this.driveFieldOrientedLockedAngle(targetSpeeds, targetAngle, true);
   }
 
   protected void driveAimingAtPosition(
@@ -184,7 +183,7 @@ public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem
       targetYVelocity = targetYVelocity * conversionFactor;
     }
     ChassisSpeeds desiredSpeeds = new ChassisSpeeds(targetXVelocity, targetYVelocity, 0);
-    this.driveFieldOrientedLockedAngle(desiredSpeeds, targetPose.getRotation());
+    this.driveFieldOrientedLockedAngle(desiredSpeeds, targetPose.getRotation(), false);
     this.targetPose = targetPose;
   }
 
