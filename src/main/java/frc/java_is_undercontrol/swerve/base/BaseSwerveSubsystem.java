@@ -251,7 +251,8 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     Logger.recordOutput("TargetHeadingRadians", this.targetHeadingRadians);
   }
 
-  protected void driveFieldOrientedLockedAngle(ChassisSpeeds speeds, Rotation2d targetHeading) {
+  
+  protected void driveFieldOrientedLockedAngle(ChassisSpeeds speeds, Rotation2d targetHeading, boolean allianceBasedVelocities) {
     boolean isFlipped =
         DriverStation.getAlliance().isPresent()
             && DriverStation.getAlliance().get() == Alliance.Red;
@@ -263,10 +264,16 @@ public class BaseSwerveSubsystem extends SubsystemBase {
         angleController.calculate(getHeading().getRadians(), targetRotation.getRadians());
     ChassisSpeeds adjustedSpeeds =
         new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, omega);
-    driveFieldOriented(adjustedSpeeds);
+    if(allianceBasedVelocities){
+          driveFieldOrientedAllianceBased(adjustedSpeeds);
+
+    }else{
+          driveFieldOriented(adjustedSpeeds);
+
+    }
   }
 
-  protected Translation2d getLinearVelocityFromJoysticks(double x, double y) {
+  protected Translation2d getLinearVelocityFromJoysticksTranslation(double x, double y) {
     double linearMagnitude = Math.hypot(x, y);
     Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
     linearMagnitude = linearMagnitude * linearMagnitude;
@@ -278,6 +285,21 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     return new Translation2d(
         joystickTranslation.getX() * drive.getMaxLinearSpeedMetersPerSec(),
         joystickTranslation.getY() * drive.getMaxLinearSpeedMetersPerSec());
+  }
+
+  protected ChassisSpeeds getLinearVelocityFromJoysticksChassisSpeeds(double x, double y) {
+    double linearMagnitude = Math.hypot(x, y);
+    Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
+    linearMagnitude = linearMagnitude * linearMagnitude;
+    Translation2d joystickTranslation =
+        new Pose2d(new Translation2d(), linearDirection)
+            .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
+            .getTranslation();
+
+    return new ChassisSpeeds(
+        joystickTranslation.getX() * drive.getMaxLinearSpeedMetersPerSec(),
+        joystickTranslation.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+        0);
   }
 
   protected void driveFieldOrientedLockedJoystickAngle(
@@ -311,7 +333,7 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     driveFieldOrientedLockedJoystickAngle(speedsWithTranslation, xHeading, yHeading);
   }
 
-  protected void driveFieldOriented(ChassisSpeeds speeds) {
+  protected void driveFieldOrientedAllianceBased(ChassisSpeeds speeds) {
     this.targetSpeeds = speeds;
     boolean isFlipped =
         DriverStation.getAlliance().isPresent()
@@ -320,6 +342,13 @@ public class BaseSwerveSubsystem extends SubsystemBase {
         ChassisSpeeds.fromFieldRelativeSpeeds(
             speeds,
             isFlipped ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation()));
+  }
+
+    protected void driveFieldOriented(ChassisSpeeds speeds) {
+    this.targetSpeeds = speeds;
+    drive.runVelocity(
+        ChassisSpeeds.fromFieldRelativeSpeeds(
+            speeds, drive.getRotation()));
   }
 
   protected void driveRobotOriented(ChassisSpeeds speeds) {
