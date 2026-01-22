@@ -72,7 +72,6 @@ public class RobotContainer {
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         drive = new SwerveSubsystem(simulatedSwerveDevices);
-
         break;
 
       default:
@@ -98,8 +97,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     drive.setDefaultCommand(Commands.run(() -> drive.driveAlignAngleJoystick(), drive));
-    driverController.rightArrow().onTrue(Commands.run(() -> drive.goToClimbPoseRight(), drive));
-    driverController.leftArrow().onTrue(Commands.run(() -> drive.goToClimbPoseLeft(), drive));
+    driverController.rightArrow().whileTrue(Commands.run(() -> drive.goToClimbPoseRight(), drive));
+    driverController.leftArrow().whileTrue(Commands.run(() -> drive.goToClimbPoseLeft(), drive));
   }
 
   /**
