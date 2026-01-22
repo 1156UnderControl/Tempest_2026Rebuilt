@@ -251,6 +251,19 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     Logger.recordOutput("TargetHeadingRadians", this.targetHeadingRadians);
   }
 
+  /**
+   * Drives the robot field-oriented while locking its heading to a target angle.
+   *
+   * <p>The translational components ({@code vx}, {@code vy}) come from the given {@link
+   * ChassisSpeeds}. Rotation is controlled automatically using an angle controller to track the
+   * desired heading. When on the Red alliance, the target heading is flipped by 180° to maintain
+   * consistent field-relative behavior.
+   *
+   * @param speeds Desired field-relative translational speeds
+   * @param targetHeading Target field heading to maintain
+   * @param allianceBasedVelocities Whether the heading should account for alliance orientation
+   */
+  
   protected void driveFieldOrientedLockedAngle(
       ChassisSpeeds speeds, Rotation2d targetHeading, boolean allianceBasedVelocities) {
     boolean isFlipped =
