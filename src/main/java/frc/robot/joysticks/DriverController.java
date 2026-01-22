@@ -1,18 +1,13 @@
 package frc.robot.joysticks;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.java_is_undercontrol.util.JoystickUtil;
+import frc.java_is_undercontrol.util.Util;
 import frc.robot.constants.JoystickConstants;
 
 public class DriverController implements IDriverController {
 
   private static DriverController mInstance = null;
-  private final double deadBand;
-  private final double deadBandRotation;
 
   public static DriverController getInstance() {
     if (mInstance == null) {
@@ -25,55 +20,27 @@ public class DriverController implements IDriverController {
   final CommandXboxController driverController;
 
   private DriverController() {
-    this.deadBand = JoystickConstants.DEADBAND;
-    this.deadBandRotation = 0.15;
     driverController = new CommandXboxController(0);
   }
 
   @Override
-  public double getXtranslation() {
-    if (turboActivate().getAsBoolean()) {
-      return MathUtil.applyDeadband(
-              -performAllianceInputDirectionCorrection(driverController.getLeftY()), deadBand)
-          * 1.0;
-    } else if (this.slowActivate().getAsBoolean()) {
-      return MathUtil.applyDeadband(
-              -performAllianceInputDirectionCorrection(driverController.getLeftY()), deadBand)
-          * 0.4;
-    } else {
-      return MathUtil.applyDeadband(
-              -performAllianceInputDirectionCorrection(driverController.getLeftY()), deadBand)
-          * 0.7;
-    }
+  public double getLeftX() {
+    return -driverController.getLeftX();
   }
 
   @Override
-  public double getYtranslation() {
-    if (turboActivate().getAsBoolean()) {
-      return MathUtil.applyDeadband(
-              -performAllianceInputDirectionCorrection(driverController.getLeftX()), deadBand)
-          * 1.0;
-    } else if (this.slowActivate().getAsBoolean()) {
-      return MathUtil.applyDeadband(
-              -performAllianceInputDirectionCorrection(driverController.getLeftX()), deadBand)
-          * 0.4;
-    } else {
-      return MathUtil.applyDeadband(
-              -performAllianceInputDirectionCorrection(driverController.getLeftX()), deadBand)
-          * 0.7;
-    }
+  public double getLeftY() {
+    return -driverController.getLeftY();
   }
 
   @Override
   public double getCOS_Joystick() {
-    return -performAllianceInputDirectionCorrection(
-        MathUtil.applyDeadband(driverController.getRightX(), deadBandRotation));
+    return -driverController.getRightX();
   }
 
   @Override
   public double getSIN_Joystick() {
-    return -performAllianceInputDirectionCorrection(
-        MathUtil.applyDeadband(driverController.getRightY(), deadBandRotation));
+    return -driverController.getRightY();
   }
 
   @Override
@@ -88,8 +55,8 @@ public class DriverController implements IDriverController {
 
   @Override
   public boolean notUsingJoystick() {
-    return JoystickUtil.inRange(getCOS_Joystick(), -this.deadBand, this.deadBand)
-        && JoystickUtil.inRange(getSIN_Joystick(), -this.deadBand, this.deadBand);
+    return Util.inRange(getCOS_Joystick(), -JoystickConstants.DEADBAND, JoystickConstants.DEADBAND)
+        && Util.inRange(getSIN_Joystick(), -JoystickConstants.DEADBAND, JoystickConstants.DEADBAND);
   }
 
   @Override
@@ -170,16 +137,5 @@ public class DriverController implements IDriverController {
   @Override
   public Trigger setNoObject() {
     return driverController.leftStick().and(driverController.rightStick());
-  }
-
-  private double performAllianceInputDirectionCorrection(Double value) {
-    Alliance alliance =
-        DriverStation.getAlliance().isPresent()
-            ? DriverStation.getAlliance().get()
-            : DriverStation.Alliance.Red;
-    if (alliance == Alliance.Red) {
-      return -value;
-    }
-    return value;
   }
 }

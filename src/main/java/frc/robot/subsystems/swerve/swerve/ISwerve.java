@@ -26,4 +26,10 @@ public interface ISwerve {
   Command runSysIdDynamicForward();
 
   Command runSysIdDynamicReversed();
+
+  Command runWheelRadiusCharacterization();
+
+  void goToClimbPoseRight();
+
+  void goToClimbPoseLeft();
 }

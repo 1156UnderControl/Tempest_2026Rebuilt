@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.Constants;
-
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -52,8 +51,16 @@ public class FieldConstants {
     private final String layoutString;
   }
 
-  public class FieldStructurePoses{
+  public class FieldStructurePoses {
     public static final Pose2d BLUE_HUB_POSE = new Pose2d(4.626, 4.035, new Rotation2d());
     public static final Pose2d RED_HUB_POSE = new Pose2d(11.915, 4.035, new Rotation2d());
+
+    public static final Pose2d BLUE_LEFT_TOWER = new Pose2d(1.078, 4.72, new Rotation2d());
+    public static final Pose2d BLUE_RIGHT_TOWER =
+        new Pose2d(1.078, 2.79, Rotation2d.fromDegrees(180));
+
+    public static final Pose2d RED_LEFT_TOWER = new Pose2d(15.474, 3.370, new Rotation2d());
+    public static final Pose2d RED_RIGHT_TOWER =
+        new Pose2d(15.474, 5.274, Rotation2d.fromDegrees(180));
   }
 }
