@@ -251,8 +251,8 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     Logger.recordOutput("TargetHeadingRadians", this.targetHeadingRadians);
   }
 
-  
-  protected void driveFieldOrientedLockedAngle(ChassisSpeeds speeds, Rotation2d targetHeading, boolean allianceBasedVelocities) {
+  protected void driveFieldOrientedLockedAngle(
+      ChassisSpeeds speeds, Rotation2d targetHeading, boolean allianceBasedVelocities) {
     boolean isFlipped =
         DriverStation.getAlliance().isPresent()
             && DriverStation.getAlliance().get() == Alliance.Red;
@@ -264,12 +264,11 @@ public class BaseSwerveSubsystem extends SubsystemBase {
         angleController.calculate(getHeading().getRadians(), targetRotation.getRadians());
     ChassisSpeeds adjustedSpeeds =
         new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, omega);
-    if(allianceBasedVelocities){
-          driveFieldOrientedAllianceBased(adjustedSpeeds);
+    if (allianceBasedVelocities) {
+      driveFieldOrientedAllianceBased(adjustedSpeeds);
 
-    }else{
-          driveFieldOriented(adjustedSpeeds);
-
+    } else {
+      driveFieldOriented(adjustedSpeeds);
     }
   }
 
@@ -344,11 +343,9 @@ public class BaseSwerveSubsystem extends SubsystemBase {
             isFlipped ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation()));
   }
 
-    protected void driveFieldOriented(ChassisSpeeds speeds) {
+  protected void driveFieldOriented(ChassisSpeeds speeds) {
     this.targetSpeeds = speeds;
-    drive.runVelocity(
-        ChassisSpeeds.fromFieldRelativeSpeeds(
-            speeds, drive.getRotation()));
+    drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, drive.getRotation()));
   }
 
   protected void driveRobotOriented(ChassisSpeeds speeds) {
