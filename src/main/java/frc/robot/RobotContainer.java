@@ -5,6 +5,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,7 +34,9 @@ public class RobotContainer {
   // Subsystems
   private final SwerveSubsystem drive;
 
-  public final IDriverController driverController = DriverController.getInstance();
+  public final IDriverController driverController;
+
+  public final NamedCommandsRegistry namedCommandsRegistry;
 
   private final SwerveDevices simulatedSwerveDevices =
       new SwerveDevices(
@@ -64,6 +68,8 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
+    this.driverController = DriverController.getInstance();
+
     switch (Constants.getMode()) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -81,6 +87,8 @@ public class RobotContainer {
         break;
     }
 
+    this.namedCommandsRegistry = new NamedCommandsRegistry(drive);
+
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     autoChooser.addOption("wheelRadiusCharacterization", drive.wheelRadiusCharacterization());
@@ -97,7 +105,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    drive.setDefaultCommand(Commands.run(() -> drive.driveAlignAngleJoystick(), drive));
+    drive.setDefaultCommand(Commands.run(() -> drive.driveAlignAngleJoystick(), drive).onlyIf(() -> DriverStation.isTeleopEnabled()));
     driverController.rightArrow().whileTrue(new GoToClimbPoseLeft(drive));
     driverController.leftArrow().whileTrue(new GoToClimbPoseLeft(drive));
   }
