@@ -82,11 +82,11 @@ public class SparkFlexMotor implements MotorIO {
 
   private IdleMode lastTargetIdleMode = null;
 
-  public SparkFlexMotor(int motorID, int busID, String motorName) {
-    this(motorID, busID, false, motorName);
+  public SparkFlexMotor(int motorID, String motorName) {
+    this(motorID, false, motorName);
   }
 
-  public SparkFlexMotor(int motorID, int busID, boolean usingAlternateEncoder, String motorName) {
+  public SparkFlexMotor(int motorID, boolean usingAlternateEncoder, String motorName) {
     this.motor = new SparkFlex(motorID, MotorType.kBrushless);
     this.config = new SparkFlexConfig();
     this.m_profile =

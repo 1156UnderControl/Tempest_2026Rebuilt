@@ -76,10 +76,10 @@ public class SparkMAXMotor implements MotorIO {
   private IdleMode lastTargetIdleMode = null;
 
   public SparkMAXMotor(int motorID, int busID, String motorName) {
-    this(motorID, busID, false, motorName);
+    this(motorID, false, motorName);
   }
 
-  public SparkMAXMotor(int motorID, int busID, boolean usingAlternateEncoder, String motorName) {
+  public SparkMAXMotor(int motorID, boolean usingAlternateEncoder, String motorName) {
     this.motor = new SparkMax(motorID, MotorType.kBrushless);
     this.config = new SparkMaxConfig();
     this.motorName = motorName;
