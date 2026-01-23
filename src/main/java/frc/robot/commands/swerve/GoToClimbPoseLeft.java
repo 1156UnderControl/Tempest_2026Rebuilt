@@ -24,4 +24,9 @@ public class GoToClimbPoseLeft extends Command {
   public boolean isFinished() {
     return this.swerve.isAtTargetPositionWithHeading();
   }
+
+  @Override
+  public void end(boolean interrupted){
+    this.swerve.stopSwerve();
+  }
 }
