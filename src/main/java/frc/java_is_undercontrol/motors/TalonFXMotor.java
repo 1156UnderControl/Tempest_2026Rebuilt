@@ -101,6 +101,10 @@ public class TalonFXMotor implements MotorIO {
     current = this.motor.getStatorCurrent();
   }
 
+  public TalonFXMotor(int id, CANBus canBus, String motorName) {
+    this(id, canBus, null, motorName);
+  }
+
   @Override
   public String getMotorName() {
     return this.motorName;
@@ -208,14 +212,18 @@ public class TalonFXMotor implements MotorIO {
   @Override
   public void configurePIDF(double P, double I, double D, double F) {
     talonConfigurator.refresh(talonConfiguration.Slot0);
-    talonConfigurator.apply(
-        talonConfiguration
-            .Slot0
-            .withKP(P)
-            .withKI(I)
-            .withKD(D)
-            .withKS(F)
-            .withGravityType(gravityType));
+    if (gravityType != null) {
+      talonConfigurator.apply(
+          talonConfiguration
+              .Slot0
+              .withKP(P)
+              .withKI(I)
+              .withKD(D)
+              .withKS(F)
+              .withGravityType(gravityType));
+    } else {
+      talonConfigurator.apply(talonConfiguration.Slot0.withKP(P).withKI(I).withKD(D).withKS(F));
+    }
   }
 
   @Override
@@ -304,7 +312,11 @@ public class TalonFXMotor implements MotorIO {
       double maxAcceleration,
       double positionErrorAllowed) {
     talonConfigurator.refresh(talonConfiguration.Slot0);
-    talonConfiguration.Slot0.withKP(P).withKI(I).withKD(D).withGravityType(gravityType);
+    if (this.gravityType != null) {
+      talonConfiguration.Slot0.withKP(P).withKI(I).withKD(D).withGravityType(gravityType);
+    } else {
+      talonConfiguration.Slot0.withKP(P).withKI(I).withKD(D);
+    }
     MotionMagicConfigs motionMagicConfigs = talonConfiguration.MotionMagic;
     motionMagicConfigs.MotionMagicCruiseVelocity = maxVelocity;
     motionMagicConfigs.MotionMagicAcceleration = maxAcceleration;
@@ -323,15 +335,19 @@ public class TalonFXMotor implements MotorIO {
       double maxAcceleration,
       double jerk) {
     talonConfigurator.refresh(talonConfiguration.Slot0);
-    talonConfiguration
-        .Slot0
-        .withKP(P)
-        .withKI(I)
-        .withKD(D)
-        .withKS(kS)
-        .withKV(kV)
-        .withKA(kA)
-        .withGravityType(gravityType);
+    if (this.gravityType != null) {
+      talonConfiguration
+          .Slot0
+          .withKP(P)
+          .withKI(I)
+          .withKD(D)
+          .withKS(kS)
+          .withKV(kV)
+          .withKA(kA)
+          .withGravityType(gravityType);
+    } else {
+      talonConfiguration.Slot0.withKP(P).withKI(I).withKD(D).withKS(kS).withKV(kV).withKA(kA);
+    }
     var motionMagicConfigs = talonConfiguration.MotionMagic;
     motionMagicConfigs.MotionMagicCruiseVelocity = maxVelocity;
     motionMagicConfigs.MotionMagicAcceleration = maxAcceleration;

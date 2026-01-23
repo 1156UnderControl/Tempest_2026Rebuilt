@@ -75,7 +75,7 @@ public class SparkMAXMotor implements MotorIO {
 
   private IdleMode lastTargetIdleMode = null;
 
-  public SparkMAXMotor(int motorID, int busID, String motorName) {
+  public SparkMAXMotor(int motorID, String motorName) {
     this(motorID, false, motorName);
   }
 

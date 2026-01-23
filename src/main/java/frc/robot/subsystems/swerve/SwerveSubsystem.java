@@ -119,6 +119,10 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     }
   }
 
+  public Pose2d getOdometryPose() {
+    return super.getPose();
+  }
+
   @Override
   public void driveAlignAngleJoystick() {
     if (controller.leftBumper().getAsBoolean()) {
