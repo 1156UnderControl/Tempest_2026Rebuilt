@@ -10,10 +10,9 @@ public class NamedCommandsRegistry {
 
   public NamedCommandsRegistry(SwerveSubsystem drive) {
     this.drive = drive;
-    this.registerAllAutoCommands();
   }
 
-  private void registerAllAutoCommands() {
+  public void registerAllAutoCommands() {
     this.registerGoToPoseCommands();
   }
 

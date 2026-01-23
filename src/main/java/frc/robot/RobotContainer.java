@@ -33,9 +33,11 @@ public class RobotContainer {
   // Subsystems
   private final SwerveSubsystem drive;
 
-  public final IDriverController driverController;
+  private final IDriverController driverController;
 
-  public final NamedCommandsRegistry namedCommandsRegistry;
+  private final NamedCommandsRegistry namedCommandsRegistry;
+
+  private final States states;
 
   private final SwerveDevices simulatedSwerveDevices =
       new SwerveDevices(
@@ -66,7 +68,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
     this.driverController = DriverController.getInstance();
 
     switch (Constants.getMode()) {
@@ -87,6 +88,9 @@ public class RobotContainer {
     }
 
     this.namedCommandsRegistry = new NamedCommandsRegistry(drive);
+    this.namedCommandsRegistry.registerAllAutoCommands();
+
+    this.states = new States(drive);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -104,9 +108,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    drive.setDefaultCommand(
-        Commands.run(() -> drive.driveAlignAngleJoystick(), drive)
-            .onlyIf(() -> DriverStation.isTeleopEnabled()));
+    this.states.setDefaultStates();
     driverController.rightArrow().whileTrue(new GoToClimbPoseLeft(drive));
     driverController.leftArrow().whileTrue(new GoToClimbPoseLeft(drive));
   }
