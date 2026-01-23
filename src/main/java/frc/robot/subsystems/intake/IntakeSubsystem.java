@@ -12,9 +12,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public IntakeSubsystem() {
     intakeExtender =
-        new SparkFlexMotor(IntakeConstants.ID_intakeExtenderMotor, 1, "Intake Extender Motor");
+        new SparkFlexMotor(IntakeConstants.ID_intakeExtenderMotor, "Intake Extender Motor");
     intakeWheels =
-        new SparkFlexMotor(IntakeConstants.ID_intakeWheelsMotor, 1, "Intake Wheels Motor");
+        new SparkFlexMotor(IntakeConstants.ID_intakeWheelsMotor, "Intake Wheels Motor");
   }
 
   private void setIntakeExtenderConfigs() {
