@@ -61,7 +61,9 @@ public class BaseSwerveSubsystem extends SubsystemBase {
 
   @AutoLogOutput private double targetHeadingRadians = Double.NaN;
 
-  @AutoLogOutput private double lastDesiredJoystickAngleRadians;
+  @AutoLogOutput private double lastDesiredJoystickAngleRadiansAutonomous;
+
+  @AutoLogOutput private double lastDesiredJoystickAngleRadiansTeleop;
 
   private final double FF_START_DELAY = 2.0; // Secs
   private final double FF_RAMP_RATE = 0.1; // Volts/Sec
@@ -90,7 +92,6 @@ public class BaseSwerveSubsystem extends SubsystemBase {
             .in(RadiansPerSecond); // fraction of a rotation per second
     pathPlannerConfig = config.pathPlannerConfig;
     configureAutoBuilder();
-    this.lastDesiredJoystickAngleRadians = AllianceFlipUtil.shouldFlip() ? 0 : Math.PI;
     this.translationDeadband = config.deadbandsConfig.translationDeadband;
     this.joystickAimDeadband = config.deadbandsConfig.joystickAimDeadband;
   }
@@ -265,11 +266,14 @@ public class BaseSwerveSubsystem extends SubsystemBase {
    */
   protected void driveFieldOrientedLockedAngle(
       ChassisSpeeds speeds, Rotation2d targetHeading, boolean allianceBasedVelocities) {
+    if(this.lastDesiredJoystickAngleRadiansAutonomous == Double.NaN){
+      this.lastDesiredJoystickAngleRadiansAutonomous = this.getPose().getRotation().getRadians();
+    }
     boolean isFlipped =
         DriverStation.getAlliance().isPresent()
             && DriverStation.getAlliance().get() == Alliance.Red;
     Rotation2d targetRotation = targetHeading;
-    this.lastDesiredJoystickAngleRadians = targetHeading.rotateBy(Rotation2d.fromDegrees(isFlipped ? 180 : 0)).getRadians();
+    this.lastDesiredJoystickAngleRadiansAutonomous = targetHeading.rotateBy(Rotation2d.fromDegrees(isFlipped ? 180 : 0)).getRadians();
     this.targetHeadingDegrees = targetRotation.getDegrees();
     this.targetHeadingRadians = targetRotation.getRadians();
     double omega =
@@ -314,12 +318,15 @@ public class BaseSwerveSubsystem extends SubsystemBase {
 
   protected void driveFieldOrientedLockedJoystickAngle(
       ChassisSpeeds speeds, double xHeading, double yHeading) {
+    if(this.lastDesiredJoystickAngleRadiansTeleop == Double.NaN){
+      this.lastDesiredJoystickAngleRadiansTeleop = this.getPose().getRotation().getRadians();
+    }
     double angle =
         Util.withinHypotDeadband(xHeading, yHeading, joystickAimDeadband)
-            ? lastDesiredJoystickAngleRadians
+            ? lastDesiredJoystickAngleRadiansTeleop
             : Math.atan2(xHeading, yHeading);
     // It has to be de pre-inverted angle
-    this.lastDesiredJoystickAngleRadians = angle;
+    this.lastDesiredJoystickAngleRadiansTeleop = angle;
     boolean isFlipped =
         DriverStation.getAlliance().isPresent()
             && DriverStation.getAlliance().get() == Alliance.Red;
