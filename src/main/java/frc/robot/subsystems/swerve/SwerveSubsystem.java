@@ -2,6 +2,8 @@ package frc.robot.subsystems.swerve;
 
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.path.PathConstraints;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -81,7 +83,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     super(
         new OdometryEnabledSwerveConfig(
             0.75,
-            new SwerveDeadbandsConfig(JoystickConstants.DEADBAND, 0.5),
+            new SwerveDeadbandsConfig(JoystickConstants.DEADBAND_TRANSLATION, JoystickConstants.DEADBAND_ROTATION),
             pathPlannerConfig,
             configureMulticameraPoseEstimation(),
             configureMulticameraPoseEstimation(),
@@ -129,10 +131,10 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     }
     Translation2d desiredSpeeds =
         this.getLinearVelocityFromJoysticksTranslation(
-            controller.getLeftY(), controller.getLeftX());
+            MathUtil.applyDeadband(controller.getLeftY(), JoystickConstants.DEADBAND_TRANSLATION), MathUtil.applyDeadband(controller.getLeftX(), JoystickConstants.DEADBAND_TRANSLATION));
     this.state = "DRIVE_ALIGN_ANGLE_JOY";
     this.driveFieldOrientedLockedJoystickAngle(
-        desiredSpeeds, controller.getCOS_Joystick(), controller.getSIN_Joystick());
+        desiredSpeeds, controller.notUsingJoystick() ? 0 : controller.getCOS_Joystick(), controller.notUsingJoystick() ? 0 : controller.getSIN_Joystick());
   }
 
   public void driveRotating(boolean rotateRight) {

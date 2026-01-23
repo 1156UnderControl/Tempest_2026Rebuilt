@@ -15,6 +15,7 @@ import frc.java_is_undercontrol.swerve.io.gyro.GyroIOPigeon2;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIO;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOSim;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
+import frc.robot.commands.swerve.GoToClimbPoseLeft;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
@@ -97,8 +98,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     drive.setDefaultCommand(Commands.run(() -> drive.driveAlignAngleJoystick(), drive));
-    driverController.rightArrow().whileTrue(Commands.run(() -> drive.goToClimbPoseRight(), drive));
-    driverController.leftArrow().whileTrue(Commands.run(() -> drive.goToClimbPoseLeft(), drive));
+    driverController.rightArrow().whileTrue(new GoToClimbPoseLeft(drive));
+    driverController.leftArrow().whileTrue(new GoToClimbPoseLeft(drive));
   }
 
   /**

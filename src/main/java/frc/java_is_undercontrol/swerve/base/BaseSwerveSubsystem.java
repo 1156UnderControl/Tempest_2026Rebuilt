@@ -268,8 +268,8 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     boolean isFlipped =
         DriverStation.getAlliance().isPresent()
             && DriverStation.getAlliance().get() == Alliance.Red;
-    Rotation2d targetRotation = isFlipped ? targetHeading.plus(Rotation2d.kPi) : targetHeading;
-    this.lastDesiredJoystickAngleRadians = targetRotation.getRadians();
+    Rotation2d targetRotation = targetHeading;
+    this.lastDesiredJoystickAngleRadians = targetHeading.rotateBy(Rotation2d.fromDegrees(isFlipped ? 180 : 0)).getRadians();
     this.targetHeadingDegrees = targetRotation.getDegrees();
     this.targetHeadingRadians = targetRotation.getRadians();
     double omega =
@@ -278,7 +278,6 @@ public class BaseSwerveSubsystem extends SubsystemBase {
         new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, omega);
     if (allianceBasedVelocities) {
       driveFieldOrientedAllianceBased(adjustedSpeeds);
-
     } else {
       driveFieldOriented(adjustedSpeeds);
     }
