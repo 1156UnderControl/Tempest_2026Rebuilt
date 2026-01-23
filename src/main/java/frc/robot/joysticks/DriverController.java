@@ -55,8 +55,14 @@ public class DriverController implements IDriverController {
 
   @Override
   public boolean notUsingJoystick() {
-    return Util.inRange(getCOS_Joystick(), -JoystickConstants.DEADBAND_ROTATION, JoystickConstants.DEADBAND_ROTATION)
-        && Util.inRange(getSIN_Joystick(), -JoystickConstants.DEADBAND_ROTATION, JoystickConstants.DEADBAND_ROTATION);
+    return Util.inRange(
+            getCOS_Joystick(),
+            -JoystickConstants.DEADBAND_ROTATION,
+            JoystickConstants.DEADBAND_ROTATION)
+        && Util.inRange(
+            getSIN_Joystick(),
+            -JoystickConstants.DEADBAND_ROTATION,
+            JoystickConstants.DEADBAND_ROTATION);
   }
 
   @Override

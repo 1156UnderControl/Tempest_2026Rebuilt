@@ -169,8 +169,8 @@ createVersionFile.dependsOn(eventDeploy)
 spotless {
     java {
         target fileTree('.') {
-            include '*/.java'
-            exclude '*/build/', '/build-/*', '/bin/', '*/BuildConstants.java'
+            include '**/*.java'
+            exclude '**/build/**', '**/build-*/**', '**/bin/**', '**/BuildConstants.java'
         }
         toggleOffOn()
         googleJavaFormat()
@@ -180,8 +180,8 @@ spotless {
     }
     groovyGradle {
         target fileTree('.') {
-            include '*/.gradle'
-            exclude '*/build/', '/build-/**'
+            include '**/*.gradle'
+            exclude '**/build/**', '**/build-*/**'
         }
         greclipse()
         indentWithSpaces(4)
@@ -190,8 +190,8 @@ spotless {
     }
     format 'xml', {
         target fileTree('.') {
-            include '*/.xml'
-            exclude '*/build/', '/build-/**'
+            include '**/*.xml'
+            exclude '**/build/**', '**/build-*/**'
         }
         eclipseWtp('xml')
         trimTrailingWhitespace()
@@ -200,8 +200,8 @@ spotless {
     }
     format 'misc', {
         target fileTree('.') {
-            include '*/.md', '**/.gitignore'
-            exclude '*/build/', '/build-/**'
+            include '**/*.md', '**/.gitignore'
+            exclude '**/build/**', '**/build-*/**'
         }
         trimTrailingWhitespace()
         indentWithSpaces(2)

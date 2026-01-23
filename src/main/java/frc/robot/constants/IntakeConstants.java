@@ -26,5 +26,3 @@ public class IntakeConstants {
     public static final double INTAKE_HOMED_POSITION = 0;
   }
 }
-
-

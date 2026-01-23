@@ -13,8 +13,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public IntakeSubsystem() {
     intakeExtender =
         new SparkFlexMotor(IntakeConstants.ID_intakeExtenderMotor, "Intake Extender Motor");
-    intakeWheels =
-        new SparkFlexMotor(IntakeConstants.ID_intakeWheelsMotor, "Intake Wheels Motor");
+    intakeWheels = new SparkFlexMotor(IntakeConstants.ID_intakeWheelsMotor, "Intake Wheels Motor");
   }
 
   private void setIntakeExtenderConfigs() {
@@ -27,7 +26,6 @@ public class IntakeSubsystem extends SubsystemBase {
   public void collectFuel() {
     intakeWheels.set(0.8);
   }
-
 
   public void goToCollectPostion() {
     intakeExtender.setPositionReference(IntakeConstants.setpoints.INTAKE_EXTENDED_POSITION);
@@ -42,7 +40,5 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-
-  }
+  public void periodic() {}
 }

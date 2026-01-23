@@ -5,7 +5,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -105,7 +104,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    drive.setDefaultCommand(Commands.run(() -> drive.driveAlignAngleJoystick(), drive).onlyIf(() -> DriverStation.isTeleopEnabled()));
+    drive.setDefaultCommand(
+        Commands.run(() -> drive.driveAlignAngleJoystick(), drive)
+            .onlyIf(() -> DriverStation.isTeleopEnabled()));
     driverController.rightArrow().whileTrue(new GoToClimbPoseLeft(drive));
     driverController.leftArrow().whileTrue(new GoToClimbPoseLeft(drive));
   }

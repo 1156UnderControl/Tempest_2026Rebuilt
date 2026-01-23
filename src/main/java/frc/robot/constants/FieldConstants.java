@@ -59,8 +59,15 @@ public class FieldConstants {
     public static final Pose2d BLUE_RIGHT_TOWER =
         new Pose2d(0.906, 2.857, Rotation2d.fromDegrees(180));
 
-    public static final Pose2d RED_LEFT_TOWER = new Pose2d(16.541052-BLUE_LEFT_TOWER.getX(), 8.069263-BLUE_LEFT_TOWER.getY(), new Rotation2d());
+    public static final Pose2d RED_LEFT_TOWER =
+        new Pose2d(
+            16.541052 - BLUE_LEFT_TOWER.getX(),
+            8.069263 - BLUE_LEFT_TOWER.getY(),
+            new Rotation2d());
     public static final Pose2d RED_RIGHT_TOWER =
-        new Pose2d(16.541052-BLUE_RIGHT_TOWER.getX(), 8.069263-BLUE_RIGHT_TOWER.getY(), Rotation2d.fromDegrees(180));
+        new Pose2d(
+            16.541052 - BLUE_RIGHT_TOWER.getX(),
+            8.069263 - BLUE_RIGHT_TOWER.getY(),
+            Rotation2d.fromDegrees(180));
   }
 }

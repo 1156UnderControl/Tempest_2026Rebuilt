@@ -26,7 +26,7 @@ public class GoToClimbPoseRight extends Command {
   }
 
   @Override
-  public void end(boolean interrupted){
+  public void end(boolean interrupted) {
     this.swerve.stopSwerve();
   }
 }
