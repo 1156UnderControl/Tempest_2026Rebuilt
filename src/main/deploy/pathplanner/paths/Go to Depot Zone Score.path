@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.0
+        "x": 0.338,
+        "y": 6.165
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0,
-        "y": 7.0
+        "x": 0.3103135918090069,
+        "y": 8.720163559054736
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.293,
-        "y": 6.0
+        "x": 2.4672608634996123,
+        "y": 6.165
       },
       "prevControl": {
-        "x": -0.7069999999999999,
-        "y": 6.0
+        "x": 1.9897027853260876,
+        "y": 6.670303067983307
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,7 +29,21 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.8705572693133042,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 0.2,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -42,13 +56,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 126.56160542127614
   },
   "reversed": false,
-  "folder": "Match Autos",
+  "folder": "Depot Collect & Score",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 0.0
+    "velocity": 1.5,
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

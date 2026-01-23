@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 0.293,
-        "y": 6.149331613996635
+        "x": 0.338,
+        "y": 6.164819609056068
       },
       "prevControl": {
-        "x": 0.33386275308723484,
-        "y": 5.802289214370078
+        "x": 0.40676877795429844,
+        "y": 5.850561121571732
       },
       "nextControl": null,
       "isLocked": false,
@@ -60,7 +60,7 @@
       "minWaypointRelativePos": 1.1539630402750494,
       "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 0.45,
+        "maxVelocity": 1.0,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -80,11 +80,11 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 89.73992802460845
+    "velocity": 1.5,
+    "rotation": 90.0
   },
   "reversed": false,
-  "folder": "Match Autos",
+  "folder": "Depot Collect & Score",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

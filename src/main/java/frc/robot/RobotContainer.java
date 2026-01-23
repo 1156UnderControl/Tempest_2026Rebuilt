@@ -5,6 +5,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,6 +17,7 @@ import frc.java_is_undercontrol.swerve.io.gyro.GyroIOPigeon2;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIO;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOSim;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
+import frc.robot.commands.swerve.GoToClimbPoseLeft;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
@@ -31,7 +34,9 @@ public class RobotContainer {
   // Subsystems
   private final SwerveSubsystem drive;
 
-  public final IDriverController driverController = DriverController.getInstance();
+  public final IDriverController driverController;
+
+  public final NamedCommandsRegistry namedCommandsRegistry;
 
   private final SwerveDevices simulatedSwerveDevices =
       new SwerveDevices(
@@ -63,6 +68,8 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
+    this.driverController = DriverController.getInstance();
+
     switch (Constants.getMode()) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -72,7 +79,6 @@ public class RobotContainer {
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
         drive = new SwerveSubsystem(simulatedSwerveDevices);
-
         break;
 
       default:
@@ -80,6 +86,8 @@ public class RobotContainer {
         drive = new SwerveSubsystem(replayedDevices);
         break;
     }
+
+    this.namedCommandsRegistry = new NamedCommandsRegistry(drive);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -97,9 +105,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    drive.setDefaultCommand(Commands.run(() -> drive.driveAlignAngleJoystick(), drive));
-    driverController.rightArrow().onTrue(Commands.run(() -> drive.goToClimbPoseRight(), drive));
-    driverController.leftArrow().onTrue(Commands.run(() -> drive.goToClimbPoseLeft(), drive));
+    drive.setDefaultCommand(Commands.run(() -> drive.driveAlignAngleJoystick(), drive).onlyIf(() -> DriverStation.isTeleopEnabled()));
+    driverController.rightArrow().whileTrue(new GoToClimbPoseLeft(drive));
+    driverController.leftArrow().whileTrue(new GoToClimbPoseLeft(drive));
   }
 
   /**

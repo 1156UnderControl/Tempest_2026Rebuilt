@@ -2,6 +2,8 @@ package frc.robot.subsystems.swerve;
 
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.path.PathConstraints;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -81,7 +83,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     super(
         new OdometryEnabledSwerveConfig(
             0.75,
-            new SwerveDeadbandsConfig(JoystickConstants.DEADBAND, 0.5),
+            new SwerveDeadbandsConfig(JoystickConstants.DEADBAND_TRANSLATION, JoystickConstants.DEADBAND_ROTATION),
             pathPlannerConfig,
             configureMulticameraPoseEstimation(),
             configureMulticameraPoseEstimation(),
@@ -95,7 +97,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   private static PoseEstimator configureMulticameraPoseEstimation() {
     List<PoseEstimator> listOfEstimators = new ArrayList<PoseEstimator>();
-    PoseEstimator limelightCenter = new LimelightPoseEstimator("limelight-center", false, true, 2);
+    PoseEstimator limelightCenter = new LimelightPoseEstimator("limelight-center", false, false, 2);
     listOfEstimators.add(limelightCenter);
     PoseEstimator estimatorMultiCamera =
         new MultiCameraPoseEstimator(listOfEstimators, "Teleop Multi Pose Estimator");
@@ -104,7 +106,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   @Override
   public void resetOdometryLimelight(Translation2d defaultPosition) {
-    PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-center", false, true, 2);
+    PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-center", false, false, 2);
     Optional<PoseEstimation> limelightPoseEstimation =
         limelightLeft.getEstimatedPose(this.getPose());
     if (limelightPoseEstimation.isEmpty()) {
@@ -128,17 +130,17 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
       return;
     }
     Translation2d desiredSpeeds =
-        this.getLinearVelocityFromJoysticks(
-            controller.getXtranslation(), controller.getYtranslation());
+        this.getLinearVelocityFromJoysticksTranslation(
+            MathUtil.applyDeadband(controller.getLeftY(), JoystickConstants.DEADBAND_TRANSLATION), MathUtil.applyDeadband(controller.getLeftX(), JoystickConstants.DEADBAND_TRANSLATION));
     this.state = "DRIVE_ALIGN_ANGLE_JOY";
     this.driveFieldOrientedLockedJoystickAngle(
-        desiredSpeeds, controller.getCOS_Joystick(), controller.getSIN_Joystick());
+        desiredSpeeds, controller.notUsingJoystick() ? 0 : controller.getCOS_Joystick(), controller.notUsingJoystick() ? 0 : controller.getSIN_Joystick());
   }
 
   public void driveRotating(boolean rotateRight) {
     ChassisSpeeds desiredSpeeds =
         this.inputsToChassisSpeeds(
-            controller.getXtranslation(), controller.getYtranslation(), rotateRight ? -1.5 : 1.5);
+            controller.getLeftY(), controller.getLeftX(), rotateRight ? -1.5 : 1.5);
     this.state = "DRIVE_ALIGN_ANGLE_ROTATING_RIGHT?:" + Boolean.toString(rotateRight);
     this.driveFieldOriented(desiredSpeeds);
   }
@@ -147,13 +149,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
   public void periodic() {
     super.periodic();
     LimelightHelpers.SetRobotOrientation(
-        "limelight-center",
-        OdometryEnabledSwerveSubsystem.robotOrientation,
-        OdometryEnabledSwerveSubsystem.robotAngularVelocity,
-        0,
-        0,
-        0,
-        0);
+        "limelight-center", OdometryEnabledSwerveSubsystem.robotOrientation, 0, 0, 0, 0, 0);
   }
 
   @Override
@@ -180,9 +176,11 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   @Override
   public void driveAlignAngleJoystickSuperSlow() {
+
     ChassisSpeeds desiredSpeeds =
-        this.inputsToChassisSpeeds(controller.getXtranslation(), controller.getYtranslation())
-            .times(0.12);
+        this.getLinearVelocityFromJoysticksChassisSpeeds(
+                controller.getLeftY(), controller.getLeftX())
+            .times(0.15);
     this.state = "DRIVE_ALIGN_ANGLE_JOY_SUPER_SLOW";
     this.driveFieldOrientedLockedJoystickAngle(
         desiredSpeeds, controller.getCOS_Joystick(), controller.getSIN_Joystick());
@@ -193,8 +191,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     Pose2d target = new Pose2d(8.272, 4.132, new Rotation2d());
     this.state = "DRIVE_AIMING_POSITION_TEST";
     Translation2d desiredSpeeds =
-        this.getLinearVelocityFromJoysticks(
-            controller.getXtranslation(), controller.getYtranslation());
+        this.getLinearVelocityFromJoysticksTranslation(
+            controller.getLeftY(), controller.getLeftX());
     this.driveAimingAtPosition(desiredSpeeds, target.getTranslation());
   }
 

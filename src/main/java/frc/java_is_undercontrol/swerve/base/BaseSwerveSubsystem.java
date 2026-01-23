@@ -61,7 +61,9 @@ public class BaseSwerveSubsystem extends SubsystemBase {
 
   @AutoLogOutput private double targetHeadingRadians = Double.NaN;
 
-  @AutoLogOutput private double lastDesiredJoystickAngleRadians;
+  @AutoLogOutput private double lastDesiredJoystickAngleRadiansAutonomous;
+
+  @AutoLogOutput private double lastDesiredJoystickAngleRadiansTeleop;
 
   private final double FF_START_DELAY = 2.0; // Secs
   private final double FF_RAMP_RATE = 0.1; // Volts/Sec
@@ -90,7 +92,6 @@ public class BaseSwerveSubsystem extends SubsystemBase {
             .in(RadiansPerSecond); // fraction of a rotation per second
     pathPlannerConfig = config.pathPlannerConfig;
     configureAutoBuilder();
-    this.lastDesiredJoystickAngleRadians = AllianceFlipUtil.shouldFlip() ? 0 : Math.PI;
     this.translationDeadband = config.deadbandsConfig.translationDeadband;
     this.joystickAimDeadband = config.deadbandsConfig.joystickAimDeadband;
   }
@@ -251,22 +252,42 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     Logger.recordOutput("TargetHeadingRadians", this.targetHeadingRadians);
   }
 
-  protected void driveFieldOrientedLockedAngle(ChassisSpeeds speeds, Rotation2d targetHeading) {
+  /**
+   * Drives the robot field-oriented while locking its heading to a target angle.
+   *
+   * <p>The translational components ({@code vx}, {@code vy}) come from the given {@link
+   * ChassisSpeeds}. Rotation is controlled automatically using an angle controller to track the
+   * desired heading. When on the Red alliance, the target heading is flipped by 180° to maintain
+   * consistent field-relative behavior.
+   *
+   * @param speeds Desired field-relative translational speeds
+   * @param targetHeading Target field heading to maintain
+   * @param allianceBasedVelocities Whether the heading should account for alliance orientation
+   */
+  protected void driveFieldOrientedLockedAngle(
+      ChassisSpeeds speeds, Rotation2d targetHeading, boolean allianceBasedVelocities) {
+    if(this.lastDesiredJoystickAngleRadiansAutonomous == Double.NaN){
+      this.lastDesiredJoystickAngleRadiansAutonomous = this.getPose().getRotation().getRadians();
+    }
     boolean isFlipped =
         DriverStation.getAlliance().isPresent()
             && DriverStation.getAlliance().get() == Alliance.Red;
-    Rotation2d targetRotation = isFlipped ? targetHeading.plus(Rotation2d.kPi) : targetHeading;
-    this.lastDesiredJoystickAngleRadians = targetRotation.getRadians();
+    Rotation2d targetRotation = targetHeading;
+    this.lastDesiredJoystickAngleRadiansAutonomous = targetHeading.rotateBy(Rotation2d.fromDegrees(isFlipped ? 180 : 0)).getRadians();
     this.targetHeadingDegrees = targetRotation.getDegrees();
     this.targetHeadingRadians = targetRotation.getRadians();
     double omega =
         angleController.calculate(getHeading().getRadians(), targetRotation.getRadians());
     ChassisSpeeds adjustedSpeeds =
         new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, omega);
-    driveFieldOriented(adjustedSpeeds);
+    if (allianceBasedVelocities) {
+      driveFieldOrientedAllianceBased(adjustedSpeeds);
+    } else {
+      driveFieldOriented(adjustedSpeeds);
+    }
   }
 
-  protected Translation2d getLinearVelocityFromJoysticks(double x, double y) {
+  protected Translation2d getLinearVelocityFromJoysticksTranslation(double x, double y) {
     double linearMagnitude = Math.hypot(x, y);
     Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
     linearMagnitude = linearMagnitude * linearMagnitude;
@@ -280,14 +301,32 @@ public class BaseSwerveSubsystem extends SubsystemBase {
         joystickTranslation.getY() * drive.getMaxLinearSpeedMetersPerSec());
   }
 
+  protected ChassisSpeeds getLinearVelocityFromJoysticksChassisSpeeds(double x, double y) {
+    double linearMagnitude = Math.hypot(x, y);
+    Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
+    linearMagnitude = linearMagnitude * linearMagnitude;
+    Translation2d joystickTranslation =
+        new Pose2d(new Translation2d(), linearDirection)
+            .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
+            .getTranslation();
+
+    return new ChassisSpeeds(
+        joystickTranslation.getX() * drive.getMaxLinearSpeedMetersPerSec(),
+        joystickTranslation.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+        0);
+  }
+
   protected void driveFieldOrientedLockedJoystickAngle(
       ChassisSpeeds speeds, double xHeading, double yHeading) {
+    if(this.lastDesiredJoystickAngleRadiansTeleop == Double.NaN){
+      this.lastDesiredJoystickAngleRadiansTeleop = this.getPose().getRotation().getRadians();
+    }
     double angle =
         Util.withinHypotDeadband(xHeading, yHeading, joystickAimDeadband)
-            ? lastDesiredJoystickAngleRadians
+            ? lastDesiredJoystickAngleRadiansTeleop
             : Math.atan2(xHeading, yHeading);
     // It has to be de pre-inverted angle
-    this.lastDesiredJoystickAngleRadians = angle;
+    this.lastDesiredJoystickAngleRadiansTeleop = angle;
     boolean isFlipped =
         DriverStation.getAlliance().isPresent()
             && DriverStation.getAlliance().get() == Alliance.Red;
@@ -311,7 +350,7 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     driveFieldOrientedLockedJoystickAngle(speedsWithTranslation, xHeading, yHeading);
   }
 
-  protected void driveFieldOriented(ChassisSpeeds speeds) {
+  protected void driveFieldOrientedAllianceBased(ChassisSpeeds speeds) {
     this.targetSpeeds = speeds;
     boolean isFlipped =
         DriverStation.getAlliance().isPresent()
@@ -320,6 +359,11 @@ public class BaseSwerveSubsystem extends SubsystemBase {
         ChassisSpeeds.fromFieldRelativeSpeeds(
             speeds,
             isFlipped ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation()));
+  }
+
+  protected void driveFieldOriented(ChassisSpeeds speeds) {
+    this.targetSpeeds = speeds;
+    drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, drive.getRotation()));
   }
 
   protected void driveRobotOriented(ChassisSpeeds speeds) {
