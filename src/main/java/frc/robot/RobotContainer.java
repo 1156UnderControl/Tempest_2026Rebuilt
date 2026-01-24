@@ -33,7 +33,7 @@ public class RobotContainer {
 
   private final IDriverController driverController;
 
-  private final NamedCommandsRegistry namedCommandsRegistry;
+  private final NamedCommandsRegistery namedCommandsRegistry;
 
   private final States states;
 
@@ -87,7 +87,7 @@ public class RobotContainer {
         break;
     }
 
-    this.namedCommandsRegistry = new NamedCommandsRegistry(drive);
+    this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
     this.namedCommandsRegistry.registerAllAutoCommands();
 
     this.robotData = new RobotData(this.drive.getOdometryPose(), this.drive.getCurrentSpeeds());
