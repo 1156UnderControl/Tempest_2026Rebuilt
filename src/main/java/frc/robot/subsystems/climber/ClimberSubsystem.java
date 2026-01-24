@@ -5,11 +5,12 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
@@ -30,7 +31,6 @@ import yams.mechanisms.positional.Pivot;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
-import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
@@ -76,22 +76,21 @@ public class ClimberSubsystem extends SubsystemBase {
               DegreesPerSecond.of(ClimberConstants.VELOCITY_M_PER_SECOND),
               DegreesPerSecondPerSecond.of(ClimberConstants.ACCELERATION_M_PER_SECOND_SQRD))
           .withFeedforward(
-              new ArmFeedforward(
+              new SimpleMotorFeedforward(
                   ClimberConstants.feedforward.kS,
-                  ClimberConstants.feedforward.kG,
                   ClimberConstants.feedforward.kV,
                   ClimberConstants.feedforward.kA))
           .withSimFeedforward(
-              new ArmFeedforward(
+              new SimpleMotorFeedforward(
                   ClimberConstants.feedforward.kS,
-                  ClimberConstants.feedforward.kG,
                   ClimberConstants.feedforward.kV,
                   ClimberConstants.feedforward.kA))
           .withTelemetry("Climber", TelemetryVerbosity.HIGH)
           .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 3, 4)))
           .withMotorInverted(false)
-          .withIdleMode(MotorMode.BRAKE)
-          .withStatorCurrentLimit(Amps.of(ClimberConstants.STATOR_CURRENT_LIMIT));
+          .withClosedLoopRampRate(Seconds.of(0.25))
+          .withOpenLoopRampRate(Seconds.of(0.25))
+          .withControlMode(ControlMode.CLOSED_LOOP);
 
   private final SmartMotorController motor = new SparkWrapper(climberMotor, motors, smcConfig);
 
@@ -104,16 +103,16 @@ public class ClimberSubsystem extends SubsystemBase {
   private final PivotConfig m_config =
       new PivotConfig(motor)
           .withHardLimit(Degrees.of(0), Degrees.of(770.4))
-          .withMechanismPositionConfig(robotToMechanism).withStartingPosition(Degrees.of(0));
+          .withMechanismPositionConfig(robotToMechanism)
+          .withStartingPosition(Degrees.of(0));
 
   private final Pivot climber = new Pivot(m_config);
 
   private Angle angleSetpoint = Degrees.of(0);
 
-  public ClimberSubsystem() {
+  public ClimberSubsystem() {}
 
-  }
-
+  @Override
   public void periodic() {
     this.updateInputs();
     Logger.processInputs("Motors/Climber", climberInputs);
@@ -126,7 +125,8 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public Command climb() {
-    return this.run(() -> climber.setAngle(ClimberConstants.setpoints.DEFAULT_ANGLE)).until(isClimbed());
+    return this.run(() -> climber.setAngle(ClimberConstants.setpoints.DEFAULT_ANGLE))
+        .until(isClimbed());
   }
 
   public Trigger isClimbed() {
@@ -134,12 +134,17 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public Command defaultPosition() {
-    return this.run(() -> climber.setAngle(ClimberConstants.setpoints.DEFAULT_ANGLE)).until(isClimbed());
+    return this.run(() -> climber.setAngle(ClimberConstants.setpoints.DEFAULT_ANGLE))
+        .until(isClimbed());
   }
 
   public Command setAngle(Angle angle) {
     angleSetpoint = angle;
     return climber.setAngle(angle).until(isClimbed());
+  }
+
+  public Command setDutyCycle(double dutycycle) {
+    return climber.set(dutycycle);
   }
 
   public void updateInputs() {

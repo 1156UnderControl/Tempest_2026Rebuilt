@@ -18,6 +18,7 @@ import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
+import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.swerve.swerve.SwerveSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -30,6 +31,8 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final SwerveSubsystem drive;
+
+  private final ClimberSubsystem climber;
 
   public final IDriverController driverController = DriverController.getInstance();
 
@@ -80,6 +83,8 @@ public class RobotContainer {
         break;
     }
 
+    climber = new ClimberSubsystem();
+
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     autoChooser.addOption("wheelRadiusCharacterization", drive.wheelRadiusCharacterization());
@@ -97,8 +102,11 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     drive.setDefaultCommand(Commands.run(() -> drive.driveAlignAngleJoystick(), drive));
+    climber.setDefaultCommand(climber.setDutyCycle(0));
     driverController.rightArrow().whileTrue(Commands.run(() -> drive.goToClimbPoseRight(), drive));
     driverController.leftArrow().whileTrue(Commands.run(() -> drive.goToClimbPoseLeft(), drive));
+    driverController.a().whileTrue(climber.setDutyCycle(0.2));
+    driverController.b().whileTrue(climber.setDutyCycle(-0.2));
   }
 
   /**
