@@ -3,7 +3,7 @@ package frc.robot.constants;
 public class IntakeConstants {
   public static final int ID_intakeWheelsMotor = 0;
   public static final int ID_intakeExtenderMotor = 0;
-  public static final int intakeBusID = 0;
+  public static final int ID_spindexerMotor = 0;
   public static final String intakeWheelsMotorName = "Intake Wheels";
   public static final String intakeExtenderMotorName = "Intake Extender";
 

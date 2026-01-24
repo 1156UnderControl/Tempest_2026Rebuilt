@@ -1,5 +1,6 @@
 package frc.robot.subsystems.intake;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.java_is_undercontrol.motors.MotorIO;
 import frc.java_is_undercontrol.motors.SparkFlexMotor;
@@ -9,11 +10,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
   private final MotorIO intakeWheels;
   private final MotorIO intakeExtender;
+  private final MotorIO spindexerMotor;
 
   public IntakeSubsystem() {
-    intakeExtender =
-        new SparkFlexMotor(IntakeConstants.ID_intakeExtenderMotor, "Intake Extender Motor");
+    intakeExtender = new SparkFlexMotor(IntakeConstants.ID_intakeExtenderMotor, "Intake Extender Motor");
     intakeWheels = new SparkFlexMotor(IntakeConstants.ID_intakeWheelsMotor, "Intake Wheels Motor");
+    spindexerMotor = new SparkFlexMotor(IntakeConstants.ID_spindexerMotor, "Spindxer Motor");
   }
 
   private void setIntakeExtenderConfigs() {
@@ -24,7 +26,11 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void collectFuel() {
-    intakeWheels.set(0.8);
+    intakeWheels.set(0.6);
+  }
+
+  public void stopCollectingFuel() {
+    intakeWheels.set(IntakeConstants.motor_values.INTAKE_WHEELS_STOP);
   }
 
   public void goToCollectPostion() {
@@ -35,10 +41,19 @@ public class IntakeSubsystem extends SubsystemBase {
     intakeExtender.setPositionReference(IntakeConstants.setpoints.INTAKE_HOMED_POSITION);
   }
 
-  public void stopIntake() {
-    intakeWheels.set(IntakeConstants.motor_values.INTAKE_WHEELS_STOP);
+  public void runSpindexer(){
+    spindexerMotor.set(0.6);
+  }
+
+  public void stopSpindexer(){
+    spindexerMotor.set(0);
+  }
+
+  public void agigateIntake(){
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+
+  }
 }
