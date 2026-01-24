@@ -27,9 +27,6 @@ import yams.motorcontrollers.local.SparkWrapper;
 import yams.motorcontrollers.remote.TalonFXSWrapper;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Kilograms;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.Pounds;
 
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
