@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 
 public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements ISwerve {

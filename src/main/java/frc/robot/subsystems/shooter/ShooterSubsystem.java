@@ -17,9 +17,7 @@ import frc.robot.constants.FieldConstants.FieldStructurePoses;
 import frc.robot.constants.shooter.FlyWheelsConstants;
 import frc.robot.constants.shooter.HoodConstants;
 import frc.robot.constants.shooter.TurretConstants;
-
 import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -243,6 +241,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private Pose2d getShooterFieldPoseFromRobotCenter(Translation2d turretOffset) {
     Translation2d rotatedOffset = turretOffset.rotateBy(this.robotPose.get().getRotation());
     return new Pose2d(
-        this.robotPose.get().getTranslation().plus(rotatedOffset), this.robotPose.get().getRotation());
+        this.robotPose.get().getTranslation().plus(rotatedOffset),
+        this.robotPose.get().getRotation());
   }
 }
