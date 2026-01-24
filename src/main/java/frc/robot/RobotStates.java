@@ -22,21 +22,19 @@ public class RobotStates {
     return robotPose.getRotation();
   }
 
-  public Pose2d getRobotPose(){
+  public Pose2d getRobotPose() {
     return robotPose;
   }
 
-  public void setRobotPose(Pose2d newPose){
+  public void setRobotPose(Pose2d newPose) {
     robotPose = newPose;
   }
 
-  public void setRobotVelocity(ChassisSpeeds newChassisSpeeds){
+  public void setRobotVelocity(ChassisSpeeds newChassisSpeeds) {
     robotVelocity = newChassisSpeeds;
   }
 
-  public ChassisSpeeds getRobotVelocity(){
+  public ChassisSpeeds getRobotVelocity() {
     return robotVelocity;
   }
-
-
 }

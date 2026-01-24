@@ -1,19 +1,15 @@
 package frc.robot.subsystems.climber;
 
-import edu.wpi.first.math.controller.PIDController;
 import frc.java_is_undercontrol.motors.MotorIO;
 import frc.java_is_undercontrol.motors.MotorIOInputsAutoLogged;
 import frc.java_is_undercontrol.motors.SparkFlexMotor;
 import frc.robot.constants.climber.ClimberConstants;
-import frc.robot.util.LoggedTunableNumber;
-
 import org.littletonrobotics.junction.Logger;
 
-public class ClimberSubsystem  {
+public class ClimberSubsystem {
   private static ClimberSubsystem instance;
   private final MotorIOInputsAutoLogged climberInputs;
   private final MotorIO climberMotor;
-
 
   public static ClimberSubsystem getInstance() {
     if (instance == null) {
@@ -64,12 +60,5 @@ public class ClimberSubsystem  {
     climberMotor.setPosition(ClimberConstants.setpoints.CLIMB_ANGLE);
   }
 
-  public void releaseClimber(){
-  }
-
-  
-
-
-
-
+  public void releaseClimber() {}
 }
