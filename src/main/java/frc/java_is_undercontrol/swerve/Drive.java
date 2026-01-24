@@ -335,7 +335,9 @@ public class Drive {
       Pose2d visionRobotPoseMeters,
       double timestampSeconds,
       Matrix<N3, N1> visionMeasurementStdDevs) {
-    Logger.recordOutput("Vision/VisionStandardDeviation", visionMeasurementStdDevs);
+    Logger.recordOutput("Vision/VisionStandardDeviationX", visionMeasurementStdDevs.get(0, 0));
+    Logger.recordOutput("Vision/VisionStandardDeviationY", visionMeasurementStdDevs.get(1, 0));
+    Logger.recordOutput("Vision/VisionStandardDeviationZ", visionMeasurementStdDevs.get(2, 0));
     Logger.recordOutput("Vision/PoseSentToEstimator", visionRobotPoseMeters);
     poseEstimator.addVisionMeasurement(
         visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
