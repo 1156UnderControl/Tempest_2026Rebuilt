@@ -1,22 +1,33 @@
 package frc.robot.subsystems.shooter;
 
-import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.hardware.TalonFXS;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkMax;
+
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.java_is_undercontrol.motors.MotorIOInputsAutoLogged;
-import frc.java_is_undercontrol.motors.SparkFlexMotor;
-import frc.java_is_undercontrol.motors.SparkMAXMotor;
-import frc.java_is_undercontrol.motors.TalonFXMotor;
 import frc.robot.constants.FieldConstants.FieldStructurePoses;
 import frc.robot.constants.shooter.FlyWheelsConstants;
 import frc.robot.constants.shooter.HoodConstants;
 import frc.robot.constants.shooter.TurretConstants;
+import yams.mechanisms.config.ArmConfig;
+import yams.mechanisms.config.FlyWheelConfig;
+import yams.mechanisms.config.PivotConfig;
+import yams.mechanisms.positional.Arm;
+import yams.mechanisms.positional.Pivot;
+import yams.mechanisms.velocity.FlyWheel;
+import yams.motorcontrollers.SmartMotorController;
+import yams.motorcontrollers.SmartMotorControllerConfig;
+import yams.motorcontrollers.local.SparkWrapper;
+import yams.motorcontrollers.remote.TalonFXSWrapper;
+
+import static edu.wpi.first.units.Units.Degrees;
+
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -25,108 +36,129 @@ public class ShooterSubsystem extends SubsystemBase {
   private final Supplier<Pose2d> robotPose;
   private boolean isHubMode;
 
-  private final TalonFXMotor flyWheelsMotorLead;
-  private final TalonFXMotor flyWheelsMotorFollower;
-  private final SparkFlexMotor turretMotor;
-  private final SparkMAXMotor hoodMotor;
+  private final SmartMotorControllerConfig turretConfig;
+  private final SparkFlex turretMotor;
+  private final SmartMotorController smartTurretMotor;
+  private final PivotConfig turretMechanismConfig;
+  private final Pivot turretMechanism;
 
-  private final DCMotorSim flyWheelsMotorLeadSim;
-  private final DCMotorSim flyWheelsMotorFollowerSim;
-  private final DCMotorSim turretMotorSim;
-  private final DCMotorSim hoodMotorSim;
+  private final SmartMotorControllerConfig hoodConfig;
+  private final SparkMax hoodMotor;
+  private final SmartMotorController smartHoodMotor;
+  private final ArmConfig hoodMechanismConfig;
+  private final Arm hoodMechanism;
+
+  private final SmartMotorControllerConfig flyWheelLeadConfig;
+  private final TalonFXS flyWheelLeadMotor;
+  private final SmartMotorController smartFlyWheelLeadMotor;
+  private final FlyWheelConfig flyWheelLeadMechanismConfig;
+  private final FlyWheel flyWheelLeadMechanism;
+
+  private final SmartMotorControllerConfig flyWheelFollowerConfig;
+  private final TalonFXS flyWheelFollowerMotor;
+  private final SmartMotorController smartFlyWheelFollowerMotor;
+  private final FlyWheelConfig flyWheelFollowerMechanismConfig;
+  private final FlyWheel flyWheelFollowerMechanism;
 
   private final ShooterInputsAutoLogged shooterInputs;
-  private final MotorIOInputsAutoLogged flyWheelsLeadInputs;
-  private final MotorIOInputsAutoLogged flyWheelsFollowerInputs;
-  private final MotorIOInputsAutoLogged turretInputs;
-  private final MotorIOInputsAutoLogged hoodInputs;
 
   public ShooterSubsystem(Supplier<Pose2d> robotPose) {
     this.robotPose = robotPose;
-
     this.isHubMode = true;
 
+    this.turretConfig = new SmartMotorControllerConfig(this)
+      .withIdleMode(TurretConstants.MOTOR_MODE)
+      .withGearing(TurretConstants.MOTOR_GEARING)
+      .withMotorInverted(TurretConstants.Position.MOTOR_INVERTED)
+      .withTelemetry(TurretConstants.MOTOR_NAME, TurretConstants.TELEMETRY)
+      .withSoftLimit(TurretConstants.Position.TURRET_MIN_ANGLE, TurretConstants.Position.TURRET_MAX_ANGLE)
+      .withStatorCurrentLimit(TurretConstants.STATOR_CURRENT)
+      .withClosedLoopRampRate(TurretConstants.CLOSED_RAMP_RATE)
+      .withClosedLoopController(TurretConstants.ClosedLoopController.P,TurretConstants.ClosedLoopController.I,TurretConstants.ClosedLoopController.D, TurretConstants.Velocity.MAX_VELOCITY, TurretConstants.Velocity.ACCELERATION)
+      .withFeedforward(new SimpleMotorFeedforward(TurretConstants.FeedForward.KS, TurretConstants.FeedForward.KV, TurretConstants.FeedForward.KA))
+      .withControlMode(TurretConstants.CONTROL_MODE);
+    this.turretMotor = new SparkFlex(TurretConstants.TURRET_MOTOR_ID, TurretConstants.MOTOR_TYPE);
+    this.smartTurretMotor = new SparkWrapper(this.turretMotor, TurretConstants.TURRET_MOTOR, this.turretConfig);
+    this.turretMechanismConfig = new PivotConfig(smartTurretMotor)
+      .withStartingPosition(TurretConstants.Position.STARTING_POSITION)
+      .withHardLimit(TurretConstants.Position.TURRET_MIN_ANGLE, TurretConstants.Position.TURRET_MAX_ANGLE);
+    this.turretMechanism = new Pivot(turretMechanismConfig);
+
+    this.hoodConfig = new SmartMotorControllerConfig(this)
+      .withIdleMode(HoodConstants.MOTOR_MODE)
+      .withGearing(HoodConstants.MOTOR_GEARING)
+      .withMotorInverted(HoodConstants.Position.MOTOR_INVERTED)
+      .withTelemetry(HoodConstants.MOTOR_NAME, HoodConstants.TELEMETRY)
+      .withSoftLimit(HoodConstants.Position.HOOD_MIN_ANGLE, HoodConstants.Position.HOOD_MAX_ANGLE)
+      .withStatorCurrentLimit(HoodConstants.STATOR_CURRENT)
+      .withClosedLoopRampRate(HoodConstants.CLOSED_RAMP_RATE)
+      .withClosedLoopController(HoodConstants.ClosedLoopController.P,HoodConstants.ClosedLoopController.I,HoodConstants.ClosedLoopController.D, HoodConstants.Velocity.MAX_VELOCITY, HoodConstants.Velocity.ACCELERATION)
+      .withFeedforward(new SimpleMotorFeedforward(HoodConstants.FeedForward.KS, HoodConstants.FeedForward.KV, HoodConstants.FeedForward.KA))
+      .withControlMode(HoodConstants.CONTROL_MODE);
+    this.hoodMotor = new SparkMax(HoodConstants.HOOD_MOTOR_ID, HoodConstants.MOTOR_TYPE);
+    this.smartHoodMotor = new SparkWrapper(this.hoodMotor, HoodConstants.HOOD_MOTOR, this.hoodConfig);
+    this.hoodMechanismConfig = new ArmConfig(smartHoodMotor)
+      .withStartingPosition(HoodConstants.Position.STARTING_POSITION)
+      .withHardLimit(HoodConstants.Position.HOOD_MIN_ANGLE, HoodConstants.Position.HOOD_MAX_ANGLE);
+    this.hoodMechanism = new Arm(hoodMechanismConfig);
+
+    this.flyWheelLeadConfig = new SmartMotorControllerConfig(this)
+      .withIdleMode(FlyWheelsConstants.MOTOR_MODE)
+      .withGearing(FlyWheelsConstants.MOTOR_GEARING)
+      .withMotorInverted(FlyWheelsConstants.Position.MOTOR_INVERTED_LEAD)
+      .withTelemetry(FlyWheelsConstants.MOTOR_LEAD_NAME, FlyWheelsConstants.TELEMETRY)
+      .withStatorCurrentLimit(FlyWheelsConstants.STATOR_CURRENT)
+      .withClosedLoopRampRate(FlyWheelsConstants.CLOSED_RAMP_RATE)
+      .withClosedLoopController(FlyWheelsConstants.ClosedLoopController.P,FlyWheelsConstants.ClosedLoopController.I,FlyWheelsConstants.ClosedLoopController.D, FlyWheelsConstants.Velocity.MAX_VELOCITY, FlyWheelsConstants.Velocity.ACCELERATION)
+      .withFeedforward(new SimpleMotorFeedforward(FlyWheelsConstants.FeedForward.KS, FlyWheelsConstants.FeedForward.KV, FlyWheelsConstants.FeedForward.KA))
+      .withControlMode(FlyWheelsConstants.CONTROL_MODE);
+    this.flyWheelLeadMotor = new TalonFXS(FlyWheelsConstants.FLYWHEEL_MOTOR_LEAD_ID);
+    this.smartFlyWheelLeadMotor = new TalonFXSWrapper(this.flyWheelLeadMotor, FlyWheelsConstants.FLYWHEEL_MOTOR, this.flyWheelLeadConfig);
+    this.flyWheelLeadMechanismConfig = new FlyWheelConfig(smartFlyWheelLeadMotor);
+    this.flyWheelLeadMechanism = new FlyWheel(flyWheelLeadMechanismConfig);
+
+    this.flyWheelFollowerConfig = new SmartMotorControllerConfig(this)
+      .withIdleMode(FlyWheelsConstants.MOTOR_MODE)
+      .withGearing(FlyWheelsConstants.MOTOR_GEARING)
+      .withMotorInverted(FlyWheelsConstants.Position.MOTOR_INVERTED_FOLLOWER)
+      .withTelemetry(FlyWheelsConstants.MOTOR_FOLLOWER_NAME, FlyWheelsConstants.TELEMETRY)
+      .withStatorCurrentLimit(FlyWheelsConstants.STATOR_CURRENT)
+      .withClosedLoopRampRate(FlyWheelsConstants.CLOSED_RAMP_RATE)
+      .withClosedLoopController(FlyWheelsConstants.ClosedLoopController.P,FlyWheelsConstants.ClosedLoopController.I,FlyWheelsConstants.ClosedLoopController.D, FlyWheelsConstants.Velocity.MAX_VELOCITY, FlyWheelsConstants.Velocity.ACCELERATION)
+      .withFeedforward(new SimpleMotorFeedforward(FlyWheelsConstants.FeedForward.KS, FlyWheelsConstants.FeedForward.KV, FlyWheelsConstants.FeedForward.KA))
+      .withControlMode(FlyWheelsConstants.CONTROL_MODE);
+    this.flyWheelFollowerMotor = new TalonFXS(FlyWheelsConstants.FLYWHEEL_MOTOR_LEAD_ID);
+    this.smartFlyWheelFollowerMotor = new TalonFXSWrapper(this.flyWheelFollowerMotor, FlyWheelsConstants.FLYWHEEL_MOTOR, this.flyWheelFollowerConfig);
+    this.flyWheelFollowerMechanismConfig = new FlyWheelConfig(smartFlyWheelFollowerMotor);
+    this.flyWheelFollowerMechanism = new FlyWheel(flyWheelFollowerMechanismConfig);
+
     this.shooterInputs = new ShooterInputsAutoLogged();
-    this.flyWheelsLeadInputs = new MotorIOInputsAutoLogged();
-    this.flyWheelsFollowerInputs = new MotorIOInputsAutoLogged();
-    this.turretInputs = new MotorIOInputsAutoLogged();
-    this.hoodInputs = new MotorIOInputsAutoLogged();
-
-    this.flyWheelsMotorLead =
-        new TalonFXMotor(
-            FlyWheelsConstants.FLY_WHEELS_LEAD_MOTOR_ID, CANBus.roboRIO(), "FlyWheelsLead");
-    this.flyWheelsMotorFollower =
-        new TalonFXMotor(
-            FlyWheelsConstants.FLY_WHEELS_FOLLOWER_MOTOR_ID, CANBus.roboRIO(), "FlyWheelsFollower");
-    this.turretMotor = new SparkFlexMotor(TurretConstants.TURRET_MOTOR_ID, "Turret");
-    this.hoodMotor = new SparkMAXMotor(HoodConstants.HOOD_MOTOR_ID, "Hood");
-
-    this.flyWheelsMotorFollower.setFollower(FlyWheelsConstants.FLY_WHEELS_LEAD_MOTOR_ID, isHubMode);
-
-    this.turretMotorSim =
-        new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(
-                TurretConstants.TURRET_MOTOR,
-                TurretConstants.MOMENT_OF_INERTIA,
-                TurretConstants.GEARBOX),
-            TurretConstants.TURRET_MOTOR);
-    this.flyWheelsMotorLeadSim =
-        new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(
-                FlyWheelsConstants.FLYWHEELS_MOTOR,
-                FlyWheelsConstants.MOMENT_OF_INERTIA,
-                FlyWheelsConstants.GEARBOX),
-            FlyWheelsConstants.FLYWHEELS_MOTOR);
-    this.flyWheelsMotorFollowerSim =
-        new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(
-                FlyWheelsConstants.FLYWHEELS_MOTOR,
-                FlyWheelsConstants.MOMENT_OF_INERTIA,
-                FlyWheelsConstants.GEARBOX),
-            FlyWheelsConstants.FLYWHEELS_MOTOR);
-    this.hoodMotorSim =
-        new DCMotorSim(
-            LinearSystemId.createDCMotorSystem(
-                HoodConstants.HOOD_MOTOR, HoodConstants.MOMENT_OF_INERTIA, HoodConstants.GEARBOX),
-            HoodConstants.HOOD_MOTOR);
   }
 
   @Override
   public void periodic() {
-    this.simulationPeriodic();
+    this.smartFlyWheelFollowerMotor.setDutyCycle(smartFlyWheelLeadMotor.getDutyCycle());
     this.updateInputs();
-  }
-
-  @Override
-  public void simulationPeriodic() {
-    turretMotorSim.setInput(
-        (turretMotor.getDutyCycleSetpoint()) * RobotController.getBatteryVoltage());
-    flyWheelsMotorLeadSim.setInput(
-        (flyWheelsMotorLead.getDutyCycleSetpoint()) * RobotController.getBatteryVoltage());
-    flyWheelsMotorFollowerSim.setInput(
-        (flyWheelsMotorFollower.getDutyCycleSetpoint()) * RobotController.getBatteryVoltage());
-    hoodMotorSim.setInput((hoodMotor.getDutyCycleSetpoint()) * RobotController.getBatteryVoltage());
-    turretMotorSim.update(0.02);
-    flyWheelsMotorLeadSim.update(0.02);
-    flyWheelsMotorFollowerSim.update(0.02);
-    hoodMotorSim.update(0.02);
+    this.turretMechanism.updateTelemetry();
+    this.hoodMechanism.updateTelemetry();
+    this.flyWheelLeadMechanism.updateTelemetry();
+    this.flyWheelFollowerMechanism.updateTelemetry();
   }
 
   private void updateInputs() {
-    shooterInputs.distanceToTargetAngle = getDistanceToTargetPose();
-    shooterInputs.shooterTargetFieldAngle = getTurretTargetAngle();
-    shooterInputs.isAtTargetHeading = isShooterPrepared();
-
-    flyWheelsMotorLead.updateInputs(flyWheelsLeadInputs);
-    flyWheelsMotorFollower.updateInputs(flyWheelsFollowerInputs);
-    turretMotor.updateInputs(turretInputs);
-    hoodMotor.updateInputs(hoodInputs);
+    this.shooterInputs.distanceToTargetAngle = getDistanceToTargetPose();
+    this.shooterInputs.shooterTargetFieldAngle = getTurretTargetAngle();
+    this.shooterInputs.isAtTargetHeading = isShooterPrepared();
 
     Logger.processInputs("Subsystems/Shooter/", shooterInputs);
-    Logger.processInputs("Motor/Shooter/FlyWheelLead", flyWheelsLeadInputs);
-    Logger.processInputs("Motor/Shooter/FlyWheelFollower", flyWheelsFollowerInputs);
-    Logger.processInputs("Motor/Shooter/Turret", turretInputs);
-    Logger.processInputs("Motor/Shooter/Hood", hoodInputs);
+  }
+
+  @Override
+  public void simulationPeriodic(){
+    this.turretMechanism.simIterate();
+    this.hoodMechanism.simIterate();
+    this.flyWheelLeadMechanism.simIterate();
+    this.flyWheelFollowerMechanism.simIterate();
   }
 
   public void setTargetMode(boolean isHubMode) {
@@ -135,7 +167,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void prepareToShoot() {
     double targetAngle = this.getTurretTargetAngle();
-    this.turretMotor.setPositionReference(targetAngle);
+    this.smartTurretMotor.setPosition(Angle.ofBaseUnits(targetAngle, Degrees));
     this.getHoodTargetAngle(this.getDistanceToTargetPose());
   }
 
@@ -144,7 +176,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void shootFuel() {
-    flyWheelsMotorLead.set(getFlyWheelsTargetVelocity(getDistanceToTargetPose()));
+    smartFlyWheelLeadMotor.setDutyCycle(getFlyWheelsTargetVelocity(getDistanceToTargetPose()));
   }
 
   public SubsystemBase getCurrentSubsystem() {
@@ -152,27 +184,27 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   private boolean isTurretPrepared() {
-    return this.turretMotor.getPosition()
-            <= TurretConstants.ANGLE_ERROR_ALLOWED + getTurretTargetAngle()
-        && this.turretMotor.getPosition()
-            >= -TurretConstants.ANGLE_ERROR_ALLOWED + getTurretTargetAngle();
+    return this.smartTurretMotor.getMechanismPosition().in(Degrees)
+            <= HoodConstants.Position.ANGLE_ERROR_ALLOWED + getTurretTargetAngle()
+        && this.smartTurretMotor.getMechanismPosition().in(Degrees)
+            >= -HoodConstants.Position.ANGLE_ERROR_ALLOWED + getTurretTargetAngle();
   }
 
   // Tem que mexer depois que quisermos colocar velocidade
   private boolean isFlyWheelsPrepared() {
-    return this.flyWheelsMotorLead.getAppliedOutput()
-            <= FlyWheelsConstants.VELOCITY_ERROR_ALLOWED
+    return this.smartFlyWheelLeadMotor.getDutyCycle()
+            <= FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED
                 + getFlyWheelsTargetVelocity(getDistanceToTargetPose())
-        && this.flyWheelsMotorLead.getAppliedOutput()
-            >= -FlyWheelsConstants.VELOCITY_ERROR_ALLOWED
+        && this.smartFlyWheelLeadMotor.getDutyCycle()
+            >= -FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED
                 + getFlyWheelsTargetVelocity(getDistanceToTargetPose());
   }
 
   private boolean isHoodPrepared() {
-    return this.hoodMotor.getPosition()
-            <= HoodConstants.ANGLE_ERROR_ALLOWED + getHoodTargetAngle(getDistanceToTargetPose())
-        && this.hoodMotor.getPosition()
-            >= -HoodConstants.ANGLE_ERROR_ALLOWED + getHoodTargetAngle(getDistanceToTargetPose());
+    return this.smartHoodMotor.getMechanismPosition().in(Degrees)
+            <= HoodConstants.Position.ANGLE_ERROR_ALLOWED + getHoodTargetAngle(getDistanceToTargetPose())
+        && this.smartHoodMotor.getMechanismPosition().in(Degrees)
+            >= -HoodConstants.Position.ANGLE_ERROR_ALLOWED + getHoodTargetAngle(getDistanceToTargetPose());
   }
 
   private double getTurretTargetAngle() {
@@ -198,9 +230,9 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   private double getReacheableTurretAngle(double targetAngle) {
-    if (targetAngle > TurretConstants.TURRET_MAX_ANGLE) {
+    if (targetAngle > TurretConstants.Position.TURRET_MAX_ANGLE.in(Degrees)) {
       return targetAngle - 400;
-    } else if (targetAngle < TurretConstants.TURRET_MIN_ANGLE) {
+    } else if (targetAngle < TurretConstants.Position.TURRET_MIN_ANGLE.in(Degrees)) {
       return targetAngle + 400;
     } else {
       return targetAngle;
@@ -209,13 +241,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private double getXSideFromTriangle() {
     return this.getTargetAlliancePose().getX()
-        - this.getShooterFieldPoseFromRobotCenter(TurretConstants.TURRET_OFFSET_FROM_ROBOT_CENTER)
+        - this.getShooterFieldPoseFromRobotCenter(TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER)
             .getX();
   }
 
   private double getYSideFromTriangle() {
     return this.getTargetAlliancePose().getY()
-        - this.getShooterFieldPoseFromRobotCenter(TurretConstants.TURRET_OFFSET_FROM_ROBOT_CENTER)
+        - this.getShooterFieldPoseFromRobotCenter(TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER)
             .getY();
   }
 

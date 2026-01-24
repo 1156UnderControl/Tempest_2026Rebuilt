@@ -1,26 +1,24 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import java.util.function.Supplier;
 
 public class RobotData {
 
-  private static Pose2d robotPose = Pose2d.kZero;
-  private static ChassisSpeeds robotVelocity = new ChassisSpeeds();
+  private Supplier<Pose2d> robotPose;
+  private Supplier<ChassisSpeeds> currentVelocity;
 
-  public RobotData(Supplier<Pose2d> robotPose, Supplier<ChassisSpeeds> currentSpeeds) {}
-
-  public Rotation2d getRobotRotation() {
-    return robotPose.getRotation();
+  public RobotData(Supplier<Pose2d> robotPose, Supplier<ChassisSpeeds> currentSpeeds) {
+    this.robotPose = robotPose;
+    this.currentVelocity = currentSpeeds;
   }
 
-  public Pose2d getRobotPose() {
+  public Supplier<Pose2d> getRobotPose() {
     return robotPose;
   }
 
-  public ChassisSpeeds getRobotVelocity() {
-    return robotVelocity;
+  public Supplier<ChassisSpeeds> getRobotVelocity() {
+    return currentVelocity;
   }
 }

@@ -18,6 +18,7 @@ import frc.robot.commands.swerve.GoToClimbPoseLeft;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -28,8 +29,10 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // Subsystems
+
   private final SwerveSubsystem drive;
+
+  private final ShooterSubsystem shooter;
 
   private final IDriverController driverController;
 
@@ -91,7 +94,8 @@ public class RobotContainer {
     this.namedCommandsRegistry.registerAllAutoCommands();
 
     this.robotData = new RobotData(this.drive.getOdometryPose(), this.drive.getCurrentSpeeds());
-    this.states = new States(drive);
+    this.shooter = new ShooterSubsystem(robotData.getRobotPose());
+    this.states = new States(drive, shooter);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -110,6 +114,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     this.states.setDefaultStates();
+    this.states.shootState();
     driverController.rightArrow().whileTrue(new GoToClimbPoseLeft(drive));
     driverController.leftArrow().whileTrue(new GoToClimbPoseLeft(drive));
   }
