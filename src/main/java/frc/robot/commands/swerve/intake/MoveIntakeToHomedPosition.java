@@ -9,9 +9,7 @@ public class MoveIntakeToHomedPosition extends Command{
 
 
   public MoveIntakeToHomedPosition() {
-    
   }
-
 
   @Override
   public void initialize() {
