@@ -48,12 +48,12 @@
     },
     {
       "anchor": {
-        "x": 2.2484656965228873,
-        "y": 4.967681007922535
+        "x": 0.7643519241898153,
+        "y": 4.892792100694444
       },
       "prevControl": {
-        "x": 3.1670334507042255,
-        "y": 4.904472931338028
+        "x": 1.0238415798611118,
+        "y": 5.463734953703701
       },
       "nextControl": null,
       "isLocked": false,
@@ -97,12 +97,12 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -179.9796063551954
+    "rotation": -149.62635753798457
   },
   "reversed": false,
   "folder": "Neutral Zone Collect Right & Score Left",
   "idealStartingState": {
-    "velocity": 2.2,
+    "velocity": 1.0,
     "rotation": 102.174
   },
   "useDefaultConstraints": false

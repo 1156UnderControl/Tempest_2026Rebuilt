@@ -5,10 +5,10 @@ import frc.robot.commands.swerve.GoToClimbPoseLeft;
 import frc.robot.commands.swerve.GoToClimbPoseRight;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
-public class NamedCommandsRegistry {
+public class NamedCommandsRegistery {
   SwerveSubsystem drive;
 
-  public NamedCommandsRegistry(SwerveSubsystem drive) {
+  public NamedCommandsRegistery(SwerveSubsystem drive) {
     this.drive = drive;
   }
 
