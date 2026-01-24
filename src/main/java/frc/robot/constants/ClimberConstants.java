@@ -1,6 +1,6 @@
 package frc.robot.constants;
 
-import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
 
 import edu.wpi.first.units.measure.Angle;
 
@@ -13,9 +13,9 @@ public class ClimberConstants {
   public static final double STATOR_CURRENT_LIMIT = 60;
 
   public class setpoints {
-    public static final Angle CLIMB_ANGLE = Degrees.of(770);
-    public static final Angle CLIMBED_ANGLE = Degrees.of(0);
-    public static final Angle DEFAULT_ANGLE = Degrees.of(0);
+    public static final Angle CLIMB_ANGLE = Rotations.of(12.4);
+    public static final Angle CLIMBED_ANGLE = Rotations.of(0);
+    public static final Angle DEFAULT_ANGLE = Rotations.of(0);
   }
 
   public class PID {
