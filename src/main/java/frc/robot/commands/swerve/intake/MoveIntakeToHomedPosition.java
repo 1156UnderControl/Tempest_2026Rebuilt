@@ -3,13 +3,10 @@ package frc.robot.commands.swerve.intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 
-public class MoveIntakeToHomedPosition extends Command{
+public class MoveIntakeToHomedPosition extends Command {
   IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
-
-
-  public MoveIntakeToHomedPosition() {
-  }
+  public MoveIntakeToHomedPosition() {}
 
   @Override
   public void initialize() {

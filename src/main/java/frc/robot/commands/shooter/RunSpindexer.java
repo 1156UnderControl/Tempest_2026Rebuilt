@@ -3,15 +3,10 @@ package frc.robot.commands.shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 
-public class RunSpindexer extends Command{
+public class RunSpindexer extends Command {
   IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
 
-
-
-  public RunSpindexer() {
-    
-  }
-
+  public RunSpindexer() {}
 
   @Override
   public void initialize() {
