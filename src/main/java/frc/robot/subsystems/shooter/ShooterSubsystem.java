@@ -36,7 +36,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private final DCMotorSim turretMotorSim;
   private final DCMotorSim hoodMotorSim;
 
-  private final ShooterIOInputsAutoLogged shooterInputs;
+  private final ShooterInputsAutoLogged shooterInputs;
   private final MotorIOInputsAutoLogged flyWheelsLeadInputs;
   private final MotorIOInputsAutoLogged flyWheelsFollowerInputs;
   private final MotorIOInputsAutoLogged turretInputs;
@@ -48,7 +48,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     this.isHubMode = true;
 
-    this.shooterInputs = new ShooterIOInputsAutoLogged();
+    this.shooterInputs = new ShooterInputsAutoLogged();
     this.flyWheelsLeadInputs = new MotorIOInputsAutoLogged();
     this.flyWheelsFollowerInputs = new MotorIOInputsAutoLogged();
     this.turretInputs = new MotorIOInputsAutoLogged();
@@ -132,11 +132,9 @@ public class ShooterSubsystem extends SubsystemBase {
     Logger.processInputs("Motor/Shooter/Hood", hoodInputs);
   }
 
-
   public void setTargetMode(boolean isHubMode) {
     this.isHubMode = isHubMode;
   }
-
 
   public void prepareToShoot() {
     double targetAngle = this.getTurretTargetAngle();
@@ -148,11 +146,9 @@ public class ShooterSubsystem extends SubsystemBase {
     return isTurretPrepared() && isFlyWheelsPrepared() && isHoodPrepared();
   }
 
-
   public void shootFuel() {
     flyWheelsMotorLead.set(getFlyWheelsTargetVelocity(getDistanceToTargetPose()));
   }
-
 
   public SubsystemBase getCurrentSubsystem() {
     return this;
