@@ -27,6 +27,9 @@ import yams.motorcontrollers.local.SparkWrapper;
 import yams.motorcontrollers.remote.TalonFXSWrapper;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Kilograms;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Pounds;
 
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
@@ -77,12 +80,19 @@ public class ShooterSubsystem extends SubsystemBase {
       .withClosedLoopController(TurretConstants.ClosedLoopController.P,TurretConstants.ClosedLoopController.I,TurretConstants.ClosedLoopController.D, TurretConstants.Velocity.MAX_VELOCITY, TurretConstants.Velocity.ACCELERATION)
       .withFeedforward(new SimpleMotorFeedforward(TurretConstants.FeedForward.KS, TurretConstants.FeedForward.KV, TurretConstants.FeedForward.KA))
       .withControlMode(TurretConstants.CONTROL_MODE);
+
     this.turretMotor = new SparkFlex(TurretConstants.TURRET_MOTOR_ID, TurretConstants.MOTOR_TYPE);
+
     this.smartTurretMotor = new SparkWrapper(this.turretMotor, TurretConstants.TURRET_MOTOR, this.turretConfig);
+
     this.turretMechanismConfig = new PivotConfig(smartTurretMotor)
       .withStartingPosition(TurretConstants.Position.STARTING_POSITION)
-      .withHardLimit(TurretConstants.Position.TURRET_MIN_ANGLE, TurretConstants.Position.TURRET_MAX_ANGLE);
+      .withHardLimit(TurretConstants.Position.TURRET_MIN_ANGLE, TurretConstants.Position.TURRET_MAX_ANGLE)
+      .withMOI(TurretConstants.TURRET_SIZE, TurretConstants.TURRET_MASS);
+
     this.turretMechanism = new Pivot(turretMechanismConfig);
+
+
 
     this.hoodConfig = new SmartMotorControllerConfig(this)
       .withIdleMode(HoodConstants.MOTOR_MODE)
@@ -95,12 +105,18 @@ public class ShooterSubsystem extends SubsystemBase {
       .withClosedLoopController(HoodConstants.ClosedLoopController.P,HoodConstants.ClosedLoopController.I,HoodConstants.ClosedLoopController.D, HoodConstants.Velocity.MAX_VELOCITY, HoodConstants.Velocity.ACCELERATION)
       .withFeedforward(new SimpleMotorFeedforward(HoodConstants.FeedForward.KS, HoodConstants.FeedForward.KV, HoodConstants.FeedForward.KA))
       .withControlMode(HoodConstants.CONTROL_MODE);
+
     this.hoodMotor = new SparkMax(HoodConstants.HOOD_MOTOR_ID, HoodConstants.MOTOR_TYPE);
+
     this.smartHoodMotor = new SparkWrapper(this.hoodMotor, HoodConstants.HOOD_MOTOR, this.hoodConfig);
+
     this.hoodMechanismConfig = new ArmConfig(smartHoodMotor)
       .withStartingPosition(HoodConstants.Position.STARTING_POSITION)
       .withHardLimit(HoodConstants.Position.HOOD_MIN_ANGLE, HoodConstants.Position.HOOD_MAX_ANGLE);
+
     this.hoodMechanism = new Arm(hoodMechanismConfig);
+
+
 
     this.flyWheelLeadConfig = new SmartMotorControllerConfig(this)
       .withIdleMode(FlyWheelsConstants.MOTOR_MODE)
@@ -112,10 +128,17 @@ public class ShooterSubsystem extends SubsystemBase {
       .withClosedLoopController(FlyWheelsConstants.ClosedLoopController.P,FlyWheelsConstants.ClosedLoopController.I,FlyWheelsConstants.ClosedLoopController.D, FlyWheelsConstants.Velocity.MAX_VELOCITY, FlyWheelsConstants.Velocity.ACCELERATION)
       .withFeedforward(new SimpleMotorFeedforward(FlyWheelsConstants.FeedForward.KS, FlyWheelsConstants.FeedForward.KV, FlyWheelsConstants.FeedForward.KA))
       .withControlMode(FlyWheelsConstants.CONTROL_MODE);
+
     this.flyWheelLeadMotor = new TalonFXS(FlyWheelsConstants.FLYWHEEL_MOTOR_LEAD_ID);
+
     this.smartFlyWheelLeadMotor = new TalonFXSWrapper(this.flyWheelLeadMotor, FlyWheelsConstants.FLYWHEEL_MOTOR, this.flyWheelLeadConfig);
-    this.flyWheelLeadMechanismConfig = new FlyWheelConfig(smartFlyWheelLeadMotor);
+
+    this.flyWheelLeadMechanismConfig = new FlyWheelConfig(smartFlyWheelLeadMotor)
+      .withMOI(FlyWheelsConstants.FLYWHEEL_SIZE, FlyWheelsConstants.FLYWHEEL_MASS);
+
     this.flyWheelLeadMechanism = new FlyWheel(flyWheelLeadMechanismConfig);
+
+
 
     this.flyWheelFollowerConfig = new SmartMotorControllerConfig(this)
       .withIdleMode(FlyWheelsConstants.MOTOR_MODE)
@@ -127,9 +150,14 @@ public class ShooterSubsystem extends SubsystemBase {
       .withClosedLoopController(FlyWheelsConstants.ClosedLoopController.P,FlyWheelsConstants.ClosedLoopController.I,FlyWheelsConstants.ClosedLoopController.D, FlyWheelsConstants.Velocity.MAX_VELOCITY, FlyWheelsConstants.Velocity.ACCELERATION)
       .withFeedforward(new SimpleMotorFeedforward(FlyWheelsConstants.FeedForward.KS, FlyWheelsConstants.FeedForward.KV, FlyWheelsConstants.FeedForward.KA))
       .withControlMode(FlyWheelsConstants.CONTROL_MODE);
+
     this.flyWheelFollowerMotor = new TalonFXS(FlyWheelsConstants.FLYWHEEL_MOTOR_LEAD_ID);
+
     this.smartFlyWheelFollowerMotor = new TalonFXSWrapper(this.flyWheelFollowerMotor, FlyWheelsConstants.FLYWHEEL_MOTOR, this.flyWheelFollowerConfig);
-    this.flyWheelFollowerMechanismConfig = new FlyWheelConfig(smartFlyWheelFollowerMotor);
+
+    this.flyWheelFollowerMechanismConfig = new FlyWheelConfig(smartFlyWheelFollowerMotor)
+      .withMOI(FlyWheelsConstants.FLYWHEEL_SIZE, FlyWheelsConstants.FLYWHEEL_MASS);
+
     this.flyWheelFollowerMechanism = new FlyWheel(flyWheelFollowerMechanismConfig);
 
     this.shooterInputs = new ShooterInputsAutoLogged();

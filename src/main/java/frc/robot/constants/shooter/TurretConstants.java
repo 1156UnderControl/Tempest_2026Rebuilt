@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
+import static edu.wpi.first.units.Units.Kilograms;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
@@ -15,6 +17,8 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.Time;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -34,6 +38,8 @@ public class TurretConstants {
   public static final Current STATOR_CURRENT = Amps.of(40);
   public static final Time CLOSED_RAMP_RATE = Seconds.of(0.5);
   public static final Time OPEN_RAMP_RATE = Seconds.of(0.5);
+  public static final Mass TURRET_MASS = Kilograms.of(6);
+  public static final Distance TURRET_SIZE = Meters.of(0.25);
 
   public static class Velocity {
     public static final AngularVelocity MAX_VELOCITY = DegreesPerSecond.of(360);

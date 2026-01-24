@@ -1,7 +1,8 @@
 package frc.robot.constants.shooter;
 
 import static edu.wpi.first.units.Units.Amps;
-
+import static edu.wpi.first.units.Units.Kilograms;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
@@ -10,6 +11,8 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.Time;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -30,6 +33,8 @@ public class FlyWheelsConstants {
   public static final Current STATOR_CURRENT = Amps.of(60);
   public static final Time CLOSED_RAMP_RATE = Seconds.of(0.5);
   public static final Time OPEN_RAMP_RATE = Seconds.of(0.5);
+  public static final Mass FLYWHEEL_MASS = Kilograms.of(1);
+  public static final Distance FLYWHEEL_SIZE = Meters.of(0.11);
 
   public static class Velocity {
     public static final AngularVelocity MAX_VELOCITY = RotationsPerSecond.of(83);
