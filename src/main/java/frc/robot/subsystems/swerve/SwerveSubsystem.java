@@ -35,6 +35,8 @@ import frc.robot.joysticks.DriverController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 
 public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements ISwerve {
@@ -68,6 +70,10 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   @AutoLogOutput private boolean positionUpdated = false;
 
+  private final Supplier<Pose2d> robotPose;
+
+  private final Supplier<ChassisSpeeds> currentSpeeds;
+
   private static final double ROBOT_MASS_KG = 74.088;
   private static final double ROBOT_MOI = 6.883;
   private static final double WHEEL_COF = 1.2;
@@ -93,6 +99,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
                 SwerveConstants.MOVE_TO_POSE_Y_CONSTRAINTS)),
         swerveDevices);
     this.resetOdometry(new Pose2d());
+    this.robotPose = () -> super.getPose();
+    this.currentSpeeds = () -> super.getRobotVelocity();
   }
 
   private static PoseEstimator configureMulticameraPoseEstimation() {
@@ -119,8 +127,12 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     }
   }
 
-  public Pose2d getOdometryPose() {
-    return super.getPose();
+  public Supplier<Pose2d> getOdometryPose() {
+    return this.robotPose;
+  }
+
+  public Supplier<ChassisSpeeds> getCurrentSpeeds() {
+    return this.currentSpeeds;
   }
 
   @Override

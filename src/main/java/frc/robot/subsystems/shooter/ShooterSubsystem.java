@@ -17,13 +17,14 @@ import frc.robot.constants.FieldConstants.FieldStructurePoses;
 import frc.robot.constants.shooter.FlyWheelsConstants;
 import frc.robot.constants.shooter.HoodConstants;
 import frc.robot.constants.shooter.TurretConstants;
-import frc.robot.subsystems.swerve.SwerveSubsystem;
+
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-  private SwerveSubsystem swerve;
-  private Pose2d robotPose;
+  private final Supplier<Pose2d> robotPose;
   private boolean isHubMode;
 
   private final TalonFXMotor flyWheelsMotorLead;
@@ -42,9 +43,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private final MotorIOInputsAutoLogged turretInputs;
   private final MotorIOInputsAutoLogged hoodInputs;
 
-  public ShooterSubsystem(SwerveSubsystem swerve) {
-    this.swerve = swerve;
-    this.robotPose = new Pose2d();
+  public ShooterSubsystem(Supplier<Pose2d> robotPose) {
+    this.robotPose = robotPose;
 
     this.isHubMode = true;
 
@@ -95,7 +95,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    this.robotPose = this.swerve.getOdometryPose();
     this.simulationPeriodic();
     this.updateInputs();
   }
@@ -180,7 +179,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private double getTurretTargetAngle() {
     double alphaAngle = this.getFieldAngleToTarget();
-    double robotHeading = this.swerve.getOdometryPose().getRotation().getDegrees();
+    double robotHeading = this.robotPose.get().getRotation().getDegrees();
     double turretTargetAngle = alphaAngle - robotHeading;
 
     return getReacheableTurretAngle(turretTargetAngle);
@@ -242,8 +241,8 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   private Pose2d getShooterFieldPoseFromRobotCenter(Translation2d turretOffset) {
-    Translation2d rotatedOffset = turretOffset.rotateBy(this.robotPose.getRotation());
+    Translation2d rotatedOffset = turretOffset.rotateBy(this.robotPose.get().getRotation());
     return new Pose2d(
-        this.robotPose.getTranslation().plus(rotatedOffset), this.robotPose.getRotation());
+        this.robotPose.get().getTranslation().plus(rotatedOffset), this.robotPose.get().getRotation());
   }
 }

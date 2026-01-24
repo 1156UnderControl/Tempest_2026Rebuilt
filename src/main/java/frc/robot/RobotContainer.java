@@ -37,6 +37,8 @@ public class RobotContainer {
 
   private final States states;
 
+  private final RobotData robotData;
+
   private final SwerveDevices simulatedSwerveDevices =
       new SwerveDevices(
           new GyroIO() {},
@@ -88,6 +90,7 @@ public class RobotContainer {
     this.namedCommandsRegistry = new NamedCommandsRegistry(drive);
     this.namedCommandsRegistry.registerAllAutoCommands();
 
+    this.robotData = new RobotData(this.drive.getOdometryPose(), this.drive.getCurrentSpeeds());
     this.states = new States(drive);
 
     // Set up auto routines
