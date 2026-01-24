@@ -20,7 +20,7 @@ import frc.robot.constants.shooter.TurretConstants;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import org.littletonrobotics.junction.Logger;
 
-public class ShooterSubsystem extends SubsystemBase implements ShooterIO {
+public class ShooterSubsystem extends SubsystemBase {
 
   private SwerveSubsystem swerve;
   private Pose2d robotPose;
@@ -132,29 +132,28 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterIO {
     Logger.processInputs("Motor/Shooter/Hood", hoodInputs);
   }
 
-  @Override
+
   public void setTargetMode(boolean isHubMode) {
     this.isHubMode = isHubMode;
   }
 
-  @Override
+
   public void prepareToShoot() {
     double targetAngle = this.getTurretTargetAngle();
     this.turretMotor.setPositionReference(targetAngle);
     this.getHoodTargetAngle(this.getDistanceToTargetPose());
   }
 
-  @Override
   public boolean isShooterPrepared() {
     return isTurretPrepared() && isFlyWheelsPrepared() && isHoodPrepared();
   }
 
-  @Override
+
   public void shootFuel() {
     flyWheelsMotorLead.set(getFlyWheelsTargetVelocity(getDistanceToTargetPose()));
   }
 
-  @Override
+
   public SubsystemBase getCurrentSubsystem() {
     return this;
   }
