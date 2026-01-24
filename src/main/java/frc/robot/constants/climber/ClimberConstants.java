@@ -10,7 +10,7 @@ public class ClimberConstants {
   }
 
   public class PID {
-    public static final double P = 200;
+    public static final double P = 0;
     public static final double I = 0;
     public static final double D = 0;
     public static final double F = 0;

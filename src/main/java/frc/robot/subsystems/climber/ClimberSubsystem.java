@@ -32,7 +32,10 @@ public class ClimberSubsystem  {
     climberMotor.setInverted(false);
     climberMotor.setPositionFactor(250);
     climberMotor.configurePIDF(
-        ClimberConstants.PID.P, ClimberConstants.PID.I, ClimberConstants.PID.D, 0);
+        ClimberConstants.PID.P,
+        ClimberConstants.PID.I,
+        ClimberConstants.PID.D,
+        ClimberConstants.PID.F);
     climberMotor.burnFlash();
     climberMotor.setMotorBrake(true);
     climberMotor.setPosition(0);
@@ -53,16 +56,15 @@ public class ClimberSubsystem  {
     climberMotor.setMotorBrake(false);
   }
 
-  public void PrepareToClimb() {
+  public void prepareToClimb() {
     climberMotor.setPosition(ClimberConstants.setpoints.PREPARE_TO_CLIMB);
   }
 
-  public void Climb() {
+  public void climb() {
     climberMotor.setPosition(ClimberConstants.setpoints.CLIMB_ANGLE);
   }
 
-  public void unClimb(){
-    climberMotor.set(-1);
+  public void releaseClimber(){
   }
 
   
