@@ -114,8 +114,8 @@ public class RobotContainer {
     climber.setDefaultCommand(climber.setDutyCycle(0));
     driverController.rightArrow().whileTrue(Commands.run(() -> drive.goToClimbPoseRight(), drive));
     driverController.leftArrow().whileTrue(Commands.run(() -> drive.goToClimbPoseLeft(), drive));
-    driverController.a().whileTrue(climber.setDutyCycle(0.2));
-    driverController.b().whileTrue(climber.setDutyCycle(-0.2));
+    driverController.a().whileTrue(climber.climb());
+    driverController.b().whileTrue(climber.raise());
     this.states.setDefaultStates();
   }
 
