@@ -124,23 +124,29 @@ public class ClimberSubsystem extends SubsystemBase {
     climber.simIterate();
   }
 
-  public Command climb() {
-    return this.run(() -> climber.setAngle(ClimberConstants.setpoints.DEFAULT_ANGLE))
-        .until(isClimbed());
+  public Command holdPID() {
+    return climber.setAngle(angleSetpoint);
   }
 
-  public Trigger isClimbed() {
-    return new Trigger(() -> climber.getAngle().isNear(null, null));
+  public Command climb() {
+    return climber.setAngle(ClimberConstants.setpoints.CLIMBED_ANGLE).until(isClimbed());
   }
 
   public Command defaultPosition() {
-    return this.run(() -> climber.setAngle(ClimberConstants.setpoints.DEFAULT_ANGLE))
-        .until(isClimbed());
+    return climber.setAngle(ClimberConstants.setpoints.DEFAULT_ANGLE).until(isClimbed());
+  }
+
+  public Command raise() {
+    return climber.setAngle(ClimberConstants.setpoints.RAISED_ANGLE);
   }
 
   public Command setAngle(Angle angle) {
     angleSetpoint = angle;
     return climber.setAngle(angle).until(isClimbed());
+  }
+
+  public Trigger isClimbed() {
+    return new Trigger(() -> climber.getAngle().isNear(null, null));
   }
 
   public Command setDutyCycle(double dutycycle) {

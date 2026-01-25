@@ -13,7 +13,7 @@ public class ClimberConstants {
   public static final double STATOR_CURRENT_LIMIT = 60;
 
   public class setpoints {
-    public static final Angle CLIMB_ANGLE = Rotations.of(12.4);
+    public static final Angle RAISED_ANGLE = Rotations.of(12.4);
     public static final Angle CLIMBED_ANGLE = Rotations.of(0);
     public static final Angle DEFAULT_ANGLE = Rotations.of(0);
   }
