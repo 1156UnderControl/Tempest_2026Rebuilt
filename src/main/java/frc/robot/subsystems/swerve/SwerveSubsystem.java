@@ -161,6 +161,19 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     this.driveFieldOriented(desiredSpeeds);
   }
 
+  public void driveHeadingForward() {
+    Translation2d desiredSpeeds =
+        this.getLinearVelocityFromJoysticksTranslation(
+            MathUtil.applyDeadband(controller.getLeftY(), JoystickConstants.DEADBAND_TRANSLATION),
+            MathUtil.applyDeadband(controller.getLeftX(), JoystickConstants.DEADBAND_TRANSLATION));
+    this.state = "DRIVE_HEADING_FORWARD";
+    this.driveFieldOrientedLockedJoystickAngle(
+        desiredSpeeds,
+        MathUtil.applyDeadband(-controller.getLeftX(), JoystickConstants.DEADBAND_TRANSLATION),
+        MathUtil.applyDeadband(-controller.getLeftY(), JoystickConstants.DEADBAND_TRANSLATION));
+  }
+  
+
   public void periodic() {
     super.periodic();
     LimelightHelpers.SetRobotOrientation(
