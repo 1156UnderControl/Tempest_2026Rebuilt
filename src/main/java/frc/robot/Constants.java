@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.RobotBase;
  * (log replay from a file).
  */
 public final class Constants {
-  public static final RobotType robot = RobotType.COMPBOT;
+  public static final RobotType robot = RobotType.SIMBOT;
   public static final boolean tuningMode = false;
 
   public static final double loopPeriodSecs = 0.02;
