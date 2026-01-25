@@ -8,16 +8,17 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.java_is_undercontrol.swerve.SwerveDevices;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIO;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIOPigeon2;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIO;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOSim;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
-import frc.robot.commands.swerve.GoToClimbPoseLeft;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
+import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -31,7 +32,9 @@ public class RobotContainer {
   // Subsystems
   private final SwerveSubsystem drive;
 
-  private final IDriverController driverController;
+  private final ClimberSubsystem climber;
+
+  public final IDriverController driverController;
 
   private final NamedCommandsRegistery namedCommandsRegistry;
 
@@ -85,6 +88,7 @@ public class RobotContainer {
         break;
     }
 
+    climber = new ClimberSubsystem();
     this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
     this.namedCommandsRegistry.registerAllAutoCommands();
 
@@ -106,9 +110,13 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    drive.setDefaultCommand(Commands.run(() -> drive.driveAlignAngleJoystick(), drive));
+    climber.setDefaultCommand(climber.setDutyCycle(0));
+    driverController.rightArrow().whileTrue(Commands.run(() -> drive.goToClimbPoseRight(), drive));
+    driverController.leftArrow().whileTrue(Commands.run(() -> drive.goToClimbPoseLeft(), drive));
+    driverController.a().whileTrue(climber.climb());
+    driverController.b().whileTrue(climber.raise());
     this.states.setDefaultStates();
-    driverController.rightArrow().whileTrue(new GoToClimbPoseLeft(drive));
-    driverController.leftArrow().whileTrue(new GoToClimbPoseLeft(drive));
   }
 
   /**
