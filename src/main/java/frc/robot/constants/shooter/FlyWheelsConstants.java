@@ -52,11 +52,23 @@ public class FlyWheelsConstants {
     public static final double P = 1;
     public static final double I = 0;
     public static final double D = 0;
+    
+    public static class SIM{
+      public static final double P = 1;
+      public static final double I = 0;
+      public static final double D = 0;
+    }
   }
 
   public static class FeedForward {
     public static final double KS = 0.5;
     public static final double KV = 0.5;
     public static final double KA = 0;
+
+    public static class SIM{
+      public static final double KS = 0.5;
+      public static final double KV = 0.5;
+      public static final double KA = 0;
+    }
   }
 }

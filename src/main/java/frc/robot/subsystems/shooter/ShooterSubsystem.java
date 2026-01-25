@@ -2,7 +2,8 @@ package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-import com.ctre.phoenix6.hardware.TalonFXS;
+import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -27,7 +28,7 @@ import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.local.SparkWrapper;
-import yams.motorcontrollers.remote.TalonFXSWrapper;
+import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -48,13 +49,13 @@ public class ShooterSubsystem extends SubsystemBase {
   private final Arm hoodMechanism;
 
   private final SmartMotorControllerConfig flyWheelLeadConfig;
-  private final TalonFXS flyWheelLeadMotor;
+  private final TalonFX flyWheelLeadMotor;
   private final SmartMotorController smartFlyWheelLeadMotor;
   private final FlyWheelConfig flyWheelLeadMechanismConfig;
   private final FlyWheel flyWheelLeadMechanism;
 
   private final SmartMotorControllerConfig flyWheelFollowerConfig;
-  private final TalonFXS flyWheelFollowerMotor;
+  private final TalonFX flyWheelFollowerMotor;
   private final SmartMotorController smartFlyWheelFollowerMotor;
   private final FlyWheelConfig flyWheelFollowerMechanismConfig;
   private final FlyWheel flyWheelFollowerMechanism;
@@ -66,29 +67,19 @@ public class ShooterSubsystem extends SubsystemBase {
 
     this.states = RobotStates.getInstance();
 
-    this.turretConfig =
-        new SmartMotorControllerConfig(this)
-            .withIdleMode(TurretConstants.MOTOR_MODE)
-            .withGearing(TurretConstants.MOTOR_GEARING)
-            .withMotorInverted(TurretConstants.Position.MOTOR_INVERTED)
-            .withTelemetry(TurretConstants.MOTOR_NAME, TurretConstants.TELEMETRY)
-            .withSoftLimit(
-                TurretConstants.Position.TURRET_MIN_ANGLE,
-                TurretConstants.Position.TURRET_MAX_ANGLE)
-            .withStatorCurrentLimit(TurretConstants.STATOR_CURRENT)
-            .withClosedLoopRampRate(TurretConstants.CLOSED_RAMP_RATE)
-            .withClosedLoopController(
-                TurretConstants.ClosedLoopController.P,
-                TurretConstants.ClosedLoopController.I,
-                TurretConstants.ClosedLoopController.D,
-                TurretConstants.Velocity.MAX_VELOCITY,
-                TurretConstants.Velocity.ACCELERATION)
-            .withFeedforward(
-                new SimpleMotorFeedforward(
-                    TurretConstants.FeedForward.KS,
-                    TurretConstants.FeedForward.KV,
-                    TurretConstants.FeedForward.KA))
-            .withControlMode(TurretConstants.CONTROL_MODE);
+    this.turretConfig = new SmartMotorControllerConfig(this)
+      .withIdleMode(TurretConstants.MOTOR_MODE)
+      .withGearing(TurretConstants.MOTOR_GEARING)
+      .withMotorInverted(TurretConstants.Position.MOTOR_INVERTED)
+      .withTelemetry(TurretConstants.MOTOR_NAME, TurretConstants.TELEMETRY)
+      .withSoftLimit(TurretConstants.Position.TURRET_MIN_ANGLE, TurretConstants.Position.TURRET_MAX_ANGLE)
+      .withStatorCurrentLimit(TurretConstants.STATOR_CURRENT)
+      .withClosedLoopRampRate(TurretConstants.CLOSED_RAMP_RATE)
+      .withClosedLoopController(TurretConstants.ClosedLoopController.P,TurretConstants.ClosedLoopController.I,TurretConstants.ClosedLoopController.D, TurretConstants.Velocity.MAX_VELOCITY, TurretConstants.Velocity.ACCELERATION)
+      .withSimClosedLoopController(TurretConstants.ClosedLoopController.SIM.P,TurretConstants.ClosedLoopController.SIM.I,TurretConstants.ClosedLoopController.SIM.D, TurretConstants.Velocity.MAX_VELOCITY, TurretConstants.Velocity.ACCELERATION)
+      .withFeedforward(new SimpleMotorFeedforward(TurretConstants.FeedForward.KS, TurretConstants.FeedForward.KV, TurretConstants.FeedForward.KA))
+      .withSimFeedforward(new SimpleMotorFeedforward(TurretConstants.FeedForward.SIM.KS, TurretConstants.FeedForward.SIM.KV, TurretConstants.FeedForward.SIM.KA))
+      .withControlMode(TurretConstants.CONTROL_MODE);
 
     this.turretMotor = new SparkFlex(TurretConstants.TURRET_MOTOR_ID, TurretConstants.MOTOR_TYPE);
 
@@ -105,28 +96,21 @@ public class ShooterSubsystem extends SubsystemBase {
 
     this.turretMechanism = new Pivot(turretMechanismConfig);
 
-    this.hoodConfig =
-        new SmartMotorControllerConfig(this)
-            .withIdleMode(HoodConstants.MOTOR_MODE)
-            .withGearing(HoodConstants.MOTOR_GEARING)
-            .withMotorInverted(HoodConstants.Position.MOTOR_INVERTED)
-            .withTelemetry(HoodConstants.MOTOR_NAME, HoodConstants.TELEMETRY)
-            .withSoftLimit(
-                HoodConstants.Position.HOOD_MIN_ANGLE, HoodConstants.Position.HOOD_MAX_ANGLE)
-            .withStatorCurrentLimit(HoodConstants.STATOR_CURRENT)
-            .withClosedLoopRampRate(HoodConstants.CLOSED_RAMP_RATE)
-            .withClosedLoopController(
-                HoodConstants.ClosedLoopController.P,
-                HoodConstants.ClosedLoopController.I,
-                HoodConstants.ClosedLoopController.D,
-                HoodConstants.Velocity.MAX_VELOCITY,
-                HoodConstants.Velocity.ACCELERATION)
-            .withFeedforward(
-                new SimpleMotorFeedforward(
-                    HoodConstants.FeedForward.KS,
-                    HoodConstants.FeedForward.KV,
-                    HoodConstants.FeedForward.KA))
-            .withControlMode(HoodConstants.CONTROL_MODE);
+
+
+    this.hoodConfig = new SmartMotorControllerConfig(this)
+      .withIdleMode(HoodConstants.MOTOR_MODE)
+      .withGearing(HoodConstants.MOTOR_GEARING)
+      .withMotorInverted(HoodConstants.Position.MOTOR_INVERTED)
+      .withTelemetry(HoodConstants.MOTOR_NAME, HoodConstants.TELEMETRY)
+      .withSoftLimit(HoodConstants.Position.HOOD_MIN_ANGLE, HoodConstants.Position.HOOD_MAX_ANGLE)
+      .withStatorCurrentLimit(HoodConstants.STATOR_CURRENT)
+      .withClosedLoopRampRate(HoodConstants.CLOSED_RAMP_RATE)
+      .withClosedLoopController(HoodConstants.ClosedLoopController.P,HoodConstants.ClosedLoopController.I,HoodConstants.ClosedLoopController.D, HoodConstants.Velocity.MAX_VELOCITY, HoodConstants.Velocity.ACCELERATION)
+      .withSimClosedLoopController(HoodConstants.ClosedLoopController.SIM.P,HoodConstants.ClosedLoopController.SIM.I,HoodConstants.ClosedLoopController.SIM.D, HoodConstants.Velocity.MAX_VELOCITY, HoodConstants.Velocity.ACCELERATION)
+      .withFeedforward(new SimpleMotorFeedforward(HoodConstants.FeedForward.KS, HoodConstants.FeedForward.KV, HoodConstants.FeedForward.KA))
+      .withSimFeedforward(new SimpleMotorFeedforward(HoodConstants.FeedForward.SIM.KS, HoodConstants.FeedForward.SIM.KV, HoodConstants.FeedForward.SIM.KA))
+      .withControlMode(HoodConstants.CONTROL_MODE);
 
     this.hoodMotor = new SparkMax(HoodConstants.HOOD_MOTOR_ID, HoodConstants.MOTOR_TYPE);
 
@@ -137,35 +121,31 @@ public class ShooterSubsystem extends SubsystemBase {
         new ArmConfig(smartHoodMotor)
             .withStartingPosition(HoodConstants.Position.STARTING_POSITION)
             .withHardLimit(
-                HoodConstants.Position.HOOD_MIN_ANGLE, HoodConstants.Position.HOOD_MAX_ANGLE);
+                HoodConstants.Position.HOOD_MIN_ANGLE, HoodConstants.Position.HOOD_MAX_ANGLE)
+            .withLength(HoodConstants.HOOD_SIZE)
+            .withMass(HoodConstants.HOOD_MASS);
 
     this.hoodMechanism = new Arm(hoodMechanismConfig);
 
-    this.flyWheelLeadConfig =
-        new SmartMotorControllerConfig(this)
-            .withIdleMode(FlyWheelsConstants.MOTOR_MODE)
-            .withGearing(FlyWheelsConstants.MOTOR_GEARING)
-            .withMotorInverted(FlyWheelsConstants.Position.MOTOR_INVERTED_LEAD)
-            .withTelemetry(FlyWheelsConstants.MOTOR_LEAD_NAME, FlyWheelsConstants.TELEMETRY)
-            .withStatorCurrentLimit(FlyWheelsConstants.STATOR_CURRENT)
-            .withClosedLoopRampRate(FlyWheelsConstants.CLOSED_RAMP_RATE)
-            .withClosedLoopController(
-                FlyWheelsConstants.ClosedLoopController.P,
-                FlyWheelsConstants.ClosedLoopController.I,
-                FlyWheelsConstants.ClosedLoopController.D,
-                FlyWheelsConstants.Velocity.MAX_VELOCITY,
-                FlyWheelsConstants.Velocity.ACCELERATION)
-            .withFeedforward(
-                new SimpleMotorFeedforward(
-                    FlyWheelsConstants.FeedForward.KS,
-                    FlyWheelsConstants.FeedForward.KV,
-                    FlyWheelsConstants.FeedForward.KA))
-            .withControlMode(FlyWheelsConstants.CONTROL_MODE);
 
-    this.flyWheelLeadMotor = new TalonFXS(FlyWheelsConstants.FLYWHEEL_MOTOR_LEAD_ID);
+
+    this.flyWheelLeadConfig = new SmartMotorControllerConfig(this)
+      .withIdleMode(FlyWheelsConstants.MOTOR_MODE)
+      .withGearing(FlyWheelsConstants.MOTOR_GEARING)
+      .withMotorInverted(FlyWheelsConstants.Position.MOTOR_INVERTED_LEAD)
+      .withTelemetry(FlyWheelsConstants.MOTOR_LEAD_NAME, FlyWheelsConstants.TELEMETRY)
+      .withStatorCurrentLimit(FlyWheelsConstants.STATOR_CURRENT)
+      .withClosedLoopRampRate(FlyWheelsConstants.CLOSED_RAMP_RATE)
+      .withClosedLoopController(FlyWheelsConstants.ClosedLoopController.P,FlyWheelsConstants.ClosedLoopController.I,FlyWheelsConstants.ClosedLoopController.D, FlyWheelsConstants.Velocity.MAX_VELOCITY, FlyWheelsConstants.Velocity.ACCELERATION)
+      .withSimClosedLoopController(FlyWheelsConstants.ClosedLoopController.SIM.P,FlyWheelsConstants.ClosedLoopController.SIM.I,FlyWheelsConstants.ClosedLoopController.SIM.D, FlyWheelsConstants.Velocity.MAX_VELOCITY, FlyWheelsConstants.Velocity.ACCELERATION)
+      .withFeedforward(new SimpleMotorFeedforward(FlyWheelsConstants.FeedForward.KS, FlyWheelsConstants.FeedForward.KV, FlyWheelsConstants.FeedForward.KA))
+      .withSimFeedforward(new SimpleMotorFeedforward(FlyWheelsConstants.FeedForward.SIM.KS, FlyWheelsConstants.FeedForward.SIM.KV, FlyWheelsConstants.FeedForward.SIM.KA))
+      .withControlMode(FlyWheelsConstants.CONTROL_MODE);
+
+    this.flyWheelLeadMotor = new TalonFX(FlyWheelsConstants.FLYWHEEL_MOTOR_LEAD_ID);
 
     this.smartFlyWheelLeadMotor =
-        new TalonFXSWrapper(
+        new TalonFXWrapper(
             this.flyWheelLeadMotor, FlyWheelsConstants.FLYWHEEL_MOTOR, this.flyWheelLeadConfig);
 
     this.flyWheelLeadMechanismConfig =
@@ -174,34 +154,26 @@ public class ShooterSubsystem extends SubsystemBase {
 
     this.flyWheelLeadMechanism = new FlyWheel(flyWheelLeadMechanismConfig);
 
-    this.flyWheelFollowerConfig =
-        new SmartMotorControllerConfig(this)
-            .withIdleMode(FlyWheelsConstants.MOTOR_MODE)
-            .withGearing(FlyWheelsConstants.MOTOR_GEARING)
-            .withMotorInverted(FlyWheelsConstants.Position.MOTOR_INVERTED_FOLLOWER)
-            .withTelemetry(FlyWheelsConstants.MOTOR_FOLLOWER_NAME, FlyWheelsConstants.TELEMETRY)
-            .withStatorCurrentLimit(FlyWheelsConstants.STATOR_CURRENT)
-            .withClosedLoopRampRate(FlyWheelsConstants.CLOSED_RAMP_RATE)
-            .withClosedLoopController(
-                FlyWheelsConstants.ClosedLoopController.P,
-                FlyWheelsConstants.ClosedLoopController.I,
-                FlyWheelsConstants.ClosedLoopController.D,
-                FlyWheelsConstants.Velocity.MAX_VELOCITY,
-                FlyWheelsConstants.Velocity.ACCELERATION)
-            .withFeedforward(
-                new SimpleMotorFeedforward(
-                    FlyWheelsConstants.FeedForward.KS,
-                    FlyWheelsConstants.FeedForward.KV,
-                    FlyWheelsConstants.FeedForward.KA))
-            .withControlMode(FlyWheelsConstants.CONTROL_MODE);
 
-    this.flyWheelFollowerMotor = new TalonFXS(FlyWheelsConstants.FLYWHEEL_MOTOR_LEAD_ID);
+
+    this.flyWheelFollowerConfig = new SmartMotorControllerConfig(this)
+      .withIdleMode(FlyWheelsConstants.MOTOR_MODE)
+      .withGearing(FlyWheelsConstants.MOTOR_GEARING)
+      .withMotorInverted(FlyWheelsConstants.Position.MOTOR_INVERTED_FOLLOWER)
+      .withTelemetry(FlyWheelsConstants.MOTOR_FOLLOWER_NAME, FlyWheelsConstants.TELEMETRY)
+      .withStatorCurrentLimit(FlyWheelsConstants.STATOR_CURRENT)
+      .withClosedLoopRampRate(FlyWheelsConstants.CLOSED_RAMP_RATE)
+      .withClosedLoopController(FlyWheelsConstants.ClosedLoopController.P,FlyWheelsConstants.ClosedLoopController.I,FlyWheelsConstants.ClosedLoopController.D, FlyWheelsConstants.Velocity.MAX_VELOCITY, FlyWheelsConstants.Velocity.ACCELERATION)
+      .withSimClosedLoopController(FlyWheelsConstants.ClosedLoopController.SIM.P,FlyWheelsConstants.ClosedLoopController.SIM.I,FlyWheelsConstants.ClosedLoopController.SIM.D, FlyWheelsConstants.Velocity.MAX_VELOCITY, FlyWheelsConstants.Velocity.ACCELERATION)
+      .withFeedforward(new SimpleMotorFeedforward(FlyWheelsConstants.FeedForward.KS, FlyWheelsConstants.FeedForward.KV, FlyWheelsConstants.FeedForward.KA))
+      .withSimFeedforward(new SimpleMotorFeedforward(FlyWheelsConstants.FeedForward.SIM.KS, FlyWheelsConstants.FeedForward.SIM.KV, FlyWheelsConstants.FeedForward.SIM.KA))
+      .withControlMode(FlyWheelsConstants.CONTROL_MODE);
+
+    this.flyWheelFollowerMotor = new TalonFX(FlyWheelsConstants.FLYWHEEL_MOTOR_FOLLOWER_ID, CANBus.roboRIO());
 
     this.smartFlyWheelFollowerMotor =
-        new TalonFXSWrapper(
-            this.flyWheelFollowerMotor,
-            FlyWheelsConstants.FLYWHEEL_MOTOR,
-            this.flyWheelFollowerConfig);
+        new TalonFXWrapper(
+            this.flyWheelFollowerMotor, FlyWheelsConstants.FLYWHEEL_MOTOR, this.flyWheelFollowerConfig);
 
     this.flyWheelFollowerMechanismConfig =
         new FlyWheelConfig(smartFlyWheelFollowerMotor)
