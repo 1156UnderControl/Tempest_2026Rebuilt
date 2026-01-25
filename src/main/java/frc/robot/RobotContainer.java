@@ -6,15 +6,12 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.java_is_undercontrol.swerve.SwerveDevices;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIO;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIOPigeon2;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIO;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOSim;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
-import frc.robot.commands.swerve.GoToClimbPoseLeft;
-import frc.robot.commands.swerve.GoToClimbPoseRight;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
@@ -41,7 +38,7 @@ public class RobotContainer {
   private final HoodSubsystem hood;
 
   private final FlyWheelSubsystem flyWheel;
-  
+
   public final IDriverController driverController;
 
   private final NamedCommandsRegistery namedCommandsRegistry;

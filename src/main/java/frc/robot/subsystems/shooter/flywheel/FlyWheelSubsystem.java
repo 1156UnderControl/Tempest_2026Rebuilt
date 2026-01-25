@@ -121,14 +121,14 @@ public class FlyWheelSubsystem extends SubsystemBase {
     this.followerMechanism = new FlyWheel(followerMechanismConfig);
 
     this.inputs = new FlyWheelInputsAutoLogged();
-    }
+  }
 
-    public static FlyWheelSubsystem getInstance(){
-        if(instance == null){
-            instance = new FlyWheelSubsystem();
-        }
-        return instance;
+  public static FlyWheelSubsystem getInstance() {
+    if (instance == null) {
+      instance = new FlyWheelSubsystem();
     }
+    return instance;
+  }
 
   @Override
   public void periodic() {

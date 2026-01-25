@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.HoodConstants;
 import frc.robot.constants.shooter.TurretConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
-
 import org.littletonrobotics.junction.Logger;
 import yams.mechanisms.config.PivotConfig;
 import yams.mechanisms.positional.Pivot;
@@ -82,12 +81,12 @@ public class TurretSubsystem extends SubsystemBase {
     this.inputs = new TurretInputsAutoLogged();
   }
 
-  public static TurretSubsystem getInstance(){
-        if(instance == null){
-            instance = new TurretSubsystem();
-        }
-        return instance;
+  public static TurretSubsystem getInstance() {
+    if (instance == null) {
+      instance = new TurretSubsystem();
     }
+    return instance;
+  }
 
   @Override
   public void periodic() {
