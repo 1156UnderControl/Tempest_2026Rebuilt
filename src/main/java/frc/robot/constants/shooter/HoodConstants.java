@@ -15,9 +15,7 @@ import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.units.measure.ImmutableMomentOfInertia;
 import edu.wpi.first.units.measure.Mass;
-import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.units.measure.Time;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -71,7 +69,7 @@ public class HoodConstants {
     public static final double KV = 0.5;
     public static final double KA = 0;
 
-    public static class SIM{
+    public static class SIM {
       public static final double KS = 0.5;
       public static final double KV = 0.5;
       public static final double KA = 0;

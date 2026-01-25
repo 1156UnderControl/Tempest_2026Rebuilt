@@ -5,8 +5,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.java_is_undercontrol.swerve.SwerveDevices;
@@ -20,7 +18,9 @@ import frc.robot.commands.swerve.GoToClimbPoseRight;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
-import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.shooter.flywheel.FlyWheelSubsystem;
+import frc.robot.subsystems.shooter.hood.HoodSubsystem;
+import frc.robot.subsystems.shooter.turret.TurretSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -36,8 +36,12 @@ public class RobotContainer {
 
   private final States states;
 
-  private final ShooterSubsystem shooter;
+  private final TurretSubsystem turret;
 
+  private final HoodSubsystem hood;
+
+  private final FlyWheelSubsystem flyWheel;
+  
   public final IDriverController driverController;
 
   private final NamedCommandsRegistery namedCommandsRegistry;
@@ -66,64 +70,46 @@ public class RobotContainer {
           new ModuleIO() {},
           new ModuleIO() {});
 
-  // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     this.driverController = DriverController.getInstance();
 
     switch (Constants.getMode()) {
       case REAL:
-        // Real robot, instantiate hardware IO implementations
         drive = new SwerveSubsystem(talonFxSwervedevices);
         break;
 
       case SIM:
-        // Sim robot, instantiate physics sim IO implementations
         drive = new SwerveSubsystem(simulatedSwerveDevices);
         break;
 
       default:
-        // Replayed robot, disable IO implementations
         drive = new SwerveSubsystem(replayedDevices);
         break;
     }
 
-    this.shooter = new ShooterSubsystem();
+    this.turret = TurretSubsystem.getInstance();
+    this.hood = HoodSubsystem.getInstance();
+    this.flyWheel = FlyWheelSubsystem.getInstance();
+
     this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
     this.namedCommandsRegistry.registerAllAutoCommands();
 
-    this.states = new States(drive, shooter);
+    this.states = new States(this.drive, this.turret, this.hood, this.flyWheel);
 
-    // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     autoChooser.addOption("wheelRadiusCharacterization", drive.wheelRadiusCharacterization());
     autoChooser.addOption("feedForwardCharacterization", drive.feedforwardCharacterization());
 
-    // Configure the button bindings
     configureButtonBindings();
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
   private void configureButtonBindings() {
-    drive.setDefaultCommand(Commands.run(() -> drive.driveAlignAngleJoystick(), drive));
-    driverController.rightArrow().whileTrue(new GoToClimbPoseRight(drive));
-    driverController.leftArrow().whileTrue(new GoToClimbPoseLeft(drive));
     this.states.setDefaultStates();
-    this.states.shootState();
+    this.driverController.a().onTrue(this.states.shootState());
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
   public Command getAutonomousCommand() {
     return autoChooser.get();
   }
