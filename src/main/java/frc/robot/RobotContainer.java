@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.java_is_undercontrol.swerve.SwerveDevices;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIO;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIOPigeon2;
@@ -15,6 +16,7 @@ import frc.java_is_undercontrol.swerve.io.module.ModuleIO;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOSim;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
 import frc.robot.commands.swerve.GoToClimbPoseLeft;
+import frc.robot.commands.swerve.GoToClimbPoseRight;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
@@ -32,15 +34,13 @@ public class RobotContainer {
 
   private final SwerveSubsystem drive;
 
-  private final ShooterSubsystem shooter;
-
-  private final IDriverController driverController;
-
-  private final NamedCommandsRegistery namedCommandsRegistry;
-
   private final States states;
 
-  private final RobotData robotData;
+  private final ShooterSubsystem shooter;
+
+  public final IDriverController driverController;
+
+  private final NamedCommandsRegistery namedCommandsRegistry;
 
   private final SwerveDevices simulatedSwerveDevices =
       new SwerveDevices(
@@ -90,11 +90,10 @@ public class RobotContainer {
         break;
     }
 
+    this.shooter = new ShooterSubsystem();
     this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
     this.namedCommandsRegistry.registerAllAutoCommands();
 
-    this.robotData = new RobotData(this.drive.getOdometryPose(), this.drive.getCurrentSpeeds());
-    this.shooter = new ShooterSubsystem(robotData.getRobotPose());
     this.states = new States(drive, shooter);
 
     // Set up auto routines
@@ -113,10 +112,11 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    drive.setDefaultCommand(Commands.run(() -> drive.driveAlignAngleJoystick(), drive));
+    driverController.rightArrow().whileTrue(new GoToClimbPoseRight(drive));
+    driverController.leftArrow().whileTrue(new GoToClimbPoseLeft(drive));
     this.states.setDefaultStates();
     this.states.shootState();
-    driverController.rightArrow().whileTrue(new GoToClimbPoseLeft(drive));
-    driverController.leftArrow().whileTrue(new GoToClimbPoseLeft(drive));
   }
 
   /**

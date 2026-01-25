@@ -24,7 +24,7 @@ public class States {
     this.shooter.setDefaultCommand(Commands.run(() -> shooter.prepareToShoot(), shooter));
   }
 
-  public Command shootState(){
+  public Command shootState() {
     return Commands.run(() -> this.shooter.shootFuel(), shooter);
   }
 }

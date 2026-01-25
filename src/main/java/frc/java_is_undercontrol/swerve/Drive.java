@@ -47,6 +47,7 @@ import frc.java_is_undercontrol.swerve.io.gyro.GyroIO;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIOInputsAutoLogged;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.RobotStates;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
@@ -205,6 +206,9 @@ public class Drive {
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
     }
 
+    RobotStates.getInstance().setRobotPose(getPose());
+    RobotStates.getInstance().setRobotVelocity(getChassisSpeeds());
+
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.getMode() != Mode.SIM);
   }
@@ -335,7 +339,9 @@ public class Drive {
       Pose2d visionRobotPoseMeters,
       double timestampSeconds,
       Matrix<N3, N1> visionMeasurementStdDevs) {
-    Logger.recordOutput("Vision/VisionStandardDeviation", visionMeasurementStdDevs);
+    Logger.recordOutput("Vision/VisionStandardDeviationX", visionMeasurementStdDevs.get(0, 0));
+    Logger.recordOutput("Vision/VisionStandardDeviationY", visionMeasurementStdDevs.get(1, 0));
+    Logger.recordOutput("Vision/VisionStandardDeviationZ", visionMeasurementStdDevs.get(2, 0));
     Logger.recordOutput("Vision/PoseSentToEstimator", visionRobotPoseMeters);
     poseEstimator.addVisionMeasurement(
         visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);

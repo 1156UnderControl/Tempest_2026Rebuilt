@@ -27,7 +27,8 @@ public class FlyWheelsConstants {
   public static final String MOTOR_FOLLOWER_NAME = "FlyWheelFollowerMotor";
   public static final DCMotor FLYWHEEL_MOTOR = DCMotor.getKrakenX44(2);
   public static final MotorMode MOTOR_MODE = MotorMode.BRAKE;
-  public static final MechanismGearing MOTOR_GEARING = new MechanismGearing(GearBox.fromReductionStages(1));
+  public static final MechanismGearing MOTOR_GEARING =
+      new MechanismGearing(GearBox.fromReductionStages(1));
   public static final ControlMode CONTROL_MODE = ControlMode.OPEN_LOOP;
   public static final TelemetryVerbosity TELEMETRY = TelemetryVerbosity.HIGH;
   public static final Current STATOR_CURRENT = Amps.of(60);
@@ -47,13 +48,13 @@ public class FlyWheelsConstants {
     public static final boolean MOTOR_INVERTED_FOLLOWER = true;
   }
 
-  public static class ClosedLoopController{
+  public static class ClosedLoopController {
     public static final double P = 1;
     public static final double I = 0;
     public static final double D = 0;
   }
 
-  public static class FeedForward{
+  public static class FeedForward {
     public static final double KS = 0.5;
     public static final double KV = 0.5;
     public static final double KA = 0;

@@ -6,11 +6,9 @@ import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
@@ -32,7 +30,8 @@ public class TurretConstants {
   public static final DCMotor TURRET_MOTOR = DCMotor.getNeoVortex(1);
   public static final MotorMode MOTOR_MODE = MotorMode.BRAKE;
   public static final MotorType MOTOR_TYPE = MotorType.kBrushless;
-  public static final MechanismGearing MOTOR_GEARING = new MechanismGearing(GearBox.fromReductionStages(360));
+  public static final MechanismGearing MOTOR_GEARING =
+      new MechanismGearing(GearBox.fromReductionStages(360));
   public static final ControlMode CONTROL_MODE = ControlMode.CLOSED_LOOP;
   public static final TelemetryVerbosity TELEMETRY = TelemetryVerbosity.HIGH;
   public static final Current STATOR_CURRENT = Amps.of(40);
@@ -55,13 +54,13 @@ public class TurretConstants {
     public static final Angle STARTING_POSITION = Degrees.of(0);
   }
 
-  public static class ClosedLoopController{
+  public static class ClosedLoopController {
     public static final double P = 100;
     public static final double I = 0;
     public static final double D = 0;
   }
 
-  public static class FeedForward{
+  public static class FeedForward {
     public static final double KS = 0.5;
     public static final double KV = 0.5;
     public static final double KA = 0;
