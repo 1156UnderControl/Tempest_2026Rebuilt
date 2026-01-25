@@ -4,7 +4,11 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
+import static edu.wpi.first.units.Units.Kilogram;
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
+import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -13,20 +17,27 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.MomentOfInertiaUnit;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.measure.Mass;
+import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.constants.ClimberConstants;
+import frc.robot.constants.climber.ClimberConstants;
 import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
+import yams.mechanisms.config.ElevatorConfig;
 import yams.mechanisms.config.MechanismPositionConfig;
 import yams.mechanisms.config.PivotConfig;
+import yams.mechanisms.positional.Elevator;
 import yams.mechanisms.positional.Pivot;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
@@ -46,9 +57,9 @@ public class ClimberSubsystem extends SubsystemBase {
 
   @AutoLog
   public static class ClimberInputs {
-    public Angle climberPosition = Degrees.of(0);
-    public AngularVelocity climberVelocity = DegreesPerSecond.of(0);
-    public Angle climberDesiredPosition = Degrees.of(0);
+    public Distance climberPosition = Meters.of(0);
+    public LinearVelocity climberVelocity = MetersPerSecond.of(0);
+    public Distance climberDesiredPosition = Meters.of(0);
     public Voltage climberAppliedVolts = Volts.of(0);
     public Current climberCurrent = Amps.of(0);
   }
@@ -76,15 +87,9 @@ public class ClimberSubsystem extends SubsystemBase {
               DegreesPerSecond.of(ClimberConstants.VELOCITY_M_PER_SECOND),
               DegreesPerSecondPerSecond.of(ClimberConstants.ACCELERATION_M_PER_SECOND_SQRD))
           .withFeedforward(
-              new SimpleMotorFeedforward(
-                  ClimberConstants.feedforward.kS,
-                  ClimberConstants.feedforward.kV,
-                  ClimberConstants.feedforward.kA))
+              new SimpleMotorFeedforward(0,0,0))
           .withSimFeedforward(
-              new SimpleMotorFeedforward(
-                  ClimberConstants.feedforward.kS,
-                  ClimberConstants.feedforward.kV,
-                  ClimberConstants.feedforward.kA))
+              new SimpleMotorFeedforward(0,0,0))
           .withTelemetry("Climber", TelemetryVerbosity.HIGH)
           .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 3, 4)))
           .withMotorInverted(false)
@@ -100,15 +105,15 @@ public class ClimberSubsystem extends SubsystemBase {
           .withMaxRobotLength(Meters.of(0.75))
           .withRelativePosition(new Translation3d(Meters.of(-0.25), Meters.of(0), Meters.of(0.5)));
 
-  private final PivotConfig m_config =
-      new PivotConfig(motor)
-          .withHardLimit(Degrees.of(0), Degrees.of(770.4))
+  private final ElevatorConfig m_config =
+      new ElevatorConfig(motor)
+          .withHardLimits(ClimberConstants.limits.MIN_HEIGHT, ClimberConstants.limits.MAX_HEIGHT)
           .withMechanismPositionConfig(robotToMechanism)
-          .withStartingPosition(Degrees.of(0));
+          .withStartingHeight(ClimberConstants.limits.MIN_HEIGHT).withMass(Mass.ofBaseUnits(2, Kilograms));
 
-  private final Pivot climber = new Pivot(m_config);
+  private final Elevator climber = new Elevator(m_config);
 
-  private Angle angleSetpoint = Degrees.of(0);
+  private Distance heightSetpoint = ClimberConstants.setpoints.DEFAULT_HEIGHT;
 
   public ClimberSubsystem() {}
 
@@ -125,28 +130,28 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public Command holdPID() {
-    return climber.setAngle(angleSetpoint);
+    return climber.setHeight(heightSetpoint);
   }
 
   public Command climb() {
-    return climber.setAngle(ClimberConstants.setpoints.CLIMBED_ANGLE).until(isClimbed());
+    return climber.setHeight(ClimberConstants.setpoints.CLIMBED_HEIGHT).until(isClimbed());
   }
 
   public Command defaultPosition() {
-    return climber.setAngle(ClimberConstants.setpoints.DEFAULT_ANGLE).until(isClimbed());
+    return climber.setHeight(ClimberConstants.setpoints.DEFAULT_HEIGHT).until(isClimbed());
   }
 
   public Command raise() {
-    return climber.setAngle(ClimberConstants.setpoints.RAISED_ANGLE);
+    return this.setHeight(ClimberConstants.setpoints.RAISED_HEIGHT);
   }
 
-  public Command setAngle(Angle angle) {
-    angleSetpoint = angle;
-    return climber.setAngle(angle).until(isClimbed());
+  public Command setHeight(Distance height) {
+    heightSetpoint = height;
+    return climber.setHeight(height).until(isClimbed());
   }
 
   public Trigger isClimbed() {
-    return new Trigger(() -> climber.getAngle().isNear(null, null));
+    return new Trigger(() -> climber.getHeight().isNear(heightSetpoint, ClimberConstants.DEADBAND));
   }
 
   public Command setDutyCycle(double dutycycle) {
@@ -156,8 +161,8 @@ public class ClimberSubsystem extends SubsystemBase {
   public void updateInputs() {
     climberInputs.climberAppliedVolts = climber.getMotor().getVoltage();
     climberInputs.climberCurrent = climber.getMotor().getStatorCurrent();
-    climberInputs.climberPosition = climber.getMotor().getMechanismPosition();
-    climberInputs.climberDesiredPosition = angleSetpoint;
-    climberInputs.climberVelocity = climber.getMotor().getMechanismVelocity();
+    climberInputs.climberPosition = climber.getMotor().getMeasurementPosition();
+    climberInputs.climberDesiredPosition = heightSetpoint;
+    climberInputs.climberVelocity = climber.getMotor().getMeasurementVelocity();
   }
 }
