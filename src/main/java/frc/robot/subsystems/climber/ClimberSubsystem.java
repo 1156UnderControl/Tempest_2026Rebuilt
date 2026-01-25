@@ -1,11 +1,8 @@
 package frc.robot.subsystems.climber;
 
 import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
-import static edu.wpi.first.units.Units.Kilogram;
-import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
@@ -17,14 +14,10 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.MomentOfInertiaUnit;
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Mass;
-import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,9 +29,7 @@ import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
 import yams.mechanisms.config.ElevatorConfig;
 import yams.mechanisms.config.MechanismPositionConfig;
-import yams.mechanisms.config.PivotConfig;
 import yams.mechanisms.positional.Elevator;
-import yams.mechanisms.positional.Pivot;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
@@ -86,10 +77,8 @@ public class ClimberSubsystem extends SubsystemBase {
               ClimberConstants.PID.kD,
               DegreesPerSecond.of(ClimberConstants.VELOCITY_M_PER_SECOND),
               DegreesPerSecondPerSecond.of(ClimberConstants.ACCELERATION_M_PER_SECOND_SQRD))
-          .withFeedforward(
-              new SimpleMotorFeedforward(0,0,0))
-          .withSimFeedforward(
-              new SimpleMotorFeedforward(0,0,0))
+          .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+          .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
           .withTelemetry("Climber", TelemetryVerbosity.HIGH)
           .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 3, 4)))
           .withMotorInverted(false)
@@ -109,7 +98,8 @@ public class ClimberSubsystem extends SubsystemBase {
       new ElevatorConfig(motor)
           .withHardLimits(ClimberConstants.limits.MIN_HEIGHT, ClimberConstants.limits.MAX_HEIGHT)
           .withMechanismPositionConfig(robotToMechanism)
-          .withStartingHeight(ClimberConstants.limits.MIN_HEIGHT).withMass(Mass.ofBaseUnits(2, Kilograms));
+          .withStartingHeight(ClimberConstants.limits.MIN_HEIGHT)
+          .withMass(Mass.ofBaseUnits(2, Kilograms));
 
   private final Elevator climber = new Elevator(m_config);
 
