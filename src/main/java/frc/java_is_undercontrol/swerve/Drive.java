@@ -47,6 +47,7 @@ import frc.java_is_undercontrol.swerve.io.gyro.GyroIO;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIOInputsAutoLogged;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.RobotStates;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
@@ -204,6 +205,9 @@ public class Drive {
       // Apply update
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
     }
+
+    RobotStates.getInstance().setRobotPose(getPose());
+    RobotStates.getInstance().setRobotVelocity(getChassisSpeeds());
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.getMode() != Mode.SIM);

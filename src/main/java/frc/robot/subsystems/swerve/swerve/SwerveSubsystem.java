@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve.swerve;
 
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,6 +35,7 @@ import frc.robot.joysticks.DriverController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 
 public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements ISwerve {
@@ -67,6 +69,10 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
 
   @AutoLogOutput private boolean positionUpdated = false;
 
+  private final Supplier<Pose2d> robotPose;
+
+  private final Supplier<ChassisSpeeds> currentSpeeds;
+
   private static final double ROBOT_MASS_KG = 74.088;
   private static final double ROBOT_MOI = 6.883;
   private static final double WHEEL_COF = 1.2;
@@ -81,7 +87,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     super(
         new OdometryEnabledSwerveConfig(
             0.75,
-            new SwerveDeadbandsConfig(JoystickConstants.DEADBAND, 0.5),
+            new SwerveDeadbandsConfig(
+                JoystickConstants.DEADBAND_TRANSLATION, JoystickConstants.DEADBAND_ROTATION),
             pathPlannerConfig,
             configureMulticameraPoseEstimation(),
             configureMulticameraPoseEstimation(),
@@ -91,6 +98,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
                 SwerveConstants.MOVE_TO_POSE_Y_CONSTRAINTS)),
         swerveDevices);
     this.resetOdometry(new Pose2d());
+    this.robotPose = () -> super.getPose();
+    this.currentSpeeds = () -> super.getRobotVelocity();
   }
 
   private static PoseEstimator configureMulticameraPoseEstimation() {
@@ -117,6 +126,14 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     }
   }
 
+  public Supplier<Pose2d> getOdometryPose() {
+    return this.robotPose;
+  }
+
+  public Supplier<ChassisSpeeds> getCurrentSpeeds() {
+    return this.currentSpeeds;
+  }
+
   @Override
   public void driveAlignAngleJoystick() {
     if (controller.leftBumper().getAsBoolean()) {
@@ -129,10 +146,13 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     }
     Translation2d desiredSpeeds =
         this.getLinearVelocityFromJoysticksTranslation(
-            controller.getLeftY(), controller.getLeftX());
+            MathUtil.applyDeadband(controller.getLeftY(), JoystickConstants.DEADBAND_TRANSLATION),
+            MathUtil.applyDeadband(controller.getLeftX(), JoystickConstants.DEADBAND_TRANSLATION));
     this.state = "DRIVE_ALIGN_ANGLE_JOY";
     this.driveFieldOrientedLockedJoystickAngle(
-        desiredSpeeds, controller.getCOS_Joystick(), controller.getSIN_Joystick());
+        desiredSpeeds,
+        controller.notUsingJoystick() ? 0 : controller.getCOS_Joystick(),
+        controller.notUsingJoystick() ? 0 : controller.getSIN_Joystick());
   }
 
   public void driveRotating(boolean rotateRight) {

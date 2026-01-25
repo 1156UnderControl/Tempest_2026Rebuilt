@@ -25,12 +25,12 @@ public class DriverController implements IDriverController {
 
   @Override
   public double getLeftX() {
-    return -driverController.getLeftX();
+    return driverController.getLeftX();
   }
 
   @Override
   public double getLeftY() {
-    return -driverController.getLeftY();
+    return driverController.getLeftY();
   }
 
   @Override
@@ -55,8 +55,14 @@ public class DriverController implements IDriverController {
 
   @Override
   public boolean notUsingJoystick() {
-    return Util.inRange(getCOS_Joystick(), -JoystickConstants.DEADBAND, JoystickConstants.DEADBAND)
-        && Util.inRange(getSIN_Joystick(), -JoystickConstants.DEADBAND, JoystickConstants.DEADBAND);
+    return Util.inRange(
+            getCOS_Joystick(),
+            -JoystickConstants.DEADBAND_ROTATION,
+            JoystickConstants.DEADBAND_ROTATION)
+        && Util.inRange(
+            getSIN_Joystick(),
+            -JoystickConstants.DEADBAND_ROTATION,
+            JoystickConstants.DEADBAND_ROTATION);
   }
 
   @Override

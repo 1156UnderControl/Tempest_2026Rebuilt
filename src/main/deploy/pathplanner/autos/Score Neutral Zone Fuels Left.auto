@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Go To Neutral Zone"
+            "pathName": "Go to Neutral Zone from Left Bump"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Go Score Zone Right"
           }
         }
       ]

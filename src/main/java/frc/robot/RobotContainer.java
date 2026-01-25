@@ -15,6 +15,7 @@ import frc.java_is_undercontrol.swerve.io.gyro.GyroIOPigeon2;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIO;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOSim;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
+import frc.robot.commands.swerve.GoToClimbPoseLeft;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
@@ -34,7 +35,11 @@ public class RobotContainer {
 
   private final ClimberSubsystem climber;
 
-  public final IDriverController driverController = DriverController.getInstance();
+  public final IDriverController driverController;
+  
+  private final NamedCommandsRegistery namedCommandsRegistry;
+
+  private final States states;
 
   private final SwerveDevices simulatedSwerveDevices =
       new SwerveDevices(
@@ -65,6 +70,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    this.driverController = DriverController.getInstance();
 
     switch (Constants.getMode()) {
       case REAL:
@@ -84,6 +90,10 @@ public class RobotContainer {
     }
 
     climber = new ClimberSubsystem();
+    this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
+    this.namedCommandsRegistry.registerAllAutoCommands();
+
+    this.states = new States(drive);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -107,6 +117,7 @@ public class RobotContainer {
     driverController.leftArrow().whileTrue(Commands.run(() -> drive.goToClimbPoseLeft(), drive));
     driverController.a().whileTrue(climber.setDutyCycle(0.2));
     driverController.b().whileTrue(climber.setDutyCycle(-0.2));
+    this.states.setDefaultStates();
   }
 
   /**
