@@ -15,12 +15,11 @@ import frc.java_is_undercontrol.swerve.io.gyro.GyroIOPigeon2;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIO;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOSim;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
-import frc.robot.commands.swerve.GoToClimbPoseLeft;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
 import frc.robot.subsystems.climber.ClimberSubsystem;
-import frc.robot.subsystems.swerve.swerve.SwerveSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -36,7 +35,7 @@ public class RobotContainer {
   private final ClimberSubsystem climber;
 
   public final IDriverController driverController;
-  
+
   private final NamedCommandsRegistery namedCommandsRegistry;
 
   private final States states;
