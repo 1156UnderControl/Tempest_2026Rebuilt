@@ -172,7 +172,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
         MathUtil.applyDeadband(-controller.getLeftX(), JoystickConstants.DEADBAND_TRANSLATION),
         MathUtil.applyDeadband(-controller.getLeftY(), JoystickConstants.DEADBAND_TRANSLATION));
   }
-  
 
   public void periodic() {
     super.periodic();
