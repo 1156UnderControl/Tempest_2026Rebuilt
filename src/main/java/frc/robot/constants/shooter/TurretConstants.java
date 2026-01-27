@@ -75,8 +75,8 @@ public class TurretConstants {
     public static final double kA = 0;
 
     public static class SIM {
-      public static final double kS = 0.5;
-      public static final double kV = 0.5;
+      public static final double kS = 0;
+      public static final double kV = 0;
       public static final double kA = 0;
     }
   }

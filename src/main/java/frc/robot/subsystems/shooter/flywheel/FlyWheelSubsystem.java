@@ -4,9 +4,13 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.units.AngularVelocityUnit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.FlyWheelsConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
+
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import org.littletonrobotics.junction.Logger;
 import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.FlyWheelConfig;
@@ -16,6 +20,8 @@ import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class FlyWheelSubsystem extends SubsystemBase {
+
+  private final ShooterCalculator calculator;
 
   private final SmartMotorControllerConfig leadConfig;
   private final TalonFX leadMotor;
@@ -34,6 +40,8 @@ public class FlyWheelSubsystem extends SubsystemBase {
   private static FlyWheelSubsystem instance;
 
   private FlyWheelSubsystem() {
+    this.calculator = ShooterCalculator.getInstance();
+
     this.leadConfig =
         new SmartMotorControllerConfig(this)
             .withIdleMode(FlyWheelsConstants.MOTOR_MODE)
@@ -171,25 +179,23 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   private void updateInputs() {
-    this.inputs.currentVelocity = getCurrentVelocity();
-    this.inputs.targetVelocity = ShooterCalculator.getFlyWheelsTargetVelocityValue();
-    this.inputs.atTarget = isAtTargetVelocity(ShooterCalculator.getFlyWheelsTargetVelocityValue());
+    this.inputs.currentVelocityLead = this.smartLeadMotor.getDutyCycle();
+    this.inputs.targetVelocityLead = this.smartLeadMotor.getMechanismSetpointVelocity() == null ? Double.NaN : this.smartLeadMotor.getMechanismSetpointVelocity().get().in(RotationsPerSecond);
+    this.inputs.atTargetLead = isAtTargetVelocity();
+
+    this.inputs.currentVelocityFollower = this.smartFollowerMotor.getDutyCycle();
 
     Logger.processInputs("Subsystems/Shooter/FlyWheels/", inputs);
   }
 
-  public void setVelocity(double dutyCycle) {
-    this.smartLeadMotor.setDutyCycle(dutyCycle);
+  public void runVelocity() {
+    this.smartLeadMotor.setDutyCycle(this.calculator.getParameters().flyWheelsTargetVelocity());
   }
 
-  public double getCurrentVelocity() {
-    return this.smartLeadMotor.getDutyCycle();
-  }
-
-  public boolean isAtTargetVelocity(double targetDutyCycle) {
+  public boolean isAtTargetVelocity() {
     return this.smartLeadMotor.getDutyCycle()
-            <= FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED + targetDutyCycle
+            <= FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED + (this.smartLeadMotor.getMechanismSetpointVelocity() == null ? Double.NaN : this.smartLeadMotor.getMechanismSetpointVelocity().get().in(RotationsPerSecond))
         && this.smartLeadMotor.getDutyCycle()
-            >= -FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED + targetDutyCycle;
+            >= -FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED + (this.smartLeadMotor.getMechanismSetpointVelocity() == null ? Double.NaN : this.smartLeadMotor.getMechanismSetpointVelocity().get().in(RotationsPerSecond));
   }
 }

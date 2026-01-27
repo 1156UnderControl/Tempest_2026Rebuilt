@@ -8,5 +8,4 @@ public class TurretInputs {
   public double targetAngle = 0;
   public boolean atTarget = false;
   public double distanceToTarget = Double.NaN;
-  public double fieldAngleToTarget = 0;
 }

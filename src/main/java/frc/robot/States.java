@@ -42,47 +42,40 @@ public class States {
     this.turretState = isHubMode ? "Aiming at Hub Pose State" : "Aiming to Feed Pose State";
     this.turret.setDefaultCommand(
         Commands.run(
-            () -> this.turret.setTargetAngle(ShooterCalculator.getTurretTargetAngleValue()),
+            () -> this.turret.goToTargetAngle(),
             turret));
 
     this.hoodState = isHubMode ? "Aiming at Hub Pose State" : "Aiming to Feed Pose State";
     this.hood.setDefaultCommand(
         Commands.run(
-            () -> this.hood.setTargetAngle(ShooterCalculator.getHoodTargetAngleValue()),
+            () -> this.hood.goToTargetAngle(),
             this.hood));
 
     this.flyWheelState = "Stopped State";
-    this.flyWheel.setDefaultCommand(Commands.run(() -> this.flyWheel.setVelocity(0), flyWheel));
+    this.flyWheel.setDefaultCommand(Commands.run(() -> this.flyWheel.runVelocity(), flyWheel));
   }
 
   public Command shootState() {
     this.flyWheelState =
         isHubMode
-            ? (this.turret.isAtTargetAngle(ShooterCalculator.getTurretTargetAngleValue())
-                    && this.hood.isAtTargetAngle(ShooterCalculator.getHoodTargetAngleValue())
-                    && this.flyWheel.isAtTargetVelocity(
-                        ShooterCalculator.getFlyWheelsTargetVelocityValue())
+            ? (this.turret.isAtTargetAngle()
+                    && this.hood.isAtTargetAngle()
+                    && this.flyWheel.isAtTargetVelocity()
                 ? "Shooting at Hub"
                 : "Preparing to Shoot at Hub")
-            : (this.turret.isAtTargetAngle(ShooterCalculator.getTurretTargetAngleValue())
-                    && this.hood.isAtTargetAngle(ShooterCalculator.getHoodTargetAngleValue())
-                    && this.flyWheel.isAtTargetVelocity(
-                        ShooterCalculator.getFlyWheelsTargetVelocityValue()))
+            : (this.turret.isAtTargetAngle()
+                    && this.hood.isAtTargetAngle()
+                    && this.flyWheel.isAtTargetVelocity())
                 ? "Shooting at Alliance Zone"
                 : "Preparing to Shoot at Alliance Zone";
     return Commands.parallel(
         Commands.run(
-            () -> this.flyWheel.setVelocity(ShooterCalculator.getFlyWheelsTargetVelocityValue()),
+            () -> this.flyWheel.runVelocity(),
             flyWheel));
-    // () -> this.indexer.setVelocity(ShooterCalculator.getIndexerTargetVelocityValue()),
-    // indexer).onlyIf(() ->
-    // this.turret.isAtTargetAngle(ShooterCalculator.getTurretTargetAngleValue()) &&
-    // this.hood.isAtTargetAngle(ShooterCalculator.getHoodTargetAngleValue()) &&
-    // this.flyWheel.isAtTargetVelocity(ShooterCalculator.getFlyWheelsTargetVelocityValue()));
   }
 
   public Command setTargetModeCommand(boolean isHubMode) {
     this.isHubMode = isHubMode;
-    return Commands.runOnce(() -> ShooterCalculator.setHubMode(isHubMode));
+    return Commands.runOnce(() -> ShooterCalculator.getInstance().setHubMode(isHubMode));
   }
 }

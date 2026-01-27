@@ -19,18 +19,21 @@ import yams.motorcontrollers.local.SparkWrapper;
 
 public class HoodSubsystem extends SubsystemBase {
 
-  private final SmartMotorControllerConfig motorConfig;
-  private final SparkMax motor;
-  private final SmartMotorController smartMotor;
-  private final ArmConfig mechanismConfig;
-  private final Arm mechanism;
+  private final ShooterCalculator calculator;
+
+  private final SmartMotorControllerConfig hoodMotorConfig;
+  private final SparkMax hoodMotor;
+  private final SmartMotorController smartHoodMotor;
+  private final ArmConfig hoodMechanismConfig;
+  private final Arm hoodMechanism;
 
   private final HoodInputsAutoLogged inputs;
 
   private static HoodSubsystem instance;
 
   private HoodSubsystem() {
-    this.motorConfig =
+    this.calculator = ShooterCalculator.getInstance();
+    this.hoodMotorConfig =
         new SmartMotorControllerConfig(this)
             .withIdleMode(HoodConstants.MOTOR_MODE)
             .withGearing(HoodConstants.MOTOR_GEARING)
@@ -76,19 +79,19 @@ public class HoodSubsystem extends SubsystemBase {
                     HoodConstants.FeedForward.SIM.kA))
             .withControlMode(HoodConstants.CONTROL_MODE);
 
-    this.motor = new SparkMax(HoodConstants.HOOD_MOTOR_ID, HoodConstants.MOTOR_TYPE);
+    this.hoodMotor = new SparkMax(HoodConstants.HOOD_MOTOR_ID, HoodConstants.MOTOR_TYPE);
 
-    this.smartMotor = new SparkWrapper(this.motor, HoodConstants.HOOD_MOTOR, this.motorConfig);
+    this.smartHoodMotor = new SparkWrapper(this.hoodMotor, HoodConstants.HOOD_MOTOR, this.hoodMotorConfig);
 
-    this.mechanismConfig =
-        new ArmConfig(smartMotor)
+    this.hoodMechanismConfig =
+        new ArmConfig(smartHoodMotor)
             .withStartingPosition(HoodConstants.Position.STARTING_POSITION)
             .withHardLimit(
                 HoodConstants.Position.HOOD_MIN_ANGLE, HoodConstants.Position.HOOD_MAX_ANGLE)
             .withLength(HoodConstants.HOOD_SIZE)
             .withMass(HoodConstants.HOOD_MASS);
 
-    this.mechanism = new Arm(mechanismConfig);
+    this.hoodMechanism = new Arm(hoodMechanismConfig);
 
     this.inputs = new HoodInputsAutoLogged();
   }
@@ -102,48 +105,32 @@ public class HoodSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    this.mechanism.updateTelemetry();
+    this.hoodMechanism.updateTelemetry();
     this.updateInputs();
   }
 
   @Override
   public void simulationPeriodic() {
-    this.mechanism.simIterate();
+    this.hoodMechanism.simIterate();
   }
 
   private void updateInputs() {
-    this.inputs.currentAngle = getCurrentAngleDegrees();
-    this.inputs.targetAngle = ShooterCalculator.getHoodTargetAngleValue();
-    this.inputs.atTarget = isAtTargetAngle(ShooterCalculator.getHoodTargetAngleValue());
+    this.inputs.currentAngle = this.smartHoodMotor.getMechanismPosition().in(Degrees);
+    this.inputs.targetAngle = this.smartHoodMotor.getMechanismPositionSetpoint() == null ? Double.NaN : this.smartHoodMotor.getMechanismPositionSetpoint().get().in(Degrees);
+    this.inputs.atTarget = isAtTargetAngle();
 
     Logger.processInputs("Subsystems/Shooter/Hood/", inputs);
   }
 
-  public void setTargetAngle(double angleDegrees) {
-    this.smartMotor.setPosition(Angle.ofBaseUnits(angleDegrees, Degrees));
+  public void goToTargetAngle() {
+    this.smartHoodMotor.setPosition(Angle.ofBaseUnits(this.calculator.getParameters().hoodTargetAngle(), Degrees));
   }
 
-  public void setTargetAngle(Angle angle) {
-    setTargetAngle(angle.in(Degrees));
-  }
-
-  public void stop() {
-    this.smartMotor.setDutyCycle(0);
-  }
-
-  public double getCurrentAngleDegrees() {
-    return this.smartMotor.getMechanismPosition().in(Degrees);
-  }
-
-  public Angle getCurrentAngle() {
-    return this.smartMotor.getMechanismPosition();
-  }
-
-  public boolean isAtTargetAngle(double targetAngleDegrees) {
-    return this.smartMotor.getMechanismPosition().in(Degrees)
-            <= HoodConstants.Position.ANGLE_ERROR_ALLOWED + targetAngleDegrees
-        && this.smartMotor.getMechanismPosition().in(Degrees)
-            >= -HoodConstants.Position.ANGLE_ERROR_ALLOWED + targetAngleDegrees;
+  public boolean isAtTargetAngle() {
+    return this.smartHoodMotor.getMechanismPosition().in(Degrees)
+            <= HoodConstants.Position.ANGLE_ERROR_ALLOWED + (this.smartHoodMotor.getMechanismPositionSetpoint() == null ? Double.NaN : this.smartHoodMotor.getMechanismPositionSetpoint().get().in(Degrees))
+        && this.smartHoodMotor.getMechanismPosition().in(Degrees)
+            >= -HoodConstants.Position.ANGLE_ERROR_ALLOWED + (this.smartHoodMotor.getMechanismPositionSetpoint() == null ? Double.NaN : this.smartHoodMotor.getMechanismPositionSetpoint().get().in(Degrees));
   }
 
   public double getMinAngleDegrees() {

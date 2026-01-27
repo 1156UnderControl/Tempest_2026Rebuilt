@@ -20,18 +20,21 @@ import yams.motorcontrollers.local.SparkWrapper;
 
 public class TurretSubsystem extends SubsystemBase {
 
-  private final SmartMotorControllerConfig motorConfig;
-  private final SparkFlex motor;
-  private final SmartMotorController smartMotor;
-  private final PivotConfig mechanismConfig;
-  private final Pivot mechanism;
+  private final ShooterCalculator calculator;
+
+  private final SmartMotorControllerConfig turretMotorConfig;
+  private final SparkFlex turretMotor;
+  private final SmartMotorController turretSmartMotor;
+  private final PivotConfig turretMechanismConfig;
+  private final Pivot turretMechanism;
 
   private final TurretInputsAutoLogged inputs;
 
   private static TurretSubsystem instance;
 
   private TurretSubsystem() {
-    this.motorConfig =
+    this.calculator = ShooterCalculator.getInstance();
+    this.turretMotorConfig =
         new SmartMotorControllerConfig(this)
             .withIdleMode(TurretConstants.MOTOR_MODE)
             .withGearing(TurretConstants.MOTOR_GEARING)
@@ -74,19 +77,20 @@ public class TurretSubsystem extends SubsystemBase {
                     TurretConstants.FeedForward.SIM.kA))
             .withControlMode(TurretConstants.CONTROL_MODE);
 
-    this.motor = new SparkFlex(TurretConstants.TURRET_MOTOR_ID, TurretConstants.MOTOR_TYPE);
+    this.turretMotor = new SparkFlex(TurretConstants.TURRET_MOTOR_ID, TurretConstants.MOTOR_TYPE);
 
-    this.smartMotor = new SparkWrapper(this.motor, TurretConstants.TURRET_MOTOR, this.motorConfig);
+    this.turretSmartMotor = new SparkWrapper(this.turretMotor, TurretConstants.TURRET_MOTOR, this.turretMotorConfig);
 
-    this.mechanismConfig =
-        new PivotConfig(smartMotor)
+    this.turretMechanismConfig =
+        new PivotConfig(turretSmartMotor)
             .withStartingPosition(TurretConstants.Position.STARTING_POSITION)
             .withHardLimit(
                 TurretConstants.Position.TURRET_MIN_ANGLE,
                 TurretConstants.Position.TURRET_MAX_ANGLE)
-            .withMOI(TurretConstants.TURRET_SIZE, TurretConstants.TURRET_MASS);
+            .withMOI(TurretConstants.TURRET_SIZE, TurretConstants.TURRET_MASS)
+            .withTelemetry(TurretConstants.MOTOR_NAME, TurretConstants.TELEMETRY);
 
-    this.mechanism = new Pivot(mechanismConfig);
+    this.turretMechanism = new Pivot(turretMechanismConfig);
 
     this.inputs = new TurretInputsAutoLogged();
   }
@@ -100,58 +104,32 @@ public class TurretSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    ShooterCalculator.update();
-    this.mechanism.updateTelemetry();
+    this.turretMechanism.updateTelemetry();
     this.updateInputs();
   }
 
   @Override
   public void simulationPeriodic() {
-    this.mechanism.simIterate();
+    this.turretMechanism.simIterate();
   }
 
   private void updateInputs() {
-    this.inputs.currentAngle = getCurrentAngleDegrees();
-    this.inputs.targetAngle = ShooterCalculator.getTurretTargetAngleValue();
-    this.inputs.atTarget = isAtTargetAngle(ShooterCalculator.getTurretTargetAngleValue());
-    this.inputs.distanceToTarget = ShooterCalculator.getDistanceToTargetValue();
-    this.inputs.fieldAngleToTarget = ShooterCalculator.getFieldAngleToTargetValue();
+    this.inputs.currentAngle = this.turretSmartMotor.getMechanismPosition().in(Degrees);
+    this.inputs.targetAngle = this.calculator.getParameters().turretTargetAngle();
+    this.inputs.distanceToTarget = this.calculator.getParameters().distanceToTarget();
+    this.inputs.atTarget = this.isAtTargetAngle();
 
     Logger.processInputs("Subsystems/Shooter/Turret/", inputs);
   }
 
-  public void setTargetAngle(double angleDegrees) {
-    this.smartMotor.setPosition(Angle.ofBaseUnits(angleDegrees, Degrees));
+  public void goToTargetAngle() {
+    this.turretSmartMotor.setPosition(Angle.ofBaseUnits(this.calculator.getParameters().turretTargetAngle(), Degrees));
   }
 
-  public void setTargetAngle(Angle angle) {
-    setTargetAngle(angle.in(Degrees));
-  }
-
-  public void stop() {
-    this.smartMotor.setDutyCycle(0);
-  }
-
-  public double getCurrentAngleDegrees() {
-    return this.smartMotor.getMechanismPosition().in(Degrees);
-  }
-
-  public Angle getCurrentAngle() {
-    return this.smartMotor.getMechanismPosition();
-  }
-
-  public boolean isAtTargetAngle(double targetAngleDegrees) {
-    return this.smartMotor.getMechanismPosition().in(Degrees)
-            <= HoodConstants.Position.ANGLE_ERROR_ALLOWED + targetAngleDegrees
-        && this.smartMotor.getMechanismPosition().in(Degrees)
-            >= -HoodConstants.Position.ANGLE_ERROR_ALLOWED + targetAngleDegrees;
-  }
-
-  public double getMinAngleDegrees() {
-    return TurretConstants.Position.TURRET_MIN_ANGLE.in(Degrees);
-  }
-
-  public double getMaxAngleDegrees() {
-    return TurretConstants.Position.TURRET_MAX_ANGLE.in(Degrees);
+  public boolean isAtTargetAngle() {
+    return this.turretSmartMotor.getMechanismPosition().in(Degrees)
+            <= HoodConstants.Position.ANGLE_ERROR_ALLOWED + this.calculator.getParameters().turretTargetAngle()
+        && this.turretSmartMotor.getMechanismPosition().in(Degrees)
+            >= -HoodConstants.Position.ANGLE_ERROR_ALLOWED + this.calculator.getParameters().turretTargetAngle();
   }
 }
