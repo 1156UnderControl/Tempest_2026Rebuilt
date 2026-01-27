@@ -2,11 +2,15 @@ package frc.robot.subsystems.shooter.flywheel;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.FlyWheelsConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import org.littletonrobotics.junction.Logger;
+
+import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.FlyWheelConfig;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
@@ -40,18 +44,16 @@ public class FlyWheelSubsystem extends SubsystemBase {
             .withTelemetry(FlyWheelsConstants.MOTOR_LEAD_NAME, FlyWheelsConstants.TELEMETRY)
             .withStatorCurrentLimit(FlyWheelsConstants.STATOR_CURRENT)
             .withClosedLoopRampRate(FlyWheelsConstants.CLOSED_RAMP_RATE)
-            .withClosedLoopController(
+            .withClosedLoopController(new ExponentialProfilePIDController(new PIDController(
                 FlyWheelsConstants.ClosedLoopController.kP,
                 FlyWheelsConstants.ClosedLoopController.kI,
-                FlyWheelsConstants.ClosedLoopController.kD,
-                FlyWheelsConstants.Velocity.MAX_VELOCITY,
-                FlyWheelsConstants.Velocity.ACCELERATION)
-            .withSimClosedLoopController(
-                FlyWheelsConstants.ClosedLoopController.SIM.kP,
-                FlyWheelsConstants.ClosedLoopController.SIM.kI,
-                FlyWheelsConstants.ClosedLoopController.SIM.kD,
-                FlyWheelsConstants.Velocity.MAX_VELOCITY,
-                FlyWheelsConstants.Velocity.ACCELERATION)
+                FlyWheelsConstants.ClosedLoopController.kD),
+                ExponentialProfilePIDController.createFlywheelConstraints(FlyWheelsConstants.MAX_VOLTS, FlyWheelsConstants.FLYWHEEL_MOTOR, FlyWheelsConstants.FLYWHEEL_MASS, FlyWheelsConstants.FLYWHEEL_SIZE, FlyWheelsConstants.MOTOR_GEARING)))
+            .withSimClosedLoopController(new ExponentialProfilePIDController(new PIDController(
+                FlyWheelsConstants.ClosedLoopController.kP,
+                FlyWheelsConstants.ClosedLoopController.kI,
+                FlyWheelsConstants.ClosedLoopController.kD),
+                ExponentialProfilePIDController.createFlywheelConstraints(FlyWheelsConstants.MAX_VOLTS, FlyWheelsConstants.FLYWHEEL_MOTOR, FlyWheelsConstants.FLYWHEEL_MASS, FlyWheelsConstants.FLYWHEEL_SIZE, FlyWheelsConstants.MOTOR_GEARING)))
             .withFeedforward(
                 new SimpleMotorFeedforward(
                     FlyWheelsConstants.FeedForward.kS,
@@ -83,18 +85,16 @@ public class FlyWheelSubsystem extends SubsystemBase {
             .withTelemetry(FlyWheelsConstants.MOTOR_FOLLOWER_NAME, FlyWheelsConstants.TELEMETRY)
             .withStatorCurrentLimit(FlyWheelsConstants.STATOR_CURRENT)
             .withClosedLoopRampRate(FlyWheelsConstants.CLOSED_RAMP_RATE)
-            .withClosedLoopController(
+            .withClosedLoopController(new ExponentialProfilePIDController(new PIDController(
                 FlyWheelsConstants.ClosedLoopController.kP,
                 FlyWheelsConstants.ClosedLoopController.kI,
-                FlyWheelsConstants.ClosedLoopController.kD,
-                FlyWheelsConstants.Velocity.MAX_VELOCITY,
-                FlyWheelsConstants.Velocity.ACCELERATION)
-            .withSimClosedLoopController(
-                FlyWheelsConstants.ClosedLoopController.SIM.kP,
-                FlyWheelsConstants.ClosedLoopController.SIM.kI,
-                FlyWheelsConstants.ClosedLoopController.SIM.kD,
-                FlyWheelsConstants.Velocity.MAX_VELOCITY,
-                FlyWheelsConstants.Velocity.ACCELERATION)
+                FlyWheelsConstants.ClosedLoopController.kD),
+                ExponentialProfilePIDController.createFlywheelConstraints(FlyWheelsConstants.MAX_VOLTS, FlyWheelsConstants.FLYWHEEL_MOTOR, FlyWheelsConstants.FLYWHEEL_MASS, FlyWheelsConstants.FLYWHEEL_SIZE, FlyWheelsConstants.MOTOR_GEARING)))
+            .withSimClosedLoopController(new ExponentialProfilePIDController(new PIDController(
+                FlyWheelsConstants.ClosedLoopController.kP,
+                FlyWheelsConstants.ClosedLoopController.kI,
+                FlyWheelsConstants.ClosedLoopController.kD),
+                ExponentialProfilePIDController.createFlywheelConstraints(FlyWheelsConstants.MAX_VOLTS, FlyWheelsConstants.FLYWHEEL_MOTOR, FlyWheelsConstants.FLYWHEEL_MASS, FlyWheelsConstants.FLYWHEEL_SIZE, FlyWheelsConstants.MOTOR_GEARING)))
             .withFeedforward(
                 new SimpleMotorFeedforward(
                     FlyWheelsConstants.FeedForward.kS,

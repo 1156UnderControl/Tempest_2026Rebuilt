@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularAcceleration;
@@ -13,7 +14,10 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
+import edu.wpi.first.units.measure.MomentOfInertia;
+import edu.wpi.first.units.measure.MutMomentOfInertia;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.units.measure.Voltage;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
@@ -36,6 +40,7 @@ public class FlyWheelsConstants {
   public static final Time OPEN_RAMP_RATE = Seconds.of(0.5);
   public static final Mass FLYWHEEL_MASS = Kilograms.of(1);
   public static final Distance FLYWHEEL_SIZE = Meters.of(0.11);
+  public static final Voltage MAX_VOLTS = Volts.of(12.0);
 
   public static class Velocity {
     public static final AngularVelocity MAX_VELOCITY = RotationsPerSecond.of(83);
