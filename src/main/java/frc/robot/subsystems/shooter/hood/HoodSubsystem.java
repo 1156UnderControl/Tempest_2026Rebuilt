@@ -3,12 +3,14 @@ package frc.robot.subsystems.shooter.hood;
 import static edu.wpi.first.units.Units.Degrees;
 
 import com.revrobotics.spark.SparkMax;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.HoodConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import org.littletonrobotics.junction.Logger;
+import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.ArmConfig;
 import yams.mechanisms.positional.Arm;
 import yams.motorcontrollers.SmartMotorController;
@@ -39,17 +41,29 @@ public class HoodSubsystem extends SubsystemBase {
             .withStatorCurrentLimit(HoodConstants.STATOR_CURRENT)
             .withClosedLoopRampRate(HoodConstants.CLOSED_RAMP_RATE)
             .withClosedLoopController(
-                HoodConstants.ClosedLoopController.kP,
-                HoodConstants.ClosedLoopController.kI,
-                HoodConstants.ClosedLoopController.kD,
-                HoodConstants.Velocity.MAX_VELOCITY,
-                HoodConstants.Velocity.ACCELERATION)
+                new ExponentialProfilePIDController(
+                    new PIDController(
+                        HoodConstants.ClosedLoopController.kP,
+                        HoodConstants.ClosedLoopController.kI,
+                        HoodConstants.ClosedLoopController.kD),
+                    ExponentialProfilePIDController.createArmConstraints(
+                        HoodConstants.MAX_VOLTS,
+                        HoodConstants.HOOD_MOTOR,
+                        HoodConstants.HOOD_MASS,
+                        HoodConstants.HOOD_SIZE,
+                        HoodConstants.MOTOR_GEARING)))
             .withSimClosedLoopController(
-                HoodConstants.ClosedLoopController.SIM.kP,
-                HoodConstants.ClosedLoopController.SIM.kI,
-                HoodConstants.ClosedLoopController.SIM.kD,
-                HoodConstants.Velocity.MAX_VELOCITY,
-                HoodConstants.Velocity.ACCELERATION)
+                new ExponentialProfilePIDController(
+                    new PIDController(
+                        HoodConstants.ClosedLoopController.kP,
+                        HoodConstants.ClosedLoopController.kI,
+                        HoodConstants.ClosedLoopController.kD),
+                    ExponentialProfilePIDController.createArmConstraints(
+                        HoodConstants.MAX_VOLTS,
+                        HoodConstants.HOOD_MOTOR,
+                        HoodConstants.HOOD_MASS,
+                        HoodConstants.HOOD_SIZE,
+                        HoodConstants.MOTOR_GEARING)))
             .withFeedforward(
                 new SimpleMotorFeedforward(
                     HoodConstants.FeedForward.kS,
