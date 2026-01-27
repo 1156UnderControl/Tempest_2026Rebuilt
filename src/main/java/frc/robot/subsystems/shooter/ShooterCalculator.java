@@ -11,64 +11,65 @@ import frc.robot.constants.FieldConstants.FieldStructurePoses;
 import frc.robot.constants.shooter.TurretConstants;
 
 public class ShooterCalculator {
+  private static ShooterCalculator instance;
 
-  private static boolean isHubMode = true;
+  private static boolean isHubMode;
 
-  private static double turretTargetAngle = 0;
-  private static double hoodTargetAngle = 0;
-  private static double flyWheelsTargetVelocity = 0;
-  private static double distanceToTarget = 0;
-  private static double fieldAngleToTarget = 0;
+  private static ShooterParameters latestParameters;
 
-  private ShooterCalculator() {}
-
-  public static void update() {
-    distanceToTarget = getDistanceToTargetPose();
-    fieldAngleToTarget = getFieldAngleToTarget();
-    turretTargetAngle = getTurretTargetAngle();
-    hoodTargetAngle = getHoodTargetAngle(distanceToTarget);
-    flyWheelsTargetVelocity = getFlyWheelsTargetVelocity(distanceToTarget);
+  private ShooterCalculator(){
+    isHubMode = true;
   }
 
-  public static void setHubMode(boolean hubMode) {
+  public static ShooterCalculator getInstance() {
+    if (instance == null) instance = new ShooterCalculator();
+      return instance;
+  }
+
+  public ShooterParameters getParameters() {
+    if (latestParameters != null) {
+      return latestParameters;
+    }
+    latestParameters =
+        new ShooterParameters(
+            getTurretTargetAngle(),
+            getHoodTargetAngle(),
+            getFlyWheelsTargetVelocity(),
+            getDistanceToTargetPose());
+
+    return latestParameters;
+  }
+
+  public void clearShooterParameters() {
+    latestParameters = null;
+  }
+
+  public void setHubMode(boolean hubMode) {
     isHubMode = hubMode;
   }
 
-  public static boolean isHubMode() {
+  public boolean isHubMode() {
     return isHubMode;
   }
 
-  public static double getTurretTargetAngleValue() {
-    return turretTargetAngle;
-  }
-
-  public static double getHoodTargetAngleValue() {
-    return hoodTargetAngle;
-  }
-
-  public static double getFlyWheelsTargetVelocityValue() {
-    return flyWheelsTargetVelocity;
-  }
-
-  public static double getDistanceToTargetValue() {
-    return distanceToTarget;
-  }
-
-  public static double getFieldAngleToTargetValue() {
-    return fieldAngleToTarget;
-  }
-
-  public static Pose2d getShooterFieldPose() {
-    return getShooterFieldPoseFromRobotCenter(
-        TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER);
-  }
-
-  private static double getTurretTargetAngle() {
+  private double getTurretTargetAngle() {
     double alphaAngle = getFieldAngleToTarget();
     double robotHeading = RobotStates.getInstance().getRobotPose().getRotation().getDegrees();
-    double turretTarget = alphaAngle - robotHeading;
+    double turretTargetAngle = alphaAngle - robotHeading;
 
-    return getReacheableTurretAngle(turretTarget);
+    return getReacheableTurretAngle(turretTargetAngle);
+  }
+
+  private static double getHoodTargetAngle() {
+    return 45;
+  }
+
+  private static double getFlyWheelsTargetVelocity() {
+    return 0.5;
+  }
+
+  private static double getDistanceToTargetPose() {
+    return Math.hypot(getXSideFromTriangle(), getYSideFromTriangle());
   }
 
   private static double getReacheableTurretAngle(double targetAngle) {
@@ -81,39 +82,13 @@ public class ShooterCalculator {
     }
   }
 
-  private static double getFlyWheelsTargetVelocity(double distanceToTargetPose) {
-    return 0.5;
-  }
-
-  private static double getHoodTargetAngle(double distanceToTargetPose) {
-    return 45;
-  }
-
-  private static double getDistanceToTargetPose() {
-    return Math.hypot(getXSideFromTriangle(), getYSideFromTriangle());
-  }
-
   private static double getFieldAngleToTarget() {
     double alphaAngle = Math.atan2(getYSideFromTriangle(), getXSideFromTriangle());
     return Math.toDegrees(alphaAngle);
   }
 
-  private static double getXSideFromTriangle() {
-    return getTargetAlliancePose().getX()
-        - getShooterFieldPoseFromRobotCenter(
-                TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER)
-            .getX();
-  }
-
-  private static double getYSideFromTriangle() {
-    return getTargetAlliancePose().getY()
-        - getShooterFieldPoseFromRobotCenter(
-                TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER)
-            .getY();
-  }
-
   private static Pose2d getTargetAlliancePose() {
-    Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+    Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue); // valor padrão
 
     if (isHubMode) {
       return alliance == Alliance.Blue
@@ -127,10 +102,21 @@ public class ShooterCalculator {
   }
 
   private static Pose2d getShooterFieldPoseFromRobotCenter(Translation2d turretOffset) {
-    Translation2d rotatedOffset =
-        turretOffset.rotateBy(RobotStates.getInstance().getRobotPose().getRotation());
+    Translation2d rotatedOffset = turretOffset.rotateBy(RobotStates.getInstance().getRobotPose().getRotation());
     return new Pose2d(
         RobotStates.getInstance().getRobotPose().getTranslation().plus(rotatedOffset),
         RobotStates.getInstance().getRobotPose().getRotation());
+  }
+
+  private static double getXSideFromTriangle() {
+    return getTargetAlliancePose().getX()
+        - getShooterFieldPoseFromRobotCenter(TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER)
+            .getX();
+  }
+
+  private static double getYSideFromTriangle() {
+    return getTargetAlliancePose().getY()
+        - getShooterFieldPoseFromRobotCenter(TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER)
+            .getY();
   }
 }
