@@ -6,6 +6,9 @@ import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -26,6 +29,8 @@ import frc.robot.constants.climber.ClimberConstants;
 import frc.robot.constants.hopper.SpindexerConstants;
 import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
+import org.w3c.dom.html.HTMLOptGroupElement;
+
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
 import yams.mechanisms.config.ElevatorConfig;
@@ -34,6 +39,7 @@ import yams.mechanisms.positional.Elevator;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
@@ -48,34 +54,26 @@ public class SpindexerSubsystem extends SubsystemBase {
   }
 
 private final SparkFlex spindexerMotor = new SparkFlex(SpindexerConstants.ID_spindexerMotor, MotorType.kBrushless);
+private final SmartMotorController smartSpindexerMotor = new SparkWrapper(spindexerMotor, DCMotor.getNeoVortex(0), new SmartMotorControllerConfig()){
+
+};
+
 
   private final DCMotor motors = DCMotor.getNeoVortex(1);
 
-  private SmartMotorControllerConfig smcConfig =
-      new SmartMotorControllerConfig(this)
+  private SmartMotorControllerConfig smartSpindexerMotorConfig = new SmartMotorControllerConfig(this)
           .withControlMode(ControlMode.CLOSED_LOOP)
           .withClosedLoopController(
               ClimberConstants.PID.kP,
               ClimberConstants.PID.kI,
               ClimberConstants.PID.kD,
-              DegreesPerSecond.of(ClimberConstants.VELOCITY_M_PER_SECOND),
-              DegreesPerSecondPerSecond.of(ClimberConstants.ACCELERATION_M_PER_SECOND_SQRD))
-          .withSimClosedLoopController(
-              ClimberConstants.PID.kP,
-              ClimberConstants.PID.kI,
-              ClimberConstants.PID.kD,
-              DegreesPerSecond.of(ClimberConstants.VELOCITY_M_PER_SECOND),
-              DegreesPerSecondPerSecond.of(ClimberConstants.ACCELERATION_M_PER_SECOND_SQRD))
-          .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
-          .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
-          .withTelemetry("Climber", TelemetryVerbosity.HIGH)
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 3, 4)))
-          .withMotorInverted(false)
-          .withClosedLoopRampRate(Seconds.of(0.25))
-          .withOpenLoopRampRate(Seconds.of(0.25))
-          .withControlMode(ControlMode.CLOSED_LOOP);
+              RPM.of(SpindexerConstants.SPINDEXER_MAX_VELOCITY), RotationsPerSecondPerSecond.of(SpindexerConstants.SPINDEXER_MAX_ACCELERATION))
+              .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
+              .withIdleMode(MotorMode.BRAKE)
+              .withMotorInverted(false)
+              .withTelemetry("Spindexer Motor", TelemetryVerbosity.HIGH);
 
-  private final SmartMotorController motor = new SparkWrapper(spindexerMotor, motors, smcConfig);
+
 
   private final MechanismPositionConfig robotToMechanism =
       new MechanismPositionConfig()
@@ -83,58 +81,18 @@ private final SparkFlex spindexerMotor = new SparkFlex(SpindexerConstants.ID_spi
           .withMaxRobotLength(Meters.of(0.75))
           .withRelativePosition(new Translation3d(Meters.of(-0.25), Meters.of(0), Meters.of(0.5)));
 
-  private final ElevatorConfig m_config =
-      new ElevatorConfig(motor)
-          .withHardLimits(ClimberConstants.limits.MIN_HEIGHT, ClimberConstants.limits.MAX_HEIGHT)
-          .withMechanismPositionConfig(robotToMechanism)
-          .withStartingHeight(ClimberConstants.limits.MIN_HEIGHT)
-          .withMass(Mass.ofBaseUnits(2, Kilograms));
-
-  private final Elevator climber = new Elevator(m_config);
-
-  private Distance heightSetpoint = ClimberConstants.setpoints.DEFAULT_HEIGHT;
 
   public SpindexerSubsystem() {}
 
   @Override
   public void periodic() {
     this.updateInputs();
-    climber.updateTelemetry();
   }
 
   @Override
   public void simulationPeriodic() {
-    climber.simIterate();
   }
 
-  public Command holdPID() {
-    return climber.setHeight(heightSetpoint);
-  }
-
-  public Command climb() {
-    return climber.setHeight(ClimberConstants.setpoints.CLIMBED_HEIGHT).until(isClimbed());
-  }
-
-  public Command defaultPosition() {
-    return climber.setHeight(ClimberConstants.setpoints.DEFAULT_HEIGHT).until(isClimbed());
-  }
-
-  public Command raise() {
-    return this.setHeight(ClimberConstants.setpoints.RAISED_HEIGHT);
-  }
-
-  public Command setHeight(Distance height) {
-    heightSetpoint = height;
-    return climber.setHeight(height).until(isClimbed());
-  }
-
-  public Trigger isClimbed() {
-    return new Trigger(() -> climber.getHeight().isNear(heightSetpoint, ClimberConstants.DEADBAND));
-  }
-
-  public Command setDutyCycle(double dutycycle) {
-    return climber.set(dutycycle);
-  }
 
   public void updateInputs() {
 

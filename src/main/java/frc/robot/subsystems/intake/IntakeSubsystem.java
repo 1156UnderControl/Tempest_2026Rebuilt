@@ -49,7 +49,9 @@ public class IntakeSubsystem extends SubsystemBase {
     spindexerMotor.set(0);
   }
 
-  public void agigateIntake() {}
+  public void agigateIntake() {
+    
+  }
 
   @Override
   public void periodic() {}
