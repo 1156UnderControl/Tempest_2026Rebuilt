@@ -74,9 +74,9 @@ public class ShooterCalculator {
 
   private static double getReacheableTurretAngle(double targetAngle) {
     if (targetAngle > TurretConstants.Position.TURRET_MAX_ANGLE.in(Degrees)) {
-      return targetAngle - 400;
+      return targetAngle - 360;
     } else if (targetAngle < TurretConstants.Position.TURRET_MIN_ANGLE.in(Degrees)) {
-      return targetAngle + 400;
+      return targetAngle + 360;
     } else {
       return targetAngle;
     }
@@ -88,7 +88,7 @@ public class ShooterCalculator {
   }
 
   private static Pose2d getTargetAlliancePose() {
-    Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue); // valor padrão
+    Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
     if (isHubMode) {
       return alliance == Alliance.Blue
