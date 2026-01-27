@@ -3,7 +3,9 @@ package frc.robot.constants.intake;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.units.measure.Distance;
+import yams.mechanisms.config.MechanismPositionConfig;
 
 public class IntakeConstants {
   public static final int ID_intakeLeaderRollerMotor = 2;
@@ -23,6 +25,12 @@ public class IntakeConstants {
   public class roller {
     public static final Distance MECHANISM_CIRCUNFERENCE = Inches.of(4);
 
+    public static final MechanismPositionConfig robotToMechanism =
+        new MechanismPositionConfig()
+            .withMaxRobotHeight(Meters.of(1.5))
+            .withMaxRobotLength(Meters.of(0.75))
+            .withRelativePosition(
+                new Translation3d(Meters.of(-0.25), Meters.of(0), Meters.of(0.5)));
 
     public class PID {
       public static final double kP = 0;
@@ -40,6 +48,13 @@ public class IntakeConstants {
   public class extensor {
 
     public static final Distance MECHANISM_CIRCUNFERENCE = Meters.of(Math.PI * 0.0305);
+
+    public static final MechanismPositionConfig robotToMechanism =
+        new MechanismPositionConfig()
+            .withMaxRobotHeight(Meters.of(1.5))
+            .withMaxRobotLength(Meters.of(0.75))
+            .withRelativePosition(
+                new Translation3d(Meters.of(-0.25), Meters.of(0), Meters.of(0.5)));
 
     public class PID {
       public static final double kP = 0;
