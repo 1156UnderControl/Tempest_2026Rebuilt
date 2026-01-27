@@ -3,7 +3,6 @@ package frc.robot.subsystems.intake;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.KilogramSquareMeters;
-import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.Seconds;
 
@@ -65,8 +64,10 @@ public class IntakeSubsystem extends SubsystemBase {
           // Diameter of the flywheel.
           .withDiameter(Inches.of(4))
           // Mass of the flywheel.
-          .withMass(Pounds.of(1)).withMOI(KilogramSquareMeters.of(0.003))
-          .withTelemetry("RollerMech", TelemetryVerbosity.HIGH);
+          .withMass(Pounds.of(1))
+          .withMOI(KilogramSquareMeters.of(0.003))
+          .withTelemetry("RollerMech", TelemetryVerbosity.HIGH)
+          .withMechanismPositionConfig(IntakeConstants.roller.robotToMechanism);
 
   private final FlyWheel roller = new FlyWheel(rollerConfig);
 
@@ -81,7 +82,7 @@ public class IntakeSubsystem extends SubsystemBase {
                   IntakeConstants.roller.PID.kP,
                   IntakeConstants.roller.PID.kI,
                   IntakeConstants.roller.PID.kD))
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages( 4)))
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
           .withIdleMode(MotorMode.COAST)
           .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
           .withStatorCurrentLimit(Amps.of(40))
@@ -90,14 +91,15 @@ public class IntakeSubsystem extends SubsystemBase {
           .withControlMode(ControlMode.CLOSED_LOOP);
 
   private final SmartMotorController extensorMotor =
-      new SparkWrapper(rollerMasterFlex, DCMotor.getNeoVortex(1), rollerMotorConfig);
+      new SparkWrapper(extensorSparkFlex, DCMotor.getNeoVortex(1), extensorMotorConfig);
 
   private final ElevatorConfig extensorConfig =
       new ElevatorConfig(rollerMotor)
           .withMass(Pounds.of(1))
           .withHardLimits(
               IntakeConstants.limits.MIN_EXTENSION, IntakeConstants.limits.MAX_EXTENSION)
-          .withTelemetry("ExtensorMech", TelemetryVerbosity.HIGH);
+          .withTelemetry("ExtensorMech", TelemetryVerbosity.HIGH)
+          .withMechanismPositionConfig(IntakeConstants.extensor.robotToMechanism);
 
   private final Elevator extensor = new Elevator(extensorConfig);
 

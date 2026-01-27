@@ -2,7 +2,9 @@ package frc.robot.constants.climber;
 
 import static edu.wpi.first.units.Units.Meters;
 
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.units.measure.Distance;
+import yams.mechanisms.config.MechanismPositionConfig;
 
 public class ClimberConstants {
   public static final int ID_climberMotor = 13;
@@ -14,6 +16,12 @@ public class ClimberConstants {
   public static final double ACCELERATION_M_PER_SECOND_SQRD = 0;
 
   public static final double MECHANISM_CIRCUNFERENCE = 2 * Math.PI * 0.015875;
+
+  public static final MechanismPositionConfig robotToMechanism =
+      new MechanismPositionConfig()
+          .withMaxRobotHeight(Meters.of(1.5))
+          .withMaxRobotLength(Meters.of(0.75))
+          .withRelativePosition(new Translation3d(Meters.of(-0.25), Meters.of(0), Meters.of(0.5)));
 
   public class limits {
     public static final Distance MIN_HEIGHT = Distance.ofBaseUnits(0, Meters);
