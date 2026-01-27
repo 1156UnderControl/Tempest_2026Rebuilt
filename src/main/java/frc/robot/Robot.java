@@ -38,31 +38,25 @@ public class Robot extends LoggedRobot {
         break;
     }
 
-  
     switch (Constants.getMode()) {
       case REAL:
-
         Logger.addDataReceiver(new WPILOGWriter());
         Logger.addDataReceiver(new NT4Publisher());
         break;
 
       case SIM:
-
         Logger.addDataReceiver(new NT4Publisher());
         break;
 
       case REPLAY:
-      
-        setUseTiming(false); 
+        setUseTiming(false);
         String logPath = LogFileUtil.findReplayLog();
         Logger.setReplaySource(new WPILOGReader(logPath));
         Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
         break;
     }
 
-
     Logger.start();
-
 
     var modules =
         new SwerveModuleConstants[] {
@@ -79,23 +73,17 @@ public class Robot extends LoggedRobot {
       }
     }
 
-
     robotContainer = new RobotContainer();
   }
-
 
   @Override
   public void robotPeriodic() {
 
     CommandScheduler.getInstance().run();
-
-
- 
   }
 
   @Override
   public void disabledInit() {}
-
 
   @Override
   public void disabledPeriodic() {}
@@ -105,7 +93,6 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     autonomousCommand = robotContainer.getAutonomousCommand();
 
-   
     if (autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(autonomousCommand);
     }
@@ -113,7 +100,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousPeriodic() {}
-
 
   @Override
   public void teleopInit() {
@@ -123,24 +109,19 @@ public class Robot extends LoggedRobot {
     }
   }
 
-
   @Override
   public void teleopPeriodic() {}
-
 
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
   }
 
-
   @Override
   public void testPeriodic() {}
 
-
   @Override
   public void simulationInit() {}
-
 
   @Override
   public void simulationPeriodic() {}

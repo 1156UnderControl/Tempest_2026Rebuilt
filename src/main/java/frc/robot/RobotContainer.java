@@ -112,8 +112,9 @@ public class RobotContainer {
   private void configureButtonBindings() {
     drive.setDefaultCommand(Commands.run(() -> drive.driveAlignAngleJoystick(), drive));
     climber.setDefaultCommand(climber.setDutyCycle(0));
-    driverController.rightArrow().whileTrue(Commands.run(() -> drive.goToClimbPoseRight(), drive));
-    driverController.leftArrow().whileTrue(Commands.run(() -> drive.goToClimbPoseLeft(), drive));
+    // driverController.rightArrow().whileTrue(Commands.run(() -> drive.goToClimbPoseRight(),
+    // drive));
+    // driverController.leftArrow().whileTrue(Commands.run(() -> drive.goToClimbPoseLeft(), drive));
     driverController.a().whileTrue(climber.climb());
     driverController.b().whileTrue(climber.raise());
     this.states.setDefaultStates();

@@ -12,9 +12,8 @@ public class ClimberConstants {
   public static final double VELOCITY_M_PER_SECOND = 0;
 
   public static final double ACCELERATION_M_PER_SECOND_SQRD = 0;
-  
-  public static final double MECHANISM_CIRCUNFERENCE = 2 * Math.PI * 0.015875;
 
+  public static final double MECHANISM_CIRCUNFERENCE = 2 * Math.PI * 0.015875;
 
   public class limits {
     public static final Distance MIN_HEIGHT = Distance.ofBaseUnits(0, Meters);
