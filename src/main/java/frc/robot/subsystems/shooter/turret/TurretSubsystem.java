@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter.turret;
 import static edu.wpi.first.units.Units.Degrees;
 
 import com.revrobotics.spark.SparkFlex;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -10,6 +11,7 @@ import frc.robot.constants.shooter.HoodConstants;
 import frc.robot.constants.shooter.TurretConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import org.littletonrobotics.junction.Logger;
+import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.PivotConfig;
 import yams.mechanisms.positional.Pivot;
 import yams.motorcontrollers.SmartMotorController;
@@ -41,17 +43,25 @@ public class TurretSubsystem extends SubsystemBase {
             .withStatorCurrentLimit(TurretConstants.STATOR_CURRENT)
             .withClosedLoopRampRate(TurretConstants.CLOSED_RAMP_RATE)
             .withClosedLoopController(
-                TurretConstants.ClosedLoopController.kP,
-                TurretConstants.ClosedLoopController.kI,
-                TurretConstants.ClosedLoopController.kD,
-                TurretConstants.Velocity.MAX_VELOCITY,
-                TurretConstants.Velocity.ACCELERATION)
+                new ExponentialProfilePIDController(
+                    new PIDController(
+                        TurretConstants.ClosedLoopController.kP,
+                        TurretConstants.ClosedLoopController.kI,
+                        TurretConstants.ClosedLoopController.kD),
+                    ExponentialProfilePIDController.createConstraints(
+                        TurretConstants.MAX_VOLTS,
+                        TurretConstants.Velocity.MAX_VELOCITY,
+                        TurretConstants.Velocity.ACCELERATION)))
             .withSimClosedLoopController(
-                TurretConstants.ClosedLoopController.SIM.kP,
-                TurretConstants.ClosedLoopController.SIM.kI,
-                TurretConstants.ClosedLoopController.SIM.kD,
-                TurretConstants.Velocity.MAX_VELOCITY,
-                TurretConstants.Velocity.ACCELERATION)
+                new ExponentialProfilePIDController(
+                    new PIDController(
+                        TurretConstants.ClosedLoopController.kP,
+                        TurretConstants.ClosedLoopController.kI,
+                        TurretConstants.ClosedLoopController.kD),
+                    ExponentialProfilePIDController.createConstraints(
+                        TurretConstants.MAX_VOLTS,
+                        TurretConstants.Velocity.MAX_VELOCITY,
+                        TurretConstants.Velocity.ACCELERATION)))
             .withFeedforward(
                 new SimpleMotorFeedforward(
                     TurretConstants.FeedForward.kS,
