@@ -81,7 +81,8 @@ public class HoodSubsystem extends SubsystemBase {
 
     this.hoodMotor = new SparkMax(HoodConstants.HOOD_MOTOR_ID, HoodConstants.MOTOR_TYPE);
 
-    this.smartHoodMotor = new SparkWrapper(this.hoodMotor, HoodConstants.HOOD_MOTOR, this.hoodMotorConfig);
+    this.smartHoodMotor =
+        new SparkWrapper(this.hoodMotor, HoodConstants.HOOD_MOTOR, this.hoodMotorConfig);
 
     this.hoodMechanismConfig =
         new ArmConfig(smartHoodMotor)
@@ -123,11 +124,18 @@ public class HoodSubsystem extends SubsystemBase {
   }
 
   public void goToTargetAngle() {
-    this.smartHoodMotor.setPosition(Angle.ofBaseUnits(this.calculator.getParameters().hoodTargetAngle(), Degrees));
+    this.smartHoodMotor.setPosition(
+        Angle.ofBaseUnits(this.calculator.getParameters().hoodTargetAngle(), Degrees));
   }
 
   public boolean isAtTargetAngle() {
-    return this.smartHoodMotor.getMechanismPosition().isNear(this.smartHoodMotor.getMechanismPositionSetpoint().isEmpty() == true ? Degrees.of(0) : this.smartHoodMotor.getMechanismPositionSetpoint().get(), HoodConstants.Position.ANGLE_ERROR_ALLOWED);
+    return this.smartHoodMotor
+        .getMechanismPosition()
+        .isNear(
+            this.smartHoodMotor.getMechanismPositionSetpoint().isEmpty() == true
+                ? Degrees.of(0)
+                : this.smartHoodMotor.getMechanismPositionSetpoint().get(),
+            HoodConstants.Position.ANGLE_ERROR_ALLOWED);
   }
 
   public double getMinAngleDegrees() {

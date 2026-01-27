@@ -40,16 +40,10 @@ public class States {
             .onlyIf(() -> DriverStation.isTeleopEnabled()));
 
     this.turretState = isHubMode ? "Aiming at Hub Pose State" : "Aiming to Feed Pose State";
-    this.turret.setDefaultCommand(
-        Commands.run(
-            () -> this.turret.goToTargetAngle(),
-            turret));
+    this.turret.setDefaultCommand(Commands.run(() -> this.turret.goToTargetAngle(), turret));
 
     this.hoodState = isHubMode ? "Aiming at Hub Pose State" : "Aiming to Feed Pose State";
-    this.hood.setDefaultCommand(
-        Commands.run(
-            () -> this.hood.goToTargetAngle(),
-            this.hood));
+    this.hood.setDefaultCommand(Commands.run(() -> this.hood.goToTargetAngle(), this.hood));
 
     this.flyWheelState = "Stopped State";
     this.flyWheel.setDefaultCommand(Commands.run(() -> this.flyWheel.runVelocity(), flyWheel));
@@ -68,10 +62,7 @@ public class States {
                     && this.flyWheel.isAtTargetVelocity())
                 ? "Shooting at Alliance Zone"
                 : "Preparing to Shoot at Alliance Zone";
-    return Commands.parallel(
-        Commands.run(
-            () -> this.flyWheel.runVelocity(),
-            flyWheel));
+    return Commands.parallel(Commands.run(() -> this.flyWheel.runVelocity(), flyWheel));
   }
 
   public Command setTargetModeCommand(boolean isHubMode) {

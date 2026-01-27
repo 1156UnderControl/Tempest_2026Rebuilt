@@ -17,13 +17,13 @@ public class ShooterCalculator {
 
   private static ShooterParameters latestParameters;
 
-  private ShooterCalculator(){
+  private ShooterCalculator() {
     isHubMode = true;
   }
 
   public static ShooterCalculator getInstance() {
     if (instance == null) instance = new ShooterCalculator();
-      return instance;
+    return instance;
   }
 
   public ShooterParameters getParameters() {
@@ -102,7 +102,8 @@ public class ShooterCalculator {
   }
 
   private static Pose2d getShooterFieldPoseFromRobotCenter(Translation2d turretOffset) {
-    Translation2d rotatedOffset = turretOffset.rotateBy(RobotStates.getInstance().getRobotPose().getRotation());
+    Translation2d rotatedOffset =
+        turretOffset.rotateBy(RobotStates.getInstance().getRobotPose().getRotation());
     return new Pose2d(
         RobotStates.getInstance().getRobotPose().getTranslation().plus(rotatedOffset),
         RobotStates.getInstance().getRobotPose().getRotation());
@@ -110,13 +111,15 @@ public class ShooterCalculator {
 
   private static double getXSideFromTriangle() {
     return getTargetAlliancePose().getX()
-        - getShooterFieldPoseFromRobotCenter(TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER)
+        - getShooterFieldPoseFromRobotCenter(
+                TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER)
             .getX();
   }
 
   private static double getYSideFromTriangle() {
     return getTargetAlliancePose().getY()
-        - getShooterFieldPoseFromRobotCenter(TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER)
+        - getShooterFieldPoseFromRobotCenter(
+                TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER)
             .getY();
   }
 }

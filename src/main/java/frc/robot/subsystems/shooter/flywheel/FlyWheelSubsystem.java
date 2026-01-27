@@ -1,5 +1,7 @@
 package frc.robot.subsystems.shooter.flywheel;
 
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
@@ -7,9 +9,6 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.FlyWheelsConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
-
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-
 import org.littletonrobotics.junction.Logger;
 import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.FlyWheelConfig;
@@ -179,7 +178,10 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   private void updateInputs() {
     this.inputs.currentVelocityLead = this.smartLeadMotor.getDutyCycle();
-    this.inputs.targetVelocityLead = this.smartLeadMotor.getMechanismSetpointVelocity().isEmpty() == true ? 0 : this.smartLeadMotor.getMechanismSetpointVelocity().get().in(RotationsPerSecond);
+    this.inputs.targetVelocityLead =
+        this.smartLeadMotor.getMechanismSetpointVelocity().isEmpty() == true
+            ? 0
+            : this.smartLeadMotor.getMechanismSetpointVelocity().get().in(RotationsPerSecond);
     this.inputs.atTargetLead = isAtTargetVelocity();
 
     this.inputs.currentVelocityFollower = this.smartFollowerMotor.getDutyCycle();
@@ -192,6 +194,12 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   public boolean isAtTargetVelocity() {
-    return this.smartLeadMotor.getMechanismVelocity().isNear(this.smartLeadMotor.getMechanismSetpointVelocity().isEmpty() == true ? RotationsPerSecond.of(0) : this.smartLeadMotor.getMechanismSetpointVelocity().get(), FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
+    return this.smartLeadMotor
+        .getMechanismVelocity()
+        .isNear(
+            this.smartLeadMotor.getMechanismSetpointVelocity().isEmpty() == true
+                ? RotationsPerSecond.of(0)
+                : this.smartLeadMotor.getMechanismSetpointVelocity().get(),
+            FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
   }
 }

@@ -78,7 +78,8 @@ public class TurretSubsystem extends SubsystemBase {
 
     this.turretMotor = new SparkFlex(TurretConstants.TURRET_MOTOR_ID, TurretConstants.MOTOR_TYPE);
 
-    this.turretSmartMotor = new SparkWrapper(this.turretMotor, TurretConstants.TURRET_MOTOR, this.turretMotorConfig);
+    this.turretSmartMotor =
+        new SparkWrapper(this.turretMotor, TurretConstants.TURRET_MOTOR, this.turretMotorConfig);
 
     this.turretMechanismConfig =
         new PivotConfig(turretSmartMotor)
@@ -122,10 +123,17 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public void goToTargetAngle() {
-    this.turretSmartMotor.setPosition(Angle.ofBaseUnits(this.calculator.getParameters().turretTargetAngle(), Degrees));
+    this.turretSmartMotor.setPosition(
+        Angle.ofBaseUnits(this.calculator.getParameters().turretTargetAngle(), Degrees));
   }
 
   public boolean isAtTargetAngle() {
-    return this.turretSmartMotor.getMechanismPosition().isNear(this.turretSmartMotor.getMechanismPositionSetpoint().isEmpty() == true ? Degrees.of(0) : this.turretSmartMotor.getMechanismPositionSetpoint().get(), TurretConstants.Position.ANGLE_ERROR_ALLOWED);
+    return this.turretSmartMotor
+        .getMechanismPosition()
+        .isNear(
+            this.turretSmartMotor.getMechanismPositionSetpoint().isEmpty() == true
+                ? Degrees.of(0)
+                : this.turretSmartMotor.getMechanismPositionSetpoint().get(),
+            TurretConstants.Position.ANGLE_ERROR_ALLOWED);
   }
 }
