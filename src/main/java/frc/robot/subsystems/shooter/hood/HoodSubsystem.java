@@ -116,7 +116,7 @@ public class HoodSubsystem extends SubsystemBase {
 
   private void updateInputs() {
     this.inputs.currentAngle = this.smartHoodMotor.getMechanismPosition().in(Degrees);
-    this.inputs.targetAngle = this.smartHoodMotor.getMechanismPositionSetpoint() == null ? Double.NaN : this.smartHoodMotor.getMechanismPositionSetpoint().get().in(Degrees);
+    this.inputs.targetAngle = this.smartHoodMotor.getMechanismPositionSetpoint().isEmpty() == true ? 0 : this.smartHoodMotor.getMechanismPositionSetpoint().get().in(Degrees);
     this.inputs.atTarget = isAtTargetAngle();
 
     Logger.processInputs("Subsystems/Shooter/Hood/", inputs);
@@ -128,9 +128,9 @@ public class HoodSubsystem extends SubsystemBase {
 
   public boolean isAtTargetAngle() {
     return this.smartHoodMotor.getMechanismPosition().in(Degrees)
-            <= HoodConstants.Position.ANGLE_ERROR_ALLOWED + (this.smartHoodMotor.getMechanismPositionSetpoint() == null ? Double.NaN : this.smartHoodMotor.getMechanismPositionSetpoint().get().in(Degrees))
+            <= HoodConstants.Position.ANGLE_ERROR_ALLOWED + (this.smartHoodMotor.getMechanismPositionSetpoint().isEmpty() == true ? 0 : this.smartHoodMotor.getMechanismPositionSetpoint().get().in(Degrees))
         && this.smartHoodMotor.getMechanismPosition().in(Degrees)
-            >= -HoodConstants.Position.ANGLE_ERROR_ALLOWED + (this.smartHoodMotor.getMechanismPositionSetpoint() == null ? Double.NaN : this.smartHoodMotor.getMechanismPositionSetpoint().get().in(Degrees));
+            >= -HoodConstants.Position.ANGLE_ERROR_ALLOWED + (this.smartHoodMotor.getMechanismPositionSetpoint().isEmpty() == true ? 0 : this.smartHoodMotor.getMechanismPositionSetpoint().get().in(Degrees));
   }
 
   public double getMinAngleDegrees() {

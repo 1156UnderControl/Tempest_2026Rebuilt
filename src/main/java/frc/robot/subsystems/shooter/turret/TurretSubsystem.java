@@ -1,6 +1,9 @@
 package frc.robot.subsystems.shooter.turret;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
+import java.util.Optional;
 
 import com.revrobotics.spark.SparkFlex;
 import edu.wpi.first.math.controller.PIDController;
@@ -115,7 +118,7 @@ public class TurretSubsystem extends SubsystemBase {
 
   private void updateInputs() {
     this.inputs.currentAngle = this.turretSmartMotor.getMechanismPosition().in(Degrees);
-    this.inputs.targetAngle = this.calculator.getParameters().turretTargetAngle();
+    this.inputs.targetAngle = this.turretSmartMotor.getMechanismPositionSetpoint().isEmpty() == true ? 0 : this.turretSmartMotor.getMechanismPositionSetpoint().get().in(Degrees);
     this.inputs.distanceToTarget = this.calculator.getParameters().distanceToTarget();
     this.inputs.atTarget = this.isAtTargetAngle();
 
@@ -128,8 +131,8 @@ public class TurretSubsystem extends SubsystemBase {
 
   public boolean isAtTargetAngle() {
     return this.turretSmartMotor.getMechanismPosition().in(Degrees)
-            <= HoodConstants.Position.ANGLE_ERROR_ALLOWED + this.calculator.getParameters().turretTargetAngle()
+            <= HoodConstants.Position.ANGLE_ERROR_ALLOWED + (this.turretSmartMotor.getMechanismPositionSetpoint().isEmpty() == true ? 0 : this.turretSmartMotor.getMechanismPositionSetpoint().get().in(Degrees))
         && this.turretSmartMotor.getMechanismPosition().in(Degrees)
-            >= -HoodConstants.Position.ANGLE_ERROR_ALLOWED + this.calculator.getParameters().turretTargetAngle();
+            >= -HoodConstants.Position.ANGLE_ERROR_ALLOWED + (this.turretSmartMotor.getMechanismPositionSetpoint().isEmpty() == true ? 0 : this.turretSmartMotor.getMechanismPositionSetpoint().get().in(Degrees));
   }
 }
