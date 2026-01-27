@@ -7,7 +7,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.shooter.HoodConstants;
 import frc.robot.constants.shooter.TurretConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import org.littletonrobotics.junction.Logger;
@@ -127,9 +126,6 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public boolean isAtTargetAngle() {
-    return this.turretSmartMotor.getMechanismPosition().in(Degrees)
-            <= HoodConstants.Position.ANGLE_ERROR_ALLOWED + (this.turretSmartMotor.getMechanismPositionSetpoint().isEmpty() == true ? 0 : this.turretSmartMotor.getMechanismPositionSetpoint().get().in(Degrees))
-        && this.turretSmartMotor.getMechanismPosition().in(Degrees)
-            >= -HoodConstants.Position.ANGLE_ERROR_ALLOWED + (this.turretSmartMotor.getMechanismPositionSetpoint().isEmpty() == true ? 0 : this.turretSmartMotor.getMechanismPositionSetpoint().get().in(Degrees));
+    return this.turretSmartMotor.getMechanismPosition().isNear(this.turretSmartMotor.getMechanismPositionSetpoint().isEmpty() == true ? Degrees.of(0) : this.turretSmartMotor.getMechanismPositionSetpoint().get(), TurretConstants.Position.ANGLE_ERROR_ALLOWED);
   }
 }

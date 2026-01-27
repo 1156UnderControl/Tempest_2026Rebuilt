@@ -4,13 +4,10 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.units.AngularVelocityUnit;
-import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.FlyWheelsConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 
-import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import org.littletonrobotics.junction.Logger;
@@ -195,9 +192,6 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   public boolean isAtTargetVelocity() {
-    return this.smartLeadMotor.getDutyCycle()
-            <= FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED + (this.smartLeadMotor.getMechanismSetpointVelocity().isEmpty() == true ? 0 : this.smartLeadMotor.getMechanismSetpointVelocity().get().in(RotationsPerSecond))
-        && this.smartLeadMotor.getDutyCycle()
-            >= -FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED + (this.smartLeadMotor.getMechanismSetpointVelocity().isEmpty() == true ? 0 : this.smartLeadMotor.getMechanismSetpointVelocity().get().in(RotationsPerSecond));
+    return this.smartLeadMotor.getMechanismVelocity().isNear(this.smartLeadMotor.getMechanismSetpointVelocity().isEmpty() == true ? RotationsPerSecond.of(0) : this.smartLeadMotor.getMechanismSetpointVelocity().get(), FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
   }
 }

@@ -127,10 +127,7 @@ public class HoodSubsystem extends SubsystemBase {
   }
 
   public boolean isAtTargetAngle() {
-    return this.smartHoodMotor.getMechanismPosition().in(Degrees)
-            <= HoodConstants.Position.ANGLE_ERROR_ALLOWED + (this.smartHoodMotor.getMechanismPositionSetpoint().isEmpty() == true ? 0 : this.smartHoodMotor.getMechanismPositionSetpoint().get().in(Degrees))
-        && this.smartHoodMotor.getMechanismPosition().in(Degrees)
-            >= -HoodConstants.Position.ANGLE_ERROR_ALLOWED + (this.smartHoodMotor.getMechanismPositionSetpoint().isEmpty() == true ? 0 : this.smartHoodMotor.getMechanismPositionSetpoint().get().in(Degrees));
+    return this.smartHoodMotor.getMechanismPosition().isNear(this.smartHoodMotor.getMechanismPositionSetpoint().isEmpty() == true ? Degrees.of(0) : this.smartHoodMotor.getMechanismPositionSetpoint().get(), HoodConstants.Position.ANGLE_ERROR_ALLOWED);
   }
 
   public double getMinAngleDegrees() {

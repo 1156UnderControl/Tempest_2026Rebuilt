@@ -43,7 +43,7 @@ public class FlyWheelsConstants {
   public static class Velocity {
     public static final AngularVelocity MAX_VELOCITY = RotationsPerSecond.of(83);
     public static final AngularAcceleration ACCELERATION = RotationsPerSecondPerSecond.of(40);
-    public static final double VELOCITY_ERROR_ALLOWED = 0.01;
+    public static final double VELOCITY_ERROR_ALLOWED = 1;
   }
 
   public static class Position {
