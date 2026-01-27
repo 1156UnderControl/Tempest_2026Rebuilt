@@ -38,7 +38,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 
-public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements ISwerve {
+public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
   private DriverController controller = DriverController.getInstance();
 
@@ -111,7 +111,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     return estimatorMultiCamera;
   }
 
-  @Override
   public void resetOdometryLimelight(Translation2d defaultPosition) {
     PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-center", false, false, 2);
     Optional<PoseEstimation> limelightPoseEstimation =
@@ -134,7 +133,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     return this.currentSpeeds;
   }
 
-  @Override
   public void driveAlignAngleJoystick() {
     if (controller.leftBumper().getAsBoolean()) {
       driveRotating(false);
@@ -163,14 +161,24 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     this.driveFieldOriented(desiredSpeeds);
   }
 
-  @Override
+  public void driveHeadingForward() {
+    Translation2d desiredSpeeds =
+        this.getLinearVelocityFromJoysticksTranslation(
+            MathUtil.applyDeadband(controller.getLeftY(), JoystickConstants.DEADBAND_TRANSLATION),
+            MathUtil.applyDeadband(controller.getLeftX(), JoystickConstants.DEADBAND_TRANSLATION));
+    this.state = "DRIVE_HEADING_FORWARD";
+    this.driveFieldOrientedLockedJoystickAngle(
+        desiredSpeeds,
+        MathUtil.applyDeadband(-controller.getLeftX(), JoystickConstants.DEADBAND_TRANSLATION),
+        MathUtil.applyDeadband(-controller.getLeftY(), JoystickConstants.DEADBAND_TRANSLATION));
+  }
+
   public void periodic() {
     super.periodic();
     LimelightHelpers.SetRobotOrientation(
         "limelight-center", OdometryEnabledSwerveSubsystem.robotOrientation, 0, 0, 0, 0, 0);
   }
 
-  @Override
   public boolean isAtTargetPositionWithHeading() {
     return stableAtTargetPose.isStableInCondition(
         () ->
@@ -180,19 +188,16 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
                 this.goToPoseHeadingDeadband));
   }
 
-  @Override
   public boolean isAtTargetPositionWithoutHeading() {
     return stableAtTargetPose.isStableInCondition(
         () -> isAtTargetPose(this.goToPoseTranslationDeadband, this.goToPoseTranslationDeadband));
   }
 
-  @Override
   public void stopSwerve() {
     this.driveRobotOriented(new ChassisSpeeds());
     this.state = "STOP_SWERVE";
   }
 
-  @Override
   public void driveAlignAngleJoystickSuperSlow() {
 
     ChassisSpeeds desiredSpeeds =
@@ -204,7 +209,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
         desiredSpeeds, controller.getCOS_Joystick(), controller.getSIN_Joystick());
   }
 
-  @Override
   public void driveAimingAtPoseTest() {
     Pose2d target = new Pose2d(8.272, 4.132, new Rotation2d());
     this.state = "DRIVE_AIMING_POSITION_TEST";
@@ -214,32 +218,26 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     this.driveAimingAtPosition(desiredSpeeds, target.getTranslation());
   }
 
-  @Override
   public Command runSysIdQuasistaticForward() {
     return super.sysIdQuasistatic(Direction.kForward);
   }
 
-  @Override
   public Command runSysIdQuasistaticReversed() {
     return super.sysIdQuasistatic(Direction.kReverse);
   }
 
-  @Override
   public Command runSysIdDynamicForward() {
     return super.sysIdDynamic(Direction.kForward);
   }
 
-  @Override
   public Command runSysIdDynamicReversed() {
     return super.sysIdDynamic(Direction.kReverse);
   }
 
-  @Override
   public Command runWheelRadiusCharacterization() {
     return super.wheelRadiusCharacterization();
   }
 
-  @Override
   public void goToClimbPoseRight() {
     if (DriverStation.getAlliance() != null) {
       super.driveToPose(
@@ -251,7 +249,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem implements I
     }
   }
 
-  @Override
   public void goToClimbPoseLeft() {
     if (DriverStation.getAlliance() != null) {
       super.driveToPose(
