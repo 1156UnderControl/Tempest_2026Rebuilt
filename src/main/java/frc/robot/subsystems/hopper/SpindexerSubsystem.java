@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.climber.ClimberConstants;
+import frc.robot.constants.hopper.SpindexerConstants;
 import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 import yams.gearing.GearBox;
@@ -46,9 +47,7 @@ public class SpindexerSubsystem extends SubsystemBase {
     return instance;
   }
 
-
-  private final SparkFlex climberMotor =
-      new SparkFlex();
+private final SparkFlex spindexerMotor = new SparkFlex(SpindexerConstants.ID_spindexerMotor, MotorType.kBrushless);
 
   private final DCMotor motors = DCMotor.getNeoVortex(1);
 
@@ -74,10 +73,9 @@ public class SpindexerSubsystem extends SubsystemBase {
           .withMotorInverted(false)
           .withClosedLoopRampRate(Seconds.of(0.25))
           .withOpenLoopRampRate(Seconds.of(0.25))
-          .withMechanismCircumference(Meters.of(ClimberConstants.MECHANISM_CIRCUNFERENCE))
           .withControlMode(ControlMode.CLOSED_LOOP);
 
-  private final SmartMotorController motor = new SparkWrapper(climberMotor, motors, smcConfig);
+  private final SmartMotorController motor = new SparkWrapper(spindexerMotor, motors, smcConfig);
 
   private final MechanismPositionConfig robotToMechanism =
       new MechanismPositionConfig()
@@ -96,12 +94,11 @@ public class SpindexerSubsystem extends SubsystemBase {
 
   private Distance heightSetpoint = ClimberConstants.setpoints.DEFAULT_HEIGHT;
 
-  public ClimberSubsystem() {}
+  public SpindexerSubsystem() {}
 
   @Override
   public void periodic() {
     this.updateInputs();
-    Logger.processInputs("Motors/Climber", climberInputs);
     climber.updateTelemetry();
   }
 
@@ -140,10 +137,6 @@ public class SpindexerSubsystem extends SubsystemBase {
   }
 
   public void updateInputs() {
-    climberInputs.climberAppliedVolts = climber.getMotor().getVoltage();
-    climberInputs.climberCurrent = climber.getMotor().getStatorCurrent();
-    climberInputs.climberPosition = climber.getMotor().getMeasurementPosition();
-    climberInputs.climberDesiredPosition = heightSetpoint;
-    climberInputs.climberVelocity = climber.getMotor().getMeasurementVelocity();
+
   }
 }
