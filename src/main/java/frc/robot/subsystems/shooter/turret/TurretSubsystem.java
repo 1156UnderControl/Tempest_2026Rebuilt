@@ -41,27 +41,27 @@ public class TurretSubsystem extends SubsystemBase {
             .withStatorCurrentLimit(TurretConstants.STATOR_CURRENT)
             .withClosedLoopRampRate(TurretConstants.CLOSED_RAMP_RATE)
             .withClosedLoopController(
-                TurretConstants.ClosedLoopController.P,
-                TurretConstants.ClosedLoopController.I,
-                TurretConstants.ClosedLoopController.D,
+                TurretConstants.ClosedLoopController.kP,
+                TurretConstants.ClosedLoopController.kI,
+                TurretConstants.ClosedLoopController.kD,
                 TurretConstants.Velocity.MAX_VELOCITY,
                 TurretConstants.Velocity.ACCELERATION)
             .withSimClosedLoopController(
-                TurretConstants.ClosedLoopController.SIM.P,
-                TurretConstants.ClosedLoopController.SIM.I,
-                TurretConstants.ClosedLoopController.SIM.D,
+                TurretConstants.ClosedLoopController.SIM.kP,
+                TurretConstants.ClosedLoopController.SIM.kI,
+                TurretConstants.ClosedLoopController.SIM.kD,
                 TurretConstants.Velocity.MAX_VELOCITY,
                 TurretConstants.Velocity.ACCELERATION)
             .withFeedforward(
                 new SimpleMotorFeedforward(
-                    TurretConstants.FeedForward.KS,
-                    TurretConstants.FeedForward.KV,
-                    TurretConstants.FeedForward.KA))
+                    TurretConstants.FeedForward.kS,
+                    TurretConstants.FeedForward.kV,
+                    TurretConstants.FeedForward.kA))
             .withSimFeedforward(
                 new SimpleMotorFeedforward(
-                    TurretConstants.FeedForward.SIM.KS,
-                    TurretConstants.FeedForward.SIM.KV,
-                    TurretConstants.FeedForward.SIM.KA))
+                    TurretConstants.FeedForward.SIM.kS,
+                    TurretConstants.FeedForward.SIM.kV,
+                    TurretConstants.FeedForward.SIM.kA))
             .withControlMode(TurretConstants.CONTROL_MODE);
 
     this.motor = new SparkFlex(TurretConstants.TURRET_MOTOR_ID, TurretConstants.MOTOR_TYPE);

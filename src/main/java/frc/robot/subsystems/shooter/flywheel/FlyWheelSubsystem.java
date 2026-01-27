@@ -41,27 +41,27 @@ public class FlyWheelSubsystem extends SubsystemBase {
             .withStatorCurrentLimit(FlyWheelsConstants.STATOR_CURRENT)
             .withClosedLoopRampRate(FlyWheelsConstants.CLOSED_RAMP_RATE)
             .withClosedLoopController(
-                FlyWheelsConstants.ClosedLoopController.P,
-                FlyWheelsConstants.ClosedLoopController.I,
-                FlyWheelsConstants.ClosedLoopController.D,
+                FlyWheelsConstants.ClosedLoopController.kP,
+                FlyWheelsConstants.ClosedLoopController.kI,
+                FlyWheelsConstants.ClosedLoopController.kD,
                 FlyWheelsConstants.Velocity.MAX_VELOCITY,
                 FlyWheelsConstants.Velocity.ACCELERATION)
             .withSimClosedLoopController(
-                FlyWheelsConstants.ClosedLoopController.SIM.P,
-                FlyWheelsConstants.ClosedLoopController.SIM.I,
-                FlyWheelsConstants.ClosedLoopController.SIM.D,
+                FlyWheelsConstants.ClosedLoopController.SIM.kP,
+                FlyWheelsConstants.ClosedLoopController.SIM.kI,
+                FlyWheelsConstants.ClosedLoopController.SIM.kD,
                 FlyWheelsConstants.Velocity.MAX_VELOCITY,
                 FlyWheelsConstants.Velocity.ACCELERATION)
             .withFeedforward(
                 new SimpleMotorFeedforward(
-                    FlyWheelsConstants.FeedForward.KS,
-                    FlyWheelsConstants.FeedForward.KV,
-                    FlyWheelsConstants.FeedForward.KA))
+                    FlyWheelsConstants.FeedForward.kS,
+                    FlyWheelsConstants.FeedForward.kV,
+                    FlyWheelsConstants.FeedForward.kA))
             .withSimFeedforward(
                 new SimpleMotorFeedforward(
-                    FlyWheelsConstants.FeedForward.SIM.KS,
-                    FlyWheelsConstants.FeedForward.SIM.KV,
-                    FlyWheelsConstants.FeedForward.SIM.KA))
+                    FlyWheelsConstants.FeedForward.SIM.kS,
+                    FlyWheelsConstants.FeedForward.SIM.kV,
+                    FlyWheelsConstants.FeedForward.SIM.kA))
             .withControlMode(FlyWheelsConstants.CONTROL_MODE);
 
     this.leadMotor = new TalonFX(FlyWheelsConstants.FLYWHEEL_MOTOR_LEAD_ID);
@@ -84,27 +84,27 @@ public class FlyWheelSubsystem extends SubsystemBase {
             .withStatorCurrentLimit(FlyWheelsConstants.STATOR_CURRENT)
             .withClosedLoopRampRate(FlyWheelsConstants.CLOSED_RAMP_RATE)
             .withClosedLoopController(
-                FlyWheelsConstants.ClosedLoopController.P,
-                FlyWheelsConstants.ClosedLoopController.I,
-                FlyWheelsConstants.ClosedLoopController.D,
+                FlyWheelsConstants.ClosedLoopController.kP,
+                FlyWheelsConstants.ClosedLoopController.kI,
+                FlyWheelsConstants.ClosedLoopController.kD,
                 FlyWheelsConstants.Velocity.MAX_VELOCITY,
                 FlyWheelsConstants.Velocity.ACCELERATION)
             .withSimClosedLoopController(
-                FlyWheelsConstants.ClosedLoopController.SIM.P,
-                FlyWheelsConstants.ClosedLoopController.SIM.I,
-                FlyWheelsConstants.ClosedLoopController.SIM.D,
+                FlyWheelsConstants.ClosedLoopController.SIM.kP,
+                FlyWheelsConstants.ClosedLoopController.SIM.kI,
+                FlyWheelsConstants.ClosedLoopController.SIM.kD,
                 FlyWheelsConstants.Velocity.MAX_VELOCITY,
                 FlyWheelsConstants.Velocity.ACCELERATION)
             .withFeedforward(
                 new SimpleMotorFeedforward(
-                    FlyWheelsConstants.FeedForward.KS,
-                    FlyWheelsConstants.FeedForward.KV,
-                    FlyWheelsConstants.FeedForward.KA))
+                    FlyWheelsConstants.FeedForward.kS,
+                    FlyWheelsConstants.FeedForward.kV,
+                    FlyWheelsConstants.FeedForward.kA))
             .withSimFeedforward(
                 new SimpleMotorFeedforward(
-                    FlyWheelsConstants.FeedForward.SIM.KS,
-                    FlyWheelsConstants.FeedForward.SIM.KV,
-                    FlyWheelsConstants.FeedForward.SIM.KA))
+                    FlyWheelsConstants.FeedForward.SIM.kS,
+                    FlyWheelsConstants.FeedForward.SIM.kV,
+                    FlyWheelsConstants.FeedForward.SIM.kA))
             .withControlMode(FlyWheelsConstants.CONTROL_MODE);
 
     this.followerMotor =

@@ -39,27 +39,27 @@ public class HoodSubsystem extends SubsystemBase {
             .withStatorCurrentLimit(HoodConstants.STATOR_CURRENT)
             .withClosedLoopRampRate(HoodConstants.CLOSED_RAMP_RATE)
             .withClosedLoopController(
-                HoodConstants.ClosedLoopController.P,
-                HoodConstants.ClosedLoopController.I,
-                HoodConstants.ClosedLoopController.D,
+                HoodConstants.ClosedLoopController.kP,
+                HoodConstants.ClosedLoopController.kI,
+                HoodConstants.ClosedLoopController.kD,
                 HoodConstants.Velocity.MAX_VELOCITY,
                 HoodConstants.Velocity.ACCELERATION)
             .withSimClosedLoopController(
-                HoodConstants.ClosedLoopController.SIM.P,
-                HoodConstants.ClosedLoopController.SIM.I,
-                HoodConstants.ClosedLoopController.SIM.D,
+                HoodConstants.ClosedLoopController.SIM.kP,
+                HoodConstants.ClosedLoopController.SIM.kI,
+                HoodConstants.ClosedLoopController.SIM.kD,
                 HoodConstants.Velocity.MAX_VELOCITY,
                 HoodConstants.Velocity.ACCELERATION)
             .withFeedforward(
                 new SimpleMotorFeedforward(
-                    HoodConstants.FeedForward.KS,
-                    HoodConstants.FeedForward.KV,
-                    HoodConstants.FeedForward.KA))
+                    HoodConstants.FeedForward.kS,
+                    HoodConstants.FeedForward.kV,
+                    HoodConstants.FeedForward.kA))
             .withSimFeedforward(
                 new SimpleMotorFeedforward(
-                    HoodConstants.FeedForward.SIM.KS,
-                    HoodConstants.FeedForward.SIM.KV,
-                    HoodConstants.FeedForward.SIM.KA))
+                    HoodConstants.FeedForward.SIM.kS,
+                    HoodConstants.FeedForward.SIM.kV,
+                    HoodConstants.FeedForward.SIM.kA))
             .withControlMode(HoodConstants.CONTROL_MODE);
 
     this.motor = new SparkMax(HoodConstants.HOOD_MOTOR_ID, HoodConstants.MOTOR_TYPE);
