@@ -17,6 +17,7 @@ import frc.robot.constants.intake.IntakeConstants;
 import org.littletonrobotics.junction.Logger;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
+import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.ElevatorConfig;
 import yams.mechanisms.config.FlyWheelConfig;
 import yams.mechanisms.positional.Elevator;
@@ -78,11 +79,17 @@ public class IntakeSubsystem extends SubsystemBase {
       new SmartMotorControllerConfig(this)
           .withMechanismCircumference(IntakeConstants.extensor.MECHANISM_CIRCUNFERENCE)
           .withClosedLoopController(
-              new PIDController(
+              new ExponentialProfilePIDController(
                   IntakeConstants.roller.PID.kP,
                   IntakeConstants.roller.PID.kI,
-                  IntakeConstants.roller.PID.kD))
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
+                  IntakeConstants.roller.PID.kD,
+                  ExponentialProfilePIDController.createElevatorConstraints(
+                      IntakeConstants.extensor.maxVolts,
+                      IntakeConstants.extensor.motor,
+                      IntakeConstants.extensor.mass,
+                      IntakeConstants.extensor.drumRadius,
+                      IntakeConstants.extensor.gearing)))
+          .withGearing(IntakeConstants.extensor.gearing)
           .withIdleMode(MotorMode.COAST)
           .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
           .withStatorCurrentLimit(Amps.of(40))
@@ -91,11 +98,11 @@ public class IntakeSubsystem extends SubsystemBase {
           .withControlMode(ControlMode.CLOSED_LOOP);
 
   private final SmartMotorController extensorMotor =
-      new SparkWrapper(extensorSparkFlex, DCMotor.getNeoVortex(1), extensorMotorConfig);
+      new SparkWrapper(extensorSparkFlex, IntakeConstants.extensor.motor, extensorMotorConfig);
 
   private final ElevatorConfig extensorConfig =
       new ElevatorConfig(rollerMotor)
-          .withMass(Pounds.of(1))
+          .withMass(IntakeConstants.extensor.mass)
           .withHardLimits(
               IntakeConstants.limits.MIN_EXTENSION, IntakeConstants.limits.MAX_EXTENSION)
           .withTelemetry("ExtensorMech", TelemetryVerbosity.HIGH)
