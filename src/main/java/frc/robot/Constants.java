@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.RobotBase;
  * (log replay from a file).
  */
 public final class Constants {
-  public static final RobotType robot = RobotType.SIMBOT;
+  public static final RobotType robot = RobotType.ALPHABOT;
   public static final boolean tuningMode = false;
 
   public static final double loopPeriodSecs = 0.02;
@@ -23,7 +23,8 @@ public final class Constants {
 
   public static Mode getMode() {
     return switch (robot) {
-      case COMPBOT, ALPHABOT -> RobotBase.isReal() ? Mode.REAL : Mode.REPLAY;
+      case ALPHABOT ->RobotBase.isReal() ? Mode.REAL : Mode.SIM;
+      case COMPBOT -> RobotBase.isReal() ? Mode.REAL : Mode.REPLAY;
       case SIMBOT -> Mode.SIM;
     };
   }
