@@ -5,7 +5,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import com.revrobotics.spark.SparkFlex;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.TurretConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
@@ -88,7 +88,7 @@ public class TurretSubsystem extends SubsystemBase {
                 TurretConstants.Position.TURRET_MIN_ANGLE,
                 TurretConstants.Position.TURRET_MAX_ANGLE)
             .withMOI(TurretConstants.TURRET_SIZE, TurretConstants.TURRET_MASS)
-            .withTelemetry(TurretConstants.MOTOR_NAME, TurretConstants.TELEMETRY);
+            .withTelemetry("Turret", TurretConstants.TELEMETRY);
 
     this.turretMechanism = new Pivot(turretMechanismConfig);
 
@@ -114,7 +114,7 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   private void updateInputs() {
-    this.inputs.currentAngle = this.turretSmartMotor.getMechanismPosition().in(Degrees);
+    this.inputs.currentAngle = this.turretMechanism.getAngle().in(Degrees);
     this.inputs.targetAngle = this.calculator.getParameters().turretTargetAngle();
     this.inputs.distanceToTarget = this.calculator.getParameters().distanceToTarget();
     this.inputs.atTarget = this.isAtTargetAngle();
@@ -122,9 +122,8 @@ public class TurretSubsystem extends SubsystemBase {
     Logger.processInputs("Subsystems/Shooter/Turret/", inputs);
   }
 
-  public void goToTargetAngle() {
-    this.turretSmartMotor.setPosition(
-        Angle.ofBaseUnits(this.calculator.getParameters().turretTargetAngle(), Degrees));
+  public Command goToTargetAngle() {
+    return this.turretMechanism.setAngle(() -> Degrees.of(this.calculator.getParameters().turretTargetAngle()));
   }
 
   public boolean isAtTargetAngle() {

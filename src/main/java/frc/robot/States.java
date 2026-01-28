@@ -40,7 +40,7 @@ public class States {
             .onlyIf(() -> DriverStation.isTeleopEnabled()));
 
     this.turretState = isHubMode ? "Aiming at Hub Pose State" : "Aiming to Feed Pose State";
-    this.turret.setDefaultCommand(Commands.run(() -> this.turret.goToTargetAngle(), turret));
+    this.turret.setDefaultCommand(this.turret.goToTargetAngle());
 
     this.hoodState = isHubMode ? "Aiming at Hub Pose State" : "Aiming to Feed Pose State";
     this.hood.setDefaultCommand(Commands.run(() -> this.hood.goToTargetAngle(), this.hood));
