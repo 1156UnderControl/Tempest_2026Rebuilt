@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake;
+package frc.robot.subsystems.intake.roller;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Meters;
@@ -12,12 +12,7 @@ import edu.wpi.first.units.measure.Voltage;
 import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog
-public class IntakeInputs {
-  Voltage extensorVoltage = Volts.of(0);
-  Current extensorCurrent = Amps.of(0);
-  Distance extensorPosition = Meters.of(0);
-  LinearVelocity extensorVelocity = MetersPerSecond.of(0);
-
+public class RollerInputs {
   Voltage rollerVoltage = Volts.of(0);
   Current rollerCurrent = Amps.of(0);
   Distance rollerPosition = Meters.of(0);
