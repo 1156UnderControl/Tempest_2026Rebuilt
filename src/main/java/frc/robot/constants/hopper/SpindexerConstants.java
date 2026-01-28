@@ -7,6 +7,9 @@ public class SpindexerConstants {
     public static final double SPINDEXER_MAX_VELOCITY = 0;
     public static final double SPINDEXER_MAX_ACCELERATION = 0;
     public static final double SPINDEXER_STOP = 0;
+    public static final double WHEEL_DIAMETER = 0;
+    public static final double WHEEL_MASS = 0;
+
 
   public class PID {
     public static final double P = 0;
