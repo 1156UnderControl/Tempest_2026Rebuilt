@@ -24,4 +24,24 @@ public class OdometryEnabledSwerveConfig extends BaseSwerveConfig {
     this.teleoperatedPoseEstimator = teleoperatedPoseEstimator;
     this.moveToPosePIDConfig = moveToPosePIDConfig;
   }
+
+  public OdometryEnabledSwerveConfig(
+      double maxRotationSpeed,
+      double velocityReductionFactor,
+      SwerveDeadbandsConfig deadbandsConfig,
+      SwervePathPlannerConfig pathPlannerConfig,
+      PoseEstimator autonomousPoseEstimator,
+      PoseEstimator teleoperatedPoseEstimator,
+      ProfiledPIDConfig headingPIDConfig,
+      MoveToPosePIDConfig moveToPosePIDConfig) {
+    super(
+        maxRotationSpeed,
+        velocityReductionFactor,
+        deadbandsConfig,
+        pathPlannerConfig,
+        headingPIDConfig);
+    this.autonomousPoseEstimator = autonomousPoseEstimator;
+    this.teleoperatedPoseEstimator = teleoperatedPoseEstimator;
+    this.moveToPosePIDConfig = moveToPosePIDConfig;
+  }
 }

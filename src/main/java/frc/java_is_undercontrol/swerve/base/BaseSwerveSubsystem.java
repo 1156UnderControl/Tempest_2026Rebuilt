@@ -8,6 +8,7 @@ import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -64,6 +65,8 @@ public class BaseSwerveSubsystem extends SubsystemBase {
 
   @AutoLogOutput private double lastDesiredJoystickAngleRadiansTeleop;
 
+  @AutoLogOutput private boolean robotBoostedOnJoystickControl = false;
+
   private final double FF_START_DELAY = 2.0; // Secs
   private final double FF_RAMP_RATE = 0.1; // Volts/Sec
 
@@ -71,6 +74,7 @@ public class BaseSwerveSubsystem extends SubsystemBase {
 
   double translationDeadband;
   double joystickAimDeadband;
+  double velocityReductionFactor;
 
   private Drive drive;
 
@@ -93,6 +97,7 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     configureAutoBuilder();
     this.translationDeadband = config.deadbandsConfig.translationDeadband;
     this.joystickAimDeadband = config.deadbandsConfig.joystickAimDeadband;
+    this.velocityReductionFactor = config.velocityReductionFactor;
   }
 
   /**
@@ -287,8 +292,11 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     }
   }
 
-  protected Translation2d getLinearVelocityFromJoysticksTranslation(double x, double y) {
-    double linearMagnitude = Math.hypot(x, y);
+  protected Translation2d getLinearVelocityTranslationFromJoysticks(double x, double y) {
+    double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), translationDeadband);
+    if (!robotBoostedOnJoystickControl) {
+      linearMagnitude = linearMagnitude * velocityReductionFactor;
+    }
     Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
     linearMagnitude = linearMagnitude * linearMagnitude;
     Translation2d joystickTranslation =
@@ -301,8 +309,30 @@ public class BaseSwerveSubsystem extends SubsystemBase {
         joystickTranslation.getY() * drive.getMaxLinearSpeedMetersPerSec());
   }
 
-  protected ChassisSpeeds getLinearVelocityFromJoysticksChassisSpeeds(double x, double y) {
-    double linearMagnitude = Math.hypot(x, y);
+  protected ChassisSpeeds getLinearVelocityChassisSpeedsFromJoysticks(
+      double x, double y, double angularRate) {
+    double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), translationDeadband);
+    if (!robotBoostedOnJoystickControl) {
+      linearMagnitude = linearMagnitude * 0.6;
+    }
+    Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
+    linearMagnitude = linearMagnitude * linearMagnitude;
+    Translation2d joystickTranslation =
+        new Pose2d(new Translation2d(), linearDirection)
+            .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
+            .getTranslation();
+
+    return new ChassisSpeeds(
+        joystickTranslation.getX() * drive.getMaxLinearSpeedMetersPerSec(),
+        joystickTranslation.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+        angularRate);
+  }
+
+  protected ChassisSpeeds getLinearVelocityChassisSpeedsFromJoysticks(double x, double y) {
+    double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), translationDeadband);
+    if (!robotBoostedOnJoystickControl) {
+      linearMagnitude = linearMagnitude * velocityReductionFactor;
+    }
     Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
     linearMagnitude = linearMagnitude * linearMagnitude;
     Translation2d joystickTranslation =
@@ -317,7 +347,7 @@ public class BaseSwerveSubsystem extends SubsystemBase {
   }
 
   protected void driveFieldOrientedLockedJoystickAngle(
-      ChassisSpeeds speeds, double xHeading, double yHeading) {
+      ChassisSpeeds speeds, double xHeading, double yHeading, double joystickAimDeadband) {
     if (this.lastDesiredJoystickAngleRadiansTeleop == Double.NaN) {
       this.lastDesiredJoystickAngleRadiansTeleop = this.getPose().getRotation().getRadians();
     }
@@ -342,6 +372,18 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     ChassisSpeeds adjustedSpeeds =
         new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, omega);
     driveFieldOriented(adjustedSpeeds);
+  }
+
+  protected void driveFieldOrientedLockedJoystickAngle(
+      ChassisSpeeds speeds, double xHeading, double yHeading) {
+    driveFieldOrientedLockedJoystickAngle(speeds, xHeading, yHeading, this.joystickAimDeadband);
+  }
+
+  protected void driveFieldOrientedLockedJoystickAngle(
+      Translation2d speeds, double xHeading, double yHeading, double joystickAimDeadband) {
+    ChassisSpeeds speedsWithTranslation = new ChassisSpeeds(speeds.getX(), speeds.getY(), 0);
+    driveFieldOrientedLockedJoystickAngle(
+        speedsWithTranslation, xHeading, yHeading, joystickAimDeadband);
   }
 
   protected void driveFieldOrientedLockedJoystickAngle(
@@ -373,13 +415,12 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     drive.runVelocity(speeds);
   }
 
-  protected ChassisSpeeds inputsToChassisSpeeds(double xInput, double yInput, double AngularRate) {
-    return new ChassisSpeeds(
-        xInput * this.MaxSpeed, yInput * this.MaxSpeed, AngularRate * this.MaxAngularRate);
+  public Command limitRobotJoystickControlVelocity() {
+    return Commands.runOnce(() -> this.robotBoostedOnJoystickControl = false);
   }
 
-  protected ChassisSpeeds inputsToChassisSpeeds(double xInput, double yInput) {
-    return new ChassisSpeeds(xInput * this.MaxSpeed, yInput * this.MaxSpeed, 0);
+  public Command boostRobotJoystickControlVelocity() {
+    return Commands.runOnce(() -> this.robotBoostedOnJoystickControl = true);
   }
 
   protected boolean isAtTargetHeading(double toleranceDegrees) {

@@ -104,6 +104,8 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     this.states.setDefaultStates();
+    this.driverController.turboActivate().onTrue(drive.boostRobotJoystickControlVelocity());
+    this.driverController.turboActivate().onFalse(drive.limitRobotJoystickControlVelocity());
     this.driverController.a().onTrue(this.states.shootState());
   }
 
