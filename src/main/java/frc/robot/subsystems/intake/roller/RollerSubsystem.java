@@ -1,4 +1,4 @@
-package frc.robot.subsystems.intake;
+package frc.robot.subsystems.intake.roller;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
@@ -17,10 +17,7 @@ import frc.robot.constants.intake.IntakeConstants;
 import org.littletonrobotics.junction.Logger;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
-import yams.math.ExponentialProfilePIDController;
-import yams.mechanisms.config.ElevatorConfig;
 import yams.mechanisms.config.FlyWheelConfig;
-import yams.mechanisms.positional.Elevator;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
@@ -29,8 +26,8 @@ import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
-public class IntakeSubsystem extends SubsystemBase {
-  private final IntakeInputsAutoLogged intakeInputs = new IntakeInputsAutoLogged();
+public class RollerSubsystem extends SubsystemBase {
+  private final RollerInputsAutoLogged rollerInputs = new RollerInputsAutoLogged();
 
   private final SparkFlex rollerMasterFlex =
       new SparkFlex(IntakeConstants.ID_intakeLeaderRollerMotor, MotorType.kBrushless);
@@ -72,69 +69,24 @@ public class IntakeSubsystem extends SubsystemBase {
 
   private final FlyWheel roller = new FlyWheel(rollerConfig);
 
-  private final SparkFlex extensorSparkFlex =
-      new SparkFlex(IntakeConstants.ID_intakeFollowerRollerMotor, MotorType.kBrushless);
-
-  private final SmartMotorControllerConfig extensorMotorConfig =
-      new SmartMotorControllerConfig(this)
-          .withMechanismCircumference(IntakeConstants.extensor.MECHANISM_CIRCUNFERENCE)
-          .withClosedLoopController(
-              new ExponentialProfilePIDController(
-                  IntakeConstants.roller.PID.kP,
-                  IntakeConstants.roller.PID.kI,
-                  IntakeConstants.roller.PID.kD,
-                  ExponentialProfilePIDController.createElevatorConstraints(
-                      IntakeConstants.extensor.maxVolts,
-                      IntakeConstants.extensor.motor,
-                      IntakeConstants.extensor.mass,
-                      IntakeConstants.extensor.drumRadius,
-                      IntakeConstants.extensor.gearing)))
-          .withGearing(IntakeConstants.extensor.gearing)
-          .withIdleMode(MotorMode.COAST)
-          .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
-          .withStatorCurrentLimit(Amps.of(40))
-          .withMotorInverted(false)
-          .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
-          .withControlMode(ControlMode.CLOSED_LOOP);
-
-  private final SmartMotorController extensorMotor =
-      new SparkWrapper(extensorSparkFlex, IntakeConstants.extensor.motor, extensorMotorConfig);
-
-  private final ElevatorConfig extensorConfig =
-      new ElevatorConfig(rollerMotor)
-          .withMass(IntakeConstants.extensor.mass)
-          .withHardLimits(
-              IntakeConstants.limits.MIN_EXTENSION, IntakeConstants.limits.MAX_EXTENSION)
-          .withTelemetry("ExtensorMech", TelemetryVerbosity.HIGH)
-          .withMechanismPositionConfig(IntakeConstants.extensor.robotToMechanism);
-
-  private final Elevator extensor = new Elevator(extensorConfig);
-
-  public IntakeSubsystem() {}
+  public RollerSubsystem() {}
 
   @Override
   public void periodic() {
     updateInputs();
-    Logger.processInputs("Subsystems/Intake", intakeInputs);
+    Logger.processInputs("Subsystems/Intake", rollerInputs);
     roller.updateTelemetry();
-    extensor.updateTelemetry();
   }
 
   @Override
   public void simulationPeriodic() {
     roller.simIterate();
-    extensor.simIterate();
   }
 
   public void updateInputs() {
-    intakeInputs.extensorVoltage = extensorMotor.getVoltage();
-    intakeInputs.extensorCurrent = extensorMotor.getStatorCurrent();
-    intakeInputs.extensorPosition = extensorMotor.getMeasurementPosition();
-    intakeInputs.extensorVelocity = extensorMotor.getMeasurementVelocity();
-
-    intakeInputs.rollerVoltage = rollerMotor.getVoltage();
-    intakeInputs.rollerCurrent = rollerMotor.getStatorCurrent();
-    intakeInputs.rollerPosition = rollerMotor.getMeasurementPosition();
-    intakeInputs.rollerVelocity = rollerMotor.getMeasurementVelocity();
+    rollerInputs.rollerVoltage = rollerMotor.getVoltage();
+    rollerInputs.rollerCurrent = rollerMotor.getStatorCurrent();
+    rollerInputs.rollerPosition = rollerMotor.getMeasurementPosition();
+    rollerInputs.rollerVelocity = rollerMotor.getMeasurementVelocity();
   }
 }
