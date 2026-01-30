@@ -190,7 +190,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   public void runVelocity() {
-    this.smartLeadMotor.setDutyCycle(this.calculator.getParameters().flyWheelsTargetVelocity());
+    this.smartLeadMotor.setDutyCycle(this.calculator.getParameters().flywheelSpeed());
   }
 
   public boolean isAtTargetVelocity() {

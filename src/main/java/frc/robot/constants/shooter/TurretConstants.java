@@ -10,7 +10,8 @@ import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
@@ -49,7 +50,8 @@ public class TurretConstants {
   }
 
   public static class Position {
-    public static final Translation2d TURRET_OFFSET_FROM_ROBOT_CENTER = new Translation2d(0, 0);
+    public static final Transform2d TURRET_OFFSET_FROM_ROBOT_CENTER =
+        new Transform2d(0, 0, Rotation2d.kZero);
     public static final boolean MOTOR_INVERTED = false;
     public static final double ANGLE_ERROR_ALLOWED = 1.0;
     public static final Angle TURRET_MIN_ANGLE = Degrees.of(-200);
