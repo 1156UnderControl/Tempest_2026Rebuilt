@@ -117,7 +117,7 @@ public class HoodSubsystem extends SubsystemBase {
   }
 
   private void updateInputs() {
-    this.inputs.currentAngle = this.smartHoodMotor.getMechanismPosition().in(Degrees);
+    this.inputs.currentAngle = this.hoodMechanism.getAngle().in(Degrees);
     this.inputs.targetAngle = this.calculator.getParameters().hoodAngle();
     this.inputs.atTarget = isAtTargetAngle();
 
