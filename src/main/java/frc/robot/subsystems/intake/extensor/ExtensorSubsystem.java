@@ -1,11 +1,24 @@
 package frc.robot.subsystems.intake.extensor;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.intake.IntakeConstants;
 import org.littletonrobotics.junction.Logger;
 import yams.math.ExponentialProfilePIDController;
@@ -59,6 +72,8 @@ public class ExtensorSubsystem extends SubsystemBase {
 
   private final Elevator extensor = new Elevator(extensorConfig);
 
+  private Distance setpoint = Meters.of(0);
+
   public ExtensorSubsystem() {}
 
   @Override
@@ -66,6 +81,12 @@ public class ExtensorSubsystem extends SubsystemBase {
     updateInputs();
     Logger.processInputs("Subsystems/Intake", extensorInputs);
     extensor.updateTelemetry();
+    setpoint =
+        Meters.of(
+            extensorMotor.getMechanismPositionSetpoint().isEmpty()
+                ? 0
+                : extensorMotor.getMechanismPositionSetpoint().get().in(Rotations)
+                    * IntakeConstants.extensor.MECHANISM_CIRCUNFERENCE.in(Meters));
   }
 
   @Override
@@ -78,5 +99,64 @@ public class ExtensorSubsystem extends SubsystemBase {
     extensorInputs.extensorCurrent = extensorMotor.getStatorCurrent();
     extensorInputs.extensorPosition = extensorMotor.getMeasurementPosition();
     extensorInputs.extensorVelocity = extensorMotor.getMeasurementVelocity();
+    extensorInputs.extensorSetpoint = setpoint;
+  }
+
+  public Command extend() {
+    return this.setLength(IntakeConstants.extensor.setpoints.INTAKE_EXTENDED_POSITION);
+  }
+
+  public Command retract() {
+    return this.setLength(IntakeConstants.extensor.setpoints.INTAKE_HOMED_POSITION);
+  }
+
+  public Command softStopExtensor(){
+    return disableExtensor().andThen(this.setDutyCycle(0)).finallyDo(() -> extensorMotor.startClosedLoopController());
+  }
+
+  private Command disableExtensor(){
+    return this.runOnce(() -> {
+      extensorMotor.setIdleMode(MotorMode.COAST);
+      extensorMotor.stopClosedLoopController();
+    });
+  }
+
+  public Command homeReset(Current threshhold) {
+      Debouncer       currentDebouncer  = new Debouncer(0.4);
+      Voltage runVolts          = Volts.of(-2);
+      AngularVelocity velocityThreshold = DegreesPerSecond.of(2);
+      return Commands.startRun(extensorMotor::stopClosedLoopController,
+                      () -> extensorMotor.setVoltage(runVolts))
+              .until(() -> currentDebouncer.calculate(extensorMotor.getStatorCurrent().gte(threshhold) &&
+                      extensorMotor.getMechanismVelocity().abs(DegreesPerSecond) <=
+                              velocityThreshold.in(DegreesPerSecond)))
+              .finallyDo(() -> {
+                  extensorMotor.setEncoderPosition(IntakeConstants.limits.MIN_EXTENSION);
+                  extensorMotor.startClosedLoopController();
+              });  }
+
+  public Command holdPID() {
+    return this.setLength(setpoint);
+  }
+
+  private Command setLength(Distance length) {
+    return extensor.setHeight(length);
+  }
+
+  public Command setDutyCycle(double dutyCycle) {
+    return extensor.set(dutyCycle);
+  }
+
+  public Trigger isAtCollision(){
+    Debouncer isAtPositionDebouncer = new Debouncer(4, DebounceType.kFalling);
+    return new Trigger(() -> isAtPositionDebouncer.calculate(isAtTargetAngle().getAsBoolean()));
+  }
+
+  public Trigger isAtTargetAngle() {
+    return new Trigger(
+        () ->
+            extensor
+                .getHeight()
+                .isNear(extensor.getHeight(), IntakeConstants.extensor.DEADBAND_IS_AT));
   }
 }
