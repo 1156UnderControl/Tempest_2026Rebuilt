@@ -33,11 +33,11 @@ public class RobotContainer {
 
   private final States states;
 
-  private final TurretSubsystem turret;
+  //private final TurretSubsystem turret;
 
-  private final HoodSubsystem hood;
+  //private final HoodSubsystem hood;
 
-  private final FlyWheelSubsystem flyWheel;
+  //private final FlyWheelSubsystem flyWheel;
 
   public final IDriverController driverController;
 
@@ -86,14 +86,16 @@ public class RobotContainer {
         break;
     }
 
-    this.turret = TurretSubsystem.getInstance();
-    this.hood = HoodSubsystem.getInstance();
-    this.flyWheel = FlyWheelSubsystem.getInstance();
+    //this.turret = TurretSubsystem.getInstance();
+    //this.hood = HoodSubsystem.getInstance();
+    //this.flyWheel = FlyWheelSubsystem.getInstance();
 
     this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
     this.namedCommandsRegistry.registerAllAutoCommands();
 
-    this.states = new States(this.drive, this.turret, this.hood, this.flyWheel);
+    //this.states = new States(this.drive, this.turret, this.hood, this.flyWheel);
+
+    this.states = new States(this.drive);
 
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     autoChooser.addOption("wheelRadiusCharacterization", drive.wheelRadiusCharacterization());
@@ -106,7 +108,7 @@ public class RobotContainer {
     this.states.setDefaultStates();
     this.driverController.turboActivate().onTrue(drive.boostRobotJoystickControlVelocity());
     this.driverController.turboActivate().onFalse(drive.limitRobotJoystickControlVelocity());
-    this.driverController.a().onTrue(this.states.shootState());
+    //this.driverController.a().onTrue(this.states.shootState());
   }
 
   public Command getAutonomousCommand() {
