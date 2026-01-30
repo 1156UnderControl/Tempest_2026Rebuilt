@@ -79,7 +79,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotPeriodic() {
-    ShooterCalculator.getInstance().clearShooterParameters();
+    ShooterCalculator.getInstance().clearShootingParameters();
     CommandScheduler.getInstance().run();
   }
 

@@ -115,8 +115,7 @@ public class TurretSubsystem extends SubsystemBase {
 
   private void updateInputs() {
     this.inputs.currentAngle = this.turretMechanism.getAngle().in(Degrees);
-    this.inputs.targetAngle = this.calculator.getParameters().turretTargetAngle();
-    this.inputs.distanceToTarget = this.calculator.getParameters().distanceToTarget();
+    this.inputs.targetAngle = this.calculator.getParameters().turretAngle().getDegrees();
     this.inputs.atTarget = this.isAtTargetAngle();
 
     Logger.processInputs("Subsystems/Shooter/Turret/", inputs);
@@ -124,16 +123,16 @@ public class TurretSubsystem extends SubsystemBase {
 
   public Command goToTargetAngle() {
     return this.turretMechanism.setAngle(
-        () -> Degrees.of(this.calculator.getParameters().turretTargetAngle()));
+        () -> Degrees.of(this.calculator.getParameters().turretAngle().getDegrees()));
   }
 
   public boolean isAtTargetAngle() {
-    return this.turretSmartMotor
-        .getMechanismPosition()
+    return this.turretMechanism
+        .getAngle()
         .isNear(
-            this.turretSmartMotor.getMechanismPositionSetpoint().isEmpty() == true
+            this.turretMechanism.getMechanismSetpoint().isEmpty()
                 ? Degrees.of(0)
-                : this.turretSmartMotor.getMechanismPositionSetpoint().get(),
+                : this.turretMechanism.getMechanismSetpoint().get(),
             TurretConstants.Position.ANGLE_ERROR_ALLOWED);
   }
 }

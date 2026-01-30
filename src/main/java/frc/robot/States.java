@@ -3,7 +3,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.shooter.ShooterCalculator;
 import frc.robot.subsystems.shooter.flywheel.FlyWheelSubsystem;
 import frc.robot.subsystems.shooter.hood.HoodSubsystem;
 import frc.robot.subsystems.shooter.turret.TurretSubsystem;
@@ -63,10 +62,5 @@ public class States {
                 ? "Shooting at Alliance Zone"
                 : "Preparing to Shoot at Alliance Zone";
     return Commands.parallel(Commands.run(() -> this.flyWheel.runVelocity(), flyWheel));
-  }
-
-  public Command setTargetModeCommand(boolean isHubMode) {
-    this.isHubMode = isHubMode;
-    return Commands.runOnce(() -> ShooterCalculator.getInstance().setHubMode(isHubMode));
   }
 }
