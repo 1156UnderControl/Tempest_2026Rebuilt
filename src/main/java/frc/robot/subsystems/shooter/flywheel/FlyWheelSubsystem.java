@@ -4,7 +4,6 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -39,7 +38,10 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
     this.motorConfig =
         new SmartMotorControllerConfig(this)
-            .withFollowers(Pair.of(new TalonFX(FlyWheelsConstants.FLYWHEEL_MOTOR_FOLLOWER_ID, CANBus.roboRIO()), true))
+            .withFollowers(
+                Pair.of(
+                    new TalonFX(FlyWheelsConstants.FLYWHEEL_MOTOR_FOLLOWER_ID, CANBus.roboRIO()),
+                    true))
             .withIdleMode(FlyWheelsConstants.MOTOR_MODE)
             .withGearing(FlyWheelsConstants.MOTOR_GEARING)
             .withMotorInverted(FlyWheelsConstants.Position.MOTOR_INVERTED_LEAD)
@@ -93,7 +95,6 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
     this.flywheelMechanism = new FlyWheel(flyWheelConfig);
 
-
     this.inputs = new FlyWheelInputsAutoLogged();
   }
 
@@ -121,13 +122,16 @@ public class FlyWheelSubsystem extends SubsystemBase {
         this.smartFlywheelMotor.getMechanismSetpointVelocity().isEmpty()
             ? 0
             : this.smartFlywheelMotor.getMechanismSetpointVelocity().get().in(RotationsPerSecond);
-    this.inputs.atTarget= isAtTargetVelocity();
+    this.inputs.atTarget = isAtTargetVelocity();
 
     Logger.processInputs("Subsystems/Shooter/FlyWheels/", inputs);
   }
 
   public void runVelocity() {
-    this.flywheelMechanism.setSpeed(() -> AngularVelocity.ofBaseUnits(this.calculator.getParameters().flywheelSpeed(), RotationsPerSecond));
+    this.flywheelMechanism.setSpeed(
+        () ->
+            AngularVelocity.ofBaseUnits(
+                this.calculator.getParameters().flywheelSpeed(), RotationsPerSecond));
   }
 
   public boolean isAtTargetVelocity() {

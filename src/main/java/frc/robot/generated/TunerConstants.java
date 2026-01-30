@@ -9,7 +9,6 @@ import com.ctre.phoenix6.signals.*;
 import com.ctre.phoenix6.swerve.*;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.*;
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.*;
@@ -36,13 +35,6 @@ public class TunerConstants {
   public static final double WHEEL_COF = 1.430;
   public static final double GEARBOX_REDUCTION = 1.430;
   public static final double ROBOT_SIZE = 0.830;
-
-  public static final Translation2d[] MODULE_OFFSETS = {
-    new Translation2d(10.43, 10.43),
-    new Translation2d(10.43, -10.43),
-    new Translation2d(-10.43, 10.43),
-    new Translation2d(-10.43, -10.43)
-  };
 
   private static final Slot0Configs ksteerGains =
       new Slot0Configs()

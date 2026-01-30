@@ -7,5 +7,4 @@ public class FlyWheelInputs {
   public double currentVelocity = 0;
   public double targetVelocity = 0;
   public boolean atTarget = false;
-
 }

@@ -1,13 +1,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.shooter.flywheel.FlyWheelSubsystem;
-import frc.robot.subsystems.shooter.hood.HoodSubsystem;
-import frc.robot.subsystems.shooter.turret.TurretSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-import org.littletonrobotics.junction.AutoLogOutput;
 
 public class States {
   private SwerveSubsystem drive;
@@ -17,9 +12,9 @@ public class States {
 
   private boolean isHubMode;
 
-  //@AutoLogOutput private String turretState;
-  //@AutoLogOutput private String hoodState;
-  //@AutoLogOutput private String flyWheelState;
+  // @AutoLogOutput private String turretState;
+  // @AutoLogOutput private String hoodState;
+  // @AutoLogOutput private String flyWheelState;
 
   // public States(
   //     SwerveSubsystem drive,
@@ -33,8 +28,7 @@ public class States {
   //   this.flyWheel = flyWheel;
   // }
 
-  public States(
-      SwerveSubsystem drive) {
+  public States(SwerveSubsystem drive) {
     this.isHubMode = true;
     this.drive = drive;
     // this.turret = turret;
