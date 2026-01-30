@@ -12,6 +12,8 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.intake.IntakeConstants;
 import org.littletonrobotics.junction.Logger;
@@ -88,5 +90,25 @@ public class RollerSubsystem extends SubsystemBase {
     rollerInputs.rollerCurrent = rollerMotor.getStatorCurrent();
     rollerInputs.rollerPosition = rollerMotor.getMeasurementPosition();
     rollerInputs.rollerVelocity = rollerMotor.getMeasurementVelocity();
+  }
+
+  public Command runRoller() {
+    return this.setDutyCycle(IntakeConstants.roller.setpoints.INTAKE_DUTY_CYCLE);
+  }
+
+  public Command runRollerReversed() {
+    return this.setDutyCycle(IntakeConstants.roller.setpoints.REVERSE_DUTY_CYCLE);
+  }
+
+  public Command stopRoller() {
+    return this.setDutyCycle(IntakeConstants.roller.setpoints.STOP_DUTY_CYCLE);
+  }
+
+  private Command setVoltage(Voltage voltage) {
+    return roller.setVoltage(voltage);
+  }
+
+  private Command setDutyCycle(double dutycycle) {
+    return roller.set(dutycycle);
   }
 }

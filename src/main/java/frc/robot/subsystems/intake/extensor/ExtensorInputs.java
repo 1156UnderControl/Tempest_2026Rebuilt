@@ -16,5 +16,6 @@ public class ExtensorInputs {
   Voltage extensorVoltage = Volts.of(0);
   Current extensorCurrent = Amps.of(0);
   Distance extensorPosition = Meters.of(0);
+  Distance extensorSetpoint = Meters.of(0);
   LinearVelocity extensorVelocity = MetersPerSecond.of(0);
 }

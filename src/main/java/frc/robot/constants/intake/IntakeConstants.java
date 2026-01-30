@@ -20,11 +20,6 @@ public class IntakeConstants {
   public static final int ID_intakeFollowerRollerMotor = 3;
   public static final int ID_intakeExtenderMotor = 4;
 
-  public class motor_values {
-    public static final double INTAKE_WHEELS_DUTY_CYCLE = 0;
-    public static final double INTAKE_WHEELS_STOP = 0;
-  }
-
   public class limits {
     public static final Distance MAX_EXTENSION = Meters.of(0.5);
     public static final Distance MIN_EXTENSION = Meters.of(0);
@@ -51,6 +46,12 @@ public class IntakeConstants {
       public static final double kV = 0;
       public static final double kS = 0;
     }
+
+    public class setpoints {
+      public static final double INTAKE_DUTY_CYCLE = 0.8;
+      public static final double REVERSE_DUTY_CYCLE = -0.8;
+      public static final double STOP_DUTY_CYCLE = 0;
+    }
   }
 
   public class extensor {
@@ -71,6 +72,8 @@ public class IntakeConstants {
             .withRelativePosition(new Translation3d(Meters.of(-0.25), Meters.of(0), Meters.of(0.5)))
             .withMovementPlane(Plane.XY);
 
+    public static final Distance DEADBAND_IS_AT = Meters.of(0.05);
+
     public class PID {
       public static final double kP = 0;
       public static final double kI = 0;
@@ -84,8 +87,8 @@ public class IntakeConstants {
     }
 
     public class setpoints {
-      public static final double INTAKE_EXTENDED_POSITION = 0;
-      public static final double INTAKE_HOMED_POSITION = 0;
+      public static final Distance INTAKE_EXTENDED_POSITION = limits.MAX_EXTENSION;
+      public static final Distance INTAKE_HOMED_POSITION = limits.MIN_EXTENSION;
     }
   }
 }
