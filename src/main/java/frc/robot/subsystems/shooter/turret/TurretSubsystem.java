@@ -127,12 +127,12 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public boolean isAtTargetAngle() {
-    return this.turretSmartMotor
-        .getMechanismPosition()
+    return this.turretMechanism
+        .getAngle()
         .isNear(
-            this.turretSmartMotor.getMechanismPositionSetpoint().isEmpty() == true
+            this.turretMechanism.getMechanismSetpoint().isEmpty()
                 ? Degrees.of(0)
-                : this.turretSmartMotor.getMechanismPositionSetpoint().get(),
+                : this.turretMechanism.getMechanismSetpoint().get(),
             TurretConstants.Position.ANGLE_ERROR_ALLOWED);
   }
 }
