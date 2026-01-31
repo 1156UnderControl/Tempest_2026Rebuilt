@@ -41,7 +41,8 @@ public class KickerSubsystem extends SubsystemBase {
               KickerConstants.Velocity.MAX_VELOCITY,
               KickerConstants.Velocity.ACCELERATION)
           .withGearing(KickerConstants.MOTOR_GEARING)
-          .withIdleMode(KickerConstants.MOTOR_MODE).withMechanismCircumference(Inches.of(2))
+          .withIdleMode(KickerConstants.MOTOR_MODE)
+          .withMechanismCircumference(Inches.of(2))
           .withMotorInverted(KickerConstants.Position.MOTOR_INVERTED)
           .withTelemetry(KickerConstants.MOTOR_NAME, KickerConstants.TELEMETRY);
 

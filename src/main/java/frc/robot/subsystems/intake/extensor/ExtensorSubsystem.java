@@ -36,7 +36,7 @@ public class ExtensorSubsystem extends SubsystemBase {
   private final ExtensorInputsAutoLogged extensorInputs = new ExtensorInputsAutoLogged();
 
   private final SparkFlex extensorSparkFlex =
-      new SparkFlex(IntakeConstants.ID_intakeFollowerRollerMotor, MotorType.kBrushless);
+      new SparkFlex(IntakeConstants.ID_intakeExtenderMotor, MotorType.kBrushless);
 
   private final SmartMotorControllerConfig extensorMotorConfig =
       new SmartMotorControllerConfig(this)
