@@ -21,7 +21,7 @@ public class IntakeConstants {
   public static final int ID_intakeExtenderMotor = 4;
 
   public class limits {
-    public static final Distance MAX_EXTENSION = Meters.of(0.5);
+    public static final Distance MAX_EXTENSION = Meters.of(0.25);
     public static final Distance MIN_EXTENSION = Meters.of(0);
   }
 
@@ -57,7 +57,7 @@ public class IntakeConstants {
   public class extensor {
     public static final Voltage maxVolts = Volts.of(10);
     public static final DCMotor motor = DCMotor.getNeoVortex(1);
-    public static final Mass mass = Kilograms.of(0.45);
+    public static final Mass mass = Kilograms.of(5);
     public static final Distance drumRadius = Meters.of(0.0305 / 2.0);
     public static final MechanismGearing gearing =
         new MechanismGearing(GearBox.fromReductionStages(4));
@@ -75,7 +75,7 @@ public class IntakeConstants {
     public static final Distance DEADBAND_IS_AT = Meters.of(0.05);
 
     public class PID {
-      public static final double kP = 0;
+      public static final double kP = 4.5;
       public static final double kI = 0;
       public static final double kD = 0;
     }
