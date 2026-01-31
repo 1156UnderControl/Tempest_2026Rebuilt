@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkFlex;
@@ -103,37 +104,49 @@ public class ExtensorSubsystem extends SubsystemBase {
   }
 
   public Command extend() {
-    return this.setLength(IntakeConstants.extensor.setpoints.INTAKE_EXTENDED_POSITION);
+    return this.setLength(IntakeConstants.extensor.setpoints.INTAKE_EXTENDED_POSITION).onlyWhile(isAtCollision()).andThen(softStopExtensor()).repeatedly();
   }
 
   public Command retract() {
     return this.setLength(IntakeConstants.extensor.setpoints.INTAKE_HOMED_POSITION);
   }
 
-  public Command softStopExtensor(){
-    return disableExtensor().andThen(this.setDutyCycle(0)).finallyDo(() -> extensorMotor.startClosedLoopController());
+  public Command shake(){
+    return this.extend().until(isAtTargetAngle()).andThen(this.retract().until(isAtTargetAngle())).repeatedly();
   }
 
-  private Command disableExtensor(){
-    return this.runOnce(() -> {
-      extensorMotor.setIdleMode(MotorMode.COAST);
-      extensorMotor.stopClosedLoopController();
-    });
+  public Command softStopExtensor() {
+    return disableExtensor()
+        .andThen(this.setDutyCycle(0).withTimeout(Seconds.of(2.5)))
+        .finallyDo(() -> extensorMotor.startClosedLoopController());
+  }
+
+  private Command disableExtensor() {
+    return this.runOnce(
+        () -> {
+          extensorMotor.setIdleMode(MotorMode.COAST);
+          extensorMotor.stopClosedLoopController();
+        });
   }
 
   public Command homeReset(Current threshhold) {
-      Debouncer       currentDebouncer  = new Debouncer(0.4);
-      Voltage runVolts          = Volts.of(-2);
-      AngularVelocity velocityThreshold = DegreesPerSecond.of(2);
-      return Commands.startRun(extensorMotor::stopClosedLoopController,
-                      () -> extensorMotor.setVoltage(runVolts))
-              .until(() -> currentDebouncer.calculate(extensorMotor.getStatorCurrent().gte(threshhold) &&
-                      extensorMotor.getMechanismVelocity().abs(DegreesPerSecond) <=
-                              velocityThreshold.in(DegreesPerSecond)))
-              .finallyDo(() -> {
-                  extensorMotor.setEncoderPosition(IntakeConstants.limits.MIN_EXTENSION);
-                  extensorMotor.startClosedLoopController();
-              });  }
+    Debouncer currentDebouncer = new Debouncer(0.4);
+    Voltage runVolts = Volts.of(-2);
+    AngularVelocity velocityThreshold = DegreesPerSecond.of(2);
+    return Commands.startRun(
+            extensorMotor::stopClosedLoopController, () -> extensorMotor.setVoltage(runVolts))
+        .until(
+            () ->
+                currentDebouncer.calculate(
+                    extensorMotor.getStatorCurrent().gte(threshhold)
+                        && extensorMotor.getMechanismVelocity().abs(DegreesPerSecond)
+                            <= velocityThreshold.in(DegreesPerSecond)))
+        .finallyDo(
+            () -> {
+              extensorMotor.setEncoderPosition(IntakeConstants.limits.MIN_EXTENSION);
+              extensorMotor.startClosedLoopController();
+            });
+  }
 
   public Command holdPID() {
     return this.setLength(setpoint);
@@ -147,8 +160,8 @@ public class ExtensorSubsystem extends SubsystemBase {
     return extensor.set(dutyCycle);
   }
 
-  public Trigger isAtCollision(){
-    Debouncer isAtPositionDebouncer = new Debouncer(4, DebounceType.kFalling);
+  public Trigger isAtCollision() {
+    Debouncer isAtPositionDebouncer = new Debouncer(3, DebounceType.kFalling);
     return new Trigger(() -> isAtPositionDebouncer.calculate(isAtTargetAngle().getAsBoolean()));
   }
 
