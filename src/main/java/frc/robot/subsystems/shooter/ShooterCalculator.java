@@ -9,8 +9,10 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.java_is_undercontrol.util.AllianceFlipUtil;
 import frc.robot.Constants;
 import frc.robot.RobotStates;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.FieldConstants.FieldStructurePoses;
 import frc.robot.constants.shooter.TurretConstants;
 import frc.robot.subsystems.shooter.interpolatingTreeMaps.FeedingMaps;
@@ -31,6 +33,10 @@ public class ShooterCalculator {
     private double hoodAngle = Double.NaN;
     private double turretVelocity;
     private double hoodVelocity;
+
+    
+
+
 
     public static ShooterCalculator getInstance() {
         if (instance == null)
@@ -79,7 +85,8 @@ public class ShooterCalculator {
                         robotRelativeVelocity.omegaRadiansPerSecond * phaseDelay));
 
         // Calculate distance from turret to target
-        Translation2d target = getTargetTranslation2d();
+        Translation2d target = getTargetTranslation2d(shooting);
+        Logger.recordOutput("target", target);
         Pose2d turretPosition = estimatedPose.transformBy(robotToTurret);
         double turretToTargetDistance = target.getDistance(turretPosition.getTranslation());
 
@@ -140,12 +147,21 @@ public class ShooterCalculator {
         latestParameters = null;
     }
 
-    private Translation2d getTargetTranslation2d() {
+    private Translation2d getTargetTranslation2d(boolean shooting) {
+
         Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
+        if(shooting)
         return alliance == Alliance.Blue
                 ? FieldStructurePoses.BLUE_HUB_POSE
                 : FieldStructurePoses.RED_HUB_POSE;
+
+        if(RobotStates.getInstance().isOnBlueDepotSide()){
+            return AllianceFlipUtil.applyOnlyX(FieldConstants.FieldStrategicPoses.LEFT_FEED_POSE);
+        }
+        else{
+            return AllianceFlipUtil.applyOnlyX(FieldConstants.FieldStrategicPoses.RIGHT_FEED_POSE);
+        }
     }
 
     private InterpolatingTreeMaps getMaps(boolean shooting) {

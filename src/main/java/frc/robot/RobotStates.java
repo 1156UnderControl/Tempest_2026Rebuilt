@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.robot.constants.FieldConstants;
 
 public class RobotStates {
 
@@ -40,5 +41,10 @@ public class RobotStates {
 
   public ChassisSpeeds getFieldVelocity() {
     return ChassisSpeeds.fromRobotRelativeSpeeds(robotVelocity, getRobotRotation());
+  }
+
+
+  public boolean isOnBlueDepotSide(){
+    return (robotPose.getY() > FieldConstants.fieldWidth/2);
   }
 }
