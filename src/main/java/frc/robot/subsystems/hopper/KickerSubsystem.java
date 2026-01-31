@@ -5,7 +5,6 @@
 package frc.robot.subsystems.hopper;
 
 import com.revrobotics.spark.SparkFlex;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.hopper.KickerConstants;
@@ -77,7 +76,7 @@ public class KickerSubsystem extends SubsystemBase {
     kickerInputs.spindexerVelocity = kickerMotor.getMeasurementVelocity();
   }
 
-  public Command setDutyCycle(double dutycycle){
+  public Command setDutyCycle(double dutycycle) {
     return kicker.set(dutycycle);
   }
 }

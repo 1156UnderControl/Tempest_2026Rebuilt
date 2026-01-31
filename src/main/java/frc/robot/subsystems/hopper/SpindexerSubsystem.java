@@ -1,7 +1,6 @@
 package frc.robot.subsystems.hopper;
 
 import com.revrobotics.spark.SparkFlex;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.hopper.SpindexerConstants;
@@ -69,7 +68,7 @@ public class SpindexerSubsystem extends SubsystemBase {
     spindexerInputs.spindexerVelocity = spindexerMotor.getMeasurementVelocity();
   }
 
-  public Command setDutyCycle(double dutycycle){
+  public Command setDutyCycle(double dutycycle) {
     return spindexer.set(dutycycle);
   }
 }
