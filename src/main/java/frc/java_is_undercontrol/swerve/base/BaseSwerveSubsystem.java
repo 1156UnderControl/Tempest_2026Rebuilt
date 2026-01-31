@@ -61,9 +61,7 @@ public class BaseSwerveSubsystem extends SubsystemBase {
 
   @AutoLogOutput private double targetHeadingRadians = Double.NaN;
 
-  @AutoLogOutput private double lastDesiredJoystickAngleRadiansAutonomous;
-
-  @AutoLogOutput private double lastDesiredJoystickAngleRadiansTeleop;
+  @AutoLogOutput private double lastDesiredJoystickAngleRadiansTeleop = Double.NaN;
 
   @AutoLogOutput private boolean robotBoostedOnJoystickControl = false;
 
@@ -270,15 +268,8 @@ public class BaseSwerveSubsystem extends SubsystemBase {
    */
   protected void driveFieldOrientedLockedAngle(
       ChassisSpeeds speeds, Rotation2d targetHeading, boolean allianceBasedVelocities) {
-    if (this.lastDesiredJoystickAngleRadiansAutonomous == Double.NaN) {
-      this.lastDesiredJoystickAngleRadiansAutonomous = this.getPose().getRotation().getRadians();
-    }
-    boolean isFlipped =
-        DriverStation.getAlliance().isPresent()
-            && DriverStation.getAlliance().get() == Alliance.Red;
     Rotation2d targetRotation = targetHeading;
-    this.lastDesiredJoystickAngleRadiansAutonomous =
-        targetHeading.rotateBy(Rotation2d.fromDegrees(isFlipped ? 180 : 0)).getRadians();
+    this.lastDesiredJoystickAngleRadiansTeleop = targetRotation.getRadians();
     this.targetHeadingDegrees = targetRotation.getDegrees();
     this.targetHeadingRadians = targetRotation.getRadians();
     double omega =
