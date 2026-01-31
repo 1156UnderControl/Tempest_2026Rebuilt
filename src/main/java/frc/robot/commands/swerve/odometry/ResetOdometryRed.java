@@ -16,7 +16,7 @@ public class ResetOdometryRed extends Command {
 
   @Override
   public void initialize() {
-    this.swerve.resetOdometry(new Pose2d(16.0,5.0, Rotation2d.fromDegrees(180)));
+    this.swerve.resetOdometry(new Pose2d(16.0, 5.0, Rotation2d.fromDegrees(180)));
   }
 
   @Override
