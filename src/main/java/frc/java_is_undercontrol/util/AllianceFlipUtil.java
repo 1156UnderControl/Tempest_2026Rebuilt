@@ -6,12 +6,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.constants.FieldConstants;
 
 public class AllianceFlipUtil {
-  public static double fieldWidth = Units.feetToMeters(26.0) + Units.inchesToMeters(5.0);
-  public static double fieldLength = Units.feetToMeters(57.0) + Units.inchesToMeters(6.875);
+  public static double fieldWidth = FieldConstants.fieldWidth;
+  public static double fieldLength = FieldConstants.fieldLength;
 
   public static double applyX(double x) {
     return shouldFlip() ? fieldLength - x : x;
@@ -42,6 +42,14 @@ public class AllianceFlipUtil {
     return shouldFlip()
         ? new Pose2d(apply(pose.getTranslation()), apply(pose.getRotation()))
         : pose;
+  }
+
+  public static Translation2d applyOnlyX(Translation2d translation){
+    return new Translation2d(applyX(translation.getX()), translation.getY());
+  }
+
+  public static Translation2d applyOnlyY(Translation2d translation){
+    return new Translation2d(translation.getX(), applyY(translation.getY()));
   }
 
   public static Pose2d applyOnlyTranslation(Pose2d pose) {
