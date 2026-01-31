@@ -117,7 +117,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   private void updateInputs() {
-    this.inputs.currentVelocity = this.smartFlywheelMotor.getDutyCycle();
+    this.inputs.currentVelocity = this.flywheelMechanism.getSpeed().in(RotationsPerSecond);
     this.inputs.targetVelocity =
         this.smartFlywheelMotor.getMechanismSetpointVelocity().isEmpty()
             ? 0
