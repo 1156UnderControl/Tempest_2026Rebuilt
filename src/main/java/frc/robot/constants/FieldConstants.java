@@ -11,8 +11,6 @@ import frc.robot.Constants;
 import java.io.IOException;
 import java.nio.file.Path;
 
-
-
 public class FieldConstants {
   public static final double fieldLength = AprilTagLayoutType.OFFICIAL.layout.getFieldLength();
   public static final double fieldWidth = AprilTagLayoutType.OFFICIAL.layout.getFieldLength();

@@ -11,7 +11,5 @@ public class KickerSubsystem extends SubsystemBase {
   public KickerSubsystem() {}
 
   @Override
-  public void periodic() {
-
-  }
+  public void periodic() {}
 }
