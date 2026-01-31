@@ -371,7 +371,7 @@ public class BaseSwerveSubsystem extends SubsystemBase {
         angleController.calculate(drive.getRotation().getRadians(), targetHeadingRadians);
     ChassisSpeeds adjustedSpeeds =
         new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, omega);
-    driveFieldOriented(adjustedSpeeds);
+    driveFieldOrientedAllianceBased(adjustedSpeeds);
   }
 
   protected void driveFieldOrientedLockedJoystickAngle(
