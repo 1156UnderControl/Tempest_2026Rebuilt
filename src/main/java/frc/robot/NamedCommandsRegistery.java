@@ -1,7 +1,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.commands.swerve.GoToClimbPoseLeft;
@@ -28,6 +27,12 @@ public class NamedCommandsRegistery {
   }
 
   private void registerResetOdometryCommands() {
-    NamedCommands.registerCommand("Reset Odometry Alliance", DriverStation.getAlliance().isPresent() ? (DriverStation.getAlliance().get() == Alliance.Blue ? new ResetOdometryBlue(drive) : new ResetOdometryRed(drive)) : new ResetOdometryRed(drive));
+    NamedCommands.registerCommand(
+        "Reset Odometry Alliance",
+        DriverStation.getAlliance().isPresent()
+            ? (DriverStation.getAlliance().get() == Alliance.Blue
+                ? new ResetOdometryBlue(drive)
+                : new ResetOdometryRed(drive))
+            : new ResetOdometryRed(drive));
   }
 }
