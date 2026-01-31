@@ -33,7 +33,7 @@ public final class KickerConstants {
   public static final MotorType MOTOR_TYPE = MotorType.kBrushless;
   public static final MotorMode MOTOR_MODE = MotorMode.BRAKE;
   public static final MechanismGearing MOTOR_GEARING =
-      new MechanismGearing(GearBox.fromReductionStages(4));
+      new MechanismGearing(GearBox.fromReductionStages(2.5));
   public static final ControlMode CONTROL_MODE = ControlMode.CLOSED_LOOP;
   public static final TelemetryVerbosity TELEMETRY = TelemetryVerbosity.HIGH;
   public static final Current STATOR_CURRENT_LIMIT = Amps.of(40);

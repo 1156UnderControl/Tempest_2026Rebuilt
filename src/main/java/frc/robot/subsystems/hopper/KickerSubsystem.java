@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.hopper;
 
+import static edu.wpi.first.units.Units.Inches;
+
 import com.revrobotics.spark.SparkFlex;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -39,7 +41,7 @@ public class KickerSubsystem extends SubsystemBase {
               KickerConstants.Velocity.MAX_VELOCITY,
               KickerConstants.Velocity.ACCELERATION)
           .withGearing(KickerConstants.MOTOR_GEARING)
-          .withIdleMode(KickerConstants.MOTOR_MODE)
+          .withIdleMode(KickerConstants.MOTOR_MODE).withMechanismCircumference(Inches.of(2))
           .withMotorInverted(KickerConstants.Position.MOTOR_INVERTED)
           .withTelemetry(KickerConstants.MOTOR_NAME, KickerConstants.TELEMETRY);
 
