@@ -27,7 +27,7 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 
 /** Constants describing the hopper's spindexer wheel. */
 public final class SpindexerConstants {
-  public static final int MOTOR_ID = 0;
+  public static final int MOTOR_ID = 1;
   public static final String MOTOR_NAME = "SpindexerMotor";
   public static final DCMotor MOTOR = DCMotor.getNeoVortex(1);
   public static final MotorType MOTOR_TYPE = MotorType.kBrushless;

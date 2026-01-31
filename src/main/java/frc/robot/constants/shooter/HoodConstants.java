@@ -26,7 +26,7 @@ import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 
 public class HoodConstants {
-  public static final int HOOD_MOTOR_ID = 21;
+  public static final int HOOD_MOTOR_ID = 8;
   public static final String MOTOR_NAME = "HoodMotor";
   public static final DCMotor HOOD_MOTOR = DCMotor.getNEO(1);
   public static final MotorMode MOTOR_MODE = MotorMode.BRAKE;

@@ -120,9 +120,13 @@ public class RobotContainer {
     this.spindexer.setDefaultCommand(spindexer.setDutyCycle(0));
     this.driverController.a().whileTrue(extensor.setDutyCycle(0.5));
     this.driverController.y().whileTrue(extensor.setDutyCycle(-0.5));
-    
-    this.driverController.b().whileTrue(spindexer.setDutyCycle(0.5).alongWith(kicker.setDutyCycle(0.5)));
-    this.driverController.x().whileTrue(spindexer.setDutyCycle(-0.5).alongWith(kicker.setDutyCycle(-0.5)));
+
+    this.driverController
+        .b()
+        .whileTrue(spindexer.setDutyCycle(0.5).alongWith(kicker.setDutyCycle(0.5)));
+    this.driverController
+        .x()
+        .whileTrue(spindexer.setDutyCycle(-0.5).alongWith(kicker.setDutyCycle(-0.5)));
 
     this.driverController.turboActivate().onTrue(drive.boostRobotJoystickControlVelocity());
     this.driverController.turboActivate().onFalse(drive.limitRobotJoystickControlVelocity());
