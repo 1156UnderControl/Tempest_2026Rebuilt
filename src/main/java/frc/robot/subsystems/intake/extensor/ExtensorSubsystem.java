@@ -104,15 +104,21 @@ public class ExtensorSubsystem extends SubsystemBase {
   }
 
   public Command extend() {
-    return this.setLength(IntakeConstants.extensor.setpoints.INTAKE_EXTENDED_POSITION).onlyWhile(isAtCollision()).andThen(softStopExtensor()).repeatedly();
+    return this.setLength(IntakeConstants.extensor.setpoints.INTAKE_EXTENDED_POSITION)
+        .onlyWhile(isAtCollision())
+        .andThen(softStopExtensor())
+        .repeatedly();
   }
 
   public Command retract() {
     return this.setLength(IntakeConstants.extensor.setpoints.INTAKE_HOMED_POSITION);
   }
 
-  public Command shake(){
-    return this.extend().until(isAtTargetAngle()).andThen(this.retract().until(isAtTargetAngle())).repeatedly();
+  public Command shake() {
+    return this.extend()
+        .until(isAtTargetAngle())
+        .andThen(this.retract().until(isAtTargetAngle()))
+        .repeatedly();
   }
 
   public Command softStopExtensor() {
