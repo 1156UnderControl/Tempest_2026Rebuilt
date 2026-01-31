@@ -43,7 +43,7 @@ public class KickerSubsystem extends SubsystemBase {
           .withGearing(KickerConstants.MOTOR_GEARING)
           .withIdleMode(KickerConstants.MOTOR_MODE)
           .withMechanismCircumference(Inches.of(2))
-          .withMotorInverted(KickerConstants.Position.MOTOR_INVERTED)
+          .withMotorInverted(true)
           .withTelemetry(KickerConstants.MOTOR_NAME, KickerConstants.TELEMETRY);
 
   private final SmartMotorController kickerMotor =
