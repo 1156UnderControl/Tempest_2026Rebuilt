@@ -15,6 +15,8 @@ import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
+import frc.robot.subsystems.hopper.KickerSubsystem;
+import frc.robot.subsystems.hopper.SpindexerSubsystem;
 import frc.robot.subsystems.intake.extensor.ExtensorSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -38,6 +40,10 @@ public class RobotContainer {
   // private final FlyWheelSubsystem flyWheel;
 
   private final ExtensorSubsystem extensor;
+
+  private final SpindexerSubsystem spindexer;
+
+  private final KickerSubsystem kicker;
 
   public final IDriverController driverController;
 
@@ -89,6 +95,8 @@ public class RobotContainer {
     // this.turret = TurretSubsystem.getInstance();
     // this.hood = HoodSubsystem.getInstance();
     // this.flyWheel = FlyWheelSubsystem.getInstance();
+    this.spindexer = SpindexerSubsystem.getInstance();
+    this.kicker = KickerSubsystem.getInstance();
     this.extensor = new ExtensorSubsystem();
 
     this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
@@ -108,8 +116,13 @@ public class RobotContainer {
   private void configureButtonBindings() {
     this.states.setDefaultStates();
     this.extensor.setDefaultCommand(extensor.setDutyCycle(0));
+    this.kicker.setDefaultCommand(kicker.setDutyCycle(0));
+    this.spindexer.setDefaultCommand(spindexer.setDutyCycle(0));
     this.driverController.a().whileTrue(extensor.setDutyCycle(0.5));
     this.driverController.y().whileTrue(extensor.setDutyCycle(-0.5));
+    
+    this.driverController.b().whileTrue(spindexer.setDutyCycle(0.5).alongWith(kicker.setDutyCycle(0.5)));
+    this.driverController.x().whileTrue(spindexer.setDutyCycle(-0.5).alongWith(kicker.setDutyCycle(-0.5)));
 
     this.driverController.turboActivate().onTrue(drive.boostRobotJoystickControlVelocity());
     this.driverController.turboActivate().onFalse(drive.limitRobotJoystickControlVelocity());
