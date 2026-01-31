@@ -8,12 +8,15 @@ import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.climber.ClimberConstants;
 import frc.robot.constants.hopper.SpindexerConstants;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
 import yams.mechanisms.config.FlyWheelConfig;
+import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
@@ -54,13 +57,19 @@ public class SpindexerSubsystem extends SubsystemBase {
           .withTelemetry("Spindexer Motor", TelemetryVerbosity.HIGH);
 
   private final FlyWheelConfig spindexerMechanismConfig =
-      new FlyWheelConfig(smartSpindexerMotor).withDiameter(Inches.of(4)).withMass(Pounds.of(1));
+      new FlyWheelConfig(smartSpindexerMotor)
+      .withDiameter(Inches.of(4))
+      .withMass(Pounds.of(1))
+      .withSoftLimit(RPM.of(SpindexerConstants.SPINDEXER_MIN_RPM), RPM.of(SpindexerConstants.SPINDEXER_MAX_RPM));
+      
+      private final FlyWheel spindexerMechanism = new FlyWheel(spindexerMechanismConfig);
 
   public SpindexerSubsystem() {}
 
   @Override
   public void periodic() {
     this.updateInputs();
+    spindexerMechanism.updateTelemetry();
   }
 
   @Override
