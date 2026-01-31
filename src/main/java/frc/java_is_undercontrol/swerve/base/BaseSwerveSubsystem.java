@@ -31,9 +31,9 @@ import frc.java_is_undercontrol.swerve.Drive;
 import frc.java_is_undercontrol.swerve.SwerveDevices;
 import frc.java_is_undercontrol.swerve.configs.BaseSwerveConfig;
 import frc.java_is_undercontrol.swerve.configs.SwervePathPlannerConfig;
-import frc.java_is_undercontrol.swerve.constants.SwerveConstants;
 import frc.java_is_undercontrol.util.CustomMath;
 import frc.java_is_undercontrol.util.Util;
+import frc.robot.generated.TunerConstants;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;
@@ -43,13 +43,13 @@ import org.littletonrobotics.junction.Logger;
 
 public class BaseSwerveSubsystem extends SubsystemBase {
 
-  public double MaxSpeed = SwerveConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  public double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   protected double MaxAngularRate;
 
   protected final double driveBaseRadius =
       Math.hypot(
-          SwerveConstants.FrontLeft.LocationX + SwerveConstants.FrontRight.LocationX / 2,
-          SwerveConstants.FrontLeft.LocationY + SwerveConstants.BackLeft.LocationY / 2);
+          TunerConstants.FrontLeft.LocationX + TunerConstants.FrontRight.LocationX / 2,
+          TunerConstants.FrontLeft.LocationY + TunerConstants.BackLeft.LocationY / 2);
 
   private final SwervePathPlannerConfig pathPlannerConfig;
 

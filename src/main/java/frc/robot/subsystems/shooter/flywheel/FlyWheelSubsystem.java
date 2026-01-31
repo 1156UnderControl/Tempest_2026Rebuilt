@@ -4,8 +4,10 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.FlyWheelsConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
@@ -21,17 +23,11 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   private final ShooterCalculator calculator;
 
-  private final SmartMotorControllerConfig leadConfig;
+  private final SmartMotorControllerConfig motorConfig;
   private final TalonFX leadMotor;
-  private final SmartMotorController smartLeadMotor;
-  private final FlyWheelConfig leadMechanismConfig;
-  private final FlyWheel leadMechanism;
-
-  private final SmartMotorControllerConfig followerConfig;
-  private final TalonFX followerMotor;
-  private final SmartMotorController smartFollowerMotor;
-  private final FlyWheelConfig followerMechanismConfig;
-  private final FlyWheel followerMechanism;
+  private final SmartMotorController smartFlywheelMotor;
+  private final FlyWheelConfig flyWheelConfig;
+  private final FlyWheel flywheelMechanism;
 
   private final FlyWheelInputsAutoLogged inputs;
 
@@ -40,8 +36,12 @@ public class FlyWheelSubsystem extends SubsystemBase {
   private FlyWheelSubsystem() {
     this.calculator = ShooterCalculator.getInstance();
 
-    this.leadConfig =
+    this.motorConfig =
         new SmartMotorControllerConfig(this)
+            .withFollowers(
+                Pair.of(
+                    new TalonFX(FlyWheelsConstants.FLYWHEEL_MOTOR_FOLLOWER_ID, CANBus.roboRIO()),
+                    true))
             .withIdleMode(FlyWheelsConstants.MOTOR_MODE)
             .withGearing(FlyWheelsConstants.MOTOR_GEARING)
             .withMotorInverted(FlyWheelsConstants.Position.MOTOR_INVERTED_LEAD)
@@ -86,71 +86,14 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
     this.leadMotor = new TalonFX(FlyWheelsConstants.FLYWHEEL_MOTOR_LEAD_ID);
 
-    this.smartLeadMotor =
-        new TalonFXWrapper(this.leadMotor, FlyWheelsConstants.FLYWHEEL_MOTOR, this.leadConfig);
+    this.smartFlywheelMotor =
+        new TalonFXWrapper(this.leadMotor, FlyWheelsConstants.FLYWHEEL_MOTOR, this.motorConfig);
 
-    this.leadMechanismConfig =
-        new FlyWheelConfig(smartLeadMotor)
+    this.flyWheelConfig =
+        new FlyWheelConfig(smartFlywheelMotor)
             .withMOI(FlyWheelsConstants.FLYWHEEL_SIZE, FlyWheelsConstants.FLYWHEEL_MASS);
 
-    this.leadMechanism = new FlyWheel(leadMechanismConfig);
-
-    this.followerConfig =
-        new SmartMotorControllerConfig(this)
-            .withIdleMode(FlyWheelsConstants.MOTOR_MODE)
-            .withGearing(FlyWheelsConstants.MOTOR_GEARING)
-            .withMotorInverted(FlyWheelsConstants.Position.MOTOR_INVERTED_FOLLOWER)
-            .withTelemetry(FlyWheelsConstants.MOTOR_FOLLOWER_NAME, FlyWheelsConstants.TELEMETRY)
-            .withStatorCurrentLimit(FlyWheelsConstants.STATOR_CURRENT)
-            .withClosedLoopRampRate(FlyWheelsConstants.CLOSED_RAMP_RATE)
-            .withClosedLoopController(
-                new ExponentialProfilePIDController(
-                    new PIDController(
-                        FlyWheelsConstants.ClosedLoopController.kP,
-                        FlyWheelsConstants.ClosedLoopController.kI,
-                        FlyWheelsConstants.ClosedLoopController.kD),
-                    ExponentialProfilePIDController.createFlywheelConstraints(
-                        FlyWheelsConstants.MAX_VOLTS,
-                        FlyWheelsConstants.FLYWHEEL_MOTOR,
-                        FlyWheelsConstants.FLYWHEEL_MASS,
-                        FlyWheelsConstants.FLYWHEEL_SIZE,
-                        FlyWheelsConstants.MOTOR_GEARING)))
-            .withSimClosedLoopController(
-                new ExponentialProfilePIDController(
-                    new PIDController(
-                        FlyWheelsConstants.ClosedLoopController.kP,
-                        FlyWheelsConstants.ClosedLoopController.kI,
-                        FlyWheelsConstants.ClosedLoopController.kD),
-                    ExponentialProfilePIDController.createFlywheelConstraints(
-                        FlyWheelsConstants.MAX_VOLTS,
-                        FlyWheelsConstants.FLYWHEEL_MOTOR,
-                        FlyWheelsConstants.FLYWHEEL_MASS,
-                        FlyWheelsConstants.FLYWHEEL_SIZE,
-                        FlyWheelsConstants.MOTOR_GEARING)))
-            .withFeedforward(
-                new SimpleMotorFeedforward(
-                    FlyWheelsConstants.FeedForward.kS,
-                    FlyWheelsConstants.FeedForward.kV,
-                    FlyWheelsConstants.FeedForward.kA))
-            .withSimFeedforward(
-                new SimpleMotorFeedforward(
-                    FlyWheelsConstants.FeedForward.SIM.kS,
-                    FlyWheelsConstants.FeedForward.SIM.kV,
-                    FlyWheelsConstants.FeedForward.SIM.kA))
-            .withControlMode(FlyWheelsConstants.CONTROL_MODE);
-
-    this.followerMotor =
-        new TalonFX(FlyWheelsConstants.FLYWHEEL_MOTOR_FOLLOWER_ID, CANBus.roboRIO());
-
-    this.smartFollowerMotor =
-        new TalonFXWrapper(
-            this.followerMotor, FlyWheelsConstants.FLYWHEEL_MOTOR, this.followerConfig);
-
-    this.followerMechanismConfig =
-        new FlyWheelConfig(smartFollowerMotor)
-            .withMOI(FlyWheelsConstants.FLYWHEEL_SIZE, FlyWheelsConstants.FLYWHEEL_MASS);
-
-    this.followerMechanism = new FlyWheel(followerMechanismConfig);
+    this.flywheelMechanism = new FlyWheel(flyWheelConfig);
 
     this.inputs = new FlyWheelInputsAutoLogged();
   }
@@ -164,42 +107,40 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    this.smartFollowerMotor.setDutyCycle(smartLeadMotor.getDutyCycle());
-    this.leadMechanism.updateTelemetry();
-    this.followerMechanism.updateTelemetry();
+    this.flywheelMechanism.updateTelemetry();
     this.updateInputs();
   }
 
   @Override
   public void simulationPeriodic() {
-    this.leadMechanism.simIterate();
-    this.followerMechanism.simIterate();
+    this.flywheelMechanism.simIterate();
   }
 
   private void updateInputs() {
-    this.inputs.currentVelocityLead = this.smartLeadMotor.getDutyCycle();
-    this.inputs.targetVelocityLead =
-        this.smartLeadMotor.getMechanismSetpointVelocity().isEmpty() == true
+    this.inputs.currentVelocity = this.smartFlywheelMotor.getDutyCycle();
+    this.inputs.targetVelocity =
+        this.smartFlywheelMotor.getMechanismSetpointVelocity().isEmpty()
             ? 0
-            : this.smartLeadMotor.getMechanismSetpointVelocity().get().in(RotationsPerSecond);
-    this.inputs.atTargetLead = isAtTargetVelocity();
-
-    this.inputs.currentVelocityFollower = this.smartFollowerMotor.getDutyCycle();
+            : this.smartFlywheelMotor.getMechanismSetpointVelocity().get().in(RotationsPerSecond);
+    this.inputs.atTarget = isAtTargetVelocity();
 
     Logger.processInputs("Subsystems/Shooter/FlyWheels/", inputs);
   }
 
   public void runVelocity() {
-    this.smartLeadMotor.setDutyCycle(this.calculator.getParameters().flywheelSpeed());
+    this.flywheelMechanism.setSpeed(
+        () ->
+            AngularVelocity.ofBaseUnits(
+                this.calculator.getParameters().flywheelSpeed(), RotationsPerSecond));
   }
 
   public boolean isAtTargetVelocity() {
-    return this.smartLeadMotor
-        .getMechanismVelocity()
+    return this.flywheelMechanism
+        .getSpeed()
         .isNear(
-            this.smartLeadMotor.getMechanismSetpointVelocity().isEmpty() == true
+            this.smartFlywheelMotor.getMechanismSetpointVelocity().isEmpty() == true
                 ? RotationsPerSecond.of(0)
-                : this.smartLeadMotor.getMechanismSetpointVelocity().get(),
+                : this.smartFlywheelMotor.getMechanismSetpointVelocity().get(),
             FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
   }
 }

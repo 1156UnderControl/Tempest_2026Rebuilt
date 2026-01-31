@@ -5,7 +5,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.HoodConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
@@ -116,25 +116,25 @@ public class HoodSubsystem extends SubsystemBase {
   }
 
   private void updateInputs() {
-    this.inputs.currentAngle = this.smartHoodMotor.getMechanismPosition().in(Degrees);
+    this.inputs.currentAngle = this.hoodMechanism.getAngle().in(Degrees);
     this.inputs.targetAngle = this.calculator.getParameters().hoodAngle();
     this.inputs.atTarget = isAtTargetAngle();
 
     Logger.processInputs("Subsystems/Shooter/Hood/", inputs);
   }
 
-  public void goToTargetAngle() {
-    this.smartHoodMotor.setPosition(
-        Angle.ofBaseUnits(this.calculator.getParameters().hoodAngle(), Degrees));
+  public Command goToTargetAngle() {
+    return this.hoodMechanism.setAngle(
+        () -> Degrees.of(this.calculator.getParameters().turretAngle().getDegrees()));
   }
 
   public boolean isAtTargetAngle() {
-    return this.smartHoodMotor
-        .getMechanismPosition()
+    return this.hoodMechanism
+        .getAngle()
         .isNear(
-            this.smartHoodMotor.getMechanismPositionSetpoint().isEmpty() == true
+            this.hoodMechanism.getMechanismSetpoint().isEmpty()
                 ? Degrees.of(0)
-                : this.smartHoodMotor.getMechanismPositionSetpoint().get(),
+                : this.hoodMechanism.getMechanismSetpoint().get(),
             HoodConstants.Position.ANGLE_ERROR_ALLOWED);
   }
 
