@@ -8,6 +8,7 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.FlyWheelsConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
@@ -127,8 +128,8 @@ public class FlyWheelSubsystem extends SubsystemBase {
     Logger.processInputs("Subsystems/Shooter/FlyWheels/", inputs);
   }
 
-  public void runVelocity() {
-    this.flywheelMechanism.setSpeed(
+  public Command runVelocity() {
+    return this.flywheelMechanism.setSpeed(
         () ->
             AngularVelocity.ofBaseUnits(
                 this.calculator.getParameters().flywheelSpeed(), RotationsPerSecond));
