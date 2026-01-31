@@ -121,10 +121,16 @@ public class TurretSubsystem extends SubsystemBase {
     Logger.processInputs("Subsystems/Shooter/Turret/", inputs);
   }
 
-  public Command goToTargetAngle() {
+  public Command trackHub() {
     return this.turretMechanism.setAngle(
         () -> Degrees.of(this.calculator.getParameters().turretAngle().getDegrees()));
   }
+
+  public Command trackPass() {
+    return this.turretMechanism.setAngle(
+        () -> Degrees.of(this.calculator.getParameters(false).turretAngle().getDegrees()));
+  }
+
 
   public boolean isAtTargetAngle() {
     return this.turretMechanism

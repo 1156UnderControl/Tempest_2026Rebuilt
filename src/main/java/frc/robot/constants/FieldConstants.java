@@ -17,8 +17,8 @@ import java.nio.file.Path;
  * have a blue alliance origin.
  */
 public class FieldConstants {
-  public static final double fieldLength = AprilTagLayoutType.OFFICIAL.layout.getFieldLength();
-  public static final double fieldWidth = AprilTagLayoutType.OFFICIAL.layout.getFieldLength();
+  public static final double fieldLength = 16.518;
+  public static final double fieldWidth = 8.043;
 
   public static final int aprilTagCount = AprilTagLayoutType.OFFICIAL.layout.getTags().size();
   public static final double aprilTagWidth = Units.inchesToMeters(6.5);
@@ -71,4 +71,9 @@ public class FieldConstants {
             8.069263 - BLUE_RIGHT_TOWER.getY(),
             Rotation2d.fromDegrees(180));
   }
+
+  public class FieldStrategicPoses {
+        public static final Translation2d RIGHT_FEED_POSE = new Translation2d(FieldConstants.fieldLength/8, FieldConstants.fieldWidth/4);
+        public static final Translation2d LEFT_FEED_POSE = new Translation2d(RIGHT_FEED_POSE.getX(), FieldConstants.fieldWidth - RIGHT_FEED_POSE.getY());
+    }
 }
