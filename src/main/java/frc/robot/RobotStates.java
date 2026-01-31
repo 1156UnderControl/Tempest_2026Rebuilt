@@ -37,4 +37,8 @@ public class RobotStates {
   public ChassisSpeeds getRobotVelocity() {
     return robotVelocity;
   }
+
+  public ChassisSpeeds getFieldVelocity() {
+    return ChassisSpeeds.fromRobotRelativeSpeeds(robotVelocity, getRobotRotation());
+  }
 }

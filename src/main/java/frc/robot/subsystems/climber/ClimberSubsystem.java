@@ -84,6 +84,7 @@ public class ClimberSubsystem extends SubsystemBase {
           .withMotorInverted(false)
           .withClosedLoopRampRate(Seconds.of(0.25))
           .withOpenLoopRampRate(Seconds.of(0.25))
+          .withMechanismCircumference(Meters.of(ClimberConstants.MECHANISM_CIRCUNFERENCE))
           .withControlMode(ControlMode.CLOSED_LOOP);
 
   private final SmartMotorController motor = new SparkWrapper(climberMotor, motors, smcConfig);

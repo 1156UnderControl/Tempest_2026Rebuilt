@@ -2,7 +2,6 @@ package frc.robot.subsystems.swerve;
 
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.path.PathConstraints;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -73,10 +72,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
   private final Supplier<ChassisSpeeds> currentSpeeds;
 
-  private static final double ROBOT_MASS_KG = 74.088;
-  private static final double ROBOT_MOI = 6.883;
-  private static final double WHEEL_COF = 1.2;
-
   private static final SwervePathPlannerConfig pathPlannerConfig =
       new SwervePathPlannerConfig(
           new PIDConstants(5, 0, 0),
@@ -87,6 +82,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     super(
         new OdometryEnabledSwerveConfig(
             0.75,
+            0.85,
             new SwerveDeadbandsConfig(
                 JoystickConstants.DEADBAND_TRANSLATION, JoystickConstants.DEADBAND_ROTATION),
             pathPlannerConfig,
@@ -143,9 +139,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
       return;
     }
     Translation2d desiredSpeeds =
-        this.getLinearVelocityFromJoysticksTranslation(
-            MathUtil.applyDeadband(controller.getLeftY(), JoystickConstants.DEADBAND_TRANSLATION),
-            MathUtil.applyDeadband(controller.getLeftX(), JoystickConstants.DEADBAND_TRANSLATION));
+        this.getLinearVelocityTranslationFromJoysticks(
+            controller.getLeftY(), controller.getLeftX());
     this.state = "DRIVE_ALIGN_ANGLE_JOY";
     this.driveFieldOrientedLockedJoystickAngle(
         desiredSpeeds,
@@ -155,7 +150,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
   public void driveRotating(boolean rotateRight) {
     ChassisSpeeds desiredSpeeds =
-        this.inputsToChassisSpeeds(
+        this.getLinearVelocityChassisSpeedsFromJoysticks(
             controller.getLeftY(), controller.getLeftX(), rotateRight ? -1.5 : 1.5);
     this.state = "DRIVE_ALIGN_ANGLE_ROTATING_RIGHT?:" + Boolean.toString(rotateRight);
     this.driveFieldOriented(desiredSpeeds);
@@ -163,14 +158,11 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
   public void driveHeadingForward() {
     Translation2d desiredSpeeds =
-        this.getLinearVelocityFromJoysticksTranslation(
-            MathUtil.applyDeadband(controller.getLeftY(), JoystickConstants.DEADBAND_TRANSLATION),
-            MathUtil.applyDeadband(controller.getLeftX(), JoystickConstants.DEADBAND_TRANSLATION));
+        this.getLinearVelocityTranslationFromJoysticks(
+            controller.getLeftY(), controller.getLeftX());
     this.state = "DRIVE_HEADING_FORWARD";
     this.driveFieldOrientedLockedJoystickAngle(
-        desiredSpeeds,
-        MathUtil.applyDeadband(-controller.getLeftX(), JoystickConstants.DEADBAND_TRANSLATION),
-        MathUtil.applyDeadband(-controller.getLeftY(), JoystickConstants.DEADBAND_TRANSLATION));
+        desiredSpeeds, -controller.getLeftX(), -controller.getLeftY(), 0.1);
   }
 
   public void periodic() {
@@ -199,9 +191,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   }
 
   public void driveAlignAngleJoystickSuperSlow() {
-
     ChassisSpeeds desiredSpeeds =
-        this.getLinearVelocityFromJoysticksChassisSpeeds(
+        this.getLinearVelocityChassisSpeedsFromJoysticks(
                 controller.getLeftY(), controller.getLeftX())
             .times(0.15);
     this.state = "DRIVE_ALIGN_ANGLE_JOY_SUPER_SLOW";
@@ -213,7 +204,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     Pose2d target = new Pose2d(8.272, 4.132, new Rotation2d());
     this.state = "DRIVE_AIMING_POSITION_TEST";
     Translation2d desiredSpeeds =
-        this.getLinearVelocityFromJoysticksTranslation(
+        this.getLinearVelocityTranslationFromJoysticks(
             controller.getLeftY(), controller.getLeftX());
     this.driveAimingAtPosition(desiredSpeeds, target.getTranslation());
   }
