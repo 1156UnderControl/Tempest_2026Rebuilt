@@ -61,9 +61,7 @@ public class BaseSwerveSubsystem extends SubsystemBase {
 
   @AutoLogOutput private double targetHeadingRadians = Double.NaN;
 
-  @AutoLogOutput private double lastDesiredJoystickAngleRadiansAutonomous;
-
-  @AutoLogOutput private double lastDesiredJoystickAngleRadiansTeleop;
+  @AutoLogOutput private double lastDesiredJoystickAngleRadians = Double.NaN;
 
   @AutoLogOutput private boolean robotBoostedOnJoystickControl = false;
 
@@ -270,15 +268,8 @@ public class BaseSwerveSubsystem extends SubsystemBase {
    */
   protected void driveFieldOrientedLockedAngle(
       ChassisSpeeds speeds, Rotation2d targetHeading, boolean allianceBasedVelocities) {
-    if (this.lastDesiredJoystickAngleRadiansAutonomous == Double.NaN) {
-      this.lastDesiredJoystickAngleRadiansAutonomous = this.getPose().getRotation().getRadians();
-    }
-    boolean isFlipped =
-        DriverStation.getAlliance().isPresent()
-            && DriverStation.getAlliance().get() == Alliance.Red;
     Rotation2d targetRotation = targetHeading;
-    this.lastDesiredJoystickAngleRadiansAutonomous =
-        targetHeading.rotateBy(Rotation2d.fromDegrees(isFlipped ? 180 : 0)).getRadians();
+    this.lastDesiredJoystickAngleRadians = targetRotation.getRadians();
     this.targetHeadingDegrees = targetRotation.getDegrees();
     this.targetHeadingRadians = targetRotation.getRadians();
     double omega =
@@ -348,15 +339,15 @@ public class BaseSwerveSubsystem extends SubsystemBase {
 
   protected void driveFieldOrientedLockedJoystickAngle(
       ChassisSpeeds speeds, double xHeading, double yHeading, double joystickAimDeadband) {
-    if (this.lastDesiredJoystickAngleRadiansTeleop == Double.NaN) {
-      this.lastDesiredJoystickAngleRadiansTeleop = this.getPose().getRotation().getRadians();
+    if (this.lastDesiredJoystickAngleRadians == Double.NaN) {
+      this.lastDesiredJoystickAngleRadians = this.getPose().getRotation().getRadians();
     }
     double angle =
         Util.withinHypotDeadband(xHeading, yHeading, joystickAimDeadband)
-            ? lastDesiredJoystickAngleRadiansTeleop
+            ? lastDesiredJoystickAngleRadians
             : Math.atan2(xHeading, yHeading);
     // It has to be de pre-inverted angle
-    this.lastDesiredJoystickAngleRadiansTeleop = angle;
+    this.lastDesiredJoystickAngleRadians = angle;
     boolean isFlipped =
         DriverStation.getAlliance().isPresent()
             && DriverStation.getAlliance().get() == Alliance.Red;

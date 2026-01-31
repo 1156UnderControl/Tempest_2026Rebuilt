@@ -1,8 +1,5 @@
 package frc.robot.subsystems.shooter;
 
-
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,6 +16,7 @@ import frc.robot.Constants;
 import frc.robot.RobotStates;
 import frc.robot.constants.FieldConstants.FieldStructurePoses;
 import frc.robot.constants.shooter.TurretConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class ShooterCalculator {
   private static ShooterCalculator instance;
@@ -46,8 +44,7 @@ public class ShooterCalculator {
       double turretVelocity,
       double hoodAngle,
       double hoodVelocity,
-      double flywheelSpeed
-      ) {}
+      double flywheelSpeed) {}
 
   // Cache parameters
   private ShootingParameters latestParameters = null;
@@ -165,7 +162,7 @@ public class ShooterCalculator {
     lastHoodAngle = hoodAngle;
 
     Logger.recordOutput("LookAheadPose", lookaheadPose);
-    
+
     latestParameters =
         new ShootingParameters(
             lookaheadTurretToTargetDistance >= minDistance
