@@ -1,27 +1,14 @@
 package frc.robot.subsystems.hopper;
 
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Pounds;
-import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
-
 import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.measure.AngularVelocity;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.climber.ClimberConstants;
 import frc.robot.constants.hopper.SpindexerConstants;
-import yams.gearing.GearBox;
-import yams.gearing.MechanismGearing;
 import yams.mechanisms.config.FlyWheelConfig;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
-import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
-import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
-import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class SpindexerSubsystem extends SubsystemBase {
@@ -34,46 +21,55 @@ public class SpindexerSubsystem extends SubsystemBase {
     return instance;
   }
 
-  private final SparkFlex spindexerMotor =
-      new SparkFlex(SpindexerConstants.ID_spindexerMotor, MotorType.kBrushless);
-  private final SmartMotorController smartSpindexerMotor =
-      new SparkWrapper(
-          spindexerMotor, DCMotor.getNeoVortex(0), new SmartMotorControllerConfig()) {};
+  private final SpindexerInputsAutoLogged spindexerInputs = new SpindexerInputsAutoLogged();
 
-  private final DCMotor motors = DCMotor.getNeoVortex(1);
+  private final SparkFlex spindexerFlex =
+      new SparkFlex(SpindexerConstants.MOTOR_ID, SpindexerConstants.MOTOR_TYPE);
 
-  private SmartMotorControllerConfig smartSpindexerMotorConfig =
+  private final SmartMotorControllerConfig smartSpindexerMotorConfig =
       new SmartMotorControllerConfig(this)
-          .withControlMode(ControlMode.CLOSED_LOOP)
+          .withControlMode(SpindexerConstants.CONTROL_MODE)
           .withClosedLoopController(
-              ClimberConstants.PID.kP,
-              ClimberConstants.PID.kI,
-              ClimberConstants.PID.kD,
-              RPM.of(SpindexerConstants.SPINDEXER_MAX_VELOCITY),
-              RotationsPerSecondPerSecond.of(SpindexerConstants.SPINDEXER_MAX_ACCELERATION))
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
-          .withIdleMode(MotorMode.BRAKE)
-          .withMotorInverted(false)
-          .withTelemetry("Spindexer Motor", TelemetryVerbosity.HIGH);
+              SpindexerConstants.ClosedLoopController.kP,
+              SpindexerConstants.ClosedLoopController.kI,
+              SpindexerConstants.ClosedLoopController.kD,
+              SpindexerConstants.Velocity.MAX_VELOCITY,
+              SpindexerConstants.Velocity.ACCELERATION)
+          .withGearing(SpindexerConstants.MOTOR_GEARING)
+          .withIdleMode(SpindexerConstants.MOTOR_MODE)
+          .withMotorInverted(SpindexerConstants.Position.MOTOR_INVERTED)
+          .withTelemetry(SpindexerConstants.MOTOR_NAME, SpindexerConstants.TELEMETRY);
+
+  private final SmartMotorController spindexerMotor =
+      new SparkWrapper(spindexerFlex, SpindexerConstants.MOTOR, smartSpindexerMotorConfig);
 
   private final FlyWheelConfig spindexerMechanismConfig =
-      new FlyWheelConfig(smartSpindexerMotor)
-      .withDiameter(Inches.of(4))
-      .withMass(Pounds.of(1))
-      .withSoftLimit(RPM.of(SpindexerConstants.SPINDEXER_MIN_RPM), RPM.of(SpindexerConstants.SPINDEXER_MAX_RPM));
-      
-      private final FlyWheel spindexerMechanism = new FlyWheel(spindexerMechanismConfig);
+      new FlyWheelConfig(spindexerMotor)
+          .withDiameter(SpindexerConstants.Wheel.DIAMETER)
+          .withMass(SpindexerConstants.Wheel.MASS)
+          .withMOI(SpindexerConstants.Wheel.MOI)
+          .withTelemetry(SpindexerConstants.MOTOR_NAME, SpindexerConstants.TELEMETRY);
+
+  private final FlyWheel spindexer = new FlyWheel(spindexerMechanismConfig);
 
   public SpindexerSubsystem() {}
 
   @Override
   public void periodic() {
     this.updateInputs();
-    spindexerMechanism.updateTelemetry();
   }
 
   @Override
   public void simulationPeriodic() {}
 
-  public void updateInputs() {}
+  public void updateInputs() {
+    spindexerInputs.spindexerAppliedVolts = spindexerMotor.getVoltage();
+    spindexerInputs.spindexerCurrent = spindexerMotor.getStatorCurrent();
+    spindexerInputs.spindexerPosition = spindexerMotor.getMeasurementPosition();
+    spindexerInputs.spindexerVelocity = spindexerMotor.getMeasurementVelocity();
+  }
+
+  public Command setDutyCycle(double dutycycle){
+    return spindexer.set(dutycycle);
+  }
 }
