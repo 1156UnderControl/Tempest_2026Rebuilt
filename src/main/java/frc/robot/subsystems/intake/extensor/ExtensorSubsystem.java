@@ -36,7 +36,7 @@ public class ExtensorSubsystem extends SubsystemBase {
   private final ExtensorInputsAutoLogged extensorInputs = new ExtensorInputsAutoLogged();
 
   private final SparkFlex extensorSparkFlex =
-      new SparkFlex(IntakeConstants.ID_intakeFollowerRollerMotor, MotorType.kBrushless);
+      new SparkFlex(IntakeConstants.ID_intakeExtenderMotor, MotorType.kBrushless);
 
   private final SmartMotorControllerConfig extensorMotorConfig =
       new SmartMotorControllerConfig(this)
@@ -53,11 +53,11 @@ public class ExtensorSubsystem extends SubsystemBase {
                       IntakeConstants.extensor.drumRadius,
                       IntakeConstants.extensor.gearing)))
           .withGearing(IntakeConstants.extensor.gearing)
-          .withIdleMode(MotorMode.COAST)
+          .withIdleMode(MotorMode.BRAKE)
           .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
           .withStatorCurrentLimit(Amps.of(40))
           .withMotorInverted(false)
-          .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+          .withFeedforward(new SimpleMotorFeedforward(0, 4.4, 0.05))
           .withControlMode(ControlMode.CLOSED_LOOP);
 
   private final SmartMotorController extensorMotor =
@@ -66,10 +66,13 @@ public class ExtensorSubsystem extends SubsystemBase {
   private final ElevatorConfig extensorConfig =
       new ElevatorConfig(extensorMotor)
           .withMass(IntakeConstants.extensor.mass)
+          .withSoftLimits(
+              IntakeConstants.limits.MIN_EXTENSION, IntakeConstants.limits.MAX_EXTENSION)
           .withHardLimits(
               IntakeConstants.limits.MIN_EXTENSION, IntakeConstants.limits.MAX_EXTENSION)
           .withTelemetry("ExtensorMech", TelemetryVerbosity.HIGH)
-          .withMechanismPositionConfig(IntakeConstants.extensor.robotToMechanism);
+          .withMechanismPositionConfig(IntakeConstants.extensor.robotToMechanism)
+          .withStartingHeight(Meters.of(0));
 
   private final Elevator extensor = new Elevator(extensorConfig);
 

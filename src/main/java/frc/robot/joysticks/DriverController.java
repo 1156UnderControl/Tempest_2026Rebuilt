@@ -25,12 +25,12 @@ public class DriverController implements IDriverController {
 
   @Override
   public double getLeftX() {
-    return driverController.getLeftX();
+    return -driverController.getLeftX();
   }
 
   @Override
   public double getLeftY() {
-    return driverController.getLeftY();
+    return -driverController.getLeftY();
   }
 
   @Override

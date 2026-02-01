@@ -12,10 +12,6 @@ import frc.robot.Constants;
 import java.io.IOException;
 import java.nio.file.Path;
 
-/**
- * Contains various field dimensions and useful reference points. All units are in meters and poses
- * have a blue alliance origin.
- */
 public class FieldConstants {
   public static final double fieldLength = 16.518;
   public static final double fieldWidth = 8.043;

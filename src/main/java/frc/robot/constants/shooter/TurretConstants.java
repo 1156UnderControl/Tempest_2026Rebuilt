@@ -28,7 +28,7 @@ import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 
 public class TurretConstants {
-  public static final int TURRET_MOTOR_ID = 20;
+  public static final int TURRET_MOTOR_ID = 7;
   public static final String MOTOR_NAME = "TurretMotor";
   public static final DCMotor TURRET_MOTOR = DCMotor.getNeoVortex(1);
   public static final MotorMode MOTOR_MODE = MotorMode.BRAKE;
