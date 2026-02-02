@@ -44,11 +44,11 @@ public class AllianceFlipUtil {
         : pose;
   }
 
-  public static Translation2d applyOnlyX(Translation2d translation){
+  public static Translation2d applyOnlyX(Translation2d translation) {
     return new Translation2d(applyX(translation.getX()), translation.getY());
   }
 
-  public static Translation2d applyOnlyY(Translation2d translation){
+  public static Translation2d applyOnlyY(Translation2d translation) {
     return new Translation2d(translation.getX(), applyY(translation.getY()));
   }
 

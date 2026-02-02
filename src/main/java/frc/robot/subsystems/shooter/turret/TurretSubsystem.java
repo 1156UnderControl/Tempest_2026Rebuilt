@@ -131,7 +131,6 @@ public class TurretSubsystem extends SubsystemBase {
         () -> Degrees.of(this.calculator.getParameters(false).turretAngle().getDegrees()));
   }
 
-
   public boolean isAtTargetAngle() {
     return this.turretMechanism
         .getAngle()
