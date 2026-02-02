@@ -48,43 +48,45 @@ public class ExtensorSubsystem extends SubsystemBase {
   private Distance setpoint = Meters.of(0);
 
   public ExtensorSubsystem() {
-    this.extensorMotor = new SparkFlex(IntakeConstants.ID_intakeExtenderMotor, MotorType.kBrushless);
+    this.extensorMotor =
+        new SparkFlex(IntakeConstants.ID_intakeExtenderMotor, MotorType.kBrushless);
 
     this.smartExtensorMotorConfig =
-      new SmartMotorControllerConfig(this)
-          .withMechanismCircumference(IntakeConstants.extensor.MECHANISM_CIRCUNFERENCE)
-          .withClosedLoopController(
-              new ExponentialProfilePIDController(
-                  IntakeConstants.roller.PID.kP,
-                  IntakeConstants.roller.PID.kI,
-                  IntakeConstants.roller.PID.kD,
-                  ExponentialProfilePIDController.createElevatorConstraints(
-                      IntakeConstants.extensor.maxVolts,
-                      IntakeConstants.extensor.motor,
-                      IntakeConstants.extensor.mass,
-                      IntakeConstants.extensor.drumRadius,
-                      IntakeConstants.extensor.gearing)))
-          .withGearing(IntakeConstants.extensor.gearing)
-          .withIdleMode(MotorMode.BRAKE)
-          .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
-          .withStatorCurrentLimit(Amps.of(40))
-          .withMotorInverted(false)
-          .withFeedforward(new SimpleMotorFeedforward(0, 4.4, 0.05))
-          .withControlMode(ControlMode.CLOSED_LOOP);
-    
+        new SmartMotorControllerConfig(this)
+            .withMechanismCircumference(IntakeConstants.extensor.MECHANISM_CIRCUNFERENCE)
+            .withClosedLoopController(
+                new ExponentialProfilePIDController(
+                    IntakeConstants.roller.PID.kP,
+                    IntakeConstants.roller.PID.kI,
+                    IntakeConstants.roller.PID.kD,
+                    ExponentialProfilePIDController.createElevatorConstraints(
+                        IntakeConstants.extensor.maxVolts,
+                        IntakeConstants.extensor.motor,
+                        IntakeConstants.extensor.mass,
+                        IntakeConstants.extensor.drumRadius,
+                        IntakeConstants.extensor.gearing)))
+            .withGearing(IntakeConstants.extensor.gearing)
+            .withIdleMode(MotorMode.BRAKE)
+            .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
+            .withStatorCurrentLimit(Amps.of(40))
+            .withMotorInverted(false)
+            .withFeedforward(new SimpleMotorFeedforward(0, 4.4, 0.05))
+            .withControlMode(ControlMode.CLOSED_LOOP);
+
     this.smartExtensorMotor =
-      new SparkWrapper(this.extensorMotor, IntakeConstants.extensor.motor, this.smartExtensorMotorConfig);
+        new SparkWrapper(
+            this.extensorMotor, IntakeConstants.extensor.motor, this.smartExtensorMotorConfig);
 
     this.extensorMechanismConfig =
-      new ElevatorConfig(smartExtensorMotor)
-          .withMass(IntakeConstants.extensor.mass)
-          .withSoftLimits(
-              IntakeConstants.limits.MIN_EXTENSION, IntakeConstants.limits.MAX_EXTENSION)
-          .withHardLimits(
-              IntakeConstants.limits.MIN_EXTENSION, IntakeConstants.limits.MAX_EXTENSION)
-          .withTelemetry("ExtensorMech", TelemetryVerbosity.HIGH)
-          .withMechanismPositionConfig(IntakeConstants.extensor.robotToMechanism)
-          .withStartingHeight(Meters.of(0));
+        new ElevatorConfig(smartExtensorMotor)
+            .withMass(IntakeConstants.extensor.mass)
+            .withSoftLimits(
+                IntakeConstants.limits.MIN_EXTENSION, IntakeConstants.limits.MAX_EXTENSION)
+            .withHardLimits(
+                IntakeConstants.limits.MIN_EXTENSION, IntakeConstants.limits.MAX_EXTENSION)
+            .withTelemetry("ExtensorMech", TelemetryVerbosity.HIGH)
+            .withMechanismPositionConfig(IntakeConstants.extensor.robotToMechanism)
+            .withStartingHeight(Meters.of(0));
 
     this.extensorMechanism = new Elevator(extensorMechanismConfig);
   }
@@ -152,7 +154,8 @@ public class ExtensorSubsystem extends SubsystemBase {
     Voltage runVolts = Volts.of(-2);
     AngularVelocity velocityThreshold = DegreesPerSecond.of(2);
     return Commands.startRun(
-            this.smartExtensorMotor::stopClosedLoopController, () -> this.smartExtensorMotor.setVoltage(runVolts))
+            this.smartExtensorMotor::stopClosedLoopController,
+            () -> this.smartExtensorMotor.setVoltage(runVolts))
         .until(
             () ->
                 currentDebouncer.calculate(
@@ -188,6 +191,7 @@ public class ExtensorSubsystem extends SubsystemBase {
         () ->
             this.extensorMechanism
                 .getHeight()
-                .isNear(this.extensorMechanism.getHeight(), IntakeConstants.extensor.DEADBAND_IS_AT));
+                .isNear(
+                    this.extensorMechanism.getHeight(), IntakeConstants.extensor.DEADBAND_IS_AT));
   }
 }

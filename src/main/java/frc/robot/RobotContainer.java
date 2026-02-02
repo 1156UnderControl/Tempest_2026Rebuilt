@@ -112,11 +112,12 @@ public class RobotContainer {
   private void configureButtonBindings() {
     this.states.setDefaultStates();
 
-    this.driverController
-        .a()
-        .whileTrue(this.states.shootState());
+    this.driverController.a().whileTrue(this.states.shootState());
 
-    this.driverController.turboActivate().onTrue(Commands.run(() -> this.drive.boostRobotJoystickControlVelocity(), drive)).onFalse(Commands.run(() -> this.drive.limitRobotJoystickControlVelocity(), drive));
+    this.driverController
+        .turboActivate()
+        .onTrue(Commands.run(() -> this.drive.boostRobotJoystickControlVelocity(), drive))
+        .onFalse(Commands.run(() -> this.drive.limitRobotJoystickControlVelocity(), drive));
     this.driverController.a().onTrue(this.states.shootState());
   }
 

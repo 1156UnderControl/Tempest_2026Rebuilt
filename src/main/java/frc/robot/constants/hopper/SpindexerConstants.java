@@ -33,7 +33,6 @@ public final class SpindexerConstants {
     private Velocity() {}
   }
 
-
   public static final class ClosedLoopController {
     public static final double kP = 0;
     public static final double kI = 0;

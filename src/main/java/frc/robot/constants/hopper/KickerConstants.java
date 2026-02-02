@@ -26,14 +26,12 @@ public final class KickerConstants {
 
   private KickerConstants() {}
 
-
   public static final class Velocity {
     public static final AngularVelocity MAX_VELOCITY = RPM.of(3000);
     public static final AngularAcceleration ACCELERATION = RotationsPerSecondPerSecond.of(150);
 
     private Velocity() {}
   }
-
 
   public static final class ClosedLoopController {
     public static final double kP = 0;
