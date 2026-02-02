@@ -5,10 +5,14 @@
 package frc.robot.subsystems.hopper.kicker;
 
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
+import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,6 +23,9 @@ import yams.mechanisms.config.FlyWheelConfig;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
+import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class KickerSubsystem extends SubsystemBase {
@@ -34,11 +41,11 @@ public class KickerSubsystem extends SubsystemBase {
   private KickerSubsystem() {
     this.kickerInputs = new KickerInputsAutoLogged();
 
-    this.kickerMotor = new SparkFlex(KickerConstants.MOTOR_ID, KickerConstants.MOTOR_TYPE);
+    this.kickerMotor = new SparkFlex(KickerConstants.MOTOR_ID, MotorType.kBrushless);
 
     this.smartKickerMotorConfig =
       new SmartMotorControllerConfig(this)
-          .withControlMode(KickerConstants.CONTROL_MODE)
+          .withControlMode(ControlMode.CLOSED_LOOP)
           .withClosedLoopController(
               KickerConstants.ClosedLoopController.kP,
               KickerConstants.ClosedLoopController.kI,
@@ -46,20 +53,20 @@ public class KickerSubsystem extends SubsystemBase {
               KickerConstants.Velocity.MAX_VELOCITY,
               KickerConstants.Velocity.ACCELERATION)
           .withGearing(KickerConstants.MOTOR_GEARING)
-          .withIdleMode(KickerConstants.MOTOR_MODE)
+          .withIdleMode(MotorMode.BRAKE)
           .withMechanismCircumference(Inches.of(2))
           .withMotorInverted(true)
-          .withTelemetry(KickerConstants.MOTOR_NAME, KickerConstants.TELEMETRY);
+          .withTelemetry("Kicker Motor", TelemetryVerbosity.HIGH);
 
     this.smartKickerMotor =
-      new SparkWrapper(kickerMotor, KickerConstants.MOTOR, smartKickerMotorConfig);
+      new SparkWrapper(kickerMotor, DCMotor.getNeoVortex(1), smartKickerMotorConfig);
 
     this.kickerMechanismConfig =
       new FlyWheelConfig(this.smartKickerMotor)
-          .withDiameter(KickerConstants.Wheel.DIAMETER)
-          .withMass(KickerConstants.Wheel.MASS)
-          .withMOI(KickerConstants.Wheel.MOI)
-          .withTelemetry(KickerConstants.MOTOR_NAME, KickerConstants.TELEMETRY)
+          .withDiameter(Inches.of(4))
+          .withMass(Kilograms.of(0.45))
+          .withMOI(KilogramSquareMeters.of(0.003))
+          .withTelemetry("Kicker Mechanism", TelemetryVerbosity.HIGH)
           .withMechanismPositionConfig(IntakeConstants.roller.robotToMechanism);
 
     this.kickerMechanism = new FlyWheel(this.kickerMechanismConfig);
