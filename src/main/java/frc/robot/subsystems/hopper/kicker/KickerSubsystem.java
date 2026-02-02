@@ -8,6 +8,8 @@ import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.revrobotics.spark.SparkFlex;
+
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.hopper.KickerConstants;
@@ -22,18 +24,19 @@ import yams.motorcontrollers.local.SparkWrapper;
 public class KickerSubsystem extends SubsystemBase {
   private static KickerSubsystem instance;
 
-  public static KickerSubsystem getInstance() {
-    if (instance == null) {
-      instance = new KickerSubsystem();
-    }
-    return instance;
-  }
+  private final KickerInputsAutoLogged kickerInputs;
+  private final SparkFlex kickerMotor;
+  private SmartMotorControllerConfig smartKickerMotorConfig;
+  private final SmartMotorController smartKickerMotor;
+  private final FlyWheelConfig kickerMechanismConfig;
+  private final FlyWheel kickerMechanism;
 
-  private final SparkFlex kickerFlex =
-      new SparkFlex(KickerConstants.MOTOR_ID, KickerConstants.MOTOR_TYPE);
-  private final KickerInputsAutoLogged kickerInputs = new KickerInputsAutoLogged();
+  private KickerSubsystem() {
+    this.kickerInputs = new KickerInputsAutoLogged();
 
-  private SmartMotorControllerConfig smartKickerMotorConfig =
+    this.kickerMotor = new SparkFlex(KickerConstants.MOTOR_ID, KickerConstants.MOTOR_TYPE);
+
+    this.smartKickerMotorConfig =
       new SmartMotorControllerConfig(this)
           .withControlMode(KickerConstants.CONTROL_MODE)
           .withClosedLoopController(
@@ -48,41 +51,47 @@ public class KickerSubsystem extends SubsystemBase {
           .withMotorInverted(true)
           .withTelemetry(KickerConstants.MOTOR_NAME, KickerConstants.TELEMETRY);
 
-  private final SmartMotorController kickerMotor =
-      new SparkWrapper(kickerFlex, KickerConstants.MOTOR, smartKickerMotorConfig);
+    this.smartKickerMotor =
+      new SparkWrapper(kickerMotor, KickerConstants.MOTOR, smartKickerMotorConfig);
 
-  private final FlyWheelConfig kickerMechanismConfig =
-      new FlyWheelConfig(kickerMotor)
+    this.kickerMechanismConfig =
+      new FlyWheelConfig(this.smartKickerMotor)
           .withDiameter(KickerConstants.Wheel.DIAMETER)
           .withMass(KickerConstants.Wheel.MASS)
           .withMOI(KickerConstants.Wheel.MOI)
           .withTelemetry(KickerConstants.MOTOR_NAME, KickerConstants.TELEMETRY)
           .withMechanismPositionConfig(IntakeConstants.roller.robotToMechanism);
 
-  private final FlyWheel kicker = new FlyWheel(kickerMechanismConfig);
+    this.kickerMechanism = new FlyWheel(this.kickerMechanismConfig);
+  }
 
-  public KickerSubsystem() {}
+  public static KickerSubsystem getInstance() {
+    if (instance == null) {
+      instance = new KickerSubsystem();
+    }
+    return instance;
+  }
 
   @Override
   public void periodic() {
     this.updateInputs();
-    this.kicker.updateTelemetry();
+    this.kickerMechanism.updateTelemetry();
   }
 
   @Override
   public void simulationPeriodic() {
-    this.kicker.simIterate();
+    this.kickerMechanism.simIterate();
   }
 
   public void updateInputs() {
-    kickerInputs.kickerAppliedVolts = kickerMotor.getVoltage();
-    kickerInputs.kickerCurrent = kickerMotor.getStatorCurrent();
-    kickerInputs.kickerPosition = kickerMotor.getMeasurementPosition();
-    kickerInputs.kickerVelocity = kickerMotor.getMechanismVelocity();
-    kickerInputs.kickerTargetVelocity = kickerMotor.getMechanismSetpointVelocity().isEmpty() ? RotationsPerSecond.of(0) : kickerMotor.getMechanismSetpointVelocity().get();
+    kickerInputs.kickerAppliedVolts = smartKickerMotor.getVoltage();
+    kickerInputs.kickerCurrent = smartKickerMotor.getStatorCurrent();
+    kickerInputs.kickerPosition = smartKickerMotor.getMeasurementPosition();
+    kickerInputs.kickerVelocity = smartKickerMotor.getMechanismVelocity();
+    kickerInputs.kickerTargetVelocity = smartKickerMotor.getMechanismSetpointVelocity().isEmpty() ? RotationsPerSecond.of(0) : smartKickerMotor.getMechanismSetpointVelocity().get();
   }
 
-  public Command setDutyCycle(double dutycycle) {
-    return kicker.set(dutycycle);
+  public Command setDutyCycle(AngularVelocity velocity) {
+    return kickerMechanism.setSpeed(velocity);
   }
 }
