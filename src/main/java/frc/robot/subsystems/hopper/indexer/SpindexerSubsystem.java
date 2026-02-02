@@ -1,12 +1,19 @@
 package frc.robot.subsystems.hopper.indexer;
 
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.KilogramMetersPerSecond;
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
+import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.hopper.SpindexerConstants;
@@ -50,13 +57,13 @@ public class SpindexerSubsystem extends SubsystemBase {
           .withMotorInverted(false)
           .withTelemetry("Spindexer Motor", TelemetryVerbosity.HIGH);
 
-    this.smartSpindexerMotor = new SparkWrapper(this.spindexerMotor, SpindexerConstants.MOTOR, this.smartSpindexerMotorConfig);
+    this.smartSpindexerMotor = new SparkWrapper(this.spindexerMotor, DCMotor.getNeoVortex(1), this.smartSpindexerMotorConfig);
     
     this.spindexerMechanismConfig =
       new FlyWheelConfig(this.smartSpindexerMotor)
-          .withDiameter(SpindexerConstants.Wheel.DIAMETER)
-          .withMass(SpindexerConstants.Wheel.MASS)
-          .withMOI(SpindexerConstants.Wheel.MOI)
+          .withDiameter(Inches.of(4))
+          .withMass(Kilograms.of(0.45))
+          .withMOI(KilogramSquareMeters.of(0.003))
           .withTelemetry("Spindexer Mechanism", TelemetryVerbosity.HIGH);
 
     this.spindexerMechanism = new FlyWheel(spindexerMechanismConfig);

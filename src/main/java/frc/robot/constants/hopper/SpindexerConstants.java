@@ -24,7 +24,6 @@ import yams.gearing.MechanismGearing;
 /** Constants describing the hopper's spindexer wheel. */
 public final class SpindexerConstants {
   public static final int MOTOR_ID = 1;
-  public static final DCMotor MOTOR = DCMotor.getNeoVortex(1);
   public static final MechanismGearing MOTOR_GEARING =
       new MechanismGearing(GearBox.fromReductionStages(4));
   public static final Current STATOR_CURRENT_LIMIT = Amps.of(40);
@@ -34,14 +33,6 @@ public final class SpindexerConstants {
 
   private SpindexerConstants() {}
 
-  public static final class Wheel {
-    public static final Distance DIAMETER = Inches.of(4);
-    public static final Mass MASS = Kilograms.of(0.45);
-    public static final MomentOfInertia MOI = KilogramSquareMeters.of(0.003);
-
-    private Wheel() {}
-  }
-
   public static final class Velocity {
     public static final AngularVelocity MAX_VELOCITY = RPM.of(3000);
     public static final AngularAcceleration ACCELERATION = RotationsPerSecondPerSecond.of(150);
@@ -49,11 +40,6 @@ public final class SpindexerConstants {
     private Velocity() {}
   }
 
-  public static final class Position {
-    public static final boolean MOTOR_INVERTED = false;
-
-    private Position() {}
-  }
 
   public static final class ClosedLoopController {
     public static final double kP = 0;
