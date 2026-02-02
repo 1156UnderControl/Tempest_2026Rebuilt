@@ -91,7 +91,7 @@ public class KickerSubsystem extends SubsystemBase {
     kickerInputs.kickerTargetVelocity = smartKickerMotor.getMechanismSetpointVelocity().isEmpty() ? RotationsPerSecond.of(0) : smartKickerMotor.getMechanismSetpointVelocity().get();
   }
 
-  public Command setDutyCycle(AngularVelocity velocity) {
+  public Command setVelocity(AngularVelocity velocity) {
     return kickerMechanism.setSpeed(velocity);
   }
 }
