@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,6 +15,9 @@ import yams.mechanisms.config.FlyWheelConfig;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
+import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class SpindexerSubsystem extends SubsystemBase {
@@ -29,11 +33,11 @@ public class SpindexerSubsystem extends SubsystemBase {
   public SpindexerSubsystem() {
     this.spindexerInputs = new SpindexerInputsAutoLogged();
 
-    spindexerMotor = new SparkFlex(SpindexerConstants.MOTOR_ID, SpindexerConstants.MOTOR_TYPE);
+    spindexerMotor = new SparkFlex(SpindexerConstants.MOTOR_ID, MotorType.kBrushless);
 
     this.smartSpindexerMotorConfig =
       new SmartMotorControllerConfig(this)
-          .withControlMode(SpindexerConstants.CONTROL_MODE)
+          .withControlMode(ControlMode.CLOSED_LOOP)
           .withClosedLoopController(
               SpindexerConstants.ClosedLoopController.kP,
               SpindexerConstants.ClosedLoopController.kI,
@@ -41,10 +45,10 @@ public class SpindexerSubsystem extends SubsystemBase {
               SpindexerConstants.Velocity.MAX_VELOCITY,
               SpindexerConstants.Velocity.ACCELERATION)
           .withGearing(SpindexerConstants.MOTOR_GEARING)
-          .withIdleMode(SpindexerConstants.MOTOR_MODE)
+          .withIdleMode(MotorMode.BRAKE)
           .withMechanismCircumference(Meters.of(0.47))
-          .withMotorInverted(SpindexerConstants.Position.MOTOR_INVERTED)
-          .withTelemetry(SpindexerConstants.MOTOR_NAME, SpindexerConstants.TELEMETRY);
+          .withMotorInverted(false)
+          .withTelemetry("Spindexer Motor", TelemetryVerbosity.HIGH);
 
     this.smartSpindexerMotor = new SparkWrapper(this.spindexerMotor, SpindexerConstants.MOTOR, this.smartSpindexerMotorConfig);
     
@@ -53,7 +57,7 @@ public class SpindexerSubsystem extends SubsystemBase {
           .withDiameter(SpindexerConstants.Wheel.DIAMETER)
           .withMass(SpindexerConstants.Wheel.MASS)
           .withMOI(SpindexerConstants.Wheel.MOI)
-          .withTelemetry(SpindexerConstants.MOTOR_NAME, SpindexerConstants.TELEMETRY);
+          .withTelemetry("Spindexer Mechanism", TelemetryVerbosity.HIGH);
 
     this.spindexerMechanism = new FlyWheel(spindexerMechanismConfig);
   }

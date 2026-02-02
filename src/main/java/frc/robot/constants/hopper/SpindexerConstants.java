@@ -9,7 +9,6 @@ import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -21,21 +20,13 @@ import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.units.measure.Voltage;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
-import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
-import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
-import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 
 /** Constants describing the hopper's spindexer wheel. */
 public final class SpindexerConstants {
   public static final int MOTOR_ID = 1;
-  public static final String MOTOR_NAME = "SpindexerMotor";
   public static final DCMotor MOTOR = DCMotor.getNeoVortex(1);
-  public static final MotorType MOTOR_TYPE = MotorType.kBrushless;
-  public static final MotorMode MOTOR_MODE = MotorMode.BRAKE;
   public static final MechanismGearing MOTOR_GEARING =
       new MechanismGearing(GearBox.fromReductionStages(4));
-  public static final ControlMode CONTROL_MODE = ControlMode.CLOSED_LOOP;
-  public static final TelemetryVerbosity TELEMETRY = TelemetryVerbosity.HIGH;
   public static final Current STATOR_CURRENT_LIMIT = Amps.of(40);
   public static final Time CLOSED_LOOP_RAMP = Seconds.of(0.25);
   public static final Time OPEN_LOOP_RAMP = Seconds.of(0.25);
