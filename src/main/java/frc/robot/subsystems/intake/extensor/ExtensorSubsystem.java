@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -43,15 +45,11 @@ public class ExtensorSubsystem extends SubsystemBase {
           .withMechanismCircumference(IntakeConstants.extensor.MECHANISM_CIRCUNFERENCE)
           .withClosedLoopController(
               new ExponentialProfilePIDController(
-                  IntakeConstants.roller.PID.kP,
-                  IntakeConstants.roller.PID.kI,
-                  IntakeConstants.roller.PID.kD,
-                  ExponentialProfilePIDController.createElevatorConstraints(
-                      IntakeConstants.extensor.maxVolts,
-                      IntakeConstants.extensor.motor,
-                      IntakeConstants.extensor.mass,
-                      IntakeConstants.extensor.drumRadius,
-                      IntakeConstants.extensor.gearing)))
+                  IntakeConstants.extensor.PID.kP,
+                  IntakeConstants.extensor.PID.kI,
+                  IntakeConstants.extensor.PID.kD,
+                  ExponentialProfilePIDController.createConstraints(
+                      Volts.of(10), RotationsPerSecond.of(2), RotationsPerSecondPerSecond.of(2))))
           .withGearing(IntakeConstants.extensor.gearing)
           .withIdleMode(MotorMode.BRAKE)
           .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
@@ -71,7 +69,6 @@ public class ExtensorSubsystem extends SubsystemBase {
           .withHardLimits(
               IntakeConstants.limits.MIN_EXTENSION, IntakeConstants.limits.MAX_EXTENSION)
           .withTelemetry("ExtensorMech", TelemetryVerbosity.HIGH)
-          .withMechanismPositionConfig(IntakeConstants.extensor.robotToMechanism)
           .withStartingHeight(Meters.of(0));
 
   private final Elevator extensor = new Elevator(extensorConfig);
@@ -120,7 +117,9 @@ public class ExtensorSubsystem extends SubsystemBase {
   public Command shake() {
     return this.extend()
         .until(isAtTargetAngle())
+        .andThen(Commands.waitSeconds(0.5))
         .andThen(this.retract().until(isAtTargetAngle()))
+        .andThen(Commands.waitSeconds(0.5))
         .repeatedly();
   }
 
@@ -176,9 +175,6 @@ public class ExtensorSubsystem extends SubsystemBase {
 
   public Trigger isAtTargetAngle() {
     return new Trigger(
-        () ->
-            extensor
-                .getHeight()
-                .isNear(extensor.getHeight(), IntakeConstants.extensor.DEADBAND_IS_AT));
+        () -> extensor.getHeight().isNear(setpoint, IntakeConstants.extensor.DEADBAND_IS_AT));
   }
 }
