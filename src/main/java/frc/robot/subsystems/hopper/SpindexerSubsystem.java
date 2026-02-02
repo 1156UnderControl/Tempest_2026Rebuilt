@@ -1,15 +1,30 @@
 package frc.robot.subsystems.hopper;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.RPM;
 
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.hopper.SpindexerConstants;
+import org.littletonrobotics.junction.Logger;
+import yams.gearing.GearBox;
+import yams.gearing.MechanismGearing;
 import yams.mechanisms.config.FlyWheelConfig;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
+import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class SpindexerSubsystem extends SubsystemBase {
@@ -22,35 +37,35 @@ public class SpindexerSubsystem extends SubsystemBase {
     return instance;
   }
 
+  private AngularVelocity setpoint = RPM.of(0);
+
   private final SpindexerInputsAutoLogged spindexerInputs = new SpindexerInputsAutoLogged();
 
   private final SparkFlex spindexerFlex =
-      new SparkFlex(SpindexerConstants.MOTOR_ID, SpindexerConstants.MOTOR_TYPE);
+      new SparkFlex(SpindexerConstants.MOTOR_ID, MotorType.kBrushless);
 
   private final SmartMotorControllerConfig smartSpindexerMotorConfig =
       new SmartMotorControllerConfig(this)
-          .withControlMode(SpindexerConstants.CONTROL_MODE)
-          .withClosedLoopController(
-              SpindexerConstants.ClosedLoopController.kP,
-              SpindexerConstants.ClosedLoopController.kI,
-              SpindexerConstants.ClosedLoopController.kD,
-              SpindexerConstants.Velocity.MAX_VELOCITY,
-              SpindexerConstants.Velocity.ACCELERATION)
-          .withGearing(SpindexerConstants.MOTOR_GEARING)
-          .withIdleMode(SpindexerConstants.MOTOR_MODE)
+          .withControlMode(ControlMode.CLOSED_LOOP)
+          .withClosedLoopController(0, 0, 0, RPM.of(3000), DegreesPerSecondPerSecond.of(80))
+          .withSimClosedLoopController(0, 0, 0, RPM.of(3000), DegreesPerSecondPerSecond.of(80))
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
+          .withIdleMode(MotorMode.COAST)
+          // TODO configurate correctly, this seems wrong, it is the circunference of the wheel
           .withMechanismCircumference(Meters.of(0.47))
-          .withMotorInverted(SpindexerConstants.Position.MOTOR_INVERTED)
-          .withTelemetry(SpindexerConstants.MOTOR_NAME, SpindexerConstants.TELEMETRY);
+          .withStatorCurrentLimit(Amps.of(60))
+          .withMotorInverted(false)
+          .withTelemetry("SpindexerMotor", TelemetryVerbosity.HIGH);
 
   private final SmartMotorController spindexerMotor =
-      new SparkWrapper(spindexerFlex, SpindexerConstants.MOTOR, smartSpindexerMotorConfig);
+      new SparkWrapper(spindexerFlex, DCMotor.getNeoVortex(1), smartSpindexerMotorConfig);
 
   private final FlyWheelConfig spindexerMechanismConfig =
       new FlyWheelConfig(spindexerMotor)
-          .withDiameter(SpindexerConstants.Wheel.DIAMETER)
-          .withMass(SpindexerConstants.Wheel.MASS)
-          .withMOI(SpindexerConstants.Wheel.MOI)
-          .withTelemetry(SpindexerConstants.MOTOR_NAME, SpindexerConstants.TELEMETRY);
+          .withDiameter(Inches.of(4))
+          .withMass(Kilograms.of(0.45))
+          .withMOI(Inches.of(4), Kilograms.of(0.45))
+          .withTelemetry("SpindexerMech", TelemetryVerbosity.HIGH);
 
   private final FlyWheel spindexer = new FlyWheel(spindexerMechanismConfig);
 
@@ -59,6 +74,12 @@ public class SpindexerSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     this.updateInputs();
+    Logger.processInputs("Subsystems/Spindexer", spindexerInputs);
+    spindexer.updateTelemetry();
+    this.setpoint =
+        spindexerMotor.getMechanismSetpointVelocity().isEmpty()
+            ? RPM.of(0)
+            : spindexerMotor.getMechanismSetpointVelocity().get();
   }
 
   @Override
@@ -67,11 +88,24 @@ public class SpindexerSubsystem extends SubsystemBase {
   public void updateInputs() {
     spindexerInputs.spindexerAppliedVolts = spindexerMotor.getVoltage();
     spindexerInputs.spindexerCurrent = spindexerMotor.getStatorCurrent();
-    spindexerInputs.spindexerPosition = spindexerMotor.getMeasurementPosition();
-    spindexerInputs.spindexerVelocity = spindexerMotor.getMeasurementVelocity();
+    spindexerInputs.spindexerPosition = spindexerMotor.getMechanismPosition();
+    spindexerInputs.spindexerVelocity = spindexerMotor.getMechanismVelocity();
+    spindexerInputs.spindexerSetpoint = this.setpoint;
+  }
+
+  public Command shoot() {
+    return spindexer.setSpeed(SpindexerConstants.setpoints.SHOOTING);
+  }
+
+  public Command stop() {
+    return spindexer.setSpeed(SpindexerConstants.setpoints.STOPPED);
   }
 
   public Command setDutyCycle(double dutycycle) {
     return spindexer.set(dutycycle);
+  }
+
+  public Trigger isAtVelocity() {
+    return spindexer.isNear(this.setpoint, SpindexerConstants.DEADBAND_IS_AT);
   }
 }

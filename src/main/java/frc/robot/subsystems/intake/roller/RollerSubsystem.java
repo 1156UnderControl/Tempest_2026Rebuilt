@@ -1,21 +1,27 @@
 package frc.robot.subsystems.intake.roller;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import static edu.wpi.first.units.Units.Pounds;
+import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.Pair;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.intake.IntakeConstants;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.constants.hopper.KickerConstants;
+import frc.robot.constants.intake.RollerConstants;
 import org.littletonrobotics.junction.Logger;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -32,19 +38,17 @@ public class RollerSubsystem extends SubsystemBase {
   private final RollerInputsAutoLogged rollerInputs = new RollerInputsAutoLogged();
 
   private final SparkFlex rollerMasterFlex =
-      new SparkFlex(IntakeConstants.ID_intakeLeaderRollerMotor, MotorType.kBrushless);
+      new SparkFlex(RollerConstants.ID_intakeLeaderRollerMotor, MotorType.kBrushless);
   private final SparkFlex rollerFollowerFlex =
-      new SparkFlex(IntakeConstants.ID_intakeFollowerRollerMotor, MotorType.kBrushless);
+      new SparkFlex(RollerConstants.ID_intakeFollowerRollerMotor, MotorType.kBrushless);
 
   private final SmartMotorControllerConfig rollerMotorConfig =
       new SmartMotorControllerConfig(this)
-          .withMechanismCircumference(IntakeConstants.roller.MECHANISM_CIRCUNFERENCE)
+          .withMechanismCircumference(RollerConstants.MECHANISM_CIRCUNFERENCE)
           .withFollowers(Pair.of(rollerFollowerFlex, true))
-          .withClosedLoopController(
-              new PIDController(
-                  IntakeConstants.roller.PID.kP,
-                  IntakeConstants.roller.PID.kI,
-                  IntakeConstants.roller.PID.kD))
+          .withClosedLoopController(0, 0, 0, RPM.of(3000), RotationsPerSecondPerSecond.of(150))
+          .withSimClosedLoopController(
+              50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
           .withGearing(new MechanismGearing(GearBox.fromReductionStages(2)))
           .withIdleMode(MotorMode.COAST)
           .withTelemetry("RollerMotor", TelemetryVerbosity.HIGH)
@@ -66,18 +70,23 @@ public class RollerSubsystem extends SubsystemBase {
           // Mass of the flywheel.
           .withMass(Pounds.of(1))
           .withMOI(KilogramSquareMeters.of(0.003))
-          .withTelemetry("RollerMech", TelemetryVerbosity.HIGH)
-          .withMechanismPositionConfig(IntakeConstants.roller.robotToMechanism);
+          .withTelemetry("RollerMech", TelemetryVerbosity.HIGH);
 
   private final FlyWheel roller = new FlyWheel(rollerConfig);
+
+  private AngularVelocity setpoint = RPM.of(0);
 
   public RollerSubsystem() {}
 
   @Override
   public void periodic() {
     updateInputs();
-    Logger.processInputs("Subsystems/Intake", rollerInputs);
+    Logger.processInputs("Subsystems/Roller", rollerInputs);
     roller.updateTelemetry();
+    this.setpoint =
+        rollerMotor.getMechanismSetpointVelocity().isEmpty()
+            ? RPM.of(0)
+            : rollerMotor.getMechanismSetpointVelocity().get();
   }
 
   @Override
@@ -88,20 +97,20 @@ public class RollerSubsystem extends SubsystemBase {
   public void updateInputs() {
     rollerInputs.rollerVoltage = rollerMotor.getVoltage();
     rollerInputs.rollerCurrent = rollerMotor.getStatorCurrent();
-    rollerInputs.rollerPosition = rollerMotor.getMeasurementPosition();
-    rollerInputs.rollerVelocity = rollerMotor.getMeasurementVelocity();
+    rollerInputs.rollerPosition = rollerMotor.getMechanismPosition();
+    rollerInputs.rollerVelocity = rollerMotor.getMechanismVelocity();
   }
 
   public Command runRoller() {
-    return this.setDutyCycle(IntakeConstants.roller.setpoints.INTAKE_DUTY_CYCLE);
+    return this.setDutyCycle(RollerConstants.setpoints.INTAKE_DUTY_CYCLE);
   }
 
   public Command runRollerReversed() {
-    return this.setDutyCycle(IntakeConstants.roller.setpoints.REVERSE_DUTY_CYCLE);
+    return this.setDutyCycle(RollerConstants.setpoints.REVERSE_DUTY_CYCLE);
   }
 
   public Command stopRoller() {
-    return this.setDutyCycle(IntakeConstants.roller.setpoints.STOP_DUTY_CYCLE);
+    return this.setDutyCycle(RollerConstants.setpoints.STOP_DUTY_CYCLE);
   }
 
   private Command setVoltage(Voltage voltage) {
@@ -110,5 +119,9 @@ public class RollerSubsystem extends SubsystemBase {
 
   private Command setDutyCycle(double dutycycle) {
     return roller.set(dutycycle);
+  }
+
+  public Trigger isAtVelocity() {
+    return roller.isNear(setpoint, KickerConstants.DEADBAND_IS_AT);
   }
 }

@@ -14,6 +14,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
@@ -22,8 +23,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.constants.intake.IntakeConstants;
+import frc.robot.constants.intake.ExtensorConstants;
 import org.littletonrobotics.junction.Logger;
+import yams.gearing.GearBox;
+import yams.gearing.MechanismGearing;
 import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.ElevatorConfig;
 import yams.mechanisms.positional.Elevator;
@@ -38,36 +41,44 @@ public class ExtensorSubsystem extends SubsystemBase {
   private final ExtensorInputsAutoLogged extensorInputs = new ExtensorInputsAutoLogged();
 
   private final SparkFlex extensorSparkFlex =
-      new SparkFlex(IntakeConstants.ID_intakeExtenderMotor, MotorType.kBrushless);
+      new SparkFlex(ExtensorConstants.ID_MOTOR, MotorType.kBrushless);
 
   private final SmartMotorControllerConfig extensorMotorConfig =
       new SmartMotorControllerConfig(this)
-          .withMechanismCircumference(IntakeConstants.extensor.MECHANISM_CIRCUNFERENCE)
+          .withMechanismCircumference(ExtensorConstants.MECHANISM_CIRCUNFERENCE)
           .withClosedLoopController(
               new ExponentialProfilePIDController(
-                  IntakeConstants.extensor.PID.kP,
-                  IntakeConstants.extensor.PID.kI,
-                  IntakeConstants.extensor.PID.kD,
+                  4.5,
+                  0,
+                  0,
                   ExponentialProfilePIDController.createConstraints(
                       Volts.of(10), RotationsPerSecond.of(2), RotationsPerSecondPerSecond.of(2))))
-          .withGearing(IntakeConstants.extensor.gearing)
+          .withSimClosedLoopController(
+              new ExponentialProfilePIDController(
+                  4.5,
+                  0,
+                  0,
+                  ExponentialProfilePIDController.createConstraints(
+                      Volts.of(10), RotationsPerSecond.of(2), RotationsPerSecondPerSecond.of(2))))
+          .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
           .withIdleMode(MotorMode.BRAKE)
           .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
           .withStatorCurrentLimit(Amps.of(40))
           .withMotorInverted(false)
           .withFeedforward(new SimpleMotorFeedforward(0, 4.4, 0.05))
+          .withSimFeedforward(new SimpleMotorFeedforward(0, 4.4, 0.05))
           .withControlMode(ControlMode.CLOSED_LOOP);
 
   private final SmartMotorController extensorMotor =
-      new SparkWrapper(extensorSparkFlex, IntakeConstants.extensor.motor, extensorMotorConfig);
+      new SparkWrapper(extensorSparkFlex, DCMotor.getNeoVortex(1), extensorMotorConfig);
 
   private final ElevatorConfig extensorConfig =
       new ElevatorConfig(extensorMotor)
-          .withMass(IntakeConstants.extensor.mass)
+          .withMass(ExtensorConstants.mass)
           .withSoftLimits(
-              IntakeConstants.limits.MIN_EXTENSION, IntakeConstants.limits.MAX_EXTENSION)
+              ExtensorConstants.limits.MIN_EXTENSION, ExtensorConstants.limits.MAX_EXTENSION)
           .withHardLimits(
-              IntakeConstants.limits.MIN_EXTENSION, IntakeConstants.limits.MAX_EXTENSION)
+              ExtensorConstants.limits.MIN_EXTENSION, ExtensorConstants.limits.MAX_EXTENSION)
           .withTelemetry("ExtensorMech", TelemetryVerbosity.HIGH)
           .withStartingHeight(Meters.of(0));
 
@@ -80,14 +91,14 @@ public class ExtensorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     updateInputs();
-    Logger.processInputs("Subsystems/Intake", extensorInputs);
+    Logger.processInputs("Subsystems/Extensor", extensorInputs);
     extensor.updateTelemetry();
     setpoint =
         Meters.of(
             extensorMotor.getMechanismPositionSetpoint().isEmpty()
                 ? 0
                 : extensorMotor.getMechanismPositionSetpoint().get().in(Rotations)
-                    * IntakeConstants.extensor.MECHANISM_CIRCUNFERENCE.in(Meters));
+                    * ExtensorConstants.MECHANISM_CIRCUNFERENCE.in(Meters));
   }
 
   @Override
@@ -104,14 +115,14 @@ public class ExtensorSubsystem extends SubsystemBase {
   }
 
   public Command extend() {
-    return this.setLength(IntakeConstants.extensor.setpoints.INTAKE_EXTENDED_POSITION)
+    return this.setLength(ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION)
         .onlyWhile(isAtCollision())
         .andThen(softStopExtensor())
         .repeatedly();
   }
 
   public Command retract() {
-    return this.setLength(IntakeConstants.extensor.setpoints.INTAKE_HOMED_POSITION);
+    return this.setLength(ExtensorConstants.setpoints.INTAKE_HOMED_POSITION);
   }
 
   public Command shake() {
@@ -151,7 +162,7 @@ public class ExtensorSubsystem extends SubsystemBase {
                             <= velocityThreshold.in(DegreesPerSecond)))
         .finallyDo(
             () -> {
-              extensorMotor.setEncoderPosition(IntakeConstants.limits.MIN_EXTENSION);
+              extensorMotor.setEncoderPosition(ExtensorConstants.limits.MIN_EXTENSION);
               extensorMotor.startClosedLoopController();
             });
   }
@@ -175,6 +186,6 @@ public class ExtensorSubsystem extends SubsystemBase {
 
   public Trigger isAtTargetAngle() {
     return new Trigger(
-        () -> extensor.getHeight().isNear(setpoint, IntakeConstants.extensor.DEADBAND_IS_AT));
+        () -> extensor.getHeight().isNear(setpoint, ExtensorConstants.DEADBAND_IS_AT));
   }
 }
