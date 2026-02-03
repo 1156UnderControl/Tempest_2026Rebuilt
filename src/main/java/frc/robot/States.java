@@ -24,12 +24,23 @@ public class States {
 
   private boolean isHubMode;
 
-  @AutoLogOutput(key = "States/TurretStates") private String turretState;
-  @AutoLogOutput(key = "States/HoodStates") private String hoodState;
-  @AutoLogOutput(key = "States/FlyWheelStates") private String flyWheelState;
-  @AutoLogOutput(key = "States/ExtensorStates") private String extensorState;
-  @AutoLogOutput(key = "States/SpindexerStates") private String spindexerState;
-  @AutoLogOutput(key = "States/KickersStates") private String kickerState;
+  @AutoLogOutput(key = "States/TurretStates")
+  private String turretState;
+
+  @AutoLogOutput(key = "States/HoodStates")
+  private String hoodState;
+
+  @AutoLogOutput(key = "States/FlyWheelStates")
+  private String flyWheelState;
+
+  @AutoLogOutput(key = "States/ExtensorStates")
+  private String extensorState;
+
+  @AutoLogOutput(key = "States/SpindexerStates")
+  private String spindexerState;
+
+  @AutoLogOutput(key = "States/KickersStates")
+  private String kickerState;
 
   public States(
       SwerveSubsystem drive,
@@ -62,11 +73,19 @@ public class States {
         Commands.run(() -> drive.driveAlignAngleJoystick(), drive)
             .onlyIf(() -> DriverStation.isTeleopEnabled()));
 
-    this.extensor.setDefaultCommand(Commands.run(() -> this.extensor.holdPID(), extensor).alongWith(Commands.runOnce(() -> this.extensorState = "Extended State")));
-    this.kicker.setDefaultCommand(this.kicker.stop().alongWith(Commands.runOnce(() -> this.kickerState = "Stopped State")));
-    this.spindexer.setDefaultCommand(this.spindexer.stop().alongWith(Commands.runOnce(() -> this.spindexerState = "Stopped State")));
+    this.extensor.setDefaultCommand(
+        Commands.run(() -> this.extensor.holdPID(), extensor)
+            .alongWith(Commands.runOnce(() -> this.extensorState = "Extended State")));
+    this.kicker.setDefaultCommand(
+        this.kicker.stop().alongWith(Commands.runOnce(() -> this.kickerState = "Stopped State")));
+    this.spindexer.setDefaultCommand(
+        this.spindexer
+            .stop()
+            .alongWith(Commands.runOnce(() -> this.spindexerState = "Stopped State")));
 
-    new Trigger(() -> RobotStates.getInstance().isOnAllianceZone()).onTrue(this.turret.trackHub()).onFalse(this.turret.trackPass());
+    new Trigger(() -> RobotStates.getInstance().isOnAllianceZone())
+        .onTrue(this.turret.trackHub())
+        .onFalse(this.turret.trackPass());
 
     this.hood.setDefaultCommand(
         Commands.run(() -> this.hood.goToTargetAngle(), hood)
@@ -82,16 +101,19 @@ public class States {
 
   public Command shootState() {
     return Commands.parallel(
-        this.spindexer.shoot(),
-        this.kicker.shoot(),
-        Commands.runOnce(() -> {
-            this.flyWheelState = this.isHubMode ? "Shooting to Hub State" : "Shooting to Pass State";
-            this.kickerState = "Running State";
-            this.spindexerState = "Running State";
-        }))
-        .onlyIf(() ->
-            this.turret.isAtTargetAngle()
-            && this.hood.isAtTargetAngle()
-            && this.flyWheel.isAtTargetVelocity());
+            this.spindexer.shoot(),
+            this.kicker.shoot(),
+            Commands.runOnce(
+                () -> {
+                  this.flyWheelState =
+                      this.isHubMode ? "Shooting to Hub State" : "Shooting to Pass State";
+                  this.kickerState = "Running State";
+                  this.spindexerState = "Running State";
+                }))
+        .onlyIf(
+            () ->
+                this.turret.isAtTargetAngle()
+                    && this.hood.isAtTargetAngle()
+                    && this.flyWheel.isAtTargetVelocity());
   }
 }
