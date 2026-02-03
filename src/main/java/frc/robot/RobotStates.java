@@ -44,9 +44,8 @@ public class RobotStates {
     return ChassisSpeeds.fromRobotRelativeSpeeds(robotVelocity, getRobotRotation());
   }
 
-
-  public boolean isOnBlueDepotSide(){
-    return (robotPose.getY() > FieldConstants.fieldWidth/2);
+  public boolean isOnBlueDepotSide() {
+    return (robotPose.getY() > FieldConstants.fieldWidth / 2);
   }
 
   public boolean isOnAllianceZone(){

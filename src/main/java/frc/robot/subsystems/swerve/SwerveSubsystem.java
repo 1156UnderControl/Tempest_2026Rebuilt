@@ -153,7 +153,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
         this.getLinearVelocityChassisSpeedsFromJoysticks(
             controller.getLeftY(), controller.getLeftX(), rotateRight ? -1.5 : 1.5);
     this.state = "DRIVE_ALIGN_ANGLE_ROTATING_RIGHT?:" + Boolean.toString(rotateRight);
-    this.driveFieldOriented(desiredSpeeds);
+    this.driveFieldOrientedAllianceBased(desiredSpeeds);
   }
 
   public void driveHeadingForward() {

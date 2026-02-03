@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.java_is_undercontrol.swerve.SwerveDevices;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIO;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIOPigeon2;
@@ -15,6 +16,9 @@ import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
+import frc.robot.subsystems.hopper.indexer.SpindexerSubsystem;
+import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
+import frc.robot.subsystems.intake.extensor.ExtensorSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -35,6 +39,12 @@ public class RobotContainer {
   // private final HoodSubsystem hood;
 
   // private final FlyWheelSubsystem flyWheel;
+
+  private final ExtensorSubsystem extensor;
+
+  private final SpindexerSubsystem spindexer;
+
+  private final KickerSubsystem kicker;
 
   public final IDriverController driverController;
 
@@ -86,26 +96,29 @@ public class RobotContainer {
     // this.turret = TurretSubsystem.getInstance();
     // this.hood = HoodSubsystem.getInstance();
     // this.flyWheel = FlyWheelSubsystem.getInstance();
+    this.spindexer = SpindexerSubsystem.getInstance();
+    this.kicker = KickerSubsystem.getInstance();
+    this.extensor = new ExtensorSubsystem();
 
     this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
     this.namedCommandsRegistry.registerAllAutoCommands();
 
-    // this.states = new States(this.drive, this.turret, this.hood, this.flyWheel);
-
-    this.states = new States(this.drive);
-
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-    autoChooser.addOption("wheelRadiusCharacterization", drive.wheelRadiusCharacterization());
-    autoChooser.addOption("feedForwardCharacterization", drive.feedforwardCharacterization());
+    this.states = new States(this.drive, this.extensor, this.spindexer, this.kicker);
 
     configureButtonBindings();
+    this.autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
   }
 
   private void configureButtonBindings() {
     this.states.setDefaultStates();
-    this.driverController.turboActivate().onTrue(drive.boostRobotJoystickControlVelocity());
-    this.driverController.turboActivate().onFalse(drive.limitRobotJoystickControlVelocity());
-    // this.driverController.a().onTrue(this.states.shootState());
+
+    this.driverController.a().whileTrue(this.states.shootState());
+
+    this.driverController
+        .turboActivate()
+        .onTrue(Commands.run(() -> this.drive.boostRobotJoystickControlVelocity(), drive))
+        .onFalse(Commands.run(() -> this.drive.limitRobotJoystickControlVelocity(), drive));
+    this.driverController.a().onTrue(this.states.shootState());
   }
 
   public Command getAutonomousCommand() {
