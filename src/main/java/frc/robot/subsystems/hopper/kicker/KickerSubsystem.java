@@ -4,13 +4,7 @@
 
 package frc.robot.subsystems.hopper.kicker;
 
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -62,24 +56,35 @@ public class KickerSubsystem extends SubsystemBase {
     smartKickerMotorConfig =
         new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
-            .withClosedLoopController(0, 0, 0, RPM.of(3000), RotationsPerSecondPerSecond.of(150))
+            .withClosedLoopController(
+                0,
+                0,
+                0,
+                KickerConstants.Motor.CLOSED_LOOP_MAX_VELOCITY,
+                KickerConstants.Motor.CLOSED_LOOP_MAX_ACCELERATION)
             .withSimClosedLoopController(
-                50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
-            .withGearing(new MechanismGearing(GearBox.fromReductionStages(2.5)))
+                50,
+                0,
+                0,
+                KickerConstants.Motor.SIM_CLOSED_LOOP_MAX_VELOCITY,
+                KickerConstants.Motor.SIM_CLOSED_LOOP_MAX_ACCELERATION)
+            .withGearing(
+                new MechanismGearing(GearBox.fromReductionStages(KickerConstants.Motor.GEAR_RATIO)))
             .withIdleMode(MotorMode.COAST)
-            .withMechanismCircumference(Inches.of(2))
-            .withMotorInverted(true)
-            .withStatorCurrentLimit(Amps.of(50))
-            .withTelemetry("KickerMotor", TelemetryVerbosity.HIGH);
+            .withMechanismCircumference(KickerConstants.Motor.MECHANISM_CIRCUMFERENCE)
+            .withMotorInverted(KickerConstants.Motor.INVERTED)
+            .withStatorCurrentLimit(KickerConstants.Motor.STATOR_CURRENT_LIMIT)
+            .withTelemetry(KickerConstants.Telemetry.MOTOR, TelemetryVerbosity.HIGH);
 
     kickerMotor = new SparkWrapper(kickerFlex, DCMotor.getNeoVortex(1), smartKickerMotorConfig);
 
     kickerMechanismConfig =
         new FlyWheelConfig(kickerMotor)
-            .withDiameter(Inches.of(4))
-            .withMass(Kilograms.of(0.45))
-            .withMOI(Inches.of(4), Kilograms.of(0.45))
-            .withTelemetry("KickerMechanism", TelemetryVerbosity.HIGH)
+            .withDiameter(KickerConstants.Mechanism.WHEEL_DIAMETER)
+            .withMass(KickerConstants.Mechanism.WHEEL_MASS)
+            .withMOI(
+                KickerConstants.Mechanism.WHEEL_DIAMETER, KickerConstants.Mechanism.WHEEL_MASS)
+            .withTelemetry(KickerConstants.Telemetry.MECHANISM, TelemetryVerbosity.HIGH)
             .withMechanismPositionConfig(KickerConstants.robotToMechanism);
     kicker = new FlyWheel(kickerMechanismConfig);
   }

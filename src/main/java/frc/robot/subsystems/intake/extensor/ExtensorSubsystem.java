@@ -40,51 +40,63 @@ import yams.motorcontrollers.local.SparkWrapper;
 public class ExtensorSubsystem extends SubsystemBase {
   private final ExtensorInputsAutoLogged extensorInputs = new ExtensorInputsAutoLogged();
 
-  private final SparkFlex extensorSparkFlex =
-      new SparkFlex(ExtensorConstants.ID_MOTOR, MotorType.kBrushless);
+  private final SparkFlex extensorSparkFlex;
 
-  private final SmartMotorControllerConfig extensorMotorConfig =
-      new SmartMotorControllerConfig(this)
-          .withMechanismCircumference(ExtensorConstants.MECHANISM_CIRCUNFERENCE)
-          .withClosedLoopController(
-              new ExponentialProfilePIDController(
-                  4.5,
-                  0,
-                  0,
-                  ExponentialProfilePIDController.createConstraints(
-                      Volts.of(10), RotationsPerSecond.of(2), RotationsPerSecondPerSecond.of(2))))
-          .withSimClosedLoopController(
-              new ExponentialProfilePIDController(
-                  4.5,
-                  0,
-                  0,
-                  ExponentialProfilePIDController.createConstraints(
-                      Volts.of(10), RotationsPerSecond.of(2), RotationsPerSecondPerSecond.of(2))))
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
-          .withIdleMode(MotorMode.BRAKE)
-          .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
-          .withStatorCurrentLimit(Amps.of(40))
-          .withMotorInverted(false)
-          .withFeedforward(new SimpleMotorFeedforward(0, 4.4, 0.05))
-          .withSimFeedforward(new SimpleMotorFeedforward(0, 4.4, 0.05))
-          .withControlMode(ControlMode.CLOSED_LOOP);
+  private final SmartMotorControllerConfig extensorMotorConfig;
 
-  private final SmartMotorController extensorMotor =
-      new SparkWrapper(extensorSparkFlex, DCMotor.getNeoVortex(1), extensorMotorConfig);
+  private final SmartMotorController extensorMotor;
 
-  private final ElevatorConfig extensorConfig =
-      new ElevatorConfig(extensorMotor)
-          .withMass(ExtensorConstants.mass)
-          .withSoftLimits(
-              ExtensorConstants.limits.MIN_EXTENSION, ExtensorConstants.limits.MAX_EXTENSION)
-          .withHardLimits(
-              ExtensorConstants.limits.MIN_EXTENSION, ExtensorConstants.limits.MAX_EXTENSION)
-          .withTelemetry("ExtensorMech", TelemetryVerbosity.HIGH)
-          .withStartingHeight(Meters.of(0));
+  private final ElevatorConfig extensorConfig;
 
-  private final Elevator extensor = new Elevator(extensorConfig);
+  private final Elevator extensor;
 
   private Distance setpoint = Meters.of(0);
+
+  public ExtensorSubsystem() {
+    this.extensorSparkFlex =
+        new SparkFlex(ExtensorConstants.ID_MOTOR, MotorType.kBrushless);
+
+    this.extensorMotorConfig =
+        new SmartMotorControllerConfig(this)
+            .withMechanismCircumference(ExtensorConstants.MECHANISM_CIRCUNFERENCE)
+            .withClosedLoopController(
+                new ExponentialProfilePIDController(
+                    4.5,
+                    0,
+                    0,
+                    ExponentialProfilePIDController.createConstraints(
+                        Volts.of(10), RotationsPerSecond.of(2), RotationsPerSecondPerSecond.of(2))))
+            .withSimClosedLoopController(
+                new ExponentialProfilePIDController(
+                    4.5,
+                    0,
+                    0,
+                    ExponentialProfilePIDController.createConstraints(
+                        Volts.of(10), RotationsPerSecond.of(2), RotationsPerSecondPerSecond.of(2))))
+            .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
+            .withIdleMode(MotorMode.BRAKE)
+            .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
+            .withStatorCurrentLimit(Amps.of(40))
+            .withMotorInverted(false)
+            .withFeedforward(new SimpleMotorFeedforward(0, 4.4, 0.05))
+            .withSimFeedforward(new SimpleMotorFeedforward(0, 4.4, 0.05))
+            .withControlMode(ControlMode.CLOSED_LOOP);
+
+    this.extensorMotor =
+        new SparkWrapper(extensorSparkFlex, DCMotor.getNeoVortex(1), extensorMotorConfig);
+
+    this.extensorConfig =
+        new ElevatorConfig(extensorMotor)
+            .withMass(ExtensorConstants.mass)
+            .withSoftLimits(
+                ExtensorConstants.limits.MIN_EXTENSION, ExtensorConstants.limits.MAX_EXTENSION)
+            .withHardLimits(
+                ExtensorConstants.limits.MIN_EXTENSION, ExtensorConstants.limits.MAX_EXTENSION)
+            .withTelemetry("ExtensorMech", TelemetryVerbosity.HIGH)
+            .withStartingHeight(Meters.of(0));
+
+    this.extensor = new Elevator(extensorConfig);
+  }
 
   @Override
   public void periodic() {

@@ -35,47 +35,58 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class RollerSubsystem extends SubsystemBase {
-  RollerInputsAutoLogged rollerInputs;
+  private final RollerInputsAutoLogged rollerInputs = new RollerInputsAutoLogged();
 
-  private final SparkFlex rollerMasterFlex =
-      new SparkFlex(RollerConstants.ID_intakeLeaderRollerMotor, MotorType.kBrushless);
-  private final SparkFlex rollerFollowerFlex =
-      new SparkFlex(RollerConstants.ID_intakeFollowerRollerMotor, MotorType.kBrushless);
+  private final SparkFlex rollerMasterFlex;
+  private final SparkFlex rollerFollowerFlex;
 
-  SmartMotorControllerConfig smartRollerMotorConfig =
-      new SmartMotorControllerConfig(this)
-          .withMechanismCircumference(RollerConstants.MECHANISM_CIRCUNFERENCE)
-          .withFollowers(Pair.of(rollerFollowerFlex, true))
-          .withClosedLoopController(0, 0, 0, RPM.of(3000), RotationsPerSecondPerSecond.of(150))
-          .withSimClosedLoopController(
-              50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(2)))
-          .withIdleMode(MotorMode.COAST)
-          .withTelemetry("RollerMotor", TelemetryVerbosity.HIGH)
-          .withStatorCurrentLimit(Amps.of(40))
-          .withMotorInverted(false)
-          .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
-          .withControlMode(ControlMode.CLOSED_LOOP)
-          .withClosedLoopRampRate(Seconds.of(0.25))
-          .withOpenLoopRampRate(Seconds.of(0.25));
+  private SmartMotorControllerConfig smartRollerMotorConfig;
 
-  SmartMotorController rollerMotor =
-      new SparkWrapper(this.rollerMasterFlex, DCMotor.getNeoVortex(2), this.smartRollerMotorConfig);
+  private final SmartMotorController rollerMotor;
 
-  private final FlyWheelConfig rollerConfig =
-      new FlyWheelConfig(rollerMotor)
-          // Diameter of the flywheel.
-          .withDiameter(Inches.of(4))
-          // Mass of the flywheel.
-          .withMass(Pounds.of(1))
-          .withMOI(KilogramSquareMeters.of(0.003))
-          .withTelemetry("RollerMech", TelemetryVerbosity.HIGH);
+  private final FlyWheelConfig rollerConfig;
 
-  private final FlyWheel roller = new FlyWheel(rollerConfig);
+  private final FlyWheel roller;
 
   private AngularVelocity setpoint = RPM.of(0);
 
-  public RollerSubsystem() {}
+  public RollerSubsystem() {
+    this.rollerMasterFlex =
+        new SparkFlex(RollerConstants.ID_intakeLeaderRollerMotor, MotorType.kBrushless);
+    this.rollerFollowerFlex =
+        new SparkFlex(RollerConstants.ID_intakeFollowerRollerMotor, MotorType.kBrushless);
+
+    this.smartRollerMotorConfig =
+        new SmartMotorControllerConfig(this)
+            .withMechanismCircumference(RollerConstants.MECHANISM_CIRCUNFERENCE)
+            .withFollowers(Pair.of(rollerFollowerFlex, true))
+            .withClosedLoopController(0, 0, 0, RPM.of(3000), RotationsPerSecondPerSecond.of(150))
+            .withSimClosedLoopController(
+                50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+            .withGearing(new MechanismGearing(GearBox.fromReductionStages(2)))
+            .withIdleMode(MotorMode.COAST)
+            .withTelemetry("RollerMotor", TelemetryVerbosity.HIGH)
+            .withStatorCurrentLimit(Amps.of(40))
+            .withMotorInverted(false)
+            .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+            .withControlMode(ControlMode.CLOSED_LOOP)
+            .withClosedLoopRampRate(Seconds.of(0.25))
+            .withOpenLoopRampRate(Seconds.of(0.25));
+
+    this.rollerMotor =
+        new SparkWrapper(this.rollerMasterFlex, DCMotor.getNeoVortex(2), this.smartRollerMotorConfig);
+
+    this.rollerConfig =
+        new FlyWheelConfig(rollerMotor)
+            // Diameter of the flywheel.
+            .withDiameter(Inches.of(4))
+            // Mass of the flywheel.
+            .withMass(Pounds.of(1))
+            .withMOI(KilogramSquareMeters.of(0.003))
+            .withTelemetry("RollerMech", TelemetryVerbosity.HIGH);
+
+    this.roller = new FlyWheel(rollerConfig);
+  }
 
   @Override
   public void periodic() {

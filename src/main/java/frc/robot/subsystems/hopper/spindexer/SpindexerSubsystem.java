@@ -41,35 +41,44 @@ public class SpindexerSubsystem extends SubsystemBase {
 
   private final SpindexerInputsAutoLogged spindexerInputs = new SpindexerInputsAutoLogged();
 
-  private final SparkFlex spindexerFlex =
-      new SparkFlex(SpindexerConstants.MOTOR_ID, MotorType.kBrushless);
+  private final SparkFlex spindexerFlex;
 
-  private final SmartMotorControllerConfig smartSpindexerMotorConfig =
-      new SmartMotorControllerConfig(this)
-          .withControlMode(ControlMode.CLOSED_LOOP)
-          .withClosedLoopController(0, 0, 0, RPM.of(3000), DegreesPerSecondPerSecond.of(80))
-          .withSimClosedLoopController(0, 0, 0, RPM.of(3000), DegreesPerSecondPerSecond.of(80))
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
-          .withIdleMode(MotorMode.COAST)
-          // TODO configurate correctly, this seems wrong, it is the circunference of the wheel
-          .withMechanismCircumference(Meters.of(0.47))
-          .withStatorCurrentLimit(Amps.of(60))
-          .withMotorInverted(false)
-          .withTelemetry("SpindexerMotor", TelemetryVerbosity.HIGH);
+  private final SmartMotorControllerConfig smartSpindexerMotorConfig;
 
-  private final SmartMotorController spindexerMotor =
-      new SparkWrapper(spindexerFlex, DCMotor.getNeoVortex(1), smartSpindexerMotorConfig);
+  private final SmartMotorController spindexerMotor;
 
-  private final FlyWheelConfig spindexerMechanismConfig =
-      new FlyWheelConfig(spindexerMotor)
-          .withDiameter(Inches.of(4))
-          .withMass(Kilograms.of(0.45))
-          .withMOI(Inches.of(4), Kilograms.of(0.45))
-          .withTelemetry("SpindexerMech", TelemetryVerbosity.HIGH);
+  private final FlyWheelConfig spindexerMechanismConfig;
 
-  private final FlyWheel spindexer = new FlyWheel(spindexerMechanismConfig);
+  private final FlyWheel spindexer;
 
-  public SpindexerSubsystem() {}
+  public SpindexerSubsystem() {
+    this.spindexerFlex = new SparkFlex(SpindexerConstants.MOTOR_ID, MotorType.kBrushless);
+
+    this.smartSpindexerMotorConfig =
+        new SmartMotorControllerConfig(this)
+            .withControlMode(ControlMode.CLOSED_LOOP)
+            .withClosedLoopController(0, 0, 0, RPM.of(3000), DegreesPerSecondPerSecond.of(80))
+            .withSimClosedLoopController(0, 0, 0, RPM.of(3000), DegreesPerSecondPerSecond.of(80))
+            .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
+            .withIdleMode(MotorMode.COAST)
+            // TODO configurate correctly, this seems wrong, it is the circunference of the wheel
+            .withMechanismCircumference(Meters.of(0.47))
+            .withStatorCurrentLimit(Amps.of(60))
+            .withMotorInverted(false)
+            .withTelemetry("SpindexerMotor", TelemetryVerbosity.HIGH);
+
+    this.spindexerMotor =
+        new SparkWrapper(spindexerFlex, DCMotor.getNeoVortex(1), smartSpindexerMotorConfig);
+
+    this.spindexerMechanismConfig =
+        new FlyWheelConfig(spindexerMotor)
+            .withDiameter(Inches.of(4))
+            .withMass(Kilograms.of(0.45))
+            .withMOI(Inches.of(4), Kilograms.of(0.45))
+            .withTelemetry("SpindexerMech", TelemetryVerbosity.HIGH);
+
+    this.spindexer = new FlyWheel(spindexerMechanismConfig);
+  }
 
   @Override
   public void periodic() {
