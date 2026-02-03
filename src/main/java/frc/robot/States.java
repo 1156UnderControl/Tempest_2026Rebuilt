@@ -56,9 +56,9 @@ public class States {
     this.kicker.setDefaultCommand(Commands.run(() -> this.kicker.setVelocity(RotationsPerSecond.of(0)), this.kicker));
     this.spindexer.setDefaultCommand(Commands.run(() -> this.spindexer.setVelocity(RotationsPerSecond.of(0)), this.spindexer));
 
-    this.turret.setDefaultCommand(Commands.run(this.isHubMode ? () -> this.turret.trackHub() : () -> this.turret.trackPass(), turret).alongWith(Commands.run(() -> this.turretState = isHubMode ? "Aiming at Hub Pose State" : "Aiming to Feed Pose State")));
-    this.hood.setDefaultCommand(Commands.run(() -> this.hood.goToTargetAngle() ,hood).alongWith(Commands.run(() -> this.hoodState = isHubMode ? "Aiming at Hub Pose State" : "Aiming to Feed Pose State")));
-    this.flyWheel.setDefaultCommand(Commands.run(() -> this.flyWheel.runVelocity(), flyWheel).alongWith(Commands.run(() -> this.flyWheelState = "Stopped State")));
+    this.turret.setDefaultCommand(Commands.run(this.isHubMode ? () -> this.turret.trackHub() : () -> this.turret.trackPass(), turret).alongWith(Commands.runOnce(() -> this.turretState = isHubMode ? "Aiming at Hub Pose State" : "Aiming to Feed Pose State")));
+    this.hood.setDefaultCommand(Commands.run(() -> this.hood.goToTargetAngle() ,hood).alongWith(Commands.runOnce(() -> this.hoodState = isHubMode ? "Aiming at Hub Pose State" : "Aiming to Feed Pose State")));
+    this.flyWheel.setDefaultCommand(Commands.run(() -> this.flyWheel.runVelocity(), flyWheel).alongWith(Commands.runOnce(() -> this.flyWheelState = "Stopped State")));
   }
 
   public Command shootState() {
