@@ -74,6 +74,6 @@ public class States {
                     && this.flyWheel.isAtTargetVelocity())
                 ? "Shooting at Alliance Zone"
                 : "Preparing to Shoot at Alliance Zone";
-    return Commands.race(Commands.run(() -> this.spindexer.setVelocity(RotationsPerSecond.of(50)), this.spindexer), Commands.run(() -> this.kicker.setVelocity(RotationsPerSecond.of(-50)), this.kicker), Commands.parallel(Commands.run(() -> this.flyWheel.runVelocity(), flyWheel)));
+    return Commands.parallel(Commands.run(() -> this.spindexer.setVelocity(RotationsPerSecond.of(50)), this.spindexer), Commands.run(() -> this.kicker.setVelocity(RotationsPerSecond.of(-50)), this.kicker), Commands.parallel(Commands.run(() -> this.flyWheel.runVelocity(), flyWheel)));
   }
 }
