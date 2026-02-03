@@ -69,10 +69,9 @@ public class FieldConstants {
   }
 
   public class FieldStrategicPoses {
-    public static final Translation2d RIGHT_FEED_POSE =
-        new Translation2d(FieldConstants.fieldLength / 8, FieldConstants.fieldWidth / 4);
-    public static final Translation2d LEFT_FEED_POSE =
-        new Translation2d(
-            RIGHT_FEED_POSE.getX(), FieldConstants.fieldWidth - RIGHT_FEED_POSE.getY());
-  }
+        public static final Translation2d RIGHT_FEED_POSE = new Translation2d(FieldConstants.fieldLength/8, FieldConstants.fieldWidth/4);
+        public static final Translation2d LEFT_FEED_POSE = new Translation2d(RIGHT_FEED_POSE.getX(), FieldConstants.fieldWidth - RIGHT_FEED_POSE.getY());
+
+        public static final double AllianceZoneX = 4.007866;
+    }
 }
