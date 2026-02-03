@@ -118,7 +118,6 @@ public class RobotContainer {
         .turboActivate()
         .onTrue(Commands.run(() -> this.drive.boostRobotJoystickControlVelocity(), drive))
         .onFalse(Commands.run(() -> this.drive.limitRobotJoystickControlVelocity(), drive));
-    this.driverController.a().onTrue(this.states.shootState());
   }
 
   public Command getAutonomousCommand() {
