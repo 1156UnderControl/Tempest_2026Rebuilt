@@ -35,14 +35,14 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class RollerSubsystem extends SubsystemBase {
-  private final RollerInputsAutoLogged rollerInputs = new RollerInputsAutoLogged();
+  RollerInputsAutoLogged rollerInputs;
 
   private final SparkFlex rollerMasterFlex =
       new SparkFlex(RollerConstants.ID_intakeLeaderRollerMotor, MotorType.kBrushless);
   private final SparkFlex rollerFollowerFlex =
       new SparkFlex(RollerConstants.ID_intakeFollowerRollerMotor, MotorType.kBrushless);
 
-  private final SmartMotorControllerConfig rollerMotorConfig =
+  SmartMotorControllerConfig smartRollerMotorConfig =
       new SmartMotorControllerConfig(this)
           .withMechanismCircumference(RollerConstants.MECHANISM_CIRCUNFERENCE)
           .withFollowers(Pair.of(rollerFollowerFlex, true))
@@ -58,10 +58,9 @@ public class RollerSubsystem extends SubsystemBase {
           .withControlMode(ControlMode.CLOSED_LOOP)
           .withClosedLoopRampRate(Seconds.of(0.25))
           .withOpenLoopRampRate(Seconds.of(0.25));
-  ;
 
-  private final SmartMotorController rollerMotor =
-      new SparkWrapper(rollerMasterFlex, DCMotor.getNeoVortex(2), rollerMotorConfig);
+  SmartMotorController rollerMotor =
+      new SparkWrapper(this.rollerMasterFlex, DCMotor.getNeoVortex(2), this.smartRollerMotorConfig);
 
   private final FlyWheelConfig rollerConfig =
       new FlyWheelConfig(rollerMotor)
@@ -91,7 +90,7 @@ public class RollerSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    roller.simIterate();
+    this.roller.simIterate();
   }
 
   public void updateInputs() {

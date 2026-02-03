@@ -80,7 +80,6 @@ public class ShooterCalculator {
                 robotRelativeVelocity.vxMetersPerSecond * phaseDelay,
                 robotRelativeVelocity.vyMetersPerSecond * phaseDelay,
                 robotRelativeVelocity.omegaRadiansPerSecond * phaseDelay));
-
     // Calculate distance from turret to target
     Translation2d target = getTargetTranslation2d(shooting);
     Logger.recordOutput("target", target);
@@ -149,7 +148,6 @@ public class ShooterCalculator {
   }
 
   private Translation2d getTargetTranslation2d(boolean shooting) {
-
     Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
     if (shooting)

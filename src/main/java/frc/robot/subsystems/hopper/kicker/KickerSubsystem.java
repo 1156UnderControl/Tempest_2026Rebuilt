@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.hopper;
+package frc.robot.subsystems.hopper.kicker;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
@@ -42,39 +42,47 @@ public class KickerSubsystem extends SubsystemBase {
     return instance;
   }
 
-  private AngularVelocity setpoint = RPM.of(0);
-
-  private final SparkFlex kickerFlex =
-      new SparkFlex(KickerConstants.MOTOR_ID, MotorType.kBrushless);
   private final KickerInputsAutoLogged kickerInputs = new KickerInputsAutoLogged();
 
-  private SmartMotorControllerConfig smartKickerMotorConfig =
-      new SmartMotorControllerConfig(this)
-          .withControlMode(ControlMode.CLOSED_LOOP)
-          .withClosedLoopController(0, 0, 0, RPM.of(3000), RotationsPerSecondPerSecond.of(150))
-          .withSimClosedLoopController(
-              50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
-          .withGearing(new MechanismGearing(GearBox.fromReductionStages(2.5)))
-          .withIdleMode(MotorMode.COAST)
-          .withMechanismCircumference(Inches.of(2))
-          .withMotorInverted(true)
-          .withStatorCurrentLimit(Amps.of(50))
-          .withTelemetry("KickerMotor", TelemetryVerbosity.HIGH);
+  private AngularVelocity setpoint = RPM.of(0);
 
-  private final SmartMotorController kickerMotor =
-      new SparkWrapper(kickerFlex, DCMotor.getNeoVortex(1), smartKickerMotorConfig);
+  private final SparkFlex kickerFlex;
 
-  private final FlyWheelConfig kickerMechanismConfig =
-      new FlyWheelConfig(kickerMotor)
-          .withDiameter(Inches.of(4))
-          .withMass(Kilograms.of(0.45))
-          .withMOI(Inches.of(4), Kilograms.of(0.45))
-          .withTelemetry("KickerMechanism", TelemetryVerbosity.HIGH)
-          .withMechanismPositionConfig(KickerConstants.robotToMechanism);
+  private SmartMotorControllerConfig smartKickerMotorConfig;
 
-  private final FlyWheel kicker = new FlyWheel(kickerMechanismConfig);
+  private final SmartMotorController kickerMotor;
 
-  public KickerSubsystem() {}
+  private final FlyWheelConfig kickerMechanismConfig;
+
+  private final FlyWheel kicker;
+
+  public KickerSubsystem() {
+    kickerFlex = new SparkFlex(KickerConstants.MOTOR_ID, MotorType.kBrushless);
+
+    smartKickerMotorConfig =
+        new SmartMotorControllerConfig(this)
+            .withControlMode(ControlMode.CLOSED_LOOP)
+            .withClosedLoopController(0, 0, 0, RPM.of(3000), RotationsPerSecondPerSecond.of(150))
+            .withSimClosedLoopController(
+                50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+            .withGearing(new MechanismGearing(GearBox.fromReductionStages(2.5)))
+            .withIdleMode(MotorMode.COAST)
+            .withMechanismCircumference(Inches.of(2))
+            .withMotorInverted(true)
+            .withStatorCurrentLimit(Amps.of(50))
+            .withTelemetry("KickerMotor", TelemetryVerbosity.HIGH);
+
+    kickerMotor = new SparkWrapper(kickerFlex, DCMotor.getNeoVortex(1), smartKickerMotorConfig);
+
+    kickerMechanismConfig =
+        new FlyWheelConfig(kickerMotor)
+            .withDiameter(Inches.of(4))
+            .withMass(Kilograms.of(0.45))
+            .withMOI(Inches.of(4), Kilograms.of(0.45))
+            .withTelemetry("KickerMechanism", TelemetryVerbosity.HIGH)
+            .withMechanismPositionConfig(KickerConstants.robotToMechanism);
+    kicker = new FlyWheel(kickerMechanismConfig);
+  }
 
   @Override
   public void periodic() {

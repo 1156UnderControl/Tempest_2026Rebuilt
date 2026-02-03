@@ -86,8 +86,6 @@ public class ExtensorSubsystem extends SubsystemBase {
 
   private Distance setpoint = Meters.of(0);
 
-  public ExtensorSubsystem() {}
-
   @Override
   public void periodic() {
     updateInputs();
@@ -95,7 +93,7 @@ public class ExtensorSubsystem extends SubsystemBase {
     extensor.updateTelemetry();
     setpoint =
         Meters.of(
-            extensorMotor.getMechanismPositionSetpoint().isEmpty()
+            this.extensorMotor.getMechanismPositionSetpoint().isEmpty()
                 ? 0
                 : extensorMotor.getMechanismPositionSetpoint().get().in(Rotations)
                     * ExtensorConstants.MECHANISM_CIRCUNFERENCE.in(Meters));
@@ -103,15 +101,15 @@ public class ExtensorSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    extensor.simIterate();
+    this.extensor.simIterate();
   }
 
   public void updateInputs() {
-    extensorInputs.extensorVoltage = extensorMotor.getVoltage();
-    extensorInputs.extensorCurrent = extensorMotor.getStatorCurrent();
-    extensorInputs.extensorPosition = extensorMotor.getMeasurementPosition();
-    extensorInputs.extensorVelocity = extensorMotor.getMeasurementVelocity();
-    extensorInputs.extensorSetpoint = setpoint;
+    extensorInputs.extensorVoltage = this.extensorMotor.getVoltage();
+    extensorInputs.extensorCurrent = this.extensorMotor.getStatorCurrent();
+    extensorInputs.extensorPosition = this.extensorMotor.getMeasurementPosition();
+    extensorInputs.extensorVelocity = this.extensorMotor.getMeasurementVelocity();
+    extensorInputs.extensorSetpoint = this.setpoint;
   }
 
   public Command extend() {
@@ -137,14 +135,14 @@ public class ExtensorSubsystem extends SubsystemBase {
   public Command softStopExtensor() {
     return disableExtensor()
         .andThen(this.setDutyCycle(0).withTimeout(Seconds.of(2.5)))
-        .finallyDo(() -> extensorMotor.startClosedLoopController());
+        .finallyDo(() -> this.extensorMotor.startClosedLoopController());
   }
 
   private Command disableExtensor() {
     return this.runOnce(
         () -> {
-          extensorMotor.setIdleMode(MotorMode.COAST);
-          extensorMotor.stopClosedLoopController();
+          this.extensorMotor.setIdleMode(MotorMode.COAST);
+          this.extensorMotor.stopClosedLoopController();
         });
   }
 
@@ -153,12 +151,13 @@ public class ExtensorSubsystem extends SubsystemBase {
     Voltage runVolts = Volts.of(-2);
     AngularVelocity velocityThreshold = DegreesPerSecond.of(2);
     return Commands.startRun(
-            extensorMotor::stopClosedLoopController, () -> extensorMotor.setVoltage(runVolts))
+            this.extensorMotor::stopClosedLoopController,
+            () -> this.extensorMotor.setVoltage(runVolts))
         .until(
             () ->
                 currentDebouncer.calculate(
-                    extensorMotor.getStatorCurrent().gte(threshhold)
-                        && extensorMotor.getMechanismVelocity().abs(DegreesPerSecond)
+                    this.extensorMotor.getStatorCurrent().gte(threshhold)
+                        && this.extensorMotor.getMechanismVelocity().abs(DegreesPerSecond)
                             <= velocityThreshold.in(DegreesPerSecond)))
         .finallyDo(
             () -> {
@@ -172,11 +171,11 @@ public class ExtensorSubsystem extends SubsystemBase {
   }
 
   private Command setLength(Distance length) {
-    return extensor.setHeight(length);
+    return this.extensor.setHeight(length);
   }
 
   public Command setDutyCycle(double dutyCycle) {
-    return extensor.set(dutyCycle);
+    return this.extensor.set(dutyCycle);
   }
 
   public Trigger isAtCollision() {

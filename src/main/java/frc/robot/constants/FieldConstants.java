@@ -74,5 +74,7 @@ public class FieldConstants {
     public static final Translation2d LEFT_FEED_POSE =
         new Translation2d(
             RIGHT_FEED_POSE.getX(), FieldConstants.fieldWidth - RIGHT_FEED_POSE.getY());
+
+    public static final double AllianceZoneX = 4.007866;
   }
 }
