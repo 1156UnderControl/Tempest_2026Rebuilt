@@ -1,12 +1,10 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.hopper.indexer.SpindexerSubsystem;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
+import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
 import frc.robot.subsystems.intake.extensor.ExtensorSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
@@ -54,10 +52,8 @@ public class States {
             .onlyIf(() -> DriverStation.isTeleopEnabled()));
 
     this.extensor.setDefaultCommand(Commands.run(() -> this.extensor.holdPID(), extensor));
-    this.kicker.setDefaultCommand(
-        Commands.run(() -> this.kicker.setVelocity(RotationsPerSecond.of(0)), this.kicker));
-    this.spindexer.setDefaultCommand(
-        Commands.run(() -> this.spindexer.setVelocity(RotationsPerSecond.of(0)), this.spindexer));
+    this.kicker.setDefaultCommand(this.kicker.stop());
+    this.spindexer.setDefaultCommand(this.spindexer.stop());
 
     // this.turretState = isHubMode ? "Aiming at Hub Pose State" : "Aiming to Feed Pose State";
     // this.turret.setDefaultCommand(this.turret.goToTargetAngle());
@@ -70,9 +66,7 @@ public class States {
   }
 
   public Command shootState() {
-    return Commands.race(
-        Commands.run(() -> this.spindexer.setVelocity(RotationsPerSecond.of(50)), this.spindexer),
-        Commands.run(() -> this.kicker.setVelocity(RotationsPerSecond.of(-50)), this.kicker));
+    return this.kicker.shoot().alongWith(this.spindexer.shoot());
     //   this.flyWheelState =
     //       isHubMode
     //           ? (this.turret.isAtTargetAngle()

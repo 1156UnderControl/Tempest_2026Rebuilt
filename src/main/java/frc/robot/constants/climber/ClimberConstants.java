@@ -9,13 +9,13 @@ import yams.mechanisms.config.MechanismPositionConfig;
 public class ClimberConstants {
   public static final int ID_climberMotor = 5;
 
-  public static final Distance DEADBAND = Meters.of(0.1);
+  public static final Distance DEADBAND_IS_AT = Meters.of(0.1);
 
   public static final double VELOCITY_M_PER_SECOND = 0;
 
   public static final double ACCELERATION_M_PER_SECOND_SQRD = 0;
 
-  public static final double MECHANISM_CIRCUNFERENCE = 2 * Math.PI * 0.015875;
+  public static final Distance MECHANISM_CIRCUNFERENCE = Meters.of(2 * Math.PI * 0.015875);
 
   public static final MechanismPositionConfig robotToMechanism =
       new MechanismPositionConfig()

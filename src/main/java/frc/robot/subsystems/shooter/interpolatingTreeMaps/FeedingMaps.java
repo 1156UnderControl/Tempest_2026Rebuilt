@@ -5,7 +5,7 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 
-public class FeedingMaps implements ITreeMaps {
+public class FeedingMaps implements InterpolatingTreeMaps {
   private static final InterpolatingTreeMap<Double, Rotation2d> shotHoodAngleMap =
       new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), Rotation2d::interpolate);
   private static final InterpolatingDoubleTreeMap shotFlywheelSpeedMap =

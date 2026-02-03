@@ -16,7 +16,7 @@ import frc.robot.constants.FieldConstants;
 import frc.robot.constants.FieldConstants.FieldStructurePoses;
 import frc.robot.constants.shooter.TurretConstants;
 import frc.robot.subsystems.shooter.interpolatingTreeMaps.FeedingMaps;
-import frc.robot.subsystems.shooter.interpolatingTreeMaps.ITreeMaps;
+import frc.robot.subsystems.shooter.interpolatingTreeMaps.InterpolatingTreeMaps;
 import frc.robot.subsystems.shooter.interpolatingTreeMaps.ShootingMaps;
 import org.littletonrobotics.junction.Logger;
 
@@ -69,7 +69,7 @@ public class ShooterCalculator {
 
     lastState = shooting;
 
-    ITreeMaps maps = getMaps(shooting);
+    InterpolatingTreeMaps maps = getMaps(shooting);
 
     // Calculate estimated pose while accounting for phase delay
     Pose2d estimatedPose = RobotStates.getInstance().getRobotPose();
@@ -80,7 +80,6 @@ public class ShooterCalculator {
                 robotRelativeVelocity.vxMetersPerSecond * phaseDelay,
                 robotRelativeVelocity.vyMetersPerSecond * phaseDelay,
                 robotRelativeVelocity.omegaRadiansPerSecond * phaseDelay));
-
     // Calculate distance from turret to target
     Translation2d target = getTargetTranslation2d(shooting);
     Logger.recordOutput("target", target);
@@ -149,7 +148,6 @@ public class ShooterCalculator {
   }
 
   private Translation2d getTargetTranslation2d(boolean shooting) {
-
     Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
     if (shooting)
@@ -164,7 +162,7 @@ public class ShooterCalculator {
     }
   }
 
-  private ITreeMaps getMaps(boolean shooting) {
+  private InterpolatingTreeMaps getMaps(boolean shooting) {
     if (shooting) return new ShootingMaps();
     return new FeedingMaps();
   }
