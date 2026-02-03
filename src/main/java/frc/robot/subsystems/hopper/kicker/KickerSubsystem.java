@@ -82,8 +82,7 @@ public class KickerSubsystem extends SubsystemBase {
         new FlyWheelConfig(kickerMotor)
             .withDiameter(KickerConstants.Mechanism.WHEEL_DIAMETER)
             .withMass(KickerConstants.Mechanism.WHEEL_MASS)
-            .withMOI(
-                KickerConstants.Mechanism.WHEEL_DIAMETER, KickerConstants.Mechanism.WHEEL_MASS)
+            .withMOI(KickerConstants.Mechanism.WHEEL_DIAMETER, KickerConstants.Mechanism.WHEEL_MASS)
             .withTelemetry(KickerConstants.Telemetry.MECHANISM, TelemetryVerbosity.HIGH)
             .withMechanismPositionConfig(KickerConstants.robotToMechanism);
     kicker = new FlyWheel(kickerMechanismConfig);

@@ -74,7 +74,8 @@ public class RollerSubsystem extends SubsystemBase {
             .withOpenLoopRampRate(Seconds.of(0.25));
 
     this.rollerMotor =
-        new SparkWrapper(this.rollerMasterFlex, DCMotor.getNeoVortex(2), this.smartRollerMotorConfig);
+        new SparkWrapper(
+            this.rollerMasterFlex, DCMotor.getNeoVortex(2), this.smartRollerMotorConfig);
 
     this.rollerConfig =
         new FlyWheelConfig(rollerMotor)

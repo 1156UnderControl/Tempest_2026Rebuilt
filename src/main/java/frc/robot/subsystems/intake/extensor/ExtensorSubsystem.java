@@ -53,8 +53,7 @@ public class ExtensorSubsystem extends SubsystemBase {
   private Distance setpoint = Meters.of(0);
 
   public ExtensorSubsystem() {
-    this.extensorSparkFlex =
-        new SparkFlex(ExtensorConstants.ID_MOTOR, MotorType.kBrushless);
+    this.extensorSparkFlex = new SparkFlex(ExtensorConstants.ID_MOTOR, MotorType.kBrushless);
 
     this.extensorMotorConfig =
         new SmartMotorControllerConfig(this)

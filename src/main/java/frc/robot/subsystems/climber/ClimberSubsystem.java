@@ -1,13 +1,11 @@
 package frc.robot.subsystems.climber;
 
 import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Rotation;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
@@ -15,7 +13,6 @@ import static edu.wpi.first.units.Units.Volts;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
@@ -31,7 +28,6 @@ import org.littletonrobotics.junction.Logger;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
 import yams.mechanisms.config.ElevatorConfig;
-import yams.mechanisms.config.MechanismPositionConfig;
 import yams.mechanisms.positional.Elevator;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
@@ -75,18 +71,23 @@ public class ClimberSubsystem extends SubsystemBase {
   private Distance setpoint = ClimberConstants.setpoints.DEFAULT_HEIGHT;
 
   public ClimberSubsystem() {
-    this.climberFlex =
-        new SparkFlex(ClimberConstants.ID_climberMotor, MotorType.kBrushless);
+    this.climberFlex = new SparkFlex(ClimberConstants.ID_climberMotor, MotorType.kBrushless);
 
     this.motors = DCMotor.getNeoVortex(1);
 
     this.climberMotor =
         new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
-            .withClosedLoopController(0,0,0,
+            .withClosedLoopController(
+                0,
+                0,
+                0,
                 DegreesPerSecond.of(ClimberConstants.VELOCITY_M_PER_SECOND),
                 DegreesPerSecondPerSecond.of(ClimberConstants.ACCELERATION_M_PER_SECOND_SQRD))
-            .withSimClosedLoopController(0,0,0,
+            .withSimClosedLoopController(
+                0,
+                0,
+                0,
                 DegreesPerSecond.of(ClimberConstants.VELOCITY_M_PER_SECOND),
                 DegreesPerSecondPerSecond.of(ClimberConstants.ACCELERATION_M_PER_SECOND_SQRD))
             .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
@@ -103,10 +104,10 @@ public class ClimberSubsystem extends SubsystemBase {
 
     this.climberConfig =
         new ElevatorConfig(motor)
-            .withHardLimits(
-                ClimberConstants.limits.MIN_HEIGHT, ClimberConstants.limits.MAX_HEIGHT)
+            .withHardLimits(ClimberConstants.limits.MIN_HEIGHT, ClimberConstants.limits.MAX_HEIGHT)
             .withStartingHeight(ClimberConstants.limits.MIN_HEIGHT)
-            .withMass(Mass.ofBaseUnits(2, Kilograms)).withTelemetry("ClimberMechanism", TelemetryVerbosity.HIGH);
+            .withMass(Mass.ofBaseUnits(2, Kilograms))
+            .withTelemetry("ClimberMechanism", TelemetryVerbosity.HIGH);
 
     this.climber = new Elevator(climberConfig);
   }
@@ -116,7 +117,12 @@ public class ClimberSubsystem extends SubsystemBase {
     this.updateInputs();
     Logger.processInputs("Motors/Climber", climberInputs);
     climber.updateTelemetry();
-    this.setpoint = climber.getMechanismSetpoint().isEmpty() ? Meters.of(0) : Meters.of(climber.getMechanismSetpoint().get().in(Rotations) * ClimberConstants.MECHANISM_CIRCUNFERENCE.in(Meters)); 
+    this.setpoint =
+        climber.getMechanismSetpoint().isEmpty()
+            ? Meters.of(0)
+            : Meters.of(
+                climber.getMechanismSetpoint().get().in(Rotations)
+                    * ClimberConstants.MECHANISM_CIRCUNFERENCE.in(Meters));
   }
 
   @Override

@@ -33,8 +33,7 @@ public final class KickerConstants {
     public static final AngularVelocity CLOSED_LOOP_MAX_VELOCITY = RPM.of(3000);
     public static final AngularAcceleration CLOSED_LOOP_MAX_ACCELERATION =
         RotationsPerSecondPerSecond.of(150);
-    public static final AngularVelocity SIM_CLOSED_LOOP_MAX_VELOCITY =
-        DegreesPerSecond.of(90);
+    public static final AngularVelocity SIM_CLOSED_LOOP_MAX_VELOCITY = DegreesPerSecond.of(90);
     public static final AngularAcceleration SIM_CLOSED_LOOP_MAX_ACCELERATION =
         DegreesPerSecondPerSecond.of(45);
     public static final Distance MECHANISM_CIRCUMFERENCE = Inches.of(2);
