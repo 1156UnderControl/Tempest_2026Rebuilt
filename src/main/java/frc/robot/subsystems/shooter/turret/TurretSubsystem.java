@@ -1,10 +1,13 @@
 package frc.robot.subsystems.shooter.turret;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
 
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.TurretConstants;
@@ -16,6 +19,8 @@ import yams.mechanisms.positional.Pivot;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.local.SparkWrapper;
+import yams.units.EasyCRT;
+import yams.units.EasyCRTConfig;
 
 public class TurretSubsystem extends SubsystemBase {
 
@@ -91,6 +96,30 @@ public class TurretSubsystem extends SubsystemBase {
             .withTelemetry("Turret", TurretConstants.TELEMETRY);
 
     this.turretMechanism = new Pivot(turretMechanismConfig);
+
+    SparkAbsoluteEncoder encoder1 = this.turretMotor.getAbsoluteEncoder();
+    // TODO: define second encoder correctly
+    SparkAbsoluteEncoder encoder2 = this.turretMotor.getAbsoluteEncoder();
+
+    EasyCRTConfig easyCRTConfig =
+        new EasyCRTConfig(
+                () -> Angle.ofBaseUnits(encoder1.getPosition(), Rotations),
+                () -> Angle.ofBaseUnits(encoder2.getPosition(), Rotations))
+            .withEncoderRatios(
+                TurretConstants.TURRET_GEAR_TEETH / TurretConstants.ENCODER1_GEAR_TEETH,
+                TurretConstants.TURRET_GEAR_TEETH / TurretConstants.ENCODER2_GEAR_TEETH)
+            .withMechanismRange(
+                TurretConstants.Position.TURRET_MIN_ANGLE,
+                TurretConstants.Position.TURRET_MAX_ANGLE);
+
+    EasyCRT easyCRT = new EasyCRT(easyCRTConfig);
+
+    easyCRT
+        .getAngleOptional()
+        .ifPresent(
+            mechAngle -> {
+              this.turretSmartMotor.setEncoderPosition(mechAngle);
+            });
 
     this.inputs = new TurretInputsAutoLogged();
   }
