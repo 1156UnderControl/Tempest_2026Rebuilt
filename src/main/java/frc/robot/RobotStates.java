@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.java_is_undercontrol.util.AllianceFlipUtil;
 import frc.robot.constants.FieldConstants;
 
 public class RobotStates {
@@ -45,5 +46,10 @@ public class RobotStates {
 
   public boolean isOnBlueDepotSide() {
     return (robotPose.getY() > FieldConstants.fieldWidth / 2);
+  }
+
+  public boolean isOnAllianceZone() {
+    return (AllianceFlipUtil.apply(robotPose).getX()
+        < FieldConstants.FieldStrategicPoses.AllianceZoneX);
   }
 }

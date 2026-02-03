@@ -16,8 +16,8 @@ import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
-import frc.robot.subsystems.hopper.indexer.SpindexerSubsystem;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
+import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
 import frc.robot.subsystems.intake.extensor.ExtensorSubsystem;
 import frc.robot.subsystems.shooter.flywheel.FlyWheelSubsystem;
 import frc.robot.subsystems.shooter.hood.HoodSubsystem;
@@ -108,12 +108,12 @@ public class RobotContainer {
   private void configureButtonBindings() {
     this.states.setDefaultStates();
 
-    this.driverController
-        .a()
-        .whileTrue(this.states.shootState());
+    this.driverController.a().whileTrue(this.states.shootState());
 
-    this.driverController.turboActivate().onTrue(Commands.run(() -> this.drive.boostRobotJoystickControlVelocity(), drive)).onFalse(Commands.run(() -> this.drive.limitRobotJoystickControlVelocity(), drive));
-    this.driverController.a().onTrue(this.states.shootState());
+    this.driverController
+        .turboActivate()
+        .onTrue(Commands.run(() -> this.drive.boostRobotJoystickControlVelocity(), drive))
+        .onFalse(Commands.run(() -> this.drive.limitRobotJoystickControlVelocity(), drive));
   }
 
   public Command getAutonomousCommand() {

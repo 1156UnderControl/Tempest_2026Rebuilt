@@ -4,7 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 
-public interface ITreeMaps {
+public interface InterpolatingTreeMaps {
 
   public InterpolatingTreeMap<Double, Rotation2d> getHoodAngleMap();
 

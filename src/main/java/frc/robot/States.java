@@ -1,15 +1,12 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.hopper.indexer.SpindexerSubsystem;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
+import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
 import frc.robot.subsystems.intake.extensor.ExtensorSubsystem;
 import frc.robot.subsystems.shooter.flywheel.FlyWheelSubsystem;
 import frc.robot.subsystems.shooter.hood.HoodSubsystem;
@@ -53,8 +50,8 @@ public class States {
             .onlyIf(() -> DriverStation.isTeleopEnabled()));
 
     this.extensor.setDefaultCommand(Commands.run(() -> this.extensor.holdPID(), extensor));
-    this.kicker.setDefaultCommand(Commands.run(() -> this.kicker.setVelocity(RotationsPerSecond.of(0)), this.kicker));
-    this.spindexer.setDefaultCommand(Commands.run(() -> this.spindexer.setVelocity(RotationsPerSecond.of(0)), this.spindexer));
+    this.kicker.setDefaultCommand(this.kicker.stop());
+    this.spindexer.setDefaultCommand(this.spindexer.stop());
 
     this.turret.setDefaultCommand(Commands.run(this.isHubMode ? () -> this.turret.trackHub() : () -> this.turret.trackPass(), turret).alongWith(Commands.runOnce(() -> this.turretState = isHubMode ? "Aiming at Hub Pose State" : "Aiming to Feed Pose State")));
     this.hood.setDefaultCommand(Commands.run(() -> this.hood.goToTargetAngle() ,hood).alongWith(Commands.runOnce(() -> this.hoodState = isHubMode ? "Aiming at Hub Pose State" : "Aiming to Feed Pose State")));
@@ -74,6 +71,6 @@ public class States {
                     && this.flyWheel.isAtTargetVelocity())
                 ? "Shooting at Alliance Zone"
                 : "Preparing to Shoot at Alliance Zone";
-    return Commands.parallel(Commands.run(() -> this.spindexer.setVelocity(RotationsPerSecond.of(50)), this.spindexer), Commands.run(() -> this.kicker.setVelocity(RotationsPerSecond.of(-50)), this.kicker), Commands.parallel(Commands.run(() -> this.flyWheel.runVelocity(), flyWheel)));
+    return Commands.parallel(Commands.run(() -> this.spindexer.shoot(), this.spindexer), Commands.run(() -> this.kicker.shoot(), this.kicker), Commands.parallel(Commands.run(() -> this.flyWheel.runVelocity(), flyWheel)));
   }
 }
