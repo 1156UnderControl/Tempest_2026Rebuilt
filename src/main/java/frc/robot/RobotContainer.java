@@ -99,7 +99,15 @@ public class RobotContainer {
     this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
     this.namedCommandsRegistry.registerAllAutoCommands();
 
-    this.states = new States(this.drive, this.turret, this.hood, this.flyWheel, this.extensor, this.spindexer, this.kicker);
+    this.states =
+        new States(
+            this.drive,
+            this.turret,
+            this.hood,
+            this.flyWheel,
+            this.extensor,
+            this.spindexer,
+            this.kicker);
 
     configureButtonBindings();
     this.autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
