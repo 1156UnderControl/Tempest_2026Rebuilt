@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
 
 import com.revrobotics.spark.SparkFlex;
@@ -72,9 +73,9 @@ public class SpindexerSubsystem extends SubsystemBase {
 
     this.spindexerMechanismConfig =
         new FlyWheelConfig(spindexerMotor)
-            .withDiameter(Inches.of(4))
-            .withMass(Kilograms.of(0.45))
-            .withMOI(Inches.of(4), Kilograms.of(0.45))
+            .withDiameter(Inches.of(6))
+            .withMass(Pounds.of(0.58))
+            .withMOI(Inches.of(6), Kilograms.of(0.58))
             .withTelemetry("SpindexerMech", TelemetryVerbosity.HIGH);
 
     this.spindexer = new FlyWheel(spindexerMechanismConfig);

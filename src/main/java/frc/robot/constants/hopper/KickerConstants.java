@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
@@ -42,8 +43,8 @@ public final class KickerConstants {
   }
 
   public static final class Mechanism {
-    public static final Distance WHEEL_DIAMETER = Inches.of(4);
-    public static final Mass WHEEL_MASS = Kilograms.of(0.45);
+    public static final Distance WHEEL_DIAMETER = Inches.of(2.25);
+    public static final Mass WHEEL_MASS = Pounds.of(0.08);
   }
 
   public static final class Telemetry {
