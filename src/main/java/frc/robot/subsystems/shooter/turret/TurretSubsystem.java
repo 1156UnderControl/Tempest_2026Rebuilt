@@ -164,7 +164,7 @@ public class TurretSubsystem extends SubsystemBase {
         .isNear(
             turret.getMechanismSetpoint().isEmpty()
                 ? Degrees.of(0)
-                : turret.getMechanismSetpoint().get(),
+                : turret.getAngle(),
             TurretConstants.Position.ANGLE_ERROR_ALLOWED);
   }
 }
