@@ -61,11 +61,19 @@ public class RobotStates {
   }
 
   public boolean isOnNotShootZone() {
-    if(!isOnAllianceZone() && (isOnOtherAllianceZone() || isOnShootZoneToFeed()) && !DriverStation.getAlliance().isEmpty()){
-      if(DriverStation.getAlliance().get() == Alliance.Blue){
-        return AllianceFlipUtil.apply(robotPose).getY() < FieldConstants.FieldStrategicPoses.NOT_SHOOT_LEFT_Y && AllianceFlipUtil.apply(robotPose).getY() > FieldConstants.FieldStrategicPoses.NOT_SHOOT_RIGHT_Y;
+    if (!isOnAllianceZone()
+        && (isOnOtherAllianceZone() || isOnShootZoneToFeed())
+        && !DriverStation.getAlliance().isEmpty()) {
+      if (DriverStation.getAlliance().get() == Alliance.Blue) {
+        return AllianceFlipUtil.apply(robotPose).getY()
+                < FieldConstants.FieldStrategicPoses.NOT_SHOOT_LEFT_Y
+            && AllianceFlipUtil.apply(robotPose).getY()
+                > FieldConstants.FieldStrategicPoses.NOT_SHOOT_RIGHT_Y;
       } else {
-        return AllianceFlipUtil.apply(robotPose).getY() < FieldConstants.FieldStrategicPoses.NOT_SHOOT_LEFT_Y && AllianceFlipUtil.apply(robotPose).getY() > FieldConstants.FieldStrategicPoses.NOT_SHOOT_RIGHT_Y;
+        return AllianceFlipUtil.apply(robotPose).getY()
+                < FieldConstants.FieldStrategicPoses.NOT_SHOOT_LEFT_Y
+            && AllianceFlipUtil.apply(robotPose).getY()
+                > FieldConstants.FieldStrategicPoses.NOT_SHOOT_RIGHT_Y;
       }
     }
     return false;

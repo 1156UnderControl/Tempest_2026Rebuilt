@@ -77,7 +77,8 @@ public class FieldConstants {
             RIGHT_FEED_POSE.getX(), FieldConstants.fieldWidth - RIGHT_FEED_POSE.getY());
 
     public static final double AllianceZoneX = 4.007866 + (TunerConstants.ROBOT_SIZE / 2);
-    public static final double OtherAllianceZoneX = (fieldLength - 4.007866) + (TunerConstants.ROBOT_SIZE / 2);
+    public static final double OtherAllianceZoneX =
+        (fieldLength - 4.007866) + (TunerConstants.ROBOT_SIZE / 2);
     public static final double ShootZoneX = 7.669;
 
     public static final double NOT_SHOOT_LEFT_Y = 4.6;

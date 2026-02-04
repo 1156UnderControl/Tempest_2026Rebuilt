@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
@@ -100,16 +99,18 @@ public class States {
   }
 
   public void shootState(Trigger button) {
-    new Trigger(() -> !RobotStates.getInstance().isOnNotShootZone()).and(button).whileTrue(
-    Commands.parallel(
-            this.spindexer.shoot(),
-            this.kicker.shoot(),
-            Commands.runOnce(
-                () -> {
-                  this.flyWheelState =
-                      this.isHubMode ? "Shooting to Hub State" : "Shooting to Pass State";
-                  this.kickerState = "Running State";
-                  this.spindexerState = "Running State";
-                })));
+    new Trigger(() -> !RobotStates.getInstance().isOnNotShootZone())
+        .and(button)
+        .whileTrue(
+            Commands.parallel(
+                this.spindexer.shoot(),
+                this.kicker.shoot(),
+                Commands.runOnce(
+                    () -> {
+                      this.flyWheelState =
+                          this.isHubMode ? "Shooting to Hub State" : "Shooting to Pass State";
+                      this.kickerState = "Running State";
+                      this.spindexerState = "Running State";
+                    })));
   }
 }
