@@ -44,9 +44,9 @@ public class ClimberSubsystem extends SubsystemBase {
 
   private final DCMotor motors;
 
-  private final SmartMotorControllerConfig climberMotor;
+  private final SmartMotorControllerConfig climberMotorConfig;
 
-  private final SmartMotorController motor;
+  private final SmartMotorController climberMotor;
 
   private final ElevatorConfig climberConfig;
 
@@ -59,7 +59,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
     this.motors = DCMotor.getNeoVortex(1);
 
-    this.climberMotor =
+    this.climberMotorConfig =
         new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
             .withClosedLoopController(
@@ -84,10 +84,10 @@ public class ClimberSubsystem extends SubsystemBase {
             .withMechanismCircumference(ClimberConstants.MECHANISM_CIRCUNFERENCE)
             .withControlMode(ControlMode.CLOSED_LOOP);
 
-    this.motor = new SparkWrapper(climberFlex, motors, climberMotor);
+    this.climberMotor = new SparkWrapper(climberFlex, motors, climberMotorConfig);
 
     this.climberConfig =
-        new ElevatorConfig(motor)
+        new ElevatorConfig(climberMotor)
             .withHardLimits(ClimberConstants.limits.MIN_HEIGHT, ClimberConstants.limits.MAX_HEIGHT)
             .withStartingHeight(ClimberConstants.limits.MIN_HEIGHT)
             .withMass(Mass.ofBaseUnits(2, Kilograms))
