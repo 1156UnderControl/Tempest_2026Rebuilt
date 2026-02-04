@@ -12,6 +12,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -133,5 +134,9 @@ public class KickerSubsystem extends SubsystemBase {
 
   public Trigger isAtVelocity() {
     return kicker.isNear(setpoint, KickerConstants.VELOCITY_ERROR_ALOWED);
+  }
+
+  public SparkAbsoluteEncoder getTurreAbsoluteEncoder(){
+    return this.kickerFlex.getAbsoluteEncoder();
   }
 }

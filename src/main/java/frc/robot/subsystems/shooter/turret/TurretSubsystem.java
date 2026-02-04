@@ -44,7 +44,10 @@ public class TurretSubsystem extends SubsystemBase {
   private final PivotConfig turretMechanismConfig;
   private final Pivot turret;
 
-  private TurretSubsystem() {
+  private final SparkAbsoluteEncoder encoder1;
+  private final SparkAbsoluteEncoder encoder2;
+
+  private TurretSubsystem(SparkAbsoluteEncoder kickerEncoder) {
     calculator = ShooterCalculator.getInstance();
     smartTurretMotorConfig =
         new SmartMotorControllerConfig(this)
@@ -96,9 +99,9 @@ public class TurretSubsystem extends SubsystemBase {
 
     turret = new Pivot(turretMechanismConfig);
 
-    SparkAbsoluteEncoder encoder1 = turretFlex.getAbsoluteEncoder();
+    encoder1 = turretFlex.getAbsoluteEncoder();
     // TODO: define second encoder correctly
-    SparkAbsoluteEncoder encoder2 = turretFlex.getAbsoluteEncoder();
+    encoder2 = kickerEncoder;
 
     EasyCRTConfig easyCRTConfig =
         new EasyCRTConfig(
@@ -115,9 +118,9 @@ public class TurretSubsystem extends SubsystemBase {
     inputs = new TurretInputsAutoLogged();
   }
 
-  public static TurretSubsystem getInstance() {
+  public static TurretSubsystem getInstance(SparkAbsoluteEncoder kickerEncoder) {
     if (instance == null) {
-      instance = new TurretSubsystem();
+      instance = new TurretSubsystem(kickerEncoder);
     }
     return instance;
   }
