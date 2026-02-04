@@ -99,7 +99,7 @@ public class ClimberSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     this.updateInputs();
-    Logger.processInputs("Motors/Climber", climberInputs);
+    Logger.processInputs("Subsystems/Climber", climberInputs);
     climber.updateTelemetry();
     this.setpoint =
         climber.getMechanismSetpoint().isEmpty()
