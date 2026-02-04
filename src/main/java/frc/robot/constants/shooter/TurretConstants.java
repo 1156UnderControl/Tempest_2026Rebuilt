@@ -57,8 +57,8 @@ public class TurretConstants {
         new Transform2d(0, 0, Rotation2d.kZero);
     public static final boolean MOTOR_INVERTED = false;
     public static final double ANGLE_ERROR_ALLOWED = 1.0;
-    public static final Angle TURRET_MIN_ANGLE = Degrees.of(-200);
-    public static final Angle TURRET_MAX_ANGLE = Degrees.of(200);
+    public static final Angle TURRET_MIN_ANGLE = Degrees.of(-180);
+    public static final Angle TURRET_MAX_ANGLE = Degrees.of(180);
     public static final Angle STARTING_POSITION = Degrees.of(0);
   }
 
