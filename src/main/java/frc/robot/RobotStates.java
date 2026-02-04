@@ -3,6 +3,8 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.java_is_undercontrol.util.AllianceFlipUtil;
 import frc.robot.constants.FieldConstants;
 
@@ -51,5 +53,26 @@ public class RobotStates {
   public boolean isOnAllianceZone() {
     return (AllianceFlipUtil.apply(robotPose).getX()
         < FieldConstants.FieldStrategicPoses.AllianceZoneX);
+  }
+
+  public boolean isOnOtherAllianceZone() {
+    return (AllianceFlipUtil.apply(robotPose).getX()
+        > FieldConstants.FieldStrategicPoses.OtherAllianceZoneX);
+  }
+
+  public boolean isOnNotShootZone() {
+    if(!isOnAllianceZone() && (isOnOtherAllianceZone() || isOnShootZoneToFeed()) && !DriverStation.getAlliance().isEmpty()){
+      if(DriverStation.getAlliance().get() == Alliance.Blue){
+        return AllianceFlipUtil.apply(robotPose).getY() < FieldConstants.FieldStrategicPoses.NOT_SHOOT_LEFT_Y && AllianceFlipUtil.apply(robotPose).getY() > FieldConstants.FieldStrategicPoses.NOT_SHOOT_RIGHT_Y;
+      } else {
+        return AllianceFlipUtil.apply(robotPose).getY() < FieldConstants.FieldStrategicPoses.NOT_SHOOT_LEFT_Y && AllianceFlipUtil.apply(robotPose).getY() > FieldConstants.FieldStrategicPoses.NOT_SHOOT_RIGHT_Y;
+      }
+    }
+    return false;
+  }
+
+  private boolean isOnShootZoneToFeed() {
+    return (AllianceFlipUtil.apply(robotPose).getX()
+        < FieldConstants.FieldStrategicPoses.ShootZoneX);
   }
 }

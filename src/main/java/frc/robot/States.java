@@ -99,8 +99,9 @@ public class States {
             .alongWith(Commands.runOnce(() -> this.flyWheelState = "Stopped State")));
   }
 
-  public Command shootState() {
-    return Commands.parallel(
+  public void shootState(Trigger button) {
+    new Trigger(() -> !RobotStates.getInstance().isOnNotShootZone()).and(button).whileTrue(
+    Commands.parallel(
             this.spindexer.shoot(),
             this.kicker.shoot(),
             Commands.runOnce(
@@ -109,11 +110,6 @@ public class States {
                       this.isHubMode ? "Shooting to Hub State" : "Shooting to Pass State";
                   this.kickerState = "Running State";
                   this.spindexerState = "Running State";
-                }))
-        .onlyIf(
-            () ->
-                this.turret.isAtTargetAngle()
-                    && this.hood.isAtTargetAngle()
-                    && this.flyWheel.isAtTargetVelocity());
+                })));
   }
 }

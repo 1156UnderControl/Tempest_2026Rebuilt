@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.Constants;
+import frc.robot.generated.TunerConstants;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -70,11 +71,16 @@ public class FieldConstants {
 
   public class FieldStrategicPoses {
     public static final Translation2d RIGHT_FEED_POSE =
-        new Translation2d(FieldConstants.fieldLength / 8, FieldConstants.fieldWidth / 4);
+        new Translation2d(FieldConstants.fieldLength / 8, (FieldConstants.fieldWidth / 4));
     public static final Translation2d LEFT_FEED_POSE =
         new Translation2d(
             RIGHT_FEED_POSE.getX(), FieldConstants.fieldWidth - RIGHT_FEED_POSE.getY());
 
-    public static final double AllianceZoneX = 4.007866;
+    public static final double AllianceZoneX = 4.007866 + (TunerConstants.ROBOT_SIZE / 2);
+    public static final double OtherAllianceZoneX = (fieldLength - 4.007866) + (TunerConstants.ROBOT_SIZE / 2);
+    public static final double ShootZoneX = 7.669;
+
+    public static final double NOT_SHOOT_LEFT_Y = 4.6;
+    public static final double NOT_SHOOT_RIGHT_Y = 3.45;
   }
 }
