@@ -1,6 +1,8 @@
 package frc.robot.subsystems.shooter.flywheel;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -18,6 +20,9 @@ import yams.mechanisms.config.FlyWheelConfig;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
+import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class FlyWheelSubsystem extends SubsystemBase {
@@ -39,16 +44,13 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
     this.motorConfig =
         new SmartMotorControllerConfig(this)
-            .withFollowers(
-                Pair.of(
-                    new TalonFX(FlyWheelsConstants.FLYWHEEL_MOTOR_FOLLOWER_ID, CANBus.roboRIO()),
-                    true))
-            .withIdleMode(FlyWheelsConstants.MOTOR_MODE)
+            .withFollowers(Pair.of(new TalonFX(18, CANBus.roboRIO()), true))
+            .withIdleMode(MotorMode.BRAKE)
             .withGearing(FlyWheelsConstants.MOTOR_GEARING)
-            .withMotorInverted(FlyWheelsConstants.Position.MOTOR_INVERTED_LEAD)
-            .withTelemetry(FlyWheelsConstants.MOTOR_LEAD_NAME, FlyWheelsConstants.TELEMETRY)
-            .withStatorCurrentLimit(FlyWheelsConstants.STATOR_CURRENT)
-            .withClosedLoopRampRate(FlyWheelsConstants.CLOSED_RAMP_RATE)
+            .withMotorInverted(false)
+            .withTelemetry("FlyWheelLeadMotor", TelemetryVerbosity.HIGH)
+            .withStatorCurrentLimit(Amps.of(60))
+            .withClosedLoopRampRate(Seconds.of(0.5))
             .withClosedLoopController(
                 new ExponentialProfilePIDController(
                     new PIDController(
@@ -73,19 +75,11 @@ public class FlyWheelSubsystem extends SubsystemBase {
                         FlyWheelsConstants.FLYWHEEL_MASS,
                         FlyWheelsConstants.FLYWHEEL_SIZE,
                         FlyWheelsConstants.MOTOR_GEARING)))
-            .withFeedforward(
-                new SimpleMotorFeedforward(
-                    FlyWheelsConstants.FeedForward.kS,
-                    FlyWheelsConstants.FeedForward.kV,
-                    FlyWheelsConstants.FeedForward.kA))
-            .withSimFeedforward(
-                new SimpleMotorFeedforward(
-                    FlyWheelsConstants.FeedForward.SIM.kS,
-                    FlyWheelsConstants.FeedForward.SIM.kV,
-                    FlyWheelsConstants.FeedForward.SIM.kA))
-            .withControlMode(FlyWheelsConstants.CONTROL_MODE);
+            .withFeedforward(new SimpleMotorFeedforward(0.5, 0.5, 0))
+            .withSimFeedforward(new SimpleMotorFeedforward(0.5, 0.5, 0))
+            .withControlMode(ControlMode.OPEN_LOOP);
 
-    this.leadMotor = new TalonFX(FlyWheelsConstants.FLYWHEEL_MOTOR_LEAD_ID);
+    this.leadMotor = new TalonFX(19);
 
     this.smartFlywheelMotor =
         new TalonFXWrapper(this.leadMotor, FlyWheelsConstants.FLYWHEEL_MOTOR, this.motorConfig);
