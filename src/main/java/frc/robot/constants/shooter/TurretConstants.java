@@ -27,9 +27,9 @@ public class TurretConstants {
   public static class Position {
     public static final Transform2d TURRET_OFFSET_FROM_ROBOT_CENTER =
         new Transform2d(0, 0, Rotation2d.kZero);
-    public static final Angle TURRET_MIN_ANGLE = Degrees.of(-200);
-    public static final Angle TURRET_MAX_ANGLE = Degrees.of(200);
     public static final Angle ANGLE_ERROR_ALLOWED = Degrees.of(1.0);
+    public static final Angle TURRET_MIN_ANGLE = Degrees.of(-180);
+    public static final Angle TURRET_MAX_ANGLE = Degrees.of(180);
   }
 
   public static class ClosedLoopController {
