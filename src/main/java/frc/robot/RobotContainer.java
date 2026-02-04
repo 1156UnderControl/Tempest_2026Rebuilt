@@ -89,11 +89,11 @@ public class RobotContainer {
         break;
     }
 
-    this.turret = TurretSubsystem.getInstance();
+    this.kicker = KickerSubsystem.getInstance();
+    this.turret = TurretSubsystem.getInstance(this.kicker.getTurreAbsoluteEncoder());
     this.hood = HoodSubsystem.getInstance();
     this.flyWheel = FlyWheelSubsystem.getInstance();
     this.spindexer = SpindexerSubsystem.getInstance();
-    this.kicker = KickerSubsystem.getInstance();
     this.extensor = new ExtensorSubsystem();
 
     this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
