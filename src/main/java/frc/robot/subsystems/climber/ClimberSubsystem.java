@@ -1,29 +1,22 @@
 package frc.robot.subsystems.climber;
 
-import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Mass;
-import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.climber.ClimberConstants;
-import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -43,15 +36,6 @@ public class ClimberSubsystem extends SubsystemBase {
       instance = new ClimberSubsystem();
     }
     return instance;
-  }
-
-  @AutoLog
-  public static class ClimberInputs {
-    public Distance climberPosition = Meters.of(0);
-    public LinearVelocity climberVelocity = MetersPerSecond.of(0);
-    public Distance climberSetpoint = Meters.of(0);
-    public Voltage climberAppliedVolts = Volts.of(0);
-    public Current climberCurrent = Amps.of(0);
   }
 
   private final ClimberInputsAutoLogged climberInputs = new ClimberInputsAutoLogged();
