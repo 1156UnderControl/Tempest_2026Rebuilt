@@ -143,12 +143,17 @@ public class TurretSubsystem extends SubsystemBase {
 
   public Command trackHub() {
     return turret.setAngle(
-        () -> Degrees.of(getReachableTurretAngle(calculator.getParameters().turretAngle().getDegrees())));
+        () ->
+            Degrees.of(
+                getReachableTurretAngle(calculator.getParameters().turretAngle().getDegrees())));
   }
 
   public Command trackPass() {
     return turret.setAngle(
-        () -> Degrees.of(getReachableTurretAngle(calculator.getParameters(false).turretAngle().getDegrees())));
+        () ->
+            Degrees.of(
+                getReachableTurretAngle(
+                    calculator.getParameters(false).turretAngle().getDegrees())));
   }
 
   public boolean isAtTargetAngle() {
@@ -159,10 +164,10 @@ public class TurretSubsystem extends SubsystemBase {
             TurretConstants.Position.ANGLE_ERROR_ALLOWED);
   }
 
-  private double getReachableTurretAngle(double targetAngle){
-    if(targetAngle > TurretConstants.Position.TURRET_MAX_ANGLE.in(Degrees)){
+  private double getReachableTurretAngle(double targetAngle) {
+    if (targetAngle > TurretConstants.Position.TURRET_MAX_ANGLE.in(Degrees)) {
       return targetAngle - 360;
-    } else if(targetAngle < TurretConstants.Position.TURRET_MIN_ANGLE.in(Degrees)){
+    } else if (targetAngle < TurretConstants.Position.TURRET_MIN_ANGLE.in(Degrees)) {
       return targetAngle + 360;
     } else {
       return targetAngle;
