@@ -93,7 +93,9 @@ public class SpindexerSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+    this.spindexer.simIterate();
+  }
 
   public void updateInputs() {
     spindexerInputs.spindexerAppliedVolts = spindexerMotor.getVoltage();

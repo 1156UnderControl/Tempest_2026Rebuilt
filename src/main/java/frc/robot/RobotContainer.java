@@ -19,6 +19,9 @@ import frc.robot.joysticks.IDriverController;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
 import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
 import frc.robot.subsystems.intake.extensor.ExtensorSubsystem;
+import frc.robot.subsystems.shooter.flywheel.FlyWheelSubsystem;
+import frc.robot.subsystems.shooter.hood.HoodSubsystem;
+import frc.robot.subsystems.shooter.turret.TurretSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -30,22 +33,15 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
 
-  private final SwerveSubsystem drive;
-
   private final States states;
 
-  // private final TurretSubsystem turret;
-
-  // private final HoodSubsystem hood;
-
-  // private final FlyWheelSubsystem flyWheel;
-
+  private final SwerveSubsystem drive;
+  private final TurretSubsystem turret;
+  private final HoodSubsystem hood;
+  private final FlyWheelSubsystem flyWheel;
   private final ExtensorSubsystem extensor;
-
   private final SpindexerSubsystem spindexer;
-
   private final KickerSubsystem kicker;
-
   public final IDriverController driverController;
 
   private final NamedCommandsRegistery namedCommandsRegistry;
@@ -93,9 +89,9 @@ public class RobotContainer {
         break;
     }
 
-    // this.turret = TurretSubsystem.getInstance();
-    // this.hood = HoodSubsystem.getInstance();
-    // this.flyWheel = FlyWheelSubsystem.getInstance();
+    this.turret = TurretSubsystem.getInstance();
+    this.hood = HoodSubsystem.getInstance();
+    this.flyWheel = FlyWheelSubsystem.getInstance();
     this.spindexer = SpindexerSubsystem.getInstance();
     this.kicker = KickerSubsystem.getInstance();
     this.extensor = new ExtensorSubsystem();
@@ -103,21 +99,29 @@ public class RobotContainer {
     this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
     this.namedCommandsRegistry.registerAllAutoCommands();
 
-    this.states = new States(this.drive, this.extensor, this.spindexer, this.kicker);
+    this.states =
+        new States(
+            this.drive,
+            this.turret,
+            this.hood,
+            this.flyWheel,
+            this.extensor,
+            this.spindexer,
+            this.kicker);
 
     configureButtonBindings();
     this.autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
   }
 
   private void configureButtonBindings() {
-    this.states.setDefaultStates();
-
     this.driverController.a().whileTrue(this.states.shootState());
 
     this.driverController
         .turboActivate()
         .onTrue(Commands.run(() -> this.drive.boostRobotJoystickControlVelocity(), drive))
         .onFalse(Commands.run(() -> this.drive.limitRobotJoystickControlVelocity(), drive));
+
+    this.states.setDefaultStates();
   }
 
   public Command getAutonomousCommand() {
