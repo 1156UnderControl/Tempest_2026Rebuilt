@@ -43,6 +43,9 @@ public class TurretConstants {
   public static final Mass TURRET_MASS = Kilograms.of(6);
   public static final Distance TURRET_SIZE = Meters.of(0.25);
   public static final Voltage MAX_VOLTS = Volts.of(12.0);
+  public static final int ENCODER1_GEAR_TEETH = 14;
+  public static final int ENCODER2_GEAR_TEETH = 15;
+  public static final int TURRET_GEAR_TEETH = 96;
 
   public static class Velocity {
     public static final AngularVelocity MAX_VELOCITY = DegreesPerSecond.of(360);
