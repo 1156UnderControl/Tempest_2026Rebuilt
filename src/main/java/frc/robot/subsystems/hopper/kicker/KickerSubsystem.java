@@ -5,12 +5,17 @@
 package frc.robot.subsystems.hopper.kicker;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,6 +26,7 @@ import org.littletonrobotics.junction.Logger;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
 import yams.mechanisms.config.FlyWheelConfig;
+import yams.mechanisms.config.MechanismPositionConfig;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
@@ -39,9 +45,9 @@ public class KickerSubsystem extends SubsystemBase {
     return instance;
   }
 
-  private final KickerInputsAutoLogged kickerInputs = new KickerInputsAutoLogged();
+  private final KickerInputsAutoLogged kickerInputs;
 
-  private AngularVelocity setpoint = RPM.of(0);
+  private AngularVelocity setpoint;
 
   private final SparkFlex kickerFlex;
 
@@ -54,7 +60,9 @@ public class KickerSubsystem extends SubsystemBase {
   private final FlyWheel kicker;
 
   public KickerSubsystem() {
-    kickerFlex = new SparkFlex(KickerConstants.MOTOR_ID, MotorType.kBrushless);
+    kickerInputs = new KickerInputsAutoLogged();
+
+    kickerFlex = new SparkFlex(6, MotorType.kBrushless);
 
     smartKickerMotorConfig = new SmartMotorControllerConfig(this)
         .withControlMode(ControlMode.CLOSED_LOOP)
@@ -62,18 +70,14 @@ public class KickerSubsystem extends SubsystemBase {
             0,
             0,
             0,
-            KickerConstants.Motor.CLOSED_LOOP_MAX_VELOCITY,
-            KickerConstants.Motor.CLOSED_LOOP_MAX_ACCELERATION)
+            RPM.of(3000),
+            RotationsPerSecondPerSecond.of(150))
+
         .withSimClosedLoopController(
-            50,
-            0,
-            0,
-            KickerConstants.Motor.SIM_CLOSED_LOOP_MAX_VELOCITY,
-            KickerConstants.Motor.SIM_CLOSED_LOOP_MAX_ACCELERATION)
-        .withGearing(
-            new MechanismGearing(GearBox.fromReductionStages(KickerConstants.Motor.GEAR_RATIO)))
+            50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+        .withGearing(new MechanismGearing(GearBox.fromReductionStages(2.5)))
         .withIdleMode(MotorMode.COAST)
-        .withMechanismCircumference(Inches.of(4))
+        .withMechanismCircumference(Inches.of(2))
         .withMotorInverted(false)
         .withStatorCurrentLimit(Amps.of(50))
         .withTelemetry("Kicker Motor", TelemetryVerbosity.HIGH);
@@ -81,12 +85,19 @@ public class KickerSubsystem extends SubsystemBase {
     kickerMotor = new SparkWrapper(kickerFlex, DCMotor.getNeoVortex(1), smartKickerMotorConfig);
 
     kickerMechanismConfig = new FlyWheelConfig(kickerMotor)
-        .withDiameter(Inches.of(2.25))
-        .withMass(Pounds.of(0.08))
-        .withMOI(Inches.of(2.25), Pounds.of(0.08))
-        .withTelemetry(KickerConstants.Telemetry.MECHANISM, TelemetryVerbosity.HIGH)
-        .withMechanismPositionConfig(KickerConstants.robotToMechanism);
+        .withDiameter(Inches.of(0))
+        .withMass(Pounds.of(0))
+        .withMOI(Inches.of( 0), Pounds.of(0))
+        .withTelemetry("KickerMechanism", TelemetryVerbosity.HIGH)
+        .withMechanismPositionConfig(
+            new MechanismPositionConfig()
+                .withMaxRobotHeight(Meters.of(1.5))
+                .withMaxRobotLength(Meters.of(0.75))
+                .withRelativePosition(
+                    new Translation3d(Meters.of(-0.25), Meters.of(0), Meters.of(0.5))));
     kicker = new FlyWheel(kickerMechanismConfig);
+
+    setpoint = RPM.of(0);
   }
 
   @Override
@@ -125,6 +136,6 @@ public class KickerSubsystem extends SubsystemBase {
   }
 
   public Trigger isAtVelocity() {
-    return kicker.isNear(setpoint, KickerConstants.DEADBAND_IS_AT);
+    return kicker.isNear(setpoint, KickerConstants.VELOCITY_ERROR_ALOWED);
   }
 }

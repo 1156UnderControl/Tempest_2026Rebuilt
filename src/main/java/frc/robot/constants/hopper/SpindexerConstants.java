@@ -10,7 +10,6 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.units.measure.Voltage;
 
-/** Constants describing the hopper's spindexer wheel. */
 public final class SpindexerConstants {
   public static final int MOTOR_ID = 1;
   public static final Current STATOR_CURRENT_LIMIT = Amps.of(40);

@@ -1,49 +1,63 @@
 package frc.robot.subsystems.shooter.turret;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Kilograms;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Pounds;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.Seconds;
 
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.TurretConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import org.littletonrobotics.junction.Logger;
+import yams.gearing.GearBox;
+import yams.gearing.MechanismGearing;
 import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.PivotConfig;
 import yams.mechanisms.positional.Pivot;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
+import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.local.SparkWrapper;
+import yams.units.EasyCRT;
+import yams.units.EasyCRTConfig;
 
 public class TurretSubsystem extends SubsystemBase {
 
   private final ShooterCalculator calculator;
-
-  private final SmartMotorControllerConfig turretMotorConfig;
-  private final SparkFlex turretMotor;
-  private final SmartMotorController turretSmartMotor;
-  private final PivotConfig turretMechanismConfig;
-  private final Pivot turretMechanism;
-
   private final TurretInputsAutoLogged inputs;
-
   private static TurretSubsystem instance;
 
+  private final SparkFlex turretFlex;
+  private final SmartMotorControllerConfig smartTurretMotorConfig;
+  private final SmartMotorController turretMotor;
+  private final PivotConfig turretMechanismConfig;
+  private final Pivot turret;
+
   private TurretSubsystem() {
-    this.calculator = ShooterCalculator.getInstance();
-    this.turretMotorConfig =
+    calculator = ShooterCalculator.getInstance();
+    smartTurretMotorConfig =
         new SmartMotorControllerConfig(this)
-            .withIdleMode(TurretConstants.MOTOR_MODE)
-            .withGearing(TurretConstants.MOTOR_GEARING)
-            .withMotorInverted(TurretConstants.Position.MOTOR_INVERTED)
-            .withTelemetry(TurretConstants.MOTOR_NAME, TurretConstants.TELEMETRY)
+            .withIdleMode(MotorMode.BRAKE)
+            .withGearing(new MechanismGearing(GearBox.fromReductionStages(360)))
+            .withMotorInverted(false)
+            .withTelemetry("TurretMotor", TurretConstants.TELEMETRY)
             .withSoftLimit(
                 TurretConstants.Position.TURRET_MIN_ANGLE,
                 TurretConstants.Position.TURRET_MAX_ANGLE)
-            .withStatorCurrentLimit(TurretConstants.STATOR_CURRENT)
-            .withClosedLoopRampRate(TurretConstants.CLOSED_RAMP_RATE)
+            .withStatorCurrentLimit(Amps.of(40))
+            .withClosedLoopRampRate(Seconds.of(0.5))
             .withClosedLoopController(
                 new ExponentialProfilePIDController(
                     new PIDController(
@@ -64,35 +78,42 @@ public class TurretSubsystem extends SubsystemBase {
                         TurretConstants.MAX_VOLTS,
                         TurretConstants.Velocity.MAX_VELOCITY,
                         TurretConstants.Velocity.ACCELERATION)))
-            .withFeedforward(
-                new SimpleMotorFeedforward(
-                    TurretConstants.FeedForward.kS,
-                    TurretConstants.FeedForward.kV,
-                    TurretConstants.FeedForward.kA))
-            .withSimFeedforward(
-                new SimpleMotorFeedforward(
-                    TurretConstants.FeedForward.SIM.kS,
-                    TurretConstants.FeedForward.SIM.kV,
-                    TurretConstants.FeedForward.SIM.kA))
-            .withControlMode(TurretConstants.CONTROL_MODE);
+            .withFeedforward(new SimpleMotorFeedforward(0.5, 0.5, 0))
+            .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+            .withControlMode(ControlMode.CLOSED_LOOP);
 
-    this.turretMotor = new SparkFlex(TurretConstants.TURRET_MOTOR_ID, TurretConstants.MOTOR_TYPE);
+    turretFlex = new SparkFlex(7, MotorType.kBrushless);
 
-    this.turretSmartMotor =
-        new SparkWrapper(this.turretMotor, TurretConstants.TURRET_MOTOR, this.turretMotorConfig);
+    turretMotor = new SparkWrapper(turretFlex, DCMotor.getNeoVortex(1), smartTurretMotorConfig);
 
-    this.turretMechanismConfig =
-        new PivotConfig(turretSmartMotor)
-            .withStartingPosition(TurretConstants.Position.STARTING_POSITION)
+    turretMechanismConfig =
+        new PivotConfig(turretMotor)
+            .withStartingPosition(Degrees.of(0))
             .withHardLimit(
                 TurretConstants.Position.TURRET_MIN_ANGLE,
                 TurretConstants.Position.TURRET_MAX_ANGLE)
-            .withMOI(TurretConstants.TURRET_SIZE, TurretConstants.TURRET_MASS)
+            .withMOI(Meters.of(0.25), Pounds.of(6))
             .withTelemetry("Turret", TurretConstants.TELEMETRY);
 
-    this.turretMechanism = new Pivot(turretMechanismConfig);
+    turret = new Pivot(turretMechanismConfig);
 
-    this.inputs = new TurretInputsAutoLogged();
+    SparkAbsoluteEncoder encoder1 = turretFlex.getAbsoluteEncoder();
+    // TODO: define second encoder correctly
+    SparkAbsoluteEncoder encoder2 = turretFlex.getAbsoluteEncoder();
+
+    EasyCRTConfig easyCRTConfig =
+        new EasyCRTConfig(
+                () -> Angle.ofBaseUnits(encoder1.getPosition(), Rotations),
+                () -> Angle.ofBaseUnits(encoder2.getPosition(), Rotations))
+            .withEncoderRatios(
+                TurretConstants.TURRET_GEAR_TEETH / 14, TurretConstants.TURRET_GEAR_TEETH / 15)
+            .withMechanismRange(
+                TurretConstants.Position.TURRET_MIN_ANGLE,
+                TurretConstants.Position.TURRET_MAX_ANGLE);
+
+    EasyCRT easyCRT = new EasyCRT(easyCRTConfig);
+
+    inputs = new TurretInputsAutoLogged();
   }
 
   public static TurretSubsystem getInstance() {
@@ -104,40 +125,53 @@ public class TurretSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    this.turretMechanism.updateTelemetry();
-    this.updateInputs();
+    turret.updateTelemetry();
+    updateInputs();
   }
 
   @Override
   public void simulationPeriodic() {
-    this.turretMechanism.simIterate();
+    turret.simIterate();
   }
 
   private void updateInputs() {
-    this.inputs.currentAngle = this.turretMechanism.getAngle().in(Degrees);
-    this.inputs.targetAngle = this.calculator.getParameters().turretAngle().getDegrees();
-    this.inputs.atTarget = this.isAtTargetAngle();
+    inputs.currentAngle = turret.getAngle().in(Degrees);
+    inputs.targetAngle = calculator.getParameters().turretAngle().getDegrees();
+    inputs.atTarget = isAtTargetAngle();
 
     Logger.processInputs("Subsystems/Shooter/Turret/", inputs);
   }
 
   public Command trackHub() {
-    return this.turretMechanism.setAngle(
-        () -> Degrees.of(this.calculator.getParameters().turretAngle().getDegrees()));
+    return turret.setAngle(
+        () ->
+            Degrees.of(
+                getReachableTurretAngle(calculator.getParameters().turretAngle().getDegrees())));
   }
 
   public Command trackPass() {
-    return this.turretMechanism.setAngle(
-        () -> Degrees.of(this.calculator.getParameters(false).turretAngle().getDegrees()));
+    return turret.setAngle(
+        () ->
+            Degrees.of(
+                getReachableTurretAngle(
+                    calculator.getParameters(false).turretAngle().getDegrees())));
   }
 
   public boolean isAtTargetAngle() {
-    return this.turretMechanism
+    return turret
         .getAngle()
         .isNear(
-            this.turretMechanism.getMechanismSetpoint().isEmpty()
-                ? Degrees.of(0)
-                : this.turretMechanism.getMechanismSetpoint().get(),
+            turret.getMechanismSetpoint().isEmpty() ? Degrees.of(0) : turret.getAngle(),
             TurretConstants.Position.ANGLE_ERROR_ALLOWED);
+  }
+
+  private double getReachableTurretAngle(double targetAngle) {
+    if (targetAngle > TurretConstants.Position.TURRET_MAX_ANGLE.in(Degrees)) {
+      return targetAngle - 360;
+    } else if (targetAngle < TurretConstants.Position.TURRET_MIN_ANGLE.in(Degrees)) {
+      return targetAngle + 360;
+    } else {
+      return targetAngle;
+    }
   }
 }

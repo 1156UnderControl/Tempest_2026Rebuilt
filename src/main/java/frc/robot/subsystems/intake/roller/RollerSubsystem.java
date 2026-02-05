@@ -20,7 +20,6 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.constants.hopper.KickerConstants;
 import frc.robot.constants.intake.RollerConstants;
 import org.littletonrobotics.junction.Logger;
 import yams.gearing.GearBox;
@@ -51,40 +50,47 @@ public class RollerSubsystem extends SubsystemBase {
   private AngularVelocity setpoint = RPM.of(0);
 
   public RollerSubsystem() {
-    this.rollerMasterFlex =
-        new SparkFlex(RollerConstants.ID_intakeLeaderRollerMotor, MotorType.kBrushless);
-    this.rollerFollowerFlex =
-        new SparkFlex(RollerConstants.ID_intakeFollowerRollerMotor, MotorType.kBrushless);
+    this.rollerMasterFlex = new SparkFlex(RollerConstants.ID_MOTOR_LEADER, MotorType.kBrushless);
+    this.rollerFollowerFlex = new SparkFlex(RollerConstants.ID_MOTOR_FOLLOWER, MotorType.kBrushless);
 
-    this.smartRollerMotorConfig =
-        new SmartMotorControllerConfig(this)
-            .withMechanismCircumference(RollerConstants.MECHANISM_CIRCUNFERENCE)
-            .withFollowers(Pair.of(rollerFollowerFlex, true))
-            .withClosedLoopController(0, 0, 0, RPM.of(3000), RotationsPerSecondPerSecond.of(150))
-            .withSimClosedLoopController(
-                50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
-            .withGearing(new MechanismGearing(GearBox.fromReductionStages(2)))
-            .withIdleMode(MotorMode.COAST)
-            .withTelemetry("RollerMotor", TelemetryVerbosity.HIGH)
-            .withStatorCurrentLimit(Amps.of(40))
-            .withMotorInverted(false)
-            .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
-            .withControlMode(ControlMode.CLOSED_LOOP)
-            .withClosedLoopRampRate(Seconds.of(0.25))
-            .withOpenLoopRampRate(Seconds.of(0.25));
+    this.smartRollerMotorConfig = new SmartMotorControllerConfig(this)
+        .withMechanismCircumference(Inches.of(4))
+        .withFollowers(Pair.of(rollerFollowerFlex, true))
+        .withClosedLoopController(
+            0,
+            0,
+            0,
+            RPM.of(3000),
+            RotationsPerSecondPerSecond.of(150))
+        .withSimClosedLoopController(
+            50,
+            0,
+            0,
+            DegreesPerSecond.of(90),
+            DegreesPerSecondPerSecond.of(45))
+        .withGearing(new MechanismGearing(GearBox.fromReductionStages(2)))
+        .withIdleMode(MotorMode.COAST)
+        .withTelemetry("RollerMotor", TelemetryVerbosity.HIGH)
+        .withStatorCurrentLimit(Amps.of(40))
+        .withMotorInverted(false)
+        .withFeedforward(new SimpleMotorFeedforward(
+            0,
+            0,
+            0))
+        .withControlMode(ControlMode.CLOSED_LOOP)
+        .withClosedLoopRampRate(Seconds.of(0.25))
+        .withOpenLoopRampRate(Seconds.of(0.25));
 
-    this.rollerMotor =
-        new SparkWrapper(
-            this.rollerMasterFlex, DCMotor.getNeoVortex(2), this.smartRollerMotorConfig);
+    this.rollerMotor = new SparkWrapper(
+        this.rollerMasterFlex, DCMotor.getNeoVortex(2), this.smartRollerMotorConfig);
 
-    this.rollerConfig =
-        new FlyWheelConfig(rollerMotor)
-            // Diameter of the flywheel.
-            .withDiameter(Inches.of(4))
-            // Mass of the flywheel.
-            .withMass(Pounds.of(1))
-            .withMOI(KilogramSquareMeters.of(0.003))
-            .withTelemetry("RollerMech", TelemetryVerbosity.HIGH);
+    this.rollerConfig = new FlyWheelConfig(rollerMotor)
+        // Diameter of the flywheel.
+        .withDiameter(Inches.of(4))
+        // Mass of the flywheel.
+        .withMass(Pounds.of(1))
+        .withMOI(KilogramSquareMeters.of(0.003))
+        .withTelemetry("RollerMech", TelemetryVerbosity.HIGH);
 
     this.roller = new FlyWheel(rollerConfig);
   }
@@ -94,10 +100,9 @@ public class RollerSubsystem extends SubsystemBase {
     updateInputs();
     Logger.processInputs("Subsystems/Roller", rollerInputs);
     roller.updateTelemetry();
-    this.setpoint =
-        rollerMotor.getMechanismSetpointVelocity().isEmpty()
-            ? RPM.of(0)
-            : rollerMotor.getMechanismSetpointVelocity().get();
+    this.setpoint = rollerMotor.getMechanismSetpointVelocity().isEmpty()
+        ? RPM.of(0)
+        : rollerMotor.getMechanismSetpointVelocity().get();
   }
 
   @Override
@@ -133,6 +138,6 @@ public class RollerSubsystem extends SubsystemBase {
   }
 
   public Trigger isAtVelocity() {
-    return roller.isNear(setpoint, KickerConstants.DEADBAND_IS_AT);
+    return roller.isNear(setpoint, RollerConstants.VELOCITY_ERROR_ALOWED);
   }
 }

@@ -56,7 +56,7 @@ public class ShooterCalculator {
   private final Transform2d robotToTurret =
       TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER;
 
-  private static double phaseDelay = 0.03;
+  private static double phaseDelay = TurretConstants.PHASE_DELAY;
 
   public ShootingParameters getParameters() {
     return this.getParameters(true);

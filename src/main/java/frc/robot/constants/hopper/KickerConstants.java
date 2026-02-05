@@ -1,24 +1,15 @@
 package frc.robot.constants.hopper;
 
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Kilograms;
-import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
-import yams.mechanisms.config.MechanismPositionConfig;
 
 public final class KickerConstants {
+<<<<<<< HEAD
   public static final int MOTOR_ID = 6;
 
   public static final MechanismPositionConfig robotToMechanism = new MechanismPositionConfig()
@@ -72,6 +63,9 @@ public final class KickerConstants {
     public static final String MOTOR = "KickerMotor";
     public static final String MECHANISM = "KickerMechanism";
   }
+=======
+  public static final AngularVelocity VELOCITY_ERROR_ALOWED = RPM.of(100);
+>>>>>>> c9422a40de210d98a2b8d4c2043f3d7534401fb3
 
   public static class setpoints {
     public static final AngularVelocity SHOOTING = RPM.of(3000);

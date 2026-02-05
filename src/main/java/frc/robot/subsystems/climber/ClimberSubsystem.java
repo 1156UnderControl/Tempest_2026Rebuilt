@@ -1,29 +1,23 @@
 package frc.robot.subsystems.climber;
 
-import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Mass;
-import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.climber.ClimberConstants;
-import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -45,24 +39,15 @@ public class ClimberSubsystem extends SubsystemBase {
     return instance;
   }
 
-  @AutoLog
-  public static class ClimberInputs {
-    public Distance climberPosition = Meters.of(0);
-    public LinearVelocity climberVelocity = MetersPerSecond.of(0);
-    public Distance climberSetpoint = Meters.of(0);
-    public Voltage climberAppliedVolts = Volts.of(0);
-    public Current climberCurrent = Amps.of(0);
-  }
-
   private final ClimberInputsAutoLogged climberInputs = new ClimberInputsAutoLogged();
 
   private final SparkFlex climberFlex;
 
   private final DCMotor motors;
 
-  private final SmartMotorControllerConfig climberMotor;
+  private final SmartMotorControllerConfig climberMotorConfig;
 
-  private final SmartMotorController motor;
+  private final SmartMotorController climberMotor;
 
   private final ElevatorConfig climberConfig;
 
@@ -75,7 +60,7 @@ public class ClimberSubsystem extends SubsystemBase {
 
     this.motors = DCMotor.getNeoVortex(1);
 
-    this.climberMotor =
+    this.climberMotorConfig =
         new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
             .withClosedLoopController(
@@ -100,13 +85,13 @@ public class ClimberSubsystem extends SubsystemBase {
             .withMechanismCircumference(ClimberConstants.MECHANISM_CIRCUNFERENCE)
             .withControlMode(ControlMode.CLOSED_LOOP);
 
-    this.motor = new SparkWrapper(climberFlex, motors, climberMotor);
+    this.climberMotor = new SparkWrapper(climberFlex, motors, climberMotorConfig);
 
     this.climberConfig =
-        new ElevatorConfig(motor)
+        new ElevatorConfig(climberMotor)
             .withHardLimits(ClimberConstants.limits.MIN_HEIGHT, ClimberConstants.limits.MAX_HEIGHT)
             .withStartingHeight(ClimberConstants.limits.MIN_HEIGHT)
-            .withMass(Mass.ofBaseUnits(2, Kilograms))
+            .withMass(Mass.ofBaseUnits(2, Pounds))
             .withTelemetry("ClimberMechanism", TelemetryVerbosity.HIGH);
 
     this.climber = new Elevator(climberConfig);
@@ -115,7 +100,7 @@ public class ClimberSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     this.updateInputs();
-    Logger.processInputs("Motors/Climber", climberInputs);
+    Logger.processInputs("Subsystems/Climber", climberInputs);
     climber.updateTelemetry();
     this.setpoint =
         climber.getMechanismSetpoint().isEmpty()

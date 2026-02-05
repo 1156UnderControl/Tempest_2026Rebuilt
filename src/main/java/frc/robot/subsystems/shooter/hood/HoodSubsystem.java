@@ -1,7 +1,10 @@
 package frc.robot.subsystems.shooter.hood;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Seconds;
 
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -15,34 +18,36 @@ import yams.mechanisms.config.ArmConfig;
 import yams.mechanisms.positional.Arm;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
+import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class HoodSubsystem extends SubsystemBase {
 
   private final ShooterCalculator calculator;
 
-  private final SmartMotorControllerConfig hoodMotorConfig;
-  private final SparkMax hoodMotor;
-  private final SmartMotorController smartHoodMotor;
+  private final SparkMax hoodMax;
+  private final SmartMotorControllerConfig smartHoodMotorConfig;
+  private final SmartMotorController hoodMotor;
   private final ArmConfig hoodMechanismConfig;
-  private final Arm hoodMechanism;
+  private final Arm hood;
 
   private final HoodInputsAutoLogged inputs;
 
   private static HoodSubsystem instance;
 
   private HoodSubsystem() {
-    this.calculator = ShooterCalculator.getInstance();
-    this.hoodMotorConfig =
+    calculator = ShooterCalculator.getInstance();
+    smartHoodMotorConfig =
         new SmartMotorControllerConfig(this)
-            .withIdleMode(HoodConstants.MOTOR_MODE)
+            .withIdleMode(MotorMode.BRAKE)
             .withGearing(HoodConstants.MOTOR_GEARING)
-            .withMotorInverted(HoodConstants.Position.MOTOR_INVERTED)
-            .withTelemetry(HoodConstants.MOTOR_NAME, HoodConstants.TELEMETRY)
-            .withSoftLimit(
-                HoodConstants.Position.HOOD_MIN_ANGLE, HoodConstants.Position.HOOD_MAX_ANGLE)
-            .withStatorCurrentLimit(HoodConstants.STATOR_CURRENT)
-            .withClosedLoopRampRate(HoodConstants.CLOSED_RAMP_RATE)
+            .withMotorInverted(false)
+            .withTelemetry("HoodMotor", TelemetryVerbosity.HIGH)
+            .withSoftLimit(Degrees.of(15), Degrees.of(50))
+            .withStatorCurrentLimit(Amps.of(40))
+            .withClosedLoopRampRate(Seconds.of(0.5))
             .withClosedLoopController(
                 new ExponentialProfilePIDController(
                     new PIDController(
@@ -67,34 +72,25 @@ public class HoodSubsystem extends SubsystemBase {
                         HoodConstants.HOOD_MASS,
                         HoodConstants.HOOD_SIZE,
                         HoodConstants.MOTOR_GEARING)))
-            .withFeedforward(
-                new SimpleMotorFeedforward(
-                    HoodConstants.FeedForward.kS,
-                    HoodConstants.FeedForward.kV,
-                    HoodConstants.FeedForward.kA))
-            .withSimFeedforward(
-                new SimpleMotorFeedforward(
-                    HoodConstants.FeedForward.SIM.kS,
-                    HoodConstants.FeedForward.SIM.kV,
-                    HoodConstants.FeedForward.SIM.kA))
-            .withControlMode(HoodConstants.CONTROL_MODE);
+            .withFeedforward(new SimpleMotorFeedforward(0.5, 0.5, 0))
+            .withSimFeedforward(new SimpleMotorFeedforward(0.5, 0.5, 0))
+            .withControlMode(ControlMode.CLOSED_LOOP);
 
-    this.hoodMotor = new SparkMax(HoodConstants.HOOD_MOTOR_ID, HoodConstants.MOTOR_TYPE);
+    hoodMax = new SparkMax(8, MotorType.kBrushless);
 
-    this.smartHoodMotor =
-        new SparkWrapper(this.hoodMotor, HoodConstants.HOOD_MOTOR, this.hoodMotorConfig);
+    hoodMotor = new SparkWrapper(hoodMax, HoodConstants.HOOD_MOTOR, smartHoodMotorConfig);
 
-    this.hoodMechanismConfig =
-        new ArmConfig(smartHoodMotor)
-            .withStartingPosition(HoodConstants.Position.STARTING_POSITION)
+    hoodMechanismConfig =
+        new ArmConfig(hoodMotor)
+            .withStartingPosition(Degrees.of(15))
             .withHardLimit(
                 HoodConstants.Position.HOOD_MIN_ANGLE, HoodConstants.Position.HOOD_MAX_ANGLE)
             .withLength(HoodConstants.HOOD_SIZE)
             .withMass(HoodConstants.HOOD_MASS);
 
-    this.hoodMechanism = new Arm(hoodMechanismConfig);
+    hood = new Arm(hoodMechanismConfig);
 
-    this.inputs = new HoodInputsAutoLogged();
+    inputs = new HoodInputsAutoLogged();
   }
 
   public static HoodSubsystem getInstance() {
@@ -106,35 +102,33 @@ public class HoodSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    this.hoodMechanism.updateTelemetry();
-    this.updateInputs();
+    hood.updateTelemetry();
+    updateInputs();
   }
 
   @Override
   public void simulationPeriodic() {
-    this.hoodMechanism.simIterate();
+    hood.simIterate();
   }
 
   private void updateInputs() {
-    this.inputs.currentAngle = this.hoodMechanism.getAngle().in(Degrees);
-    this.inputs.targetAngle = this.calculator.getParameters().hoodAngle();
-    this.inputs.atTarget = isAtTargetAngle();
+    inputs.currentAngle = hood.getAngle().in(Degrees);
+    inputs.targetAngle = calculator.getParameters().hoodAngle();
+    inputs.atTarget = isAtTargetAngle();
 
     Logger.processInputs("Subsystems/Shooter/Hood/", inputs);
   }
 
   public Command goToTargetAngle() {
-    return this.hoodMechanism.setAngle(
-        () -> Degrees.of(this.calculator.getParameters().turretAngle().getDegrees()));
+    return hood.setAngle(() -> Degrees.of(calculator.getParameters().turretAngle().getDegrees()));
   }
 
   public boolean isAtTargetAngle() {
-    return this.hoodMechanism
-        .getAngle()
+    return hood.getAngle()
         .isNear(
-            this.hoodMechanism.getMechanismSetpoint().isEmpty()
+            hood.getMechanismSetpoint().isEmpty()
                 ? Degrees.of(0)
-                : this.hoodMechanism.getMechanismSetpoint().get(),
+                : hood.getMechanismSetpoint().get(),
             HoodConstants.Position.ANGLE_ERROR_ALLOWED);
   }
 

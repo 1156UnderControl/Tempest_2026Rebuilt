@@ -3,6 +3,7 @@ package frc.robot.subsystems.intake.extensor;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
@@ -86,7 +87,7 @@ public class ExtensorSubsystem extends SubsystemBase {
 
     this.extensorConfig =
         new ElevatorConfig(extensorMotor)
-            .withMass(ExtensorConstants.mass)
+            .withMass(Pounds.of(5))
             .withSoftLimits(
                 ExtensorConstants.limits.MIN_EXTENSION, ExtensorConstants.limits.MAX_EXTENSION)
             .withHardLimits(

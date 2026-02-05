@@ -75,7 +75,7 @@ public class SpindexerSubsystem extends SubsystemBase {
         new FlyWheelConfig(spindexerMotor)
             .withDiameter(Inches.of(6))
             .withMass(Pounds.of(0.58))
-            .withMOI(Inches.of(6), Kilograms.of(0.58))
+            .withMOI(Inches.of(6), Pounds.of(0.58))
             .withTelemetry("SpindexerMech", TelemetryVerbosity.HIGH);
 
     this.spindexer = new FlyWheel(spindexerMechanismConfig);
@@ -93,7 +93,9 @@ public class SpindexerSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+    this.spindexer.simIterate();
+  }
 
   public void updateInputs() {
     spindexerInputs.spindexerAppliedVolts = spindexerMotor.getVoltage();
