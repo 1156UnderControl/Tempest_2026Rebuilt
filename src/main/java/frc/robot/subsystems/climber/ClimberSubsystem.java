@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Seconds;
 
@@ -90,7 +91,7 @@ public class ClimberSubsystem extends SubsystemBase {
         new ElevatorConfig(climberMotor)
             .withHardLimits(ClimberConstants.limits.MIN_HEIGHT, ClimberConstants.limits.MAX_HEIGHT)
             .withStartingHeight(ClimberConstants.limits.MIN_HEIGHT)
-            .withMass(Mass.ofBaseUnits(2, Kilograms))
+            .withMass(Mass.ofBaseUnits(2, Pounds))
             .withTelemetry("ClimberMechanism", TelemetryVerbosity.HIGH);
 
     this.climber = new Elevator(climberConfig);

@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Seconds;
 
@@ -91,7 +92,7 @@ public class TurretSubsystem extends SubsystemBase {
             .withHardLimit(
                 TurretConstants.Position.TURRET_MIN_ANGLE,
                 TurretConstants.Position.TURRET_MAX_ANGLE)
-            .withMOI(Meters.of(0.25), Kilograms.of(6))
+            .withMOI(Meters.of(0.25), Pounds.of(6))
             .withTelemetry("Turret", TurretConstants.TELEMETRY);
 
     turret = new Pivot(turretMechanismConfig);
