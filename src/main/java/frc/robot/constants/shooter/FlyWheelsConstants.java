@@ -1,5 +1,6 @@
 package frc.robot.constants.shooter;
 
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
@@ -19,7 +20,7 @@ public class FlyWheelsConstants {
   public static final MechanismGearing MOTOR_GEARING =
       new MechanismGearing(GearBox.fromReductionStages(1));
   public static final Mass FLYWHEEL_MASS = Pounds.of(1);
-  public static final Distance FLYWHEEL_SIZE = Meters.of(0.11);
+  public static final Distance FLYWHEEL_SIZE = Inches.of(0.11);
   public static final Voltage MAX_VOLTS = Volts.of(12.0);
 
   public static class Velocity {
