@@ -137,7 +137,6 @@ $RECYCLE.BIN/
 
 ### Gradle ###
 .gradle
-/build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -185,5 +184,14 @@ compile_commands.json
 
 # Eclipse generated file for annotation processors
 .factorypath
+
+!/build/generated/sources/annotationProcessor
+/build/classes/
+/build/debug/
+/build/jni/
+/build/libs/
+/build/sim/
+/build/spotless/
+/build/tmp/
 
 src/main/java/frc/robot/BuildConstants.java

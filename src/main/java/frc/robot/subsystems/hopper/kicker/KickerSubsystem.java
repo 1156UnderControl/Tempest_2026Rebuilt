@@ -136,7 +136,7 @@ public class KickerSubsystem extends SubsystemBase {
     return kicker.isNear(setpoint, KickerConstants.VELOCITY_ERROR_ALOWED);
   }
 
-  public SparkAbsoluteEncoder getTurreAbsoluteEncoder(){
+  public SparkAbsoluteEncoder getTurreAbsoluteEncoder() {
     return this.kickerFlex.getAbsoluteEncoder();
   }
 }
