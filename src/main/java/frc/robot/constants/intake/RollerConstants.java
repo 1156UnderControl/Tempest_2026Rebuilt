@@ -10,11 +10,10 @@ import edu.wpi.first.units.measure.Distance;
 import yams.mechanisms.config.MechanismPositionConfig;
 
 public class RollerConstants {
-  public static final int ID_intakeLeaderRollerMotor = 2;
-  public static final int ID_intakeFollowerRollerMotor = 3;
+  public static final int ID_MOTOR_LEADER = 2;
+  public static final int ID_MOTOR_FOLLOWER = 3;
   public static final AngularVelocity VELOCITY_ERROR_ALOWED = RPM.of(100);
 
-  public static final Distance MECHANISM_CIRCUNFERENCE = Inches.of(4);
 
   public static final MechanismPositionConfig robotToMechanism =
       new MechanismPositionConfig()
