@@ -10,8 +10,6 @@ import edu.wpi.first.units.measure.Mass;
 
 public final class KickerConstants {
   public static final AngularVelocity VELOCITY_ERROR_ALOWED = RPM.of(100);
-  public static final Distance WHEEL_DIAMETER = Inches.of(2.25);
-  public static final Mass WHEEL_MASS = Pounds.of(0.08);
 
   public static class setpoints {
     public static final AngularVelocity SHOOTING = RPM.of(3000);
