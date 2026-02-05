@@ -45,4 +45,28 @@ public class ExtensorConstants {
     public static final Distance INTAKE_EXTENDED_POSITION = limits.MAX_EXTENSION;
     public static final Distance INTAKE_HOMED_POSITION = limits.MIN_EXTENSION;
   }
+
+public static class ClosedLoopController {
+    public static final double kP = 100;
+    public static final double kI = 0;
+    public static final double kD = 0;
+
+    public static class SIM {
+      public static final double kP = 100;
+      public static final double kI = 0;
+      public static final double kD = 0;
+    }
+  }
+
+  public static class FeedForward {
+    public static final double kS = 0.5;
+    public static final double kV = 0.5;
+    public static final double kA = 0;
+
+    public static class SIM {
+      public static final double kS = 0.5;
+      public static final double kV = 0.5;
+      public static final double kA = 0;
+    }
+  }
 }

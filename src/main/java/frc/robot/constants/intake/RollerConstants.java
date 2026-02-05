@@ -24,4 +24,29 @@ public class RollerConstants {
     public static final double REVERSE_DUTY_CYCLE = -0.8;
     public static final double STOP_DUTY_CYCLE = 0;
   }
+
+
+  public static class ClosedLoopController {
+    public static final double kP = 100;
+    public static final double kI = 0;
+    public static final double kD = 0;
+
+    public static class SIM {
+      public static final double kP = 100;
+      public static final double kI = 0;
+      public static final double kD = 0;
+    }
+  }
+
+  public static class FeedForward {
+    public static final double kS = 0.5;
+    public static final double kV = 0.5;
+    public static final double kA = 0;
+
+    public static class SIM {
+      public static final double kS = 0.5;
+      public static final double kV = 0.5;
+      public static final double kA = 0;
+    }
+  }
 }

@@ -5,6 +5,8 @@
 package frc.robot.subsystems.hopper.kicker;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
 
 import com.revrobotics.spark.SparkFlex;
@@ -71,7 +73,7 @@ public class KickerSubsystem extends SubsystemBase {
         .withGearing(
             new MechanismGearing(GearBox.fromReductionStages(KickerConstants.Motor.GEAR_RATIO)))
         .withIdleMode(MotorMode.COAST)
-        .withMechanismCircumference(KickerConstants.Motor.MECHANISM_CIRCUMFERENCE)
+        .withMechanismCircumference(Inches.of(4))
         .withMotorInverted(false)
         .withStatorCurrentLimit(Amps.of(50))
         .withTelemetry("Kicker Motor", TelemetryVerbosity.HIGH);
@@ -79,9 +81,9 @@ public class KickerSubsystem extends SubsystemBase {
     kickerMotor = new SparkWrapper(kickerFlex, DCMotor.getNeoVortex(1), smartKickerMotorConfig);
 
     kickerMechanismConfig = new FlyWheelConfig(kickerMotor)
-        .withDiameter(KickerConstants.Mechanism.WHEEL_DIAMETER)
-        .withMass(KickerConstants.Mechanism.WHEEL_MASS)
-        .withMOI(KickerConstants.Mechanism.WHEEL_DIAMETER, KickerConstants.Mechanism.WHEEL_MASS)
+        .withDiameter(Inches.of(2.25))
+        .withMass(Pounds.of(0.08))
+        .withMOI(Inches.of(2.25), Pounds.of(0.08))
         .withTelemetry(KickerConstants.Telemetry.MECHANISM, TelemetryVerbosity.HIGH)
         .withMechanismPositionConfig(KickerConstants.robotToMechanism);
     kicker = new FlyWheel(kickerMechanismConfig);
