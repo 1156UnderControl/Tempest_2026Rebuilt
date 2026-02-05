@@ -1,15 +1,20 @@
 package frc.robot.constants.hopper;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meter;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
 
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
+import yams.mechanisms.config.MechanismPositionConfig;
 
 public final class KickerConstants {
-<<<<<<< HEAD
   public static final int MOTOR_ID = 6;
 
   public static final MechanismPositionConfig robotToMechanism = new MechanismPositionConfig()
@@ -22,11 +27,8 @@ public final class KickerConstants {
   public static final class Motor {
     public static final double GEAR_RATIO = 2.5;
     public static final AngularVelocity CLOSED_LOOP_MAX_VELOCITY = RPM.of(3000);
-    public static final AngularAcceleration CLOSED_LOOP_MAX_ACCELERATION = RotationsPerSecondPerSecond.of(150);
-    public static final AngularVelocity SIM_CLOSED_LOOP_MAX_VELOCITY = DegreesPerSecond.of(90);
-    public static final AngularAcceleration SIM_CLOSED_LOOP_MAX_ACCELERATION = DegreesPerSecondPerSecond.of(45);
+
     public static final Distance MECHANISM_CIRCUMFERENCE = Inches.of(2);
-    public static final boolean INVERTED = true;
     public static final Current STATOR_CURRENT_LIMIT = Amps.of(50);
   }
 
@@ -63,9 +65,7 @@ public final class KickerConstants {
     public static final String MOTOR = "KickerMotor";
     public static final String MECHANISM = "KickerMechanism";
   }
-=======
   public static final AngularVelocity VELOCITY_ERROR_ALOWED = RPM.of(100);
->>>>>>> c9422a40de210d98a2b8d4c2043f3d7534401fb3
 
   public static class setpoints {
     public static final AngularVelocity SHOOTING = RPM.of(3000);
