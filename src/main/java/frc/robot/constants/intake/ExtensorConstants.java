@@ -1,13 +1,11 @@
 package frc.robot.constants.intake;
 
-import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Volts;
 
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.Voltage;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -45,7 +43,7 @@ public class ExtensorConstants {
     public static final Distance INTAKE_HOMED_POSITION = limits.MIN_EXTENSION;
   }
 
-public static class ClosedLoopController {
+  public static class ClosedLoopController {
     public static final double kP = 100;
     public static final double kI = 0;
     public static final double kD = 0;

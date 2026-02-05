@@ -2,7 +2,6 @@ package frc.robot.constants.hopper;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Meter;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
@@ -17,10 +16,11 @@ import yams.mechanisms.config.MechanismPositionConfig;
 public final class KickerConstants {
   public static final int MOTOR_ID = 6;
 
-  public static final MechanismPositionConfig robotToMechanism = new MechanismPositionConfig()
-      .withMaxRobotHeight(Meters.of(1.5))
-      .withMaxRobotLength(Meters.of(0.75))
-      .withRelativePosition(new Translation3d(Meters.of(-0.25), Meters.of(0), Meters.of(0.5)));
+  public static final MechanismPositionConfig robotToMechanism =
+      new MechanismPositionConfig()
+          .withMaxRobotHeight(Meters.of(1.5))
+          .withMaxRobotLength(Meters.of(0.75))
+          .withRelativePosition(new Translation3d(Meters.of(-0.25), Meters.of(0), Meters.of(0.5)));
 
   public static final AngularVelocity DEADBAND_IS_AT = RPM.of(100);
 
@@ -65,6 +65,7 @@ public final class KickerConstants {
     public static final String MOTOR = "KickerMotor";
     public static final String MECHANISM = "KickerMechanism";
   }
+
   public static final AngularVelocity VELOCITY_ERROR_ALOWED = RPM.of(100);
 
   public static class setpoints {

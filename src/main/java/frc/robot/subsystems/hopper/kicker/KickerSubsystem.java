@@ -64,37 +64,33 @@ public class KickerSubsystem extends SubsystemBase {
 
     kickerFlex = new SparkFlex(6, MotorType.kBrushless);
 
-    smartKickerMotorConfig = new SmartMotorControllerConfig(this)
-        .withControlMode(ControlMode.CLOSED_LOOP)
-        .withClosedLoopController(
-            0,
-            0,
-            0,
-            RPM.of(3000),
-            RotationsPerSecondPerSecond.of(150))
-
-        .withSimClosedLoopController(
-            50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
-        .withGearing(new MechanismGearing(GearBox.fromReductionStages(2.5)))
-        .withIdleMode(MotorMode.COAST)
-        .withMechanismCircumference(Inches.of(2))
-        .withMotorInverted(false)
-        .withStatorCurrentLimit(Amps.of(50))
-        .withTelemetry("Kicker Motor", TelemetryVerbosity.HIGH);
+    smartKickerMotorConfig =
+        new SmartMotorControllerConfig(this)
+            .withControlMode(ControlMode.CLOSED_LOOP)
+            .withClosedLoopController(0, 0, 0, RPM.of(3000), RotationsPerSecondPerSecond.of(150))
+            .withSimClosedLoopController(
+                50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+            .withGearing(new MechanismGearing(GearBox.fromReductionStages(2.5)))
+            .withIdleMode(MotorMode.COAST)
+            .withMechanismCircumference(Inches.of(2))
+            .withMotorInverted(false)
+            .withStatorCurrentLimit(Amps.of(50))
+            .withTelemetry("Kicker Motor", TelemetryVerbosity.HIGH);
 
     kickerMotor = new SparkWrapper(kickerFlex, DCMotor.getNeoVortex(1), smartKickerMotorConfig);
 
-    kickerMechanismConfig = new FlyWheelConfig(kickerMotor)
-        .withDiameter(Inches.of(0))
-        .withMass(Pounds.of(0))
-        .withMOI(Inches.of( 0), Pounds.of(0))
-        .withTelemetry("KickerMechanism", TelemetryVerbosity.HIGH)
-        .withMechanismPositionConfig(
-            new MechanismPositionConfig()
-                .withMaxRobotHeight(Meters.of(1.5))
-                .withMaxRobotLength(Meters.of(0.75))
-                .withRelativePosition(
-                    new Translation3d(Meters.of(-0.25), Meters.of(0), Meters.of(0.5))));
+    kickerMechanismConfig =
+        new FlyWheelConfig(kickerMotor)
+            .withDiameter(Inches.of(0))
+            .withMass(Pounds.of(0))
+            .withMOI(Inches.of(0), Pounds.of(0))
+            .withTelemetry("KickerMechanism", TelemetryVerbosity.HIGH)
+            .withMechanismPositionConfig(
+                new MechanismPositionConfig()
+                    .withMaxRobotHeight(Meters.of(1.5))
+                    .withMaxRobotLength(Meters.of(0.75))
+                    .withRelativePosition(
+                        new Translation3d(Meters.of(-0.25), Meters.of(0), Meters.of(0.5))));
     kicker = new FlyWheel(kickerMechanismConfig);
 
     setpoint = RPM.of(0);
@@ -105,9 +101,10 @@ public class KickerSubsystem extends SubsystemBase {
     this.updateInputs();
     Logger.processInputs("Subsystems/Kicker", kickerInputs);
     kicker.updateTelemetry();
-    this.setpoint = kickerMotor.getMechanismSetpointVelocity().isEmpty()
-        ? RPM.of(0)
-        : kickerMotor.getMechanismSetpointVelocity().get();
+    this.setpoint =
+        kickerMotor.getMechanismSetpointVelocity().isEmpty()
+            ? RPM.of(0)
+            : kickerMotor.getMechanismSetpointVelocity().get();
   }
 
   @Override

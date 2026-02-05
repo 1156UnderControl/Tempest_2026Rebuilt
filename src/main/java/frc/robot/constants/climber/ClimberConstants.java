@@ -17,10 +17,11 @@ public class ClimberConstants {
 
   public static final Distance MECHANISM_CIRCUNFERENCE = Meters.of(2 * Math.PI * 0.015875);
 
-  public static final MechanismPositionConfig robotToMechanism = new MechanismPositionConfig()
-      .withMaxRobotHeight(Meters.of(1.5))
-      .withMaxRobotLength(Meters.of(0.75))
-      .withRelativePosition(new Translation3d(Meters.of(-0.25), Meters.of(0), Meters.of(0.5)));
+  public static final MechanismPositionConfig robotToMechanism =
+      new MechanismPositionConfig()
+          .withMaxRobotHeight(Meters.of(1.5))
+          .withMaxRobotLength(Meters.of(0.75))
+          .withRelativePosition(new Translation3d(Meters.of(-0.25), Meters.of(0), Meters.of(0.5)));
 
   public class limits {
     public static final Distance MIN_HEIGHT = Distance.ofBaseUnits(0, Meters);
