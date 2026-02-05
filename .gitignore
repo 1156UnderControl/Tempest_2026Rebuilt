@@ -193,5 +193,6 @@ compile_commands.json
 /build/sim/
 /build/spotless/
 /build/tmp/
+hs_err_pid*.log
 
 src/main/java/frc/robot/BuildConstants.java
