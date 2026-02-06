@@ -34,27 +34,11 @@ public class ClimberConstants {
     public static final Distance DEFAULT_HEIGHT = Distance.ofBaseUnits(0, Meters);
   }
 
-  public static class ClosedLoopController {
-    public static final double kP = 100;
+  public class PID {
+    public static final double kP = 0;
     public static final double kI = 0;
     public static final double kD = 0;
-
-    public static class SIM {
-      public static final double kP = 100;
-      public static final double kI = 0;
-      public static final double kD = 0;
-    }
-  }
-
-  public static class FeedForward {
-    public static final double kS = 0.5;
-    public static final double kV = 0.5;
-    public static final double kA = 0;
-
-    public static class SIM {
-      public static final double kS = 0.5;
-      public static final double kV = 0.5;
-      public static final double kA = 0;
-    }
+    public static final double F = 0;
+    public static final double IZone = 0;
   }
 }
