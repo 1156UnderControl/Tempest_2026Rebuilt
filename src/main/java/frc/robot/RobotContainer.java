@@ -19,6 +19,7 @@ import frc.robot.joysticks.IDriverController;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
 import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
 import frc.robot.subsystems.intake.extensor.ExtensorSubsystem;
+import frc.robot.subsystems.intake.roller.RollerSubsystem;
 import frc.robot.subsystems.shooter.flywheel.FlyWheelSubsystem;
 import frc.robot.subsystems.shooter.hood.HoodSubsystem;
 import frc.robot.subsystems.shooter.turret.TurretSubsystem;
@@ -39,10 +40,10 @@ public class RobotContainer {
   private final TurretSubsystem turret;
   private final HoodSubsystem hood;
   private final FlyWheelSubsystem flyWheel;
-  private final ExtensorSubsystem extensor;
   private final SpindexerSubsystem spindexer;
   private final KickerSubsystem kicker;
   public final IDriverController driverController;
+  private final RollerSubsystem roller;
 
   private final NamedCommandsRegistery namedCommandsRegistry;
 
@@ -94,7 +95,7 @@ public class RobotContainer {
     this.hood = HoodSubsystem.getInstance();
     this.flyWheel = FlyWheelSubsystem.getInstance();
     this.spindexer = SpindexerSubsystem.getInstance();
-    this.extensor = new ExtensorSubsystem();
+    this.roller = new RollerSubsystem();
 
     this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
     this.namedCommandsRegistry.registerAllAutoCommands();
@@ -105,9 +106,9 @@ public class RobotContainer {
             this.turret,
             this.hood,
             this.flyWheel,
-            this.extensor,
             this.spindexer,
-            this.kicker);
+            this.kicker,
+            this.roller);
 
     configureButtonBindings();
     this.autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -120,7 +121,10 @@ public class RobotContainer {
         .onFalse(Commands.run(() -> this.drive.limitRobotJoystickControlVelocity(), drive));
 
     this.states.setDefaultStates();
-    //this.states.shootState(driverController.a());
+    this.states.shootState(driverController.a());
+    this.driverController.b().whileTrue(
+      this.states.collectState()
+    );
   }
 
   public Command getAutonomousCommand() {

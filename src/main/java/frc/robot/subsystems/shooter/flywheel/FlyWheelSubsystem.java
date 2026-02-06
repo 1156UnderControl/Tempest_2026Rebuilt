@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter.flywheel;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Milliseconds;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
@@ -125,17 +126,11 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   public Command runVelocity() {
-    return this.flywheelMechanism.setSpeed(
-        () ->
-            AngularVelocity.ofBaseUnits(
-                this.calculator.getParameters().flywheelSpeed(), RotationsPerSecond));
+    return this.flywheelMechanism.setSpeed(RPM.of(4800));
   }
 
   public Command stoppedVelocity() {
-    return this.flywheelMechanism.setSpeed(
-        () ->
-            AngularVelocity.ofBaseUnits(
-                0, RotationsPerSecond));
+    return this.flywheelMechanism.setSpeed(RotationsPerSecond.of(0));
   }
 
   public boolean isAtTargetVelocity() {

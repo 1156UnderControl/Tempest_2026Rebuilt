@@ -112,7 +112,7 @@ public class RollerSubsystem extends SubsystemBase {
   }
 
   public Command runRoller() {
-    return this.setDutyCycle(RollerConstants.setpoints.INTAKE_DUTY_CYCLE);
+    return this.setDutyCycle(-1);
   }
 
   public Command runRollerReversed() {
