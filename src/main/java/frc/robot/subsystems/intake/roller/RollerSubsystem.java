@@ -50,13 +50,14 @@ public class RollerSubsystem extends SubsystemBase {
   private AngularVelocity setpoint = RPM.of(0);
 
   public RollerSubsystem() {
-    this.rollerMasterFlex = new SparkFlex(RollerConstants.ID_MOTOR_LEADER, MotorType.kBrushless);
+    this.rollerMasterFlex =
+        new SparkFlex(RollerConstants.ID_intakeLeaderRollerMotor, MotorType.kBrushless);
     this.rollerFollowerFlex =
-        new SparkFlex(RollerConstants.ID_MOTOR_FOLLOWER, MotorType.kBrushless);
+        new SparkFlex(RollerConstants.ID_intakeFollowerRollerMotor, MotorType.kBrushless);
 
     this.smartRollerMotorConfig =
         new SmartMotorControllerConfig(this)
-            .withMechanismCircumference(Inches.of(4))
+            .withMechanismCircumference(RollerConstants.MECHANISM_CIRCUNFERENCE)
             .withFollowers(Pair.of(rollerFollowerFlex, true))
             .withClosedLoopController(0, 0, 0, RPM.of(3000), RotationsPerSecondPerSecond.of(150))
             .withSimClosedLoopController(
