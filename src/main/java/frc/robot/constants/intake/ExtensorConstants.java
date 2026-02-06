@@ -1,13 +1,11 @@
 package frc.robot.constants.intake;
 
-import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Volts;
 
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.Voltage;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -24,7 +22,6 @@ public class ExtensorConstants {
 
   public static final Voltage maxVolts = Volts.of(10);
   public static final DCMotor motor = DCMotor.getNeoVortex(1);
-  public static final Mass mass = Kilograms.of(5);
   public static final Distance drumRadius = Meters.of(0.0305 / 2.0);
   public static final MechanismGearing gearing =
       new MechanismGearing(GearBox.fromReductionStages(4));
@@ -44,5 +41,29 @@ public class ExtensorConstants {
   public class setpoints {
     public static final Distance INTAKE_EXTENDED_POSITION = limits.MAX_EXTENSION;
     public static final Distance INTAKE_HOMED_POSITION = limits.MIN_EXTENSION;
+  }
+
+  public static class ClosedLoopController {
+    public static final double kP = 100;
+    public static final double kI = 0;
+    public static final double kD = 0;
+
+    public static class SIM {
+      public static final double kP = 100;
+      public static final double kI = 0;
+      public static final double kD = 0;
+    }
+  }
+
+  public static class FeedForward {
+    public static final double kS = 0.5;
+    public static final double kV = 0.5;
+    public static final double kA = 0;
+
+    public static class SIM {
+      public static final double kS = 0.5;
+      public static final double kV = 0.5;
+      public static final double kA = 0;
+    }
   }
 }

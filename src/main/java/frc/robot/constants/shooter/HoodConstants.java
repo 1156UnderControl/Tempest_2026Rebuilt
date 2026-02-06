@@ -1,8 +1,8 @@
 package frc.robot.constants.shooter;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.Volts;
 
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -17,7 +17,7 @@ public class HoodConstants {
   public static final DCMotor HOOD_MOTOR = DCMotor.getNEO(1);
   public static final MechanismGearing MOTOR_GEARING =
       new MechanismGearing(GearBox.fromReductionStages(360));
-  public static final Mass HOOD_MASS = Kilograms.of(2.5);
+  public static final Mass HOOD_MASS = Pounds.of(2.5);
   public static final Distance HOOD_SIZE = Meters.of(0.4);
   public static final Voltage MAX_VOLTS = Volts.of(12.0);
 

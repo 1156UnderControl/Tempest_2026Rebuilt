@@ -3,7 +3,6 @@ package frc.robot.subsystems.hopper.spindexer;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
@@ -75,7 +74,7 @@ public class SpindexerSubsystem extends SubsystemBase {
         new FlyWheelConfig(spindexerMotor)
             .withDiameter(Inches.of(6))
             .withMass(Pounds.of(0.58))
-            .withMOI(Inches.of(6), Kilograms.of(0.58))
+            .withMOI(Inches.of(6), Pounds.of(0.58))
             .withTelemetry("SpindexerMech", TelemetryVerbosity.HIGH);
 
     this.spindexer = new FlyWheel(spindexerMechanismConfig);

@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
@@ -75,15 +76,15 @@ public class KickerSubsystem extends SubsystemBase {
             .withMechanismCircumference(Inches.of(2))
             .withMotorInverted(false)
             .withStatorCurrentLimit(Amps.of(50))
-            .withTelemetry("Kicker Motor", TelemetryVerbosity.HIGH);
+            .withTelemetry("KickerMotor", TelemetryVerbosity.HIGH);
 
     kickerMotor = new SparkWrapper(kickerFlex, DCMotor.getNeoVortex(1), smartKickerMotorConfig);
 
     kickerMechanismConfig =
         new FlyWheelConfig(kickerMotor)
-            .withDiameter(KickerConstants.WHEEL_DIAMETER)
-            .withMass(KickerConstants.WHEEL_MASS)
-            .withMOI(KickerConstants.WHEEL_DIAMETER, KickerConstants.WHEEL_MASS)
+            .withDiameter(Inches.of(0))
+            .withMass(Pounds.of(0))
+            .withMOI(Inches.of(0), Pounds.of(0))
             .withTelemetry("KickerMechanism", TelemetryVerbosity.HIGH)
             .withMechanismPositionConfig(
                 new MechanismPositionConfig()
