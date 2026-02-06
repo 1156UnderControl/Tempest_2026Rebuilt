@@ -1,11 +1,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
 import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
 import frc.robot.subsystems.intake.extensor.ExtensorSubsystem;
+import frc.robot.subsystems.intake.roller.RollerSubsystem;
 import frc.robot.subsystems.shooter.flywheel.FlyWheelSubsystem;
 import frc.robot.subsystems.shooter.hood.HoodSubsystem;
 import frc.robot.subsystems.shooter.turret.TurretSubsystem;
@@ -17,9 +19,9 @@ public class States {
   private final TurretSubsystem turret;
   private final HoodSubsystem hood;
   private final FlyWheelSubsystem flyWheel;
-  private final ExtensorSubsystem extensor;
   private final SpindexerSubsystem spindexer;
   private final KickerSubsystem kicker;
+  private final RollerSubsystem roller;
 
   private boolean isHubMode;
 
@@ -46,16 +48,17 @@ public class States {
       TurretSubsystem turret,
       HoodSubsystem hood,
       FlyWheelSubsystem flyWheel,
-      ExtensorSubsystem extensor,
       SpindexerSubsystem spindexer,
-      KickerSubsystem kicker) {
+      KickerSubsystem kicker,
+      RollerSubsystem roller) {
+    this.roller = roller;
     this.drive = drive;
-    this.extensor = extensor;
     this.spindexer = spindexer;
     this.kicker = kicker;
     this.turret = turret;
     this.hood = hood;
     this.flyWheel = flyWheel;
+
 
     this.isHubMode = true;
 
@@ -72,6 +75,8 @@ public class States {
         Commands.run(() -> drive.driveAlignAngleJoystick(), drive)
             .onlyIf(() -> DriverStation.isTeleopEnabled()));
 
+    this.roller.setDefaultCommand(this.roller.stopRoller());
+
     this.kicker.setDefaultCommand(
         this.kicker.stop().alongWith(Commands.runOnce(() -> this.kickerState = "Stopped State")));
     this.spindexer.setDefaultCommand(
@@ -85,12 +90,13 @@ public class States {
   }
 
   public void shootState(Trigger button) {
-    new Trigger(() -> !RobotStates.getInstance().isOnNotShootZone())
+    new Trigger(() -> true)
         .and(button)
         .whileTrue(
             Commands.parallel(
-                this.spindexer.shoot(),
                 this.kicker.shoot(),
+                this.spindexer.shoot(),
+                this.flyWheel.runVelocity(),
                 Commands.runOnce(
                     () -> {
                       this.flyWheelState =
@@ -98,5 +104,9 @@ public class States {
                       this.kickerState = "Running State";
                       this.spindexerState = "Running State";
                     })));
+  }
+
+  public Command collectState(){
+    return this.roller.runRoller();
   }
 }

@@ -121,7 +121,7 @@ public class KickerSubsystem extends SubsystemBase {
   }
 
   public Command shoot() {
-    return kicker.setSpeed(KickerConstants.setpoints.SHOOTING);
+    return kicker.set(-1);
   }
 
   public Command stop() {
