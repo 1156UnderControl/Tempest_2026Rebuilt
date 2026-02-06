@@ -72,9 +72,6 @@ public class States {
         Commands.run(() -> drive.driveAlignAngleJoystick(), drive)
             .onlyIf(() -> DriverStation.isTeleopEnabled()));
 
-    this.extensor.setDefaultCommand(
-        Commands.run(() -> this.extensor.holdPID(), extensor)
-            .alongWith(Commands.runOnce(() -> this.extensorState = "Extended State")));
     this.kicker.setDefaultCommand(
         this.kicker.stop().alongWith(Commands.runOnce(() -> this.kickerState = "Stopped State")));
     this.spindexer.setDefaultCommand(
@@ -82,19 +79,8 @@ public class States {
             .stop()
             .alongWith(Commands.runOnce(() -> this.spindexerState = "Stopped State")));
 
-    new Trigger(() -> RobotStates.getInstance().isOnAllianceZone())
-        .onTrue(this.turret.trackHub())
-        .onFalse(this.turret.trackPass());
-
-    this.hood.setDefaultCommand(
-        Commands.run(() -> this.hood.goToTargetAngle(), hood)
-            .alongWith(
-                Commands.runOnce(
-                    () ->
-                        this.hoodState =
-                            isHubMode ? "Aiming at Hub Pose State" : "Aiming to Feed Pose State")));
     this.flyWheel.setDefaultCommand(
-        Commands.run(() -> this.flyWheel.runVelocity(), flyWheel)
+        Commands.run(() -> this.flyWheel.stoppedVelocity(), flyWheel)
             .alongWith(Commands.runOnce(() -> this.flyWheelState = "Stopped State")));
   }
 

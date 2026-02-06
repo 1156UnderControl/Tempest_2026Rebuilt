@@ -120,7 +120,7 @@ public class RobotContainer {
         .onFalse(Commands.run(() -> this.drive.limitRobotJoystickControlVelocity(), drive));
 
     this.states.setDefaultStates();
-    this.states.shootState(driverController.a());
+    //this.states.shootState(driverController.a());
   }
 
   public Command getAutonomousCommand() {
