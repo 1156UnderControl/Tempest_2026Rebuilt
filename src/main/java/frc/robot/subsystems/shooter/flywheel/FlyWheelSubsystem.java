@@ -1,10 +1,12 @@
 package frc.robot.subsystems.shooter.flywheel;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
@@ -44,13 +46,13 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
     this.motorConfig =
         new SmartMotorControllerConfig(this)
+            .withMotorInverted(true)
             .withFollowers(Pair.of(new TalonFX(18, CANBus.roboRIO()), true))
             .withIdleMode(MotorMode.BRAKE)
             .withGearing(FlyWheelsConstants.MOTOR_GEARING)
-            .withMotorInverted(false)
             .withTelemetry("FlyWheelLeadMotor", TelemetryVerbosity.HIGH)
             .withStatorCurrentLimit(Amps.of(60))
-            .withClosedLoopRampRate(Seconds.of(0.5))
+            .withClosedLoopRampRate(Milliseconds.of(100))
             .withClosedLoopController(
                 new ExponentialProfilePIDController(
                     new PIDController(
@@ -75,9 +77,9 @@ public class FlyWheelSubsystem extends SubsystemBase {
                         FlyWheelsConstants.FLYWHEEL_MASS,
                         FlyWheelsConstants.FLYWHEEL_SIZE,
                         FlyWheelsConstants.MOTOR_GEARING)))
-            .withFeedforward(new SimpleMotorFeedforward(0.5, 0.5, 0))
-            .withSimFeedforward(new SimpleMotorFeedforward(0.5, 0.5, 0))
-            .withControlMode(ControlMode.OPEN_LOOP);
+            .withFeedforward(new SimpleMotorFeedforward(0.19, 0.11, 0))
+            .withSimFeedforward(new SimpleMotorFeedforward(0.19, 0.11, 0))
+            .withControlMode(ControlMode.CLOSED_LOOP);
 
     this.leadMotor = new TalonFX(19);
 
@@ -112,7 +114,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   private void updateInputs() {
-    this.inputs.currentVelocity = this.flywheelMechanism.getSpeed().in(RotationsPerSecond);
+    this.inputs.currentVelocity = this.smartFlywheelMotor.getRotorVelocity().in(RotationsPerSecond);
     this.inputs.targetVelocity =
         this.smartFlywheelMotor.getMechanismSetpointVelocity().isEmpty()
             ? 0
@@ -127,6 +129,13 @@ public class FlyWheelSubsystem extends SubsystemBase {
         () ->
             AngularVelocity.ofBaseUnits(
                 this.calculator.getParameters().flywheelSpeed(), RotationsPerSecond));
+  }
+
+  public Command stoppedVelocity() {
+    return this.flywheelMechanism.setSpeed(
+        () ->
+            AngularVelocity.ofBaseUnits(
+                0, RotationsPerSecond));
   }
 
   public boolean isAtTargetVelocity() {
