@@ -52,7 +52,7 @@ public class SpindexerSubsystem extends SubsystemBase {
 
   private final FlyWheel spindexer;
 
-  public SpindexerSubsystem() {
+  private SpindexerSubsystem() {
     this.spindexerFlex = new SparkFlex(SpindexerConstants.MOTOR_ID, MotorType.kBrushless);
 
     this.smartSpindexerMotorConfig =

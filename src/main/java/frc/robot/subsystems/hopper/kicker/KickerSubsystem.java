@@ -59,7 +59,7 @@ public class KickerSubsystem extends SubsystemBase {
 
   private final FlyWheel kicker;
 
-  public KickerSubsystem() {
+  private KickerSubsystem() {
     kickerInputs = new KickerInputsAutoLogged();
 
     kickerFlex = new SparkFlex(6, MotorType.kBrushless);

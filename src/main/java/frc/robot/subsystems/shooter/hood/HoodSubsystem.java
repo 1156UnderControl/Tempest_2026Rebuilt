@@ -3,7 +3,6 @@ package frc.robot.subsystems.shooter.hood;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Milliseconds;
-import static edu.wpi.first.units.Units.Seconds;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -46,7 +45,8 @@ public class HoodSubsystem extends SubsystemBase {
             .withGearing(HoodConstants.MOTOR_GEARING)
             .withMotorInverted(false)
             .withTelemetry("HoodMotor", TelemetryVerbosity.HIGH)
-            .withSoftLimit(HoodConstants.Position.HOOD_MIN_ANGLE, HoodConstants.Position.HOOD_MAX_ANGLE)
+            .withSoftLimit(
+                HoodConstants.Position.HOOD_MIN_ANGLE, HoodConstants.Position.HOOD_MAX_ANGLE)
             .withStatorCurrentLimit(Amps.of(60))
             .withClosedLoopRampRate(Milliseconds.of(100))
             .withClosedLoopController(
