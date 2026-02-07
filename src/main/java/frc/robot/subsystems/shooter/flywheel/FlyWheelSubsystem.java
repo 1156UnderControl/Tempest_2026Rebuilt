@@ -6,10 +6,13 @@ import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.FlyWheelsConstants;
@@ -39,9 +42,11 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   private static FlyWheelSubsystem instance;
 
+  private TorqueCurrentFOC torqueCurrentRequest = new TorqueCurrentFOC(Amps.of(0));
+
   private FlyWheelSubsystem() {
     this.calculator = ShooterCalculator.getInstance();
-
+    
     this.motorConfig =
         new SmartMotorControllerConfig(this)
             .withMotorInverted(true)
@@ -128,6 +133,10 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   public Command stoppedVelocity() {
     return this.flywheelMechanism.setSpeed(RotationsPerSecond.of(0));
+  }
+
+  public Command runVelocityTorqueControl(double amps) {
+    return this.run(() -> leadMotor.setControl(torqueCurrentRequest.withOutput(Amps.of(amps))));
   }
 
   public boolean isAtTargetVelocity() {
