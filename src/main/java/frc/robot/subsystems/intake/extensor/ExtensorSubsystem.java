@@ -192,7 +192,7 @@ public class ExtensorSubsystem extends SubsystemBase {
     return this.setLength(setpoint);
   }
 
-  private Command setLength(Distance length) {
+  public Command setLength(Distance length) {
     return this.extensor.setHeight(length);
   }
 

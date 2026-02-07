@@ -25,6 +25,9 @@ import frc.robot.subsystems.shooter.flywheel.FlyWheelSubsystem;
 import frc.robot.subsystems.shooter.hood.HoodSubsystem;
 import frc.robot.subsystems.shooter.turret.TurretSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
+
+import static edu.wpi.first.units.Units.Meters;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -130,6 +133,8 @@ public class RobotContainer {
     this.states.shootState(driverController.a());
     this.driverController.y().onTrue(this.turret.resetEncoder().ignoringDisable(true));
     this.driverController.b().whileTrue(this.states.collectState());
+    this.driverController.x().whileTrue(extensor.setLength(Meters.of(0.15)));
+     this.driverController.a().whileTrue(extensor.setLength(Meters.of(0)));
   }
 
   public Command getAutonomousCommand() {
