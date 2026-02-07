@@ -91,7 +91,6 @@ public class TurretSubsystem extends SubsystemBase {
     turretMotor = new SparkWrapper(turretFlex, DCMotor.getNeoVortex(1), smartTurretMotorConfig);
 
     turretMechanismConfig = new PivotConfig(turretMotor)
-        .withStartingPosition(Degrees.of(0))
         .withHardLimit(
             TurretConstants.Position.TURRET_MIN_ANGLE,
             TurretConstants.Position.TURRET_MAX_ANGLE)

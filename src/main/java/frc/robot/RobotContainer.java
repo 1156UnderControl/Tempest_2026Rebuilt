@@ -125,10 +125,10 @@ public class RobotContainer {
     .turboActivate()
     .onTrue(Commands.run(() -> this.drive.boostRobotJoystickControlVelocity(), drive))
     .onFalse(Commands.run(() -> this.drive.limitRobotJoystickControlVelocity(), drive));
-    this.driverController.b().onTrue(this.turret.resetEncoder());
 
     this.states.setDefaultStates();
     this.states.shootState(driverController.a());
+    this.driverController.y().onTrue(this.turret.resetEncoder());
     this.driverController.b().whileTrue(this.states.collectState());
   }
 
