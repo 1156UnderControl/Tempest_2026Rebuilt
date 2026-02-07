@@ -98,7 +98,7 @@ public class States {
             Commands.parallel(
                 this.kicker.shoot(),
                 this.spindexer.shoot(),
-                this.flyWheel.runVelocity(),
+                this.flyWheel.runVelocity()).alongWith(
                 Commands.runOnce(
                     () -> {
                       this.flyWheelState =
@@ -111,4 +111,5 @@ public class States {
   public Command collectState() {
     return this.roller.runRoller();
   }
+
 }

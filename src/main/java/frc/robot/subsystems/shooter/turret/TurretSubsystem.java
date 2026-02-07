@@ -15,6 +15,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.TurretConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
@@ -47,11 +48,13 @@ public class TurretSubsystem extends SubsystemBase {
   private final SparkAbsoluteEncoder encoder1;
   private final SparkAbsoluteEncoder encoder2;
 
+  private final EasyCRT easyCRT;
+
   private TurretSubsystem(SparkAbsoluteEncoder kickerEncoder, SparkAbsoluteEncoder climberEncoder) {
     calculator = ShooterCalculator.getInstance();
     smartTurretMotorConfig = new SmartMotorControllerConfig(this)
         .withIdleMode(MotorMode.BRAKE)
-        .withGearing(new MechanismGearing(GearBox.fromReductionStages(360)))
+        .withGearing(new MechanismGearing(GearBox.fromReductionStages(60.3428)))
         .withMotorInverted(false)
         .withTelemetry("TurretMotor", TurretConstants.TELEMETRY)
         .withSoftLimit(
@@ -110,11 +113,7 @@ public class TurretSubsystem extends SubsystemBase {
             TurretConstants.Position.TURRET_MIN_ANGLE,
             TurretConstants.Position.TURRET_MAX_ANGLE);
 
-    EasyCRT easyCRT = new EasyCRT(easyCRTConfig);
-
-    easyCRT.getAngleOptional().ifPresent(mechAngle -> {
-      turretMotor.setEncoderPosition(mechAngle);
-    });
+    this.easyCRT = new EasyCRT(easyCRTConfig);
 
     inputs = new TurretInputsAutoLogged();
   }
@@ -129,6 +128,10 @@ public class TurretSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     turret.updateTelemetry();
+
+    if(easyCRT.getAngleOptional().isPresent()){
+      Logger.recordOutput("EasyCRT", easyCRT.getAngleOptional().get());
+    }
     updateInputs();
   }
 
@@ -174,5 +177,11 @@ public class TurretSubsystem extends SubsystemBase {
     } else {
       return targetAngle;
     }
+  }
+  
+  public Command resetEncoder(){
+    return Commands.runOnce(()->this.easyCRT.getAngleOptional().ifPresent(mechAngle -> {
+      turretMotor.setEncoderPosition(mechAngle);}));
+    
   }
 }
