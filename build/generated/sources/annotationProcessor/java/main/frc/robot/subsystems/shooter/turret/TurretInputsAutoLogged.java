@@ -12,6 +12,7 @@ public class TurretInputsAutoLogged extends TurretInputs implements LoggableInpu
     table.put("TargetAngle", targetAngle);
     table.put("AtTarget", atTarget);
     table.put("DistanceToTarget", distanceToTarget);
+    table.put("AbsoluteAngle", absoluteAngle);
   }
 
   @Override
@@ -20,6 +21,7 @@ public class TurretInputsAutoLogged extends TurretInputs implements LoggableInpu
     targetAngle = table.get("TargetAngle", targetAngle);
     atTarget = table.get("AtTarget", atTarget);
     distanceToTarget = table.get("DistanceToTarget", distanceToTarget);
+    absoluteAngle = table.get("AbsoluteAngle", absoluteAngle);
   }
 
   public TurretInputsAutoLogged clone() {
@@ -28,6 +30,7 @@ public class TurretInputsAutoLogged extends TurretInputs implements LoggableInpu
     copy.targetAngle = this.targetAngle;
     copy.atTarget = this.atTarget;
     copy.distanceToTarget = this.distanceToTarget;
+    copy.absoluteAngle = this.absoluteAngle;
     return copy;
   }
 }

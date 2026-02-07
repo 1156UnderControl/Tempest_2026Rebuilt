@@ -128,7 +128,7 @@ public class RobotContainer {
 
     this.states.setDefaultStates();
     this.states.shootState(driverController.a());
-    this.driverController.y().onTrue(this.turret.resetEncoder());
+    this.driverController.y().onTrue(this.turret.resetEncoder().ignoringDisable(true));
     this.driverController.b().whileTrue(this.states.collectState());
   }
 

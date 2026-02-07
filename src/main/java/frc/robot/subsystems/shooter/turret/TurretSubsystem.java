@@ -50,6 +50,8 @@ public class TurretSubsystem extends SubsystemBase {
 
   private final EasyCRT easyCRT;
 
+  private double absoluteAngle = 2;
+
   private TurretSubsystem(SparkAbsoluteEncoder kickerEncoder, SparkAbsoluteEncoder climberEncoder) {
     calculator = ShooterCalculator.getInstance();
     smartTurretMotorConfig = new SmartMotorControllerConfig(this)
@@ -128,9 +130,6 @@ public class TurretSubsystem extends SubsystemBase {
   public void periodic() {
     turret.updateTelemetry();
 
-    if(easyCRT.getAngleOptional().isPresent()){
-      Logger.recordOutput("EasyCRT", easyCRT.getAngleOptional().get());
-    }
     updateInputs();
   }
 
@@ -143,6 +142,7 @@ public class TurretSubsystem extends SubsystemBase {
     inputs.currentAngle = turret.getAngle().in(Degrees);
     inputs.targetAngle = calculator.getParameters().turretAngle().getDegrees();
     inputs.atTarget = isAtTargetAngle();
+    inputs.absoluteAngle = this.absoluteAngle;
 
     Logger.processInputs("Subsystems/Shooter/Turret/", inputs);
   }
@@ -180,7 +180,9 @@ public class TurretSubsystem extends SubsystemBase {
   
   public Command resetEncoder(){
     return Commands.runOnce(()->this.easyCRT.getAngleOptional().ifPresent(mechAngle -> {
-      turretMotor.setEncoderPosition(mechAngle);}));
+      turretMotor.setEncoderPosition(mechAngle);
+      this.absoluteAngle = mechAngle.in(Degrees);
+    }));
     
   }
 }
