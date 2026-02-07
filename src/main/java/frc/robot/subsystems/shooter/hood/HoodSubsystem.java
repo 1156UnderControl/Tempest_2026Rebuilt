@@ -46,7 +46,7 @@ public class HoodSubsystem extends SubsystemBase {
             .withGearing(HoodConstants.MOTOR_GEARING)
             .withMotorInverted(false)
             .withTelemetry("HoodMotor", TelemetryVerbosity.HIGH)
-            .withSoftLimit(Degrees.of(40), Degrees.of(75))
+            .withSoftLimit(HoodConstants.Position.HOOD_MIN_ANGLE, HoodConstants.Position.HOOD_MAX_ANGLE)
             .withStatorCurrentLimit(Amps.of(60))
             .withClosedLoopRampRate(Milliseconds.of(100))
             .withClosedLoopController(
