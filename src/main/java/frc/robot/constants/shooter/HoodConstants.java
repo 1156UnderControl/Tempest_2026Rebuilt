@@ -16,7 +16,7 @@ import yams.gearing.MechanismGearing;
 public class HoodConstants {
   public static final DCMotor HOOD_MOTOR = DCMotor.getNEO(1);
   public static final MechanismGearing MOTOR_GEARING =
-      new MechanismGearing(GearBox.fromReductionStages(360));
+      new MechanismGearing(GearBox.fromReductionStages(11.66, 15.3743));
   public static final Mass HOOD_MASS = Kilograms.of(2.5);
   public static final Distance HOOD_SIZE = Meters.of(0.4);
   public static final Voltage MAX_VOLTS = Volts.of(12.0);
@@ -24,12 +24,12 @@ public class HoodConstants {
   public static class Position {
     public static final Angle HOOD_MIN_ANGLE = Degrees.of(15);
     public static final Angle HOOD_MAX_ANGLE = Degrees.of(50);
-    public static final Angle ANGLE_ERROR_ALLOWED = Degrees.of(1);
+    public static final Angle ANGLE_ERROR_ALLOWED = Degrees.of(0.5);
   }
 
   public static class ClosedLoopController {
-    public static final double kP = 100;
-    public static final double kI = 0;
+    public static final double kP = 290;
+    public static final double kI = 3;
     public static final double kD = 0;
   }
 }

@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter.hood;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.Seconds;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -45,9 +46,9 @@ public class HoodSubsystem extends SubsystemBase {
             .withGearing(HoodConstants.MOTOR_GEARING)
             .withMotorInverted(false)
             .withTelemetry("HoodMotor", TelemetryVerbosity.HIGH)
-            .withSoftLimit(Degrees.of(15), Degrees.of(50))
-            .withStatorCurrentLimit(Amps.of(40))
-            .withClosedLoopRampRate(Seconds.of(0.5))
+            .withSoftLimit(Degrees.of(40), Degrees.of(75))
+            .withStatorCurrentLimit(Amps.of(60))
+            .withClosedLoopRampRate(Milliseconds.of(100))
             .withClosedLoopController(
                 new ExponentialProfilePIDController(
                     new PIDController(
@@ -72,8 +73,8 @@ public class HoodSubsystem extends SubsystemBase {
                         HoodConstants.HOOD_MASS,
                         HoodConstants.HOOD_SIZE,
                         HoodConstants.MOTOR_GEARING)))
-            .withFeedforward(new SimpleMotorFeedforward(0.5, 0.5, 0))
-            .withSimFeedforward(new SimpleMotorFeedforward(0.5, 0.5, 0))
+            .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+            .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
             .withControlMode(ControlMode.CLOSED_LOOP);
 
     hoodMax = new SparkMax(8, MotorType.kBrushless);
@@ -82,7 +83,7 @@ public class HoodSubsystem extends SubsystemBase {
 
     hoodMechanismConfig =
         new ArmConfig(hoodMotor)
-            .withStartingPosition(Degrees.of(15))
+            .withStartingPosition(Degrees.of(75))
             .withHardLimit(
                 HoodConstants.Position.HOOD_MIN_ANGLE, HoodConstants.Position.HOOD_MAX_ANGLE)
             .withLength(HoodConstants.HOOD_SIZE)
