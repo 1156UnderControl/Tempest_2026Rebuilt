@@ -16,6 +16,7 @@ import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
+import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
 import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
 import frc.robot.subsystems.intake.extensor.ExtensorSubsystem;
@@ -37,6 +38,7 @@ public class RobotContainer {
   private final States states;
 
   private final SwerveSubsystem drive;
+  private final ClimberSubsystem climber;
   private final TurretSubsystem turret;
   private final HoodSubsystem hood;
   private final FlyWheelSubsystem flyWheel;
@@ -91,8 +93,9 @@ public class RobotContainer {
         break;
     }
 
+    this.climber = ClimberSubsystem.getInstance();
     this.kicker = KickerSubsystem.getInstance();
-    this.turret = TurretSubsystem.getInstance(this.kicker.getTurreAbsoluteEncoder());
+    this.turret = TurretSubsystem.getInstance(this.kicker.getTurreAbsoluteEncoder(), this.climber.getAbsoluteEncoder());
     this.hood = HoodSubsystem.getInstance();
     this.flyWheel = FlyWheelSubsystem.getInstance();
     this.spindexer = SpindexerSubsystem.getInstance();
