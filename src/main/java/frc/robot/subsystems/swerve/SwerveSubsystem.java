@@ -25,17 +25,20 @@ import frc.java_is_undercontrol.util.StabilizeChecker;
 import frc.java_is_undercontrol.vision.deprecated.Cameras.LimelightHelpers;
 import frc.java_is_undercontrol.vision.odometry.LimelightPoseEstimator;
 import frc.java_is_undercontrol.vision.odometry.MultiCameraPoseEstimator;
+import frc.java_is_undercontrol.vision.odometry.PhotonVisionPoseEstimator;
 import frc.java_is_undercontrol.vision.odometry.PoseEstimation;
 import frc.java_is_undercontrol.vision.odometry.PoseEstimator;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.JoystickConstants;
 import frc.robot.constants.SwerveConstants;
+import frc.robot.constants.VisionConstants;
 import frc.robot.joysticks.DriverController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.photonvision.PhotonCamera;
 
 public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
@@ -101,7 +104,10 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   private static PoseEstimator configureMulticameraPoseEstimation() {
     List<PoseEstimator> listOfEstimators = new ArrayList<PoseEstimator>();
     PoseEstimator limelightCenter = new LimelightPoseEstimator("limelight-center", false, false, 2);
+    PhotonCamera cameraLeftBack = new PhotonCamera(VisionConstants.leftBackArducamName);
+    PoseEstimator photonLeftBack  = new PhotonVisionPoseEstimator(cameraLeftBack, VisionConstants.robotToCamArducamLeftBack);
     listOfEstimators.add(limelightCenter);
+    listOfEstimators.add(photonLeftBack);
     PoseEstimator estimatorMultiCamera =
         new MultiCameraPoseEstimator(listOfEstimators, "Teleop Multi Pose Estimator");
     return estimatorMultiCamera;
