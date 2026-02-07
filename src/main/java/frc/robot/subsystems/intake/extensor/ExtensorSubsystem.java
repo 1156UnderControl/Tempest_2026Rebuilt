@@ -38,7 +38,17 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class ExtensorSubsystem extends SubsystemBase {
-  private final ExtensorInputsAutoLogged extensorInputs = new ExtensorInputsAutoLogged();
+
+  private static ExtensorSubsystem instance;
+
+  public static ExtensorSubsystem getInstance() {
+    if (instance == null) {
+      instance = new ExtensorSubsystem();
+    }
+    return instance;
+  }
+
+  private final ExtensorInputsAutoLogged extensorInputs;
 
   private final SparkFlex extensorSparkFlex;
 
@@ -52,7 +62,8 @@ public class ExtensorSubsystem extends SubsystemBase {
 
   private Distance setpoint = Meters.of(0);
 
-  public ExtensorSubsystem() {
+  private ExtensorSubsystem() {
+    this.extensorInputs = new ExtensorInputsAutoLogged();
     this.extensorSparkFlex = new SparkFlex(ExtensorConstants.ID_MOTOR, MotorType.kBrushless);
 
     this.extensorMotorConfig =

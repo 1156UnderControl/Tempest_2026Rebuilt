@@ -22,6 +22,7 @@ public class States {
   private final SpindexerSubsystem spindexer;
   private final KickerSubsystem kicker;
   private final RollerSubsystem roller;
+  private final ExtensorSubsystem extensor;
 
   private boolean isHubMode;
 
@@ -50,7 +51,8 @@ public class States {
       FlyWheelSubsystem flyWheel,
       SpindexerSubsystem spindexer,
       KickerSubsystem kicker,
-      RollerSubsystem roller) {
+      RollerSubsystem roller,
+      ExtensorSubsystem extensor) {
     this.roller = roller;
     this.drive = drive;
     this.spindexer = spindexer;
@@ -58,7 +60,7 @@ public class States {
     this.turret = turret;
     this.hood = hood;
     this.flyWheel = flyWheel;
-
+    this.extensor = extensor;
 
     this.isHubMode = true;
 
@@ -106,7 +108,7 @@ public class States {
                     })));
   }
 
-  public Command collectState(){
+  public Command collectState() {
     return this.roller.runRoller();
   }
 }

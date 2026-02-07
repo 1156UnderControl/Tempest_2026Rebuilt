@@ -42,8 +42,9 @@ public class RobotContainer {
   private final FlyWheelSubsystem flyWheel;
   private final SpindexerSubsystem spindexer;
   private final KickerSubsystem kicker;
-  public final IDriverController driverController;
   private final RollerSubsystem roller;
+  private final ExtensorSubsystem extensor;
+  public final IDriverController driverController;
 
   private final NamedCommandsRegistery namedCommandsRegistry;
 
@@ -95,7 +96,8 @@ public class RobotContainer {
     this.hood = HoodSubsystem.getInstance();
     this.flyWheel = FlyWheelSubsystem.getInstance();
     this.spindexer = SpindexerSubsystem.getInstance();
-    this.roller = new RollerSubsystem();
+    this.roller = RollerSubsystem.getInstance();
+    this.extensor = ExtensorSubsystem.getInstance();
 
     this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
     this.namedCommandsRegistry.registerAllAutoCommands();
@@ -108,7 +110,8 @@ public class RobotContainer {
             this.flyWheel,
             this.spindexer,
             this.kicker,
-            this.roller);
+            this.roller,
+            this.extensor);
 
     configureButtonBindings();
     this.autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -122,9 +125,7 @@ public class RobotContainer {
 
     this.states.setDefaultStates();
     this.states.shootState(driverController.a());
-    this.driverController.b().whileTrue(
-      this.states.collectState()
-    );
+    this.driverController.b().whileTrue(this.states.collectState());
   }
 
   public Command getAutonomousCommand() {
