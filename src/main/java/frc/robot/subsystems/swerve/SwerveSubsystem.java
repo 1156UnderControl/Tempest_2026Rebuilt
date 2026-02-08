@@ -243,7 +243,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
               ? FieldConstants.FieldStructurePoses.BLUE_RIGHT_TOWER
               : FieldConstants.FieldStructurePoses.RED_RIGHT_TOWER);
     } else {
-      super.driveToPose(FieldConstants.FieldStructurePoses.RED_RIGHT_TOWER);
+      super.driveToPose(FieldConstants.FieldStructurePoses.BLUE_RIGHT_TOWER);
     }
   }
 
@@ -254,7 +254,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
               ? FieldConstants.FieldStructurePoses.BLUE_LEFT_TOWER
               : FieldConstants.FieldStructurePoses.RED_LEFT_TOWER);
     } else {
-      super.driveToPose(FieldConstants.FieldStructurePoses.RED_LEFT_TOWER);
+      super.driveToPose(FieldConstants.FieldStructurePoses.BLUE_LEFT_TOWER);
     }
   }
 }
