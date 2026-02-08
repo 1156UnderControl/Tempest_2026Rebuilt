@@ -7,6 +7,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Seconds;
 
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -148,5 +149,9 @@ public class ClimberSubsystem extends SubsystemBase {
     climberInputs.climberPosition = climber.getMotor().getMeasurementPosition();
     climberInputs.climberSetpoint = setpoint;
     climberInputs.climberVelocity = climber.getMotor().getMeasurementVelocity();
+  }
+
+  public SparkAbsoluteEncoder getAbsoluteEncoder() {
+    return climberFlex.getAbsoluteEncoder();
   }
 }

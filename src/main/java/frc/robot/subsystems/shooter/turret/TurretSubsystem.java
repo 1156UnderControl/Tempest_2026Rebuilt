@@ -15,6 +15,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.TurretConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
@@ -47,12 +48,16 @@ public class TurretSubsystem extends SubsystemBase {
   private final SparkAbsoluteEncoder encoder1;
   private final SparkAbsoluteEncoder encoder2;
 
-  private TurretSubsystem(SparkAbsoluteEncoder kickerEncoder) {
+  private final EasyCRT easyCRT;
+
+  private double absoluteAngle = 2;
+
+  private TurretSubsystem(SparkAbsoluteEncoder kickerEncoder, SparkAbsoluteEncoder climberEncoder) {
     calculator = ShooterCalculator.getInstance();
     smartTurretMotorConfig =
         new SmartMotorControllerConfig(this)
             .withIdleMode(MotorMode.BRAKE)
-            .withGearing(new MechanismGearing(GearBox.fromReductionStages(360)))
+            .withGearing(new MechanismGearing(GearBox.fromReductionStages(60.3428)))
             .withMotorInverted(false)
             .withTelemetry("TurretMotor", TurretConstants.TELEMETRY)
             .withSoftLimit(
@@ -90,18 +95,18 @@ public class TurretSubsystem extends SubsystemBase {
 
     turretMechanismConfig =
         new PivotConfig(turretMotor)
-            .withStartingPosition(Degrees.of(0))
             .withHardLimit(
                 TurretConstants.Position.TURRET_MIN_ANGLE,
                 TurretConstants.Position.TURRET_MAX_ANGLE)
             .withMOI(Meters.of(0.25), Kilograms.of(6))
+            .withStartingPosition(TurretConstants.Position.TURRET_STARTING_ANGLE)
             .withTelemetry("Turret", TurretConstants.TELEMETRY);
 
     turret = new Pivot(turretMechanismConfig);
 
-    encoder1 = turretFlex.getAbsoluteEncoder();
+    encoder1 = kickerEncoder;
     // TODO: define second encoder correctly
-    encoder2 = kickerEncoder;
+    encoder2 = climberEncoder;
 
     EasyCRTConfig easyCRTConfig =
         new EasyCRTConfig(
@@ -113,14 +118,15 @@ public class TurretSubsystem extends SubsystemBase {
                 TurretConstants.Position.TURRET_MIN_ANGLE,
                 TurretConstants.Position.TURRET_MAX_ANGLE);
 
-    EasyCRT easyCRT = new EasyCRT(easyCRTConfig);
+    this.easyCRT = new EasyCRT(easyCRTConfig);
 
     inputs = new TurretInputsAutoLogged();
   }
 
-  public static TurretSubsystem getInstance(SparkAbsoluteEncoder kickerEncoder) {
+  public static TurretSubsystem getInstance(
+      SparkAbsoluteEncoder kickerEncoder, SparkAbsoluteEncoder climberEncoder) {
     if (instance == null) {
-      instance = new TurretSubsystem(kickerEncoder);
+      instance = new TurretSubsystem(kickerEncoder, climberEncoder);
     }
     return instance;
   }
@@ -128,6 +134,7 @@ public class TurretSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     turret.updateTelemetry();
+
     updateInputs();
   }
 
@@ -140,6 +147,7 @@ public class TurretSubsystem extends SubsystemBase {
     inputs.currentAngle = turret.getAngle().in(Degrees);
     inputs.targetAngle = calculator.getParameters().turretAngle().getDegrees();
     inputs.atTarget = isAtTargetAngle();
+    inputs.absoluteAngle = this.absoluteAngle;
 
     Logger.processInputs("Subsystems/Shooter/Turret/", inputs);
   }
@@ -175,5 +183,17 @@ public class TurretSubsystem extends SubsystemBase {
     } else {
       return targetAngle;
     }
+  }
+
+  public Command resetEncoder() {
+    return Commands.runOnce(
+        () ->
+            this.easyCRT
+                .getAngleOptional()
+                .ifPresent(
+                    mechAngle -> {
+                      turretMotor.setEncoderPosition(mechAngle);
+                      this.absoluteAngle = mechAngle.in(Degrees);
+                    }));
   }
 }

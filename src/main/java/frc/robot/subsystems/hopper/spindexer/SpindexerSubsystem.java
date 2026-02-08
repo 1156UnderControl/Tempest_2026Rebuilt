@@ -52,7 +52,7 @@ public class SpindexerSubsystem extends SubsystemBase {
 
   private final FlyWheel spindexer;
 
-  public SpindexerSubsystem() {
+  private SpindexerSubsystem() {
     this.spindexerFlex = new SparkFlex(SpindexerConstants.MOTOR_ID, MotorType.kBrushless);
 
     this.smartSpindexerMotorConfig =
@@ -106,11 +106,11 @@ public class SpindexerSubsystem extends SubsystemBase {
   }
 
   public Command shoot() {
-    return spindexer.setSpeed(SpindexerConstants.setpoints.SHOOTING);
+    return spindexer.set(1);
   }
 
   public Command stop() {
-    return spindexer.setSpeed(SpindexerConstants.setpoints.STOPPED);
+    return spindexer.set(0);
   }
 
   public Command setDutyCycle(double dutycycle) {

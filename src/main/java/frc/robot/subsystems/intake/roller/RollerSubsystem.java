@@ -34,7 +34,17 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class RollerSubsystem extends SubsystemBase {
-  private final RollerInputsAutoLogged rollerInputs = new RollerInputsAutoLogged();
+
+  private static RollerSubsystem instance;
+
+  public static RollerSubsystem getInstance() {
+    if (instance == null) {
+      instance = new RollerSubsystem();
+    }
+    return instance;
+  }
+
+  private final RollerInputsAutoLogged rollerInputs;
 
   private final SparkFlex rollerMasterFlex;
   private final SparkFlex rollerFollowerFlex;
@@ -49,7 +59,8 @@ public class RollerSubsystem extends SubsystemBase {
 
   private AngularVelocity setpoint = RPM.of(0);
 
-  public RollerSubsystem() {
+  private RollerSubsystem() {
+    this.rollerInputs = new RollerInputsAutoLogged();
     this.rollerMasterFlex =
         new SparkFlex(RollerConstants.ID_intakeLeaderRollerMotor, MotorType.kBrushless);
     this.rollerFollowerFlex =
@@ -112,7 +123,7 @@ public class RollerSubsystem extends SubsystemBase {
   }
 
   public Command runRoller() {
-    return this.setDutyCycle(RollerConstants.setpoints.INTAKE_DUTY_CYCLE);
+    return this.setDutyCycle(-1);
   }
 
   public Command runRollerReversed() {

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -16,9 +18,11 @@ import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
+import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
 import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
 import frc.robot.subsystems.intake.extensor.ExtensorSubsystem;
+import frc.robot.subsystems.intake.roller.RollerSubsystem;
 import frc.robot.subsystems.shooter.flywheel.FlyWheelSubsystem;
 import frc.robot.subsystems.shooter.hood.HoodSubsystem;
 import frc.robot.subsystems.shooter.turret.TurretSubsystem;
@@ -36,12 +40,14 @@ public class RobotContainer {
   private final States states;
 
   private final SwerveSubsystem drive;
+  private final ClimberSubsystem climber;
   private final TurretSubsystem turret;
   private final HoodSubsystem hood;
   private final FlyWheelSubsystem flyWheel;
-  private final ExtensorSubsystem extensor;
   private final SpindexerSubsystem spindexer;
   private final KickerSubsystem kicker;
+  private final RollerSubsystem roller;
+  private final ExtensorSubsystem extensor;
   public final IDriverController driverController;
 
   private final NamedCommandsRegistery namedCommandsRegistry;
@@ -89,12 +95,16 @@ public class RobotContainer {
         break;
     }
 
+    this.climber = ClimberSubsystem.getInstance();
     this.kicker = KickerSubsystem.getInstance();
-    this.turret = TurretSubsystem.getInstance(this.kicker.getTurreAbsoluteEncoder());
+    this.turret =
+        TurretSubsystem.getInstance(
+            this.kicker.getTurreAbsoluteEncoder(), this.climber.getAbsoluteEncoder());
     this.hood = HoodSubsystem.getInstance();
     this.flyWheel = FlyWheelSubsystem.getInstance();
     this.spindexer = SpindexerSubsystem.getInstance();
-    this.extensor = new ExtensorSubsystem();
+    this.roller = RollerSubsystem.getInstance();
+    this.extensor = ExtensorSubsystem.getInstance();
 
     this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
     this.namedCommandsRegistry.registerAllAutoCommands();
@@ -105,9 +115,10 @@ public class RobotContainer {
             this.turret,
             this.hood,
             this.flyWheel,
-            this.extensor,
             this.spindexer,
-            this.kicker);
+            this.kicker,
+            this.roller,
+            this.extensor);
 
     configureButtonBindings();
     this.autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -121,6 +132,10 @@ public class RobotContainer {
 
     this.states.setDefaultStates();
     this.states.shootState(driverController.a());
+    this.driverController.y().onTrue(this.turret.resetEncoder().ignoringDisable(true));
+    this.driverController.b().whileTrue(this.states.collectState());
+    this.driverController.x().whileTrue(extensor.setLength(Meters.of(0.15)));
+    this.driverController.a().whileTrue(extensor.setLength(Meters.of(0)));
   }
 
   public Command getAutonomousCommand() {

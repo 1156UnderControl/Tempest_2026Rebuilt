@@ -15,10 +15,10 @@ import yams.mechanisms.config.MechanismPositionConfig;
 import yams.mechanisms.config.MechanismPositionConfig.Plane;
 
 public class ExtensorConstants {
-  public static final int ID_MOTOR = 2;
+  public static final int ID_MOTOR = 4;
 
   public class limits {
-    public static final Distance MAX_EXTENSION = Meters.of(0.25);
+    public static final Distance MAX_EXTENSION = Meters.of(5000);
     public static final Distance MIN_EXTENSION = Meters.of(0);
   }
 
