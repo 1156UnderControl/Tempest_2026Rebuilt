@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -25,9 +27,6 @@ import frc.robot.subsystems.shooter.flywheel.FlyWheelSubsystem;
 import frc.robot.subsystems.shooter.hood.HoodSubsystem;
 import frc.robot.subsystems.shooter.turret.TurretSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
-
-import static edu.wpi.first.units.Units.Meters;
-
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -98,7 +97,9 @@ public class RobotContainer {
 
     this.climber = ClimberSubsystem.getInstance();
     this.kicker = KickerSubsystem.getInstance();
-    this.turret = TurretSubsystem.getInstance(this.kicker.getTurreAbsoluteEncoder(), this.climber.getAbsoluteEncoder());
+    this.turret =
+        TurretSubsystem.getInstance(
+            this.kicker.getTurreAbsoluteEncoder(), this.climber.getAbsoluteEncoder());
     this.hood = HoodSubsystem.getInstance();
     this.flyWheel = FlyWheelSubsystem.getInstance();
     this.spindexer = SpindexerSubsystem.getInstance();
@@ -125,16 +126,16 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     this.driverController
-    .turboActivate()
-    .onTrue(Commands.run(() -> this.drive.boostRobotJoystickControlVelocity(), drive))
-    .onFalse(Commands.run(() -> this.drive.limitRobotJoystickControlVelocity(), drive));
+        .turboActivate()
+        .onTrue(Commands.run(() -> this.drive.boostRobotJoystickControlVelocity(), drive))
+        .onFalse(Commands.run(() -> this.drive.limitRobotJoystickControlVelocity(), drive));
 
     this.states.setDefaultStates();
     this.states.shootState(driverController.a());
     this.driverController.y().onTrue(this.turret.resetEncoder().ignoringDisable(true));
     this.driverController.b().whileTrue(this.states.collectState());
     this.driverController.x().whileTrue(extensor.setLength(Meters.of(0.15)));
-     this.driverController.a().whileTrue(extensor.setLength(Meters.of(0)));
+    this.driverController.a().whileTrue(extensor.setLength(Meters.of(0)));
   }
 
   public Command getAutonomousCommand() {

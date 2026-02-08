@@ -151,7 +151,7 @@ public class ClimberSubsystem extends SubsystemBase {
     climberInputs.climberVelocity = climber.getMotor().getMeasurementVelocity();
   }
 
-  public SparkAbsoluteEncoder getAbsoluteEncoder(){
+  public SparkAbsoluteEncoder getAbsoluteEncoder() {
     return climberFlex.getAbsoluteEncoder();
   }
 }

@@ -11,8 +11,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.FlyWheelsConstants;
@@ -46,7 +44,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   private FlyWheelSubsystem() {
     this.calculator = ShooterCalculator.getInstance();
-    
+
     this.motorConfig =
         new SmartMotorControllerConfig(this)
             .withMotorInverted(true)
