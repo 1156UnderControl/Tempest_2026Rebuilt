@@ -97,6 +97,7 @@ public class TurretSubsystem extends SubsystemBase {
             TurretConstants.Position.TURRET_MIN_ANGLE,
             TurretConstants.Position.TURRET_MAX_ANGLE)
         .withMOI(Meters.of(0.25), Kilograms.of(6))
+        .withStartingPosition(TurretConstants.Position.TURRET_STARTING_ANGLE)
         .withTelemetry("Turret", TurretConstants.TELEMETRY);
 
     turret = new Pivot(turretMechanismConfig);
@@ -113,6 +114,7 @@ public class TurretSubsystem extends SubsystemBase {
         .withMechanismRange(
             TurretConstants.Position.TURRET_MIN_ANGLE,
             TurretConstants.Position.TURRET_MAX_ANGLE);
+            
 
     this.easyCRT = new EasyCRT(easyCRTConfig);
 

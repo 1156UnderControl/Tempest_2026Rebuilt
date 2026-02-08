@@ -30,6 +30,7 @@ public class TurretConstants {
     public static final Angle ANGLE_ERROR_ALLOWED = Degrees.of(1.0);
     public static final Angle TURRET_MIN_ANGLE = Degrees.of(-180);
     public static final Angle TURRET_MAX_ANGLE = Degrees.of(180);
+    public static final Angle TURRET_STARTING_ANGLE = Degrees.of(0);
   }
 
   public static class ClosedLoopController {
