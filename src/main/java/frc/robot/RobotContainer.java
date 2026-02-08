@@ -130,6 +130,7 @@ public class RobotContainer {
         .turboActivate()
         .onTrue(Commands.run(() -> this.drive.boostRobotJoystickControlVelocity(), drive))
         .onFalse(Commands.run(() -> this.drive.limitRobotJoystickControlVelocity(), drive));
+        
     this.driverController.a().or(RobotStates.getInstance().isOnAllianceZone()).and(RobotStates.getInstance().isOnNotShootZone().negate()).and(() -> this.turret.isAtTargetAngle() && this.flyWheel.isAtTargetVelocity()).onTrue(this.states.shootState());
     this.driverController.b().toggleOnTrue(this.states.collectState()).toggleOnFalse(this.states.retractState());
   }
