@@ -3,7 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
 import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
 import frc.robot.subsystems.intake.extensor.ExtensorSubsystem;
@@ -24,8 +24,6 @@ public class States {
   private final RollerSubsystem roller;
   private final ExtensorSubsystem extensor;
 
-  private boolean isHubMode;
-
   @AutoLogOutput(key = "States/TurretStates")
   private String turretState;
 
@@ -43,6 +41,9 @@ public class States {
 
   @AutoLogOutput(key = "States/KickersStates")
   private String kickerState;
+
+  @AutoLogOutput(key = "States/RollerState")
+  private String rollerState;
 
   public States(
       SwerveSubsystem drive,
@@ -62,14 +63,13 @@ public class States {
     this.flyWheel = flyWheel;
     this.extensor = extensor;
 
-    this.isHubMode = true;
-
     this.turretState = "";
     this.hoodState = "";
     this.flyWheelState = "";
     this.extensorState = "";
     this.spindexerState = "";
     this.kickerState = "";
+    this.rollerState = "";
   }
 
   public void setDefaultStates() {
@@ -77,37 +77,53 @@ public class States {
         Commands.run(() -> drive.driveAlignAngleJoystick(), drive)
             .onlyIf(() -> DriverStation.isTeleopEnabled()));
 
-    this.roller.setDefaultCommand(this.roller.stopRoller());
-
     this.kicker.setDefaultCommand(
-        this.kicker.stop().alongWith(Commands.runOnce(() -> this.kickerState = "Stopped State")));
+        this.kicker
+        .stop()
+        .alongWith(Commands.runOnce(() -> this.kickerState = "Stopped State")));
+
     this.spindexer.setDefaultCommand(
         this.spindexer
             .stop()
             .alongWith(Commands.runOnce(() -> this.spindexerState = "Stopped State")));
 
-    this.flyWheel.setDefaultCommand(
-        Commands.run(() -> this.flyWheel.stoppedVelocity(), flyWheel)
-            .alongWith(Commands.runOnce(() -> this.flyWheelState = "Stopped State")));
+    this.turret.setDefaultCommand(Commands.either(
+      this.turret.trackHub().alongWith(Commands.runOnce(() ->
+      this.turretState = "Track Hub State")), 
+      this.turret.trackPass().alongWith(Commands.runOnce(() ->
+      this.turretState = "Track Pass State")), 
+      RobotStates.getInstance().isOnAllianceZone()));
+
+    this.flyWheel.setDefaultCommand(this.flyWheel.runVelocity()
+      .alongWith(Commands.runOnce(() -> this.flyWheelState = "Running State")));
   }
 
-  public void shootState(Trigger button) {
-    new Trigger(() -> true)
-        .and(button)
-        .whileTrue(
-            Commands.parallel(
-                    this.kicker.shoot(), this.spindexer.shoot(), this.flyWheel.runVelocity())
-                .alongWith(
-                    Commands.runOnce(
-                        () -> {
-                          this.flyWheelState =
-                              this.isHubMode ? "Shooting to Hub State" : "Shooting to Pass State";
-                          this.kickerState = "Running State";
-                          this.spindexerState = "Running State";
-                        })));
+  public Command shootState() {
+    return Commands.parallel(
+      this.kicker.shoot(), 
+      this.spindexer.shoot(),
+      this.extensor.shake()
+      ).alongWith(
+        Commands.runOnce(
+          () -> {
+            this.kickerState = "Running State";
+            this.spindexerState = "Running State";
+            this.extensorState = "Shake State";
+          }
+        ));
   }
 
   public Command collectState() {
-    return this.roller.runRoller();
+    return this.extensor.extend().alongWith(this.roller.runRoller(), Commands.runOnce(()-> {
+      this.extensorState = "Extended State";
+      this.rollerState = "Running State";
+    })).onlyWhile(this.extensor.isAtCollision().negate()).andThen(this.extensor.softStopExtensor().alongWith(this.roller.stopRoller())).repeatedly();
+  }
+
+  public Command retractState() {
+    return this.extensor.retract().alongWith(this.roller.stopRoller(), Commands.runOnce(()-> {
+      this.extensorState = "Retracted State";
+      this.rollerState = "Stopped State";
+    }));
   }
 }

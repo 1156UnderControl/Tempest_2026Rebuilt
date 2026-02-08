@@ -108,7 +108,7 @@ public class RobotContainer {
 
     this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
     this.namedCommandsRegistry.registerAllAutoCommands();
-
+ 
     this.states =
         new States(
             this.drive,
@@ -125,17 +125,13 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
+    this.states.setDefaultStates();
     this.driverController
         .turboActivate()
         .onTrue(Commands.run(() -> this.drive.boostRobotJoystickControlVelocity(), drive))
         .onFalse(Commands.run(() -> this.drive.limitRobotJoystickControlVelocity(), drive));
-
-    this.states.setDefaultStates();
-    this.states.shootState(driverController.a());
-    this.driverController.y().onTrue(this.turret.resetEncoder().ignoringDisable(true));
-    this.driverController.b().whileTrue(this.states.collectState());
-    this.driverController.x().whileTrue(extensor.setLength(Meters.of(0.15)));
-    this.driverController.a().whileTrue(extensor.setLength(Meters.of(0)));
+    this.driverController.a().or(RobotStates.getInstance().isOnAllianceZone()).and(RobotStates.getInstance().isOnNotShootZone().negate()).and(() -> this.turret.isAtTargetAngle() && this.flyWheel.isAtTargetVelocity()).onTrue(this.states.shootState());
+    this.driverController.b().toggleOnTrue(this.states.collectState()).toggleOnFalse(this.states.retractState());
   }
 
   public Command getAutonomousCommand() {

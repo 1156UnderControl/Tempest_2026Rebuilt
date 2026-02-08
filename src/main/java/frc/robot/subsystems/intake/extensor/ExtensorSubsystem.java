@@ -156,7 +156,7 @@ public class ExtensorSubsystem extends SubsystemBase {
 
   public Command softStopExtensor() {
     return disableExtensor()
-        .andThen(this.setDutyCycle(0).withTimeout(Seconds.of(2.5)))
+        .andThen(this.setDutyCycle(0).withTimeout(Seconds.of(1.0)))
         .finallyDo(() -> this.extensorMotor.startClosedLoopController());
   }
 
