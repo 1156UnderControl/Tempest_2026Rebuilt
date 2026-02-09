@@ -62,6 +62,10 @@ public class ShooterCalculator {
     return this.getParameters(true);
   }
 
+  public ShootingParameters getLastParameters() {
+    return latestParameters;
+  }
+
   public ShootingParameters getParameters(boolean shooting) {
     if (latestParameters != null && lastState == shooting) {
       return latestParameters;
