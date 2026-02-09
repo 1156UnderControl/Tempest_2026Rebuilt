@@ -118,7 +118,8 @@ public class RobotContainer {
             this.spindexer,
             this.kicker,
             this.roller,
-            this.extensor);
+            this.extensor,
+            this.climber);
 
     configureButtonBindings();
     this.autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -133,6 +134,8 @@ public class RobotContainer {
         
     this.driverController.a().or(RobotStates.getInstance().isOnAllianceZone()).and(RobotStates.getInstance().isOnNotShootZone().negate()).and(() -> this.turret.isAtTargetAngle() && this.flyWheel.isAtTargetVelocity()).onTrue(this.states.shootState());
     this.driverController.b().toggleOnTrue(this.states.collectState()).toggleOnFalse(this.states.retractState());
+    this.driverController.leftArrow().onTrue(this.states.goClimbStateLeft());
+    this.driverController.rightArrow().onTrue(this.states.goClimbStateRight());
   }
 
   public Command getAutonomousCommand() {

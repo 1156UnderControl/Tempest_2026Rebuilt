@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
 import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
 import frc.robot.subsystems.intake.extensor.ExtensorSubsystem;
@@ -23,27 +24,34 @@ public class States {
   private final KickerSubsystem kicker;
   private final RollerSubsystem roller;
   private final ExtensorSubsystem extensor;
+  private final ClimberSubsystem climber;
 
-  @AutoLogOutput(key = "States/TurretStates")
+  @AutoLogOutput(key = "States/DriveState")
+  private String driveState;
+
+  @AutoLogOutput(key = "States/TurretState")
   private String turretState;
 
-  @AutoLogOutput(key = "States/HoodStates")
+  @AutoLogOutput(key = "States/HoodState")
   private String hoodState;
 
-  @AutoLogOutput(key = "States/FlyWheelStates")
+  @AutoLogOutput(key = "States/FlyWheelState")
   private String flyWheelState;
 
-  @AutoLogOutput(key = "States/ExtensorStates")
+  @AutoLogOutput(key = "States/ExtensorState")
   private String extensorState;
 
-  @AutoLogOutput(key = "States/SpindexerStates")
+  @AutoLogOutput(key = "States/SpindexerState")
   private String spindexerState;
 
-  @AutoLogOutput(key = "States/KickersStates")
+  @AutoLogOutput(key = "States/KickersState")
   private String kickerState;
 
   @AutoLogOutput(key = "States/RollerState")
   private String rollerState;
+
+  @AutoLogOutput(key = "States/ClimberState")
+  private String climberState;
 
   public States(
       SwerveSubsystem drive,
@@ -53,7 +61,8 @@ public class States {
       SpindexerSubsystem spindexer,
       KickerSubsystem kicker,
       RollerSubsystem roller,
-      ExtensorSubsystem extensor) {
+      ExtensorSubsystem extensor,
+      ClimberSubsystem climber) {
     this.roller = roller;
     this.drive = drive;
     this.spindexer = spindexer;
@@ -62,7 +71,9 @@ public class States {
     this.hood = hood;
     this.flyWheel = flyWheel;
     this.extensor = extensor;
+    this.climber = climber;
 
+    this.driveState = "";
     this.turretState = "";
     this.hoodState = "";
     this.flyWheelState = "";
@@ -70,12 +81,14 @@ public class States {
     this.spindexerState = "";
     this.kickerState = "";
     this.rollerState = "";
+    this.climberState = "";
   }
 
   public void setDefaultStates() {
     this.drive.setDefaultCommand(
         Commands.run(() -> drive.driveAlignAngleJoystick(), drive)
-            .onlyIf(() -> DriverStation.isTeleopEnabled()));
+            .onlyIf(() -> DriverStation.isTeleopEnabled()).alongWith(Commands.runOnce(() ->
+            this.driveState = "Drive Align Joystick State")));
 
     this.kicker.setDefaultCommand(
         this.kicker
@@ -96,6 +109,9 @@ public class States {
 
     this.flyWheel.setDefaultCommand(this.flyWheel.runVelocity()
       .alongWith(Commands.runOnce(() -> this.flyWheelState = "Running State")));
+
+    this.climber.setDefaultCommand(this.climber.defaultPosition().alongWith(Commands.runOnce(() ->
+    this.climberState = "Default State")));
   }
 
   public Command shootState() {
@@ -128,5 +144,23 @@ public class States {
       this.extensorState = "Retracted State";
       this.rollerState = "Stopped State";
     }));
+  }
+
+  public Command goClimbStateLeft(){
+    return Commands.run(() -> this.drive.goToClimbPoseLeft(), drive).alongWith(Commands.runOnce(() ->
+        driveState = "Going To Climb Pose Left")).until(() -> this.drive.isAtTargetPositionWithHeading())
+      .andThen(this.climber.climb()).alongWith(Commands.runOnce(() -> {
+        this.climberState = "Climbed State";
+        this.driveState = "At Climb Pose State Left";
+      }));
+  }
+
+  public Command goClimbStateRight(){
+    return Commands.run(() -> this.drive.goToClimbPoseRight(), drive).alongWith(Commands.runOnce(() ->
+        driveState = "Going To Climb Pose Right")).until(() -> this.drive.isAtTargetPositionWithHeading())
+      .andThen(this.climber.climb()).alongWith(Commands.runOnce(() -> {
+        this.climberState = "Climbed State";
+        this.driveState = "At Climb Pose State Right";
+      }));
   }
 }
