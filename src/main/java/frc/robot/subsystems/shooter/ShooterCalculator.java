@@ -23,10 +23,8 @@ import org.littletonrobotics.junction.Logger;
 public class ShooterCalculator {
   private static ShooterCalculator instance;
 
-  private final LinearFilter turretAngleFilter =
-      LinearFilter.movingAverage((int) (0.1 / Constants.loopPeriodSecs));
-  private final LinearFilter hoodAngleFilter =
-      LinearFilter.movingAverage((int) (0.1 / Constants.loopPeriodSecs));
+  private final LinearFilter turretAngleFilter = LinearFilter.movingAverage((int) (0.1 / Constants.loopPeriodSecs));
+  private final LinearFilter hoodAngleFilter = LinearFilter.movingAverage((int) (0.1 / Constants.loopPeriodSecs));
 
   private Rotation2d lastTurretAngle;
   private double lastHoodAngle;
@@ -36,7 +34,8 @@ public class ShooterCalculator {
   private double hoodVelocity;
 
   public static ShooterCalculator getInstance() {
-    if (instance == null) instance = new ShooterCalculator();
+    if (instance == null)
+      instance = new ShooterCalculator();
     return instance;
   }
 
@@ -46,20 +45,24 @@ public class ShooterCalculator {
       double turretVelocity,
       double hoodAngle,
       double hoodVelocity,
-      double flywheelSpeed) {}
+      double flywheelSpeed) {
+  }
 
   // Cache parameters
   private ShootingParameters latestParameters = null;
 
   private boolean lastState;
 
-  private final Transform2d robotToTurret =
-      TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER;
+  private final Transform2d robotToTurret = TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER;
 
   private static double phaseDelay = TurretConstants.PHASE_DELAY;
 
   public ShootingParameters getParameters() {
     return this.getParameters(true);
+  }
+
+  public ShootingParameters getLastParameters() {
+    return latestParameters;
   }
 
   public ShootingParameters getParameters(boolean shooting) {
@@ -74,12 +77,11 @@ public class ShooterCalculator {
     // Calculate estimated pose while accounting for phase delay
     Pose2d estimatedPose = RobotStates.getInstance().getRobotPose();
     ChassisSpeeds robotRelativeVelocity = RobotStates.getInstance().getRobotVelocity();
-    estimatedPose =
-        estimatedPose.exp(
-            new Twist2d(
-                robotRelativeVelocity.vxMetersPerSecond * phaseDelay,
-                robotRelativeVelocity.vyMetersPerSecond * phaseDelay,
-                robotRelativeVelocity.omegaRadiansPerSecond * phaseDelay));
+    estimatedPose = estimatedPose.exp(
+        new Twist2d(
+            robotRelativeVelocity.vxMetersPerSecond * phaseDelay,
+            robotRelativeVelocity.vyMetersPerSecond * phaseDelay,
+            robotRelativeVelocity.omegaRadiansPerSecond * phaseDelay));
     // Calculate distance from turret to target
     Translation2d target = getTargetTranslation2d(shooting);
     Logger.recordOutput("target", target);
@@ -89,16 +91,14 @@ public class ShooterCalculator {
     // Calculate field relative turret velocity
     ChassisSpeeds robotVelocity = RobotStates.getInstance().getFieldVelocity();
     double robotAngle = estimatedPose.getRotation().getRadians();
-    double turretVelocityX =
-        robotVelocity.vxMetersPerSecond
-            + robotVelocity.omegaRadiansPerSecond
-                * (robotToTurret.getY() * Math.cos(robotAngle)
-                    - robotToTurret.getX() * Math.sin(robotAngle));
-    double turretVelocityY =
-        robotVelocity.vyMetersPerSecond
-            + robotVelocity.omegaRadiansPerSecond
-                * (robotToTurret.getX() * Math.cos(robotAngle)
-                    - robotToTurret.getY() * Math.sin(robotAngle));
+    double turretVelocityX = robotVelocity.vxMetersPerSecond
+        + robotVelocity.omegaRadiansPerSecond
+            * (robotToTurret.getY() * Math.cos(robotAngle)
+                - robotToTurret.getX() * Math.sin(robotAngle));
+    double turretVelocityY = robotVelocity.vyMetersPerSecond
+        + robotVelocity.omegaRadiansPerSecond
+            * (robotToTurret.getX() * Math.cos(robotAngle)
+                - robotToTurret.getY() * Math.sin(robotAngle));
 
     // Account for imparted velocity by robot (turret) to offset
     double timeOfFlight;
@@ -108,37 +108,35 @@ public class ShooterCalculator {
       timeOfFlight = maps.getTimeOfFlightMap().get(lookaheadTurretToTargetDistance);
       double offsetX = turretVelocityX * timeOfFlight;
       double offsetY = turretVelocityY * timeOfFlight;
-      lookaheadPose =
-          new Pose2d(
-              turretPosition.getTranslation().plus(new Translation2d(offsetX, offsetY)),
-              turretPosition.getRotation());
+      lookaheadPose = new Pose2d(
+          turretPosition.getTranslation().plus(new Translation2d(offsetX, offsetY)),
+          turretPosition.getRotation());
       lookaheadTurretToTargetDistance = target.getDistance(lookaheadPose.getTranslation());
     }
 
     // Calculate parameters accounted for imparted velocity
     turretAngle = target.minus(lookaheadPose.getTranslation()).getAngle();
     hoodAngle = maps.getHoodAngleMap().get(lookaheadTurretToTargetDistance).getRadians();
-    if (lastTurretAngle == null) lastTurretAngle = turretAngle;
-    if (Double.isNaN(lastHoodAngle)) lastHoodAngle = hoodAngle;
-    turretVelocity =
-        turretAngleFilter.calculate(
-            turretAngle.minus(lastTurretAngle).getRadians() / Constants.loopPeriodSecs);
-    hoodVelocity =
-        hoodAngleFilter.calculate((hoodAngle - lastHoodAngle) / Constants.loopPeriodSecs);
+    if (lastTurretAngle == null)
+      lastTurretAngle = turretAngle;
+    if (Double.isNaN(lastHoodAngle))
+      lastHoodAngle = hoodAngle;
+    turretVelocity = turretAngleFilter.calculate(
+        turretAngle.minus(lastTurretAngle).getRadians() / Constants.loopPeriodSecs);
+    hoodVelocity = hoodAngleFilter.calculate((hoodAngle - lastHoodAngle) / Constants.loopPeriodSecs);
     lastTurretAngle = turretAngle;
     lastHoodAngle = hoodAngle;
 
     Logger.recordOutput("LookAheadPose", lookaheadPose);
 
-    latestParameters =
-        new ShootingParameters(
-            lookaheadTurretToTargetDistance >= maps.getMinDistance()
-                && lookaheadTurretToTargetDistance <= maps.getMaxDistance(),
-            turretAngle.minus(Rotation2d.fromRadians(robotAngle)),
-            turretVelocity,
-            hoodAngle,
-            hoodVelocity,
-            maps.getFlywheelSpeedMap().get(lookaheadTurretToTargetDistance));
+    latestParameters = new ShootingParameters(
+        lookaheadTurretToTargetDistance >= maps.getMinDistance()
+            && lookaheadTurretToTargetDistance <= maps.getMaxDistance(),
+        turretAngle.minus(Rotation2d.fromRadians(robotAngle)),
+        turretVelocity,
+        hoodAngle,
+        hoodVelocity,
+        maps.getFlywheelSpeedMap().get(lookaheadTurretToTargetDistance));
 
     return latestParameters;
   }
@@ -163,7 +161,8 @@ public class ShooterCalculator {
   }
 
   private InterpolatingTreeMaps getMaps(boolean shooting) {
-    if (shooting) return new ShootingMaps();
+    if (shooting)
+      return new ShootingMaps();
     return new FeedingMaps();
   }
 }
