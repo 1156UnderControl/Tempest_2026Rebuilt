@@ -3,7 +3,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
 import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
@@ -87,86 +86,118 @@ public class States {
   public void setDefaultStates() {
     this.drive.setDefaultCommand(
         Commands.run(() -> drive.driveAlignAngleJoystick(), drive)
-            .onlyIf(() -> DriverStation.isTeleopEnabled()).alongWith(Commands.runOnce(() ->
-            this.driveState = "Drive Align Joystick State")));
+            .onlyIf(() -> DriverStation.isTeleopEnabled())
+            .alongWith(Commands.runOnce(() -> this.driveState = "Drive Align Joystick State")));
 
-    this.extensor.setDefaultCommand(this.extensor.retract().alongWith(Commands.runOnce(() ->
-    this.extensorState = "Retracted State")));
+    this.extensor.setDefaultCommand(
+        this.extensor
+            .retract()
+            .alongWith(Commands.runOnce(() -> this.extensorState = "Retracted State")));
 
-    this.roller.setDefaultCommand(this.roller.stopRoller().alongWith(Commands.runOnce(() ->
-    this.rollerState = "Stopped State")));
+    this.roller.setDefaultCommand(
+        this.roller
+            .stopRoller()
+            .alongWith(Commands.runOnce(() -> this.rollerState = "Stopped State")));
 
     this.kicker.setDefaultCommand(
-        this.kicker
-        .stop()
-        .alongWith(Commands.runOnce(() -> this.kickerState = "Stopped State")));
+        this.kicker.stop().alongWith(Commands.runOnce(() -> this.kickerState = "Stopped State")));
 
     this.spindexer.setDefaultCommand(
         this.spindexer
             .stop()
             .alongWith(Commands.runOnce(() -> this.spindexerState = "Stopped State")));
 
-    this.turret.setDefaultCommand(Commands.either(
-      this.turret.trackHub().alongWith(Commands.runOnce(() ->
-      this.turretState = "Track Hub State")), 
-      this.turret.trackPass().alongWith(Commands.runOnce(() ->
-      this.turretState = "Track Pass State")), 
-      RobotStates.getInstance().isOnAllianceZone()));
+    this.turret.setDefaultCommand(
+        Commands.either(
+            this.turret
+                .trackHub()
+                .alongWith(Commands.runOnce(() -> this.turretState = "Track Hub State")),
+            this.turret
+                .trackPass()
+                .alongWith(Commands.runOnce(() -> this.turretState = "Track Pass State")),
+            RobotStates.getInstance().isOnAllianceZone()));
 
-    this.flyWheel.setDefaultCommand(this.flyWheel.runVelocity()
-      .alongWith(Commands.runOnce(() -> this.flyWheelState = "Running State")));
+    this.flyWheel.setDefaultCommand(
+        this.flyWheel
+            .runVelocity()
+            .alongWith(Commands.runOnce(() -> this.flyWheelState = "Running State")));
 
-    this.climber.setDefaultCommand(this.climber.defaultPosition().alongWith(Commands.runOnce(() ->
-    this.climberState = "Default State")));
+    this.climber.setDefaultCommand(
+        this.climber
+            .defaultPosition()
+            .alongWith(Commands.runOnce(() -> this.climberState = "Default State")));
   }
 
   public Command shootState() {
-    return Commands.parallel(
-      this.kicker.shoot(), 
-      this.spindexer.shoot(),
-      this.extensor.shake()
-      ).alongWith(
-        Commands.runOnce(
-          () -> {
-            this.kickerState = "Running State";
-            this.spindexerState = "Running State";
-            this.extensorState = "Shake State";
-          }
-        ));
+    return Commands.parallel(this.kicker.shoot(), this.spindexer.shoot(), this.extensor.shake())
+        .alongWith(
+            Commands.runOnce(
+                () -> {
+                  this.kickerState = "Running State";
+                  this.spindexerState = "Running State";
+                  this.extensorState = "Shake State";
+                }));
   }
 
   public Command collectState() {
-    return this.extensor.extend().alongWith(this.roller.runRoller(), Commands.runOnce(()-> {
-      this.extensorState = "Extended State";
-      this.rollerState = "Running State";
-    })).onlyWhile(this.extensor.isAtCollision().negate()).andThen(this.extensor.softStopExtensor().alongWith(this.roller.stopRoller(), Commands.runOnce(()-> {
-      this.extensorState = "Bumped State";
-      this.rollerState = "Bumped State";
-  }))).repeatedly();
+    return this.extensor
+        .extend()
+        .alongWith(
+            this.roller.runRoller(),
+            Commands.runOnce(
+                () -> {
+                  this.extensorState = "Extended State";
+                  this.rollerState = "Running State";
+                }))
+        .onlyWhile(this.extensor.isAtCollision().negate())
+        .andThen(
+            this.extensor
+                .softStopExtensor()
+                .alongWith(
+                    this.roller.stopRoller(),
+                    Commands.runOnce(
+                        () -> {
+                          this.extensorState = "Bumped State";
+                          this.rollerState = "Bumped State";
+                        })))
+        .repeatedly();
   }
 
   public Command retractState() {
-    return this.extensor.retract().alongWith(this.roller.stopRoller(), Commands.runOnce(()-> {
-      this.extensorState = "Retracted State";
-      this.rollerState = "Stopped State";
-    }));
+    return this.extensor
+        .retract()
+        .alongWith(
+            this.roller.stopRoller(),
+            Commands.runOnce(
+                () -> {
+                  this.extensorState = "Retracted State";
+                  this.rollerState = "Stopped State";
+                }));
   }
 
-  public Command goClimbStateLeft(){
-    return Commands.run(() -> this.drive.goToClimbPoseLeft(), drive).alongWith(Commands.runOnce(() ->
-        driveState = "Going To Climb Pose Left")).until(() -> this.drive.isAtTargetPositionWithHeading())
-      .andThen(this.climber.climb()).alongWith(Commands.runOnce(() -> {
-        this.climberState = "Climbed State";
-        this.driveState = "At Climb Pose State Left";
-      }));
+  public Command goClimbStateLeft() {
+    return Commands.run(() -> this.drive.goToClimbPoseLeft(), drive)
+        .alongWith(Commands.runOnce(() -> driveState = "Going To Climb Pose Left"))
+        .until(() -> this.drive.isAtTargetPositionWithHeading())
+        .andThen(this.climber.climb())
+        .alongWith(
+            Commands.runOnce(
+                () -> {
+                  this.climberState = "Climbed State";
+                  this.driveState = "At Climb Pose State Left";
+                }));
   }
 
-  public Command goClimbStateRight(){
-    return Commands.run(() -> this.drive.goToClimbPoseRight(), drive).alongWith(Commands.runOnce(() ->
-        driveState = "Going To Climb Pose Right")).until(() -> this.drive.isAtTargetPositionWithHeading())
-      .andThen(this.climber.climb()).alongWith(Commands.runOnce(() -> {
-        this.climberState = "Climbed State";
-        this.driveState = "At Climb Pose State Right";
-      }));
+  public Command goClimbStateRight() {
+    return Commands.run(() -> this.drive.goToClimbPoseRight(), drive)
+        .alongWith(Commands.runOnce(() -> driveState = "Going To Climb Pose Right"))
+        .until(() -> this.drive.isAtTargetPositionWithHeading())
+        .andThen(this.climber.climb())
+        .alongWith(
+            Commands.runOnce(
+                () -> {
+                  this.climberState = "Climbed State";
+                  this.driveState = "At Climb Pose State Right";
+                }));
   }
 }

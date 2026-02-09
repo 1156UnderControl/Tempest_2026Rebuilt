@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Meters;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -108,7 +106,7 @@ public class RobotContainer {
 
     this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
     this.namedCommandsRegistry.registerAllAutoCommands();
- 
+
     this.states =
         new States(
             this.drive,
@@ -131,9 +129,17 @@ public class RobotContainer {
         .turboActivate()
         .onTrue(Commands.run(() -> this.drive.boostRobotJoystickControlVelocity(), drive))
         .onFalse(Commands.run(() -> this.drive.limitRobotJoystickControlVelocity(), drive));
-        
-    this.driverController.a().or(RobotStates.getInstance().isOnAllianceZone()).and(RobotStates.getInstance().isOnNotShootZone().negate()).and(() -> this.turret.isAtTargetAngle() && this.flyWheel.isAtTargetVelocity()).onTrue(this.states.shootState());
-    this.driverController.b().toggleOnTrue(this.states.collectState()).toggleOnFalse(this.states.retractState());
+
+    this.driverController
+        .a()
+        .or(RobotStates.getInstance().isOnAllianceZone())
+        .and(RobotStates.getInstance().isOnNotShootZone().negate())
+        .and(() -> this.turret.isAtTargetAngle() && this.flyWheel.isAtTargetVelocity())
+        .onTrue(this.states.shootState());
+    this.driverController
+        .b()
+        .toggleOnTrue(this.states.collectState())
+        .toggleOnFalse(this.states.retractState());
     this.driverController.leftArrow().onTrue(this.states.goClimbStateLeft());
     this.driverController.rightArrow().onTrue(this.states.goClimbStateRight());
   }

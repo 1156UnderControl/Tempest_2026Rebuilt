@@ -52,13 +52,17 @@ public class RobotStates {
   }
 
   public Trigger isOnAllianceZone() {
-    return new Trigger(() -> AllianceFlipUtil.apply(robotPose).getX()
-        < FieldConstants.FieldStrategicPoses.AllianceZoneX);
+    return new Trigger(
+        () ->
+            AllianceFlipUtil.apply(robotPose).getX()
+                < FieldConstants.FieldStrategicPoses.AllianceZoneX);
   }
 
   public Trigger isOnOtherAllianceZone() {
-    return new Trigger(() -> AllianceFlipUtil.apply(robotPose).getX()
-        > FieldConstants.FieldStrategicPoses.OtherAllianceZoneX);
+    return new Trigger(
+        () ->
+            AllianceFlipUtil.apply(robotPose).getX()
+                > FieldConstants.FieldStrategicPoses.OtherAllianceZoneX);
   }
 
   public Trigger isOnNotShootZone() {
@@ -66,15 +70,19 @@ public class RobotStates {
         && (isOnOtherAllianceZone().getAsBoolean() || isOnShootZoneToFeed())
         && !DriverStation.getAlliance().isEmpty()) {
       if (DriverStation.getAlliance().get() == Alliance.Blue) {
-        return new Trigger(() -> AllianceFlipUtil.apply(robotPose).getY()
-                < FieldConstants.FieldStrategicPoses.NOT_SHOOT_LEFT_Y
-            && AllianceFlipUtil.apply(robotPose).getY()
-                > FieldConstants.FieldStrategicPoses.NOT_SHOOT_RIGHT_Y);
+        return new Trigger(
+            () ->
+                AllianceFlipUtil.apply(robotPose).getY()
+                        < FieldConstants.FieldStrategicPoses.NOT_SHOOT_LEFT_Y
+                    && AllianceFlipUtil.apply(robotPose).getY()
+                        > FieldConstants.FieldStrategicPoses.NOT_SHOOT_RIGHT_Y);
       } else {
-        return new Trigger(() -> AllianceFlipUtil.apply(robotPose).getY()
-                < FieldConstants.FieldStrategicPoses.NOT_SHOOT_LEFT_Y
-            && AllianceFlipUtil.apply(robotPose).getY()
-                > FieldConstants.FieldStrategicPoses.NOT_SHOOT_RIGHT_Y);
+        return new Trigger(
+            () ->
+                AllianceFlipUtil.apply(robotPose).getY()
+                        < FieldConstants.FieldStrategicPoses.NOT_SHOOT_LEFT_Y
+                    && AllianceFlipUtil.apply(robotPose).getY()
+                        > FieldConstants.FieldStrategicPoses.NOT_SHOOT_RIGHT_Y);
       }
     }
     return new Trigger(() -> false);
