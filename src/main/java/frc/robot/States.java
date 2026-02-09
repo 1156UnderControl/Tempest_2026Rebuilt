@@ -90,6 +90,12 @@ public class States {
             .onlyIf(() -> DriverStation.isTeleopEnabled()).alongWith(Commands.runOnce(() ->
             this.driveState = "Drive Align Joystick State")));
 
+    this.extensor.setDefaultCommand(this.extensor.retract().alongWith(Commands.runOnce(() ->
+    this.extensorState = "Retracted State")));
+
+    this.roller.setDefaultCommand(this.roller.stopRoller().alongWith(Commands.runOnce(() ->
+    this.rollerState = "Stopped State")));
+
     this.kicker.setDefaultCommand(
         this.kicker
         .stop()
