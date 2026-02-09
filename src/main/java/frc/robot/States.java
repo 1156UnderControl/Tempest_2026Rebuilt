@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
 import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
@@ -116,6 +117,10 @@ public class States {
                 .trackPass()
                 .alongWith(Commands.runOnce(() -> this.turretState = "Track Pass State")),
             RobotStates.getInstance().isOnAllianceZone()));
+
+    new Trigger(RobotStates.getInstance().isOnAllianceZone())
+      .onTrue(this.turret.trackHub())
+      .onFalse(this.turret.trackPass());
 
     this.flyWheel.setDefaultCommand(
         this.flyWheel
