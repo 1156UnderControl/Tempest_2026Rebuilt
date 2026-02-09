@@ -71,14 +71,14 @@ public class ExtensorSubsystem extends SubsystemBase {
             .withMechanismCircumference(ExtensorConstants.MECHANISM_CIRCUNFERENCE)
             .withClosedLoopController(
                 new ExponentialProfilePIDController(
-                    4.5,
+7,
                     0,
                     0,
                     ExponentialProfilePIDController.createConstraints(
                         Volts.of(10), RotationsPerSecond.of(2), RotationsPerSecondPerSecond.of(2))))
             .withSimClosedLoopController(
                 new ExponentialProfilePIDController(
-                    4.5,
+                    0,
                     0,
                     0,
                     ExponentialProfilePIDController.createConstraints(
@@ -88,8 +88,8 @@ public class ExtensorSubsystem extends SubsystemBase {
             .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
             .withStatorCurrentLimit(Amps.of(40))
             .withMotorInverted(false)
-            .withFeedforward(new SimpleMotorFeedforward(0, 4.4, 0.05))
-            .withSimFeedforward(new SimpleMotorFeedforward(0, 4.4, 0.05))
+            .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+            .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
             .withControlMode(ControlMode.CLOSED_LOOP);
 
     this.extensorMotor =

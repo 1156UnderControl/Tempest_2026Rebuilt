@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -124,13 +126,17 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    this.states.setDefaultStates();
+    this.driverController.b().whileTrue(this.states.collectState());
+    this.driverController.x().whileTrue(extensor.setLength(Meters.of(0.15)));
+    this.driverController.a().whileTrue(extensor.setLength(Meters.of(0)));
+   // this.states.setDefaultStates();
     this.driverController
         .turboActivate()
         .onTrue(Commands.run(() -> this.drive.boostRobotJoystickControlVelocity(), drive))
         .onFalse(Commands.run(() -> this.drive.limitRobotJoystickControlVelocity(), drive));
 
-    this.driverController
+
+    /*  this.driverController
         .a()
         .or(RobotStates.getInstance().isOnAllianceZone())
         .and(RobotStates.getInstance().isOnNotShootZone().negate())
@@ -141,6 +147,7 @@ public class RobotContainer {
         .toggleOnFalse(this.states.retractState());
     this.driverController.leftArrow().onTrue(this.states.goClimbStateLeft());
     this.driverController.rightArrow().onTrue(this.states.goClimbStateRight());
+    */
   }
 
   public Command getAutonomousCommand() {
