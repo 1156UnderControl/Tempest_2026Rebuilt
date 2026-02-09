@@ -154,10 +154,11 @@ public class ShooterCalculator {
   private Translation2d getTargetTranslation2d(boolean shooting) {
     Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
-    if (shooting)
+    if (shooting) {
       return alliance == Alliance.Blue
           ? FieldStructurePoses.BLUE_HUB_POSE
           : FieldStructurePoses.RED_HUB_POSE;
+    }
 
     if (RobotStates.getInstance().isOnBlueDepotSide()) {
       return AllianceFlipUtil.applyOnlyX(FieldConstants.FieldStrategicPoses.LEFT_FEED_POSE);

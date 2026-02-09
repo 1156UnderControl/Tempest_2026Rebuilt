@@ -111,19 +111,11 @@ public class States {
             .stop()
             .alongWith(Commands.runOnce(() -> this.spindexerState = "Stopped State")));
 
-    this.turret.setDefaultCommand(
-        Commands.either(
-            this.turret
-                .trackHub()
-                .alongWith(Commands.runOnce(() -> this.turretState = "Track Hub State")),
-            this.turret
-                .trackPass()
-                .alongWith(Commands.runOnce(() -> this.turretState = "Track Pass State")),
-            () -> RobotStates.getInstance().isOnAllianceZone()));
-
     new Trigger(() -> RobotStates.getInstance().isOnAllianceZone())
         .onTrue(this.turret.trackHub())
         .onFalse(this.turret.trackPass());
+
+    this.hood.setDefaultCommand(this.hood.goToTargetAngle());
 
     this.flyWheel.setDefaultCommand(
         this.flyWheel
@@ -187,7 +179,6 @@ public class States {
 
   public Command goClimbStateLeft() {
     return new SequentialCommandGroup(
-        this.climber.climb(),
         new GoToClimbPoseLeft(drive)
             .alongWith(
                 this.climber.idle(),
@@ -201,7 +192,6 @@ public class States {
 
   public Command goClimbStateRight() {
     return new SequentialCommandGroup(
-        this.climber.climb(),
         new GoToClimbPoseRight(drive)
             .alongWith(
                 this.climber.idle(),
