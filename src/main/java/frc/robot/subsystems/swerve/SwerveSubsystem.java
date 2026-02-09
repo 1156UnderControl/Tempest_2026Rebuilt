@@ -21,6 +21,7 @@ import frc.java_is_undercontrol.swerve.configs.MoveToPosePIDConfig;
 import frc.java_is_undercontrol.swerve.configs.OdometryEnabledSwerveConfig;
 import frc.java_is_undercontrol.swerve.configs.SwerveDeadbandsConfig;
 import frc.java_is_undercontrol.swerve.configs.SwervePathPlannerConfig;
+import frc.java_is_undercontrol.util.AllianceFlipUtil;
 import frc.java_is_undercontrol.util.StabilizeChecker;
 import frc.java_is_undercontrol.vision.deprecated.Cameras.LimelightHelpers;
 import frc.java_is_undercontrol.vision.odometry.LimelightPoseEstimator;
@@ -163,13 +164,13 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     this.driveFieldOrientedAllianceBased(desiredSpeeds);
   }
 
-  public void driveHeadingForward() {
-    Translation2d desiredSpeeds =
-        this.getLinearVelocityTranslationFromJoysticks(
+  public void driveHeadingBackwards() {
+    ChassisSpeeds desiredSpeeds =
+        this.getLinearVelocityChassisSpeedsFromJoysticks(
             controller.getLeftY(), controller.getLeftX());
+    Rotation2d targetRotation = controller.notUsingJoystick() ? Rotation2d.kZero : new Rotation2d(controller.getCOS_Joystick(), controller.getCOS_Joystick());
     this.state = "DRIVE_HEADING_FORWARD";
-    this.driveFieldOrientedLockedJoystickAngle(
-        desiredSpeeds, -controller.getLeftX(), -controller.getLeftY(), 0.1);
+    this.driveFieldOrientedLockedAngle(desiredSpeeds, targetRotation, true);
   }
 
   public void periodic() {

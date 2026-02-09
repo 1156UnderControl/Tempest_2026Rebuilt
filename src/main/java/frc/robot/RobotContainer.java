@@ -135,15 +135,14 @@ public class RobotContainer {
         .or(() -> RobotStates.getInstance().isOnAllianceZone())
         .and(() -> !RobotStates.getInstance().isOnNotShootZone())
         .whileTrue(this.states.shootState());
-        
+
     this.driverController
         .x().onTrue(this.states.collectState());
-
      this.driverController
-        .b().onTrue(this.states.collectState());
+        .b().onTrue(this.states.retractState());
 
-    this.driverController.upArrow().and(() -> RobotStates.getInstance().isOnAllianceZone()).onTrue(this.states.goClimbStateLeft());
-    this.driverController.downArrow().and(() -> RobotStates.getInstance().isOnAllianceZone()).onTrue(this.states.goClimbStateLeft());
+    this.driverController.upArrow().onTrue(this.states.climbState());
+    this.driverController.downArrow().onTrue(this.states.defaultClimberState());
   }
 
   public Command getAutonomousCommand() {

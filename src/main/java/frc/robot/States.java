@@ -177,25 +177,19 @@ public class States {
         .repeatedly();
   }
 
-  public Command goClimbStateLeft() {
-    return new SequentialCommandGroup(
-        new GoToClimbPoseLeft(drive)
-            .alongWith(
-                this.climber.idle(),
-                Commands.runOnce(() -> driveState = "Going To Climb Pose Left")),
+  public Command climbState() {
+    return Commands.parallel(
+        Commands.run(() -> drive.driveHeadingBackwards(), drive),
+        this.climber.climb(),
         Commands.runOnce(
             () -> {
               this.climberState = "Climbed State";
-              this.driveState = "At Climb Pose State Left";
+              this.driveState = "At Climb Pose State Right";
             }));
   }
 
-  public Command goClimbStateRight() {
-    return new SequentialCommandGroup(
-        new GoToClimbPoseRight(drive)
-            .alongWith(
-                this.climber.idle(),
-                Commands.runOnce(() -> driveState = "Going To Climb Pose Right")),
+  public Command defaultClimberState() {
+    return this.climber.defaultPosition().alongWith(
         Commands.runOnce(
             () -> {
               this.climberState = "Climbed State";
