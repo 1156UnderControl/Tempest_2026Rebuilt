@@ -134,7 +134,6 @@ public class RobotContainer {
         .a()
         .or(RobotStates.getInstance().isOnAllianceZone())
         .and(RobotStates.getInstance().isOnNotShootZone().negate())
-        .and(() -> this.turret.isAtTargetAngle() && this.flyWheel.isAtTargetVelocity())
         .onTrue(this.states.shootState());
     this.driverController
         .b()
