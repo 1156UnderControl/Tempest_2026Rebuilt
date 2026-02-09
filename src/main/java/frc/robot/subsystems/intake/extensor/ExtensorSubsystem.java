@@ -84,7 +84,7 @@ public class ExtensorSubsystem extends SubsystemBase {
                     ExponentialProfilePIDController.createConstraints(
                         Volts.of(10), RotationsPerSecond.of(2), RotationsPerSecondPerSecond.of(2))))
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
-            .withIdleMode(MotorMode.BRAKE)
+            .withIdleMode(MotorMode.COAST)
             .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
             .withStatorCurrentLimit(Amps.of(40))
             .withMotorInverted(false)

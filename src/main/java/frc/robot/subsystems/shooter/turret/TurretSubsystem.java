@@ -16,8 +16,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotStates;
 import frc.robot.constants.shooter.TurretConstants;
@@ -111,15 +113,18 @@ public class TurretSubsystem extends SubsystemBase {
     // TODO: define second encoder correctly
     encoder2 = climberEncoder;
 
-    EasyCRTConfig easyCRTConfig =
-        new EasyCRTConfig(
-                () -> Angle.ofBaseUnits(encoder1.getPosition(), Rotations),
-                () -> Angle.ofBaseUnits(encoder2.getPosition(), Rotations))
-            .withEncoderRatios(
-                TurretConstants.TURRET_GEAR_TEETH / 14, TurretConstants.TURRET_GEAR_TEETH / 15)
-            .withMechanismRange(
-                TurretConstants.Position.TURRET_MIN_ANGLE,
-                TurretConstants.Position.TURRET_MAX_ANGLE);
+    EasyCRTConfig easyCRTConfig = new EasyCRTConfig(
+        () -> Angle.ofBaseUnits(encoder1.getPosition(), Rotations),
+        () -> Angle.ofBaseUnits(encoder2.getPosition(), Rotations))
+        .withAbsoluteEncoderOffsets(Rotations.of(0.452), Rotations.of(0.788))
+        .withEncoderRatios(
+            TurretConstants.TURRET_GEAR_TEETH / 14, TurretConstants.TURRET_GEAR_TEETH / 15)
+        .withAbsoluteEncoderInversions(false, false)
+        .withMechanismRange(
+            TurretConstants.Position.TURRET_MIN_ANGLE,
+            TurretConstants.Position.TURRET_MAX_ANGLE)
+        .withMatchTolerance(Rotations.of(0.01));
+
 
     this.easyCRT = new EasyCRT(easyCRTConfig);
 
@@ -168,6 +173,11 @@ public class TurretSubsystem extends SubsystemBase {
             .plus(
                 new Transform2d(
                     Translation2d.kZero, Rotation2d.fromDegrees(turret.getAngle().in(Degrees))));
+    inputs.absoluteAngle = this.absoluteAngle;
+    inputs.encoder1 = Units.rotationsToDegrees(this.encoder1.getPosition());
+    inputs.encoder2 = Units.rotationsToDegrees(this.encoder2.getPosition());
+    inputs.crtError = this.easyCRT.getLastErrorRotations();
+    inputs.crtStatus = this.easyCRT.getLastStatus().toString();
 
     Logger.processInputs("Subsystems/Shooter/Turret/", inputs);
   }
@@ -204,4 +214,15 @@ public class TurretSubsystem extends SubsystemBase {
       return targetAngle;
     }
   }
+
+  public Command resetEncoder() {
+    return Commands.runOnce(() -> this.easyCRT.getAngleOptional().ifPresent(mechAngle -> {
+      turretMotor.setEncoderPosition(mechAngle);
+      this.absoluteAngle = mechAngle.in(Degrees);
+    }));
+
+  }
+
+  
+
 }
