@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.java_is_undercontrol.util.AllianceFlipUtil;
 import frc.robot.constants.FieldConstants;
 
@@ -51,41 +50,33 @@ public class RobotStates {
     return (robotPose.getY() > FieldConstants.fieldWidth / 2);
   }
 
-  public Trigger isOnAllianceZone() {
-    return new Trigger(
-        () ->
-            AllianceFlipUtil.apply(robotPose).getX()
-                < FieldConstants.FieldStrategicPoses.AllianceZoneX);
+  public boolean isOnAllianceZone() {
+    return AllianceFlipUtil.apply(robotPose).getX()
+        < FieldConstants.FieldStrategicPoses.AllianceZoneX;
   }
 
-  public Trigger isOnOtherAllianceZone() {
-    return new Trigger(
-        () ->
-            AllianceFlipUtil.apply(robotPose).getX()
-                > FieldConstants.FieldStrategicPoses.OtherAllianceZoneX);
+  public boolean isOnOtherAllianceZone() {
+    return AllianceFlipUtil.apply(robotPose).getX()
+        > FieldConstants.FieldStrategicPoses.OtherAllianceZoneX;
   }
 
-  public Trigger isOnNotShootZone() {
-    if (!isOnAllianceZone().getAsBoolean()
-        && (isOnOtherAllianceZone().getAsBoolean() || isOnShootZoneToFeed())
+  public boolean isOnNotShootZone() {
+    if (!isOnAllianceZone()
+        && (isOnOtherAllianceZone() || isOnShootZoneToFeed())
         && !DriverStation.getAlliance().isEmpty()) {
       if (DriverStation.getAlliance().get() == Alliance.Blue) {
-        return new Trigger(
-            () ->
-                AllianceFlipUtil.apply(robotPose).getY()
-                        < FieldConstants.FieldStrategicPoses.NOT_SHOOT_LEFT_Y
-                    && AllianceFlipUtil.apply(robotPose).getY()
-                        > FieldConstants.FieldStrategicPoses.NOT_SHOOT_RIGHT_Y);
+        return AllianceFlipUtil.apply(robotPose).getY()
+                < FieldConstants.FieldStrategicPoses.NOT_SHOOT_LEFT_Y
+            && AllianceFlipUtil.apply(robotPose).getY()
+                > FieldConstants.FieldStrategicPoses.NOT_SHOOT_RIGHT_Y;
       } else {
-        return new Trigger(
-            () ->
-                AllianceFlipUtil.apply(robotPose).getY()
-                        < FieldConstants.FieldStrategicPoses.NOT_SHOOT_LEFT_Y
-                    && AllianceFlipUtil.apply(robotPose).getY()
-                        > FieldConstants.FieldStrategicPoses.NOT_SHOOT_RIGHT_Y);
+        return AllianceFlipUtil.apply(robotPose).getY()
+                < FieldConstants.FieldStrategicPoses.NOT_SHOOT_LEFT_Y
+            && AllianceFlipUtil.apply(robotPose).getY()
+                > FieldConstants.FieldStrategicPoses.NOT_SHOOT_RIGHT_Y;
       }
     }
-    return new Trigger(() -> false);
+    return false;
   }
 
   private boolean isOnShootZoneToFeed() {
