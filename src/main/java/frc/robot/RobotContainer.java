@@ -126,28 +126,7 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    this.driverController.b().whileTrue(this.states.collectState());
-    this.driverController.x().whileTrue(extensor.setLength(Meters.of(0.15)));
-    this.driverController.a().whileTrue(extensor.setLength(Meters.of(0)));
-   // this.states.setDefaultStates();
-    this.driverController
-        .turboActivate()
-        .onTrue(Commands.run(() -> this.drive.boostRobotJoystickControlVelocity(), drive))
-        .onFalse(Commands.run(() -> this.drive.limitRobotJoystickControlVelocity(), drive));
 
-
-    /*  this.driverController
-        .a()
-        .or(RobotStates.getInstance().isOnAllianceZone())
-        .and(RobotStates.getInstance().isOnNotShootZone().negate())
-        .onTrue(this.states.shootState());
-    this.driverController
-        .b()
-        .toggleOnTrue(this.states.collectState())
-        .toggleOnFalse(this.states.retractState());
-    this.driverController.leftArrow().onTrue(this.states.goClimbStateLeft());
-    this.driverController.rightArrow().onTrue(this.states.goClimbStateRight());
-    */
   }
 
   public Command getAutonomousCommand() {
