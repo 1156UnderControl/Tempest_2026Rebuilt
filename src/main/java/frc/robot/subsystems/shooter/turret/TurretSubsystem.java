@@ -156,13 +156,18 @@ public class TurretSubsystem extends SubsystemBase {
 
   private void updateInputs() {
     inputs.currentAngle = turret.getAngle().in(Degrees);
-    inputs.targetAngle = calculator.getLastParameters() != null
-        ? calculator.getLastParameters().turretAngle().getDegrees()
-        : 0;
+    inputs.targetAngle =
+        calculator.getLastParameters() != null
+            ? calculator.getLastParameters().turretAngle().getDegrees()
+            : 0;
     inputs.atTarget = isAtTargetAngle();
-    inputs.turret = RobotStates.getInstance().getRobotPose()
-        .transformBy(TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER)
-        .plus(new Transform2d(Translation2d.kZero, Rotation2d.fromDegrees(turret.getAngle().in(Degrees))));
+    inputs.turret =
+        RobotStates.getInstance()
+            .getRobotPose()
+            .transformBy(TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER)
+            .plus(
+                new Transform2d(
+                    Translation2d.kZero, Rotation2d.fromDegrees(turret.getAngle().in(Degrees))));
 
     Logger.processInputs("Subsystems/Shooter/Turret/", inputs);
   }

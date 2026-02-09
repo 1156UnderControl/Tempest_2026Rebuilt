@@ -1,8 +1,7 @@
 package frc.robot.subsystems.shooter.turret;
 
-import org.littletonrobotics.junction.AutoLog;
-
 import edu.wpi.first.math.geometry.Pose2d;
+import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog
 public class TurretInputs {
