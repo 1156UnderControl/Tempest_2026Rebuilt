@@ -120,6 +120,14 @@ public class TurretSubsystem extends SubsystemBase {
 
     this.easyCRT = new EasyCRT(easyCRTConfig);
 
+    this.easyCRT
+        .getAngleOptional()
+        .ifPresent(
+            mechAngle -> {
+              turretMotor.setEncoderPosition(mechAngle);
+              this.absoluteAngle = mechAngle.in(Degrees);
+            });
+
     inputs = new TurretInputsAutoLogged();
   }
 
@@ -183,17 +191,5 @@ public class TurretSubsystem extends SubsystemBase {
     } else {
       return targetAngle;
     }
-  }
-
-  public Command resetEncoder() {
-    return Commands.runOnce(
-        () ->
-            this.easyCRT
-                .getAngleOptional()
-                .ifPresent(
-                    mechAngle -> {
-                      turretMotor.setEncoderPosition(mechAngle);
-                      this.absoluteAngle = mechAngle.in(Degrees);
-                    }));
   }
 }
