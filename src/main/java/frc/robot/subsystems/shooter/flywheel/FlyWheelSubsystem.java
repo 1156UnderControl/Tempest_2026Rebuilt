@@ -6,7 +6,6 @@ import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.CANBus;
-import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.Pair;
@@ -135,7 +134,8 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   public Command runVelocityTorqueControl(double velocityRPM) {
-    return this.run(() -> leadMotor.setControl(torqueCurrentRequest.withVelocity(RPM.of(velocityRPM))));
+    return this.run(
+        () -> leadMotor.setControl(torqueCurrentRequest.withVelocity(RPM.of(velocityRPM))));
   }
 
   public boolean isAtTargetVelocity() {

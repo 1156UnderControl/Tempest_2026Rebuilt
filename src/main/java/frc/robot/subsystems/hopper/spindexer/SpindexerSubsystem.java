@@ -1,7 +1,6 @@
 package frc.robot.subsystems.hopper.spindexer;
 
 import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
@@ -10,7 +9,6 @@ import static edu.wpi.first.units.Units.RPM;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -60,8 +58,10 @@ public class SpindexerSubsystem extends SubsystemBase {
     this.smartSpindexerMotorConfig =
         new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
-            .withClosedLoopController(0.07, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
-            .withSimClosedLoopController(0, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
+            .withClosedLoopController(
+                0.07, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
+            .withSimClosedLoopController(
+                0, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(9)))
             .withIdleMode(MotorMode.BRAKE)
             .withFeedforward(new SimpleMotorFeedforward(0.16, 0.94, 0))
