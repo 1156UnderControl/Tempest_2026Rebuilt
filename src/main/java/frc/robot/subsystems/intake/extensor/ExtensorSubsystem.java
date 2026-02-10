@@ -66,32 +66,22 @@ public class ExtensorSubsystem extends SubsystemBase {
     this.extensorMotorConfig =
         new SmartMotorControllerConfig(this)
             .withMechanismCircumference(ExtensorConstants.MECHANISM_CIRCUNFERENCE)
-            .withClosedLoopRampRate(Milliseconds.of(100))
+            .withClosedLoopRampRate(Milliseconds.of(10))
             .withClosedLoopController(
                 new ExponentialProfilePIDController(
                     new PIDController(0, 0, 0),
-                    ExponentialProfilePIDController.createElevatorConstraints(
-                        ExtensorConstants.maxVolts,
-                        ExtensorConstants.motor,
-                        ExtensorConstants.mass,
-                        ExtensorConstants.drumRadius,
-                        ExtensorConstants.gearing)))
+                    ExponentialProfilePIDController.createConstraints(
+                    ExtensorConstants.maxVolts, ExtensorConstants.maxVel, ExtensorConstants.maxAccel)))
             .withSimClosedLoopController(
                 new ExponentialProfilePIDController(
                     new PIDController(0, 0, 0),
-                    ExponentialProfilePIDController.createElevatorConstraints(
-                        ExtensorConstants.maxVolts,
-                        ExtensorConstants.motor,
-                        ExtensorConstants.mass,
-                        ExtensorConstants.drumRadius,
-                        ExtensorConstants.gearing)))
+                    ExponentialProfilePIDController.createConstraints(
+                    ExtensorConstants.maxVolts, ExtensorConstants.maxVel, ExtensorConstants.maxAccel)))
             .withGearing(ExtensorConstants.gearing)
             .withIdleMode(MotorMode.BRAKE)
             .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
             .withStatorCurrentLimit(Amps.of(60))
             .withMotorInverted(false)
-            .withFeedforward(new ElevatorFeedforward(0, 0, 0, 0))
-            .withSimFeedforward(new ElevatorFeedforward(0, 0, 0, 0))
             .withControlMode(ControlMode.CLOSED_LOOP);
 
     this.extensorMotor =
