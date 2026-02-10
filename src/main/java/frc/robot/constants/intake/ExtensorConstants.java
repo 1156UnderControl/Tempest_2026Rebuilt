@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -32,7 +33,7 @@ public class ExtensorConstants {
   }
 
   public static final Voltage maxVolts = Volts.of(12);
-  public static final AngularVelocity maxVel = RPM.of(27.9695232386);
+  public static final AngularVelocity maxVel = RotationsPerSecond.of(27.9695232386);
   public static final AngularAcceleration maxAccel = RotationsPerSecondPerSecond.of(199.961218377);
   public static final DCMotor motor = DCMotor.getNeoVortex(1);
   public static final Mass mass = Kilograms.of(5);

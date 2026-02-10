@@ -12,6 +12,7 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -77,6 +78,8 @@ public class ExtensorSubsystem extends SubsystemBase {
                     new PIDController(0, 0, 0),
                     ExponentialProfilePIDController.createConstraints(
                     ExtensorConstants.maxVolts, ExtensorConstants.maxVel, ExtensorConstants.maxAccel)))
+            .withFeedforward(new SimpleMotorFeedforward(0.3, 0,0))
+            .withSimFeedforward(new SimpleMotorFeedforward(0.3, 0,0))
             .withGearing(ExtensorConstants.gearing)
             .withIdleMode(MotorMode.BRAKE)
             .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
@@ -201,5 +204,17 @@ public class ExtensorSubsystem extends SubsystemBase {
   public Trigger isAtTargetAngle() {
     return new Trigger(
         () -> extensor.getHeight().isNear(setpoint, ExtensorConstants.DEADBAND_IS_AT));
+  }
+
+  public Command extendTest(){
+    return extensor.setHeight(Meters.of(0.3));
+  }
+
+  public Command retractBitTest(){
+    return extensor.setHeight(Meters.of(0.05));
+  }
+
+  public Command retractTest(){
+    return extensor.setHeight(Meters.of(0.05));
   }
 }
