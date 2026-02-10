@@ -69,7 +69,7 @@ public class ExtensorSubsystem extends SubsystemBase {
             .withClosedLoopRampRate(Milliseconds.of(10))
             .withClosedLoopController(
                 new ExponentialProfilePIDController(
-                    new PIDController(0, 0, 0),
+                    new PIDController(5, 0, 0),
                     ExponentialProfilePIDController.createConstraints(
                         ExtensorConstants.maxVolts,
                         ExtensorConstants.maxVel,
