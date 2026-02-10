@@ -51,7 +51,7 @@ public class TurretSubsystem extends SubsystemBase {
     calculator = ShooterCalculator.getInstance();
     smartTurretMotorConfig =
         new SmartMotorControllerConfig(this)
-            .withIdleMode(MotorMode.BRAKE)
+            .withIdleMode(TurretConstants.MOTOR_MODE)
             .withGearing(TurretConstants.GEARING)
             .withMotorInverted(TurretConstants.INVERTED)
             .withSoftLimit(TurretConstants.TURRET_MIN_ANGLE, TurretConstants.TURRET_MAX_ANGLE)
@@ -87,7 +87,7 @@ public class TurretSubsystem extends SubsystemBase {
                     TurretConstants.FeedForwardController.SIM.kS,
                     TurretConstants.FeedForwardController.SIM.kV,
                     TurretConstants.FeedForwardController.SIM.kA))
-            .withControlMode(ControlMode.CLOSED_LOOP);
+            .withControlMode(TurretConstants.CONTROL_MODE);
 
     turretFlex = new SparkFlex(TurretConstants.TURRET_MOTOR_ID, TurretConstants.MOTOR_TYPE);
 

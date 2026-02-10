@@ -23,12 +23,16 @@ import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.units.measure.Voltage;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
+import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 
 public class TurretConstants {
   public static final int TURRET_MOTOR_ID = 7;
 
   public static final MotorType MOTOR_TYPE = MotorType.kBrushless;
+
+  public static final MotorMode MOTOR_MODE = MotorMode.BRAKE;
 
   public static final TelemetryVerbosity TELEMETRY = TelemetryVerbosity.HIGH;
 
@@ -43,6 +47,8 @@ public class TurretConstants {
   public static final Voltage MAX_VOLTS = Volts.of(12.0);
 
   public static final int TURRET_GEAR_TEETH = 96;
+
+  public static final ControlMode CONTROL_MODE = ControlMode.CLOSED_LOOP;
 
   public static final MechanismGearing GEARING =
       new MechanismGearing(GearBox.fromReductionStages(60.3428));
