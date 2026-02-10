@@ -79,7 +79,7 @@ public class ExtensorSubsystem extends SubsystemBase {
                     new PIDController(0, 0, 0),
                     ExponentialProfilePIDController.createConstraints(
                     ExtensorConstants.maxVolts, ExtensorConstants.maxVel, ExtensorConstants.maxAccel)))
-            .withFeedforward(new SimpleMotorFeedforward(0.17, 0.8 ,0))
+            .withFeedforward(new SimpleMotorFeedforward(0.17, 0.44 ,0))
             .withGearing(ExtensorConstants.gearing)
             .withIdleMode(MotorMode.BRAKE)
             .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
