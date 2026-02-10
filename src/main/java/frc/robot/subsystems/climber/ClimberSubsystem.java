@@ -16,7 +16,6 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.climber.ClimberConstants;
 import org.littletonrobotics.junction.Logger;
 import yams.gearing.GearBox;
@@ -64,13 +63,13 @@ public class ClimberSubsystem extends SubsystemBase {
         new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
             .withClosedLoopController(
-                0,
+                1,
                 0,
                 0,
                 DegreesPerSecond.of(ClimberConstants.VELOCITY_M_PER_SECOND),
                 DegreesPerSecondPerSecond.of(ClimberConstants.ACCELERATION_M_PER_SECOND_SQRD))
             .withSimClosedLoopController(
-                0,
+                1,
                 0,
                 0,
                 DegreesPerSecond.of(ClimberConstants.VELOCITY_M_PER_SECOND),
@@ -120,11 +119,11 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public Command climb() {
-    return climber.setHeight(ClimberConstants.setpoints.CLIMBED_HEIGHT).until(isClimbed());
+    return climber.setHeight(ClimberConstants.setpoints.CLIMBED_HEIGHT).until(() -> isClimbed());
   }
 
   public Command defaultPosition() {
-    return climber.setHeight(ClimberConstants.setpoints.DEFAULT_HEIGHT).until(isClimbed());
+    return climber.setHeight(ClimberConstants.setpoints.DEFAULT_HEIGHT).until(() -> isClimbed());
   }
 
   public Command raise() {
@@ -132,11 +131,11 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public Command setHeight(Distance height) {
-    return climber.setHeight(height).until(isClimbed());
+    return climber.setHeight(height).until(() -> isClimbed());
   }
 
-  public Trigger isClimbed() {
-    return new Trigger(() -> climber.getHeight().isNear(setpoint, ClimberConstants.DEADBAND_IS_AT));
+  public boolean isClimbed() {
+    return climber.getHeight().isNear(setpoint, ClimberConstants.DEADBAND_IS_AT);
   }
 
   public Command setDutyCycle(double dutycycle) {
@@ -144,11 +143,11 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public void updateInputs() {
-    climberInputs.climberAppliedVolts = climber.getMotor().getVoltage();
-    climberInputs.climberCurrent = climber.getMotor().getStatorCurrent();
-    climberInputs.climberPosition = climber.getMotor().getMeasurementPosition();
+    climberInputs.climberAppliedVolts = climberMotor.getVoltage();
+    climberInputs.climberCurrent = climberMotor.getStatorCurrent();
+    climberInputs.climberPosition = climber.getHeight();
     climberInputs.climberSetpoint = setpoint;
-    climberInputs.climberVelocity = climber.getMotor().getMeasurementVelocity();
+    climberInputs.climberVelocity = climber.getVelocity();
   }
 
   public SparkAbsoluteEncoder getAbsoluteEncoder() {

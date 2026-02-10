@@ -12,10 +12,14 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotStates;
 import frc.robot.constants.shooter.TurretConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import org.littletonrobotics.junction.Logger;
@@ -152,9 +156,18 @@ public class TurretSubsystem extends SubsystemBase {
 
   private void updateInputs() {
     inputs.currentAngle = turret.getAngle().in(Degrees);
-    inputs.targetAngle = calculator.getParameters().turretAngle().getDegrees();
+    inputs.targetAngle =
+        calculator.getLastParameters() != null
+            ? calculator.getLastParameters().turretAngle().getDegrees()
+            : 0;
     inputs.atTarget = isAtTargetAngle();
-    inputs.absoluteAngle = this.absoluteAngle;
+    inputs.turret =
+        RobotStates.getInstance()
+            .getRobotPose()
+            .transformBy(TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER)
+            .plus(
+                new Transform2d(
+                    Translation2d.kZero, Rotation2d.fromDegrees(turret.getAngle().in(Degrees))));
 
     Logger.processInputs("Subsystems/Shooter/Turret/", inputs);
   }
