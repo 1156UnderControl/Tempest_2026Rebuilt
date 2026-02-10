@@ -53,8 +53,7 @@ public class ShooterCalculator {
 
   private boolean lastState;
 
-  private final Transform2d robotToTurret =
-      TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER;
+  private final Transform2d robotToTurret = TurretConstants.TURRET_OFFSET_FROM_ROBOT_CENTER;
 
   private static double phaseDelay = TurretConstants.PHASE_DELAY;
 

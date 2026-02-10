@@ -122,8 +122,7 @@ public class RobotContainer {
     this.autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
   }
 
-  private void configureButtonBindings() {
-  }
+  private void configureButtonBindings() {}
 
   public Command getAutonomousCommand() {
     return autoChooser.get();
