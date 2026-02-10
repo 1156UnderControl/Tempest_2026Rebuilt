@@ -7,6 +7,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
@@ -40,7 +41,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   private static FlyWheelSubsystem instance;
 
-  private TorqueCurrentFOC torqueCurrentRequest = new TorqueCurrentFOC(Amps.of(0));
+  private VelocityTorqueCurrentFOC torqueCurrentRequest = new VelocityTorqueCurrentFOC(RPM.of(0));
 
   private FlyWheelSubsystem() {
     this.calculator = ShooterCalculator.getInstance();
@@ -133,8 +134,8 @@ public class FlyWheelSubsystem extends SubsystemBase {
     return this.flywheelMechanism.setSpeed(RotationsPerSecond.of(0));
   }
 
-  public Command runVelocityTorqueControl(double amps) {
-    return this.run(() -> leadMotor.setControl(torqueCurrentRequest.withOutput(Amps.of(amps))));
+  public Command runVelocityTorqueControl(double velocityRPM) {
+    return this.run(() -> leadMotor.setControl(torqueCurrentRequest.withVelocity(RPM.of(velocityRPM))));
   }
 
   public boolean isAtTargetVelocity() {
