@@ -123,9 +123,8 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    driverController.a().onTrue(this.extensor.extendTest());
-    driverController.b().onTrue(this.extensor.retractTest());
-    driverController.y().onTrue(this.extensor.retractBitTest());
+    driverController.a().onTrue(this.spindexer.shoot());
+    driverController.b().onTrue(this.spindexer.stop());
   }
 
   public Command getAutonomousCommand() {

@@ -106,7 +106,7 @@ public class SpindexerSubsystem extends SubsystemBase {
   }
 
   public Command shoot() {
-    return spindexer.set(1);
+    return spindexer.setSpeed(RPM.of(600));
   }
 
   public Command stop() {
