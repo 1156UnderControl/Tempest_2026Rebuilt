@@ -21,10 +21,10 @@ public final class SpindexerConstants {
   public static final AngularVelocity MAX_VELOCITY = RotationsPerSecond.of(12.5);
   public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(120);
 
-  public static final AngularVelocity DEADBAND_IS_AT = RPM.of(20);
+  public static final AngularVelocity DEADBAND_IS_AT = RPM.of(10);
 
   public static class setpoints {
-    public static final AngularVelocity SHOOTING = RotationsPerSecond.of(27);
+    public static final AngularVelocity SHOOTING = RotationsPerSecond.of(5);
     public static final AngularVelocity STOPPED = RPM.of(0);
   }
 }

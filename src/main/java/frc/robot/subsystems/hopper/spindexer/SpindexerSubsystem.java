@@ -10,6 +10,8 @@ import static edu.wpi.first.units.Units.RPM;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -62,6 +64,7 @@ public class SpindexerSubsystem extends SubsystemBase {
             .withSimClosedLoopController(0, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(9)))
             .withIdleMode(MotorMode.BRAKE)
+            .withFeedforward(new SimpleMotorFeedforward(0.16, 0.94, 0))
             .withMechanismCircumference(Meters.of(0.478))
             .withStatorCurrentLimit(Amps.of(60))
             .withMotorInverted(false)
@@ -105,7 +108,7 @@ public class SpindexerSubsystem extends SubsystemBase {
   }
 
   public Command shoot() {
-    return spindexer.set(1);
+    return spindexer.setSpeed(SpindexerConstants.setpoints.SHOOTING);
   }
 
   public Command stop() {
