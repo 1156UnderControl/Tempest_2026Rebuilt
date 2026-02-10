@@ -61,7 +61,7 @@ public class SpindexerSubsystem extends SubsystemBase {
                 0, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
             .withSimClosedLoopController(
                 0, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
-            .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
+            .withGearing(new MechanismGearing(GearBox.fromReductionStages(9)))
             .withIdleMode(MotorMode.BRAKE)
             .withMechanismCircumference(Meters.of(0.47))
             .withStatorCurrentLimit(Amps.of(60))
@@ -107,6 +107,10 @@ public class SpindexerSubsystem extends SubsystemBase {
 
   public Command shoot() {
     return spindexer.setSpeed(RPM.of(600));
+  }
+
+  public Command shootSlow(){
+    return spindexer.setSpeed(RPM.of(300));
   }
 
   public Command stop() {
