@@ -30,7 +30,7 @@ public class ClimberConstants {
 
   public class setpoints {
     public static final Distance RAISED_HEIGHT = Distance.ofBaseUnits(12.4, Meters);
-    public static final Distance CLIMBED_HEIGHT = Distance.ofBaseUnits(0, Meters);
+    public static final Distance CLIMBED_HEIGHT = Distance.ofBaseUnits(1.0, Meters);
     public static final Distance DEFAULT_HEIGHT = Distance.ofBaseUnits(0, Meters);
   }
 

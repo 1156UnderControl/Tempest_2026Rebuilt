@@ -22,7 +22,7 @@ public class ExtensorConstants {
     public static final Distance MIN_EXTENSION = Meters.of(0);
   }
 
-  public static final Voltage maxVolts = Volts.of(10);
+  public static final Voltage maxVolts = Volts.of(12);
   public static final DCMotor motor = DCMotor.getNeoVortex(1);
   public static final Mass mass = Kilograms.of(5);
   public static final Distance drumRadius = Meters.of(0.0305 / 2.0);

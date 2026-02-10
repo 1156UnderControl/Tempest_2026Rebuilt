@@ -3,6 +3,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.swerve.GoToClimbPoseLeft;
+import frc.robot.commands.swerve.GoToClimbPoseRight;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
 import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
@@ -107,15 +111,11 @@ public class States {
             .stop()
             .alongWith(Commands.runOnce(() -> this.spindexerState = "Stopped State")));
 
-    this.turret.setDefaultCommand(
-        Commands.either(
-            this.turret
-                .trackHub()
-                .alongWith(Commands.runOnce(() -> this.turretState = "Track Hub State")),
-            this.turret
-                .trackPass()
-                .alongWith(Commands.runOnce(() -> this.turretState = "Track Pass State")),
-            RobotStates.getInstance().isOnAllianceZone()));
+    new Trigger(() -> RobotStates.getInstance().isOnAllianceZone())
+        .onTrue(this.turret.trackHub())
+        .onFalse(this.turret.trackPass());
+
+    this.hood.setDefaultCommand(this.hood.goToTargetAngle());
 
     this.flyWheel.setDefaultCommand(
         this.flyWheel
@@ -136,7 +136,8 @@ public class States {
                   this.kickerState = "Running State";
                   this.spindexerState = "Running State";
                   this.extensorState = "Shake State";
-                }));
+                }))
+        .repeatedly();
   }
 
   public Command collectState() {
@@ -172,32 +173,27 @@ public class States {
                 () -> {
                   this.extensorState = "Retracted State";
                   this.rollerState = "Stopped State";
-                }));
+                }))
+        .repeatedly();
   }
 
-  public Command goClimbStateLeft() {
-    return Commands.run(() -> this.drive.goToClimbPoseLeft(), drive)
-        .alongWith(Commands.runOnce(() -> driveState = "Going To Climb Pose Left"))
-        .until(() -> this.drive.isAtTargetPositionWithHeading())
-        .andThen(this.climber.climb())
-        .alongWith(
-            Commands.runOnce(
-                () -> {
-                  this.climberState = "Climbed State";
-                  this.driveState = "At Climb Pose State Left";
-                }));
+  public Command climbState() {
+    return Commands.parallel(
+        Commands.run(() -> drive.driveHeadingBackwards(), drive),
+        this.climber.climb(),
+        Commands.runOnce(
+            () -> {
+              this.climberState = "Climbed State";
+              this.driveState = "At Climb Pose State Right";
+            }));
   }
 
-  public Command goClimbStateRight() {
-    return Commands.run(() -> this.drive.goToClimbPoseRight(), drive)
-        .alongWith(Commands.runOnce(() -> driveState = "Going To Climb Pose Right"))
-        .until(() -> this.drive.isAtTargetPositionWithHeading())
-        .andThen(this.climber.climb())
-        .alongWith(
-            Commands.runOnce(
-                () -> {
-                  this.climberState = "Climbed State";
-                  this.driveState = "At Climb Pose State Right";
-                }));
+  public Command defaultClimberState() {
+    return this.climber.defaultPosition().alongWith(
+        Commands.runOnce(
+            () -> {
+              this.climberState = "Climbed State";
+              this.driveState = "At Climb Pose State Right";
+            }));
   }
 }

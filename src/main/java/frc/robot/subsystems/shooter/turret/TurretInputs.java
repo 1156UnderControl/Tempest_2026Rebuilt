@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter.turret;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog
@@ -9,4 +10,5 @@ public class TurretInputs {
   public boolean atTarget = false;
   public double distanceToTarget = Double.NaN;
   public double absoluteAngle;
+  public Pose2d turret;
 }
