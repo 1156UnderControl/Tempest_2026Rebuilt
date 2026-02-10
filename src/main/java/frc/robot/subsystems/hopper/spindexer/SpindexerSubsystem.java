@@ -58,11 +58,10 @@ public class SpindexerSubsystem extends SubsystemBase {
     this.smartSpindexerMotorConfig =
         new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
-            .withClosedLoopController(0, 0, 0, RPM.of(3000), DegreesPerSecondPerSecond.of(80))
-            .withSimClosedLoopController(0, 0, 0, RPM.of(3000), DegreesPerSecondPerSecond.of(80))
+            .withClosedLoopController(0, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
+            .withSimClosedLoopController(0, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
-            .withIdleMode(MotorMode.COAST)
-            // TODO configurate correctly, this seems wrong, it is the circunference of the wheel
+            .withIdleMode(MotorMode.BRAKE)
             .withMechanismCircumference(Meters.of(0.47))
             .withStatorCurrentLimit(Amps.of(60))
             .withMotorInverted(false)
