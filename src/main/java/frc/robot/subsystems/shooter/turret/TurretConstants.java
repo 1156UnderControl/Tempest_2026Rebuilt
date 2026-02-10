@@ -1,4 +1,4 @@
-package frc.robot.constants.shooter;
+package frc.robot.subsystems.shooter.turret;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;

@@ -14,7 +14,6 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotStates;
-import frc.robot.constants.shooter.TurretConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import org.littletonrobotics.junction.Logger;
 import yams.math.ExponentialProfilePIDController;
