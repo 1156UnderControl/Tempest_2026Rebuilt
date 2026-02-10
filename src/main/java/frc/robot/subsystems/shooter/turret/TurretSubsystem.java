@@ -81,9 +81,9 @@ public class TurretSubsystem extends SubsystemBase {
             .withSimClosedLoopController(
                 new ExponentialProfilePIDController(
                     new PIDController(
-                        TurretConstants.ClosedLoopController.kP,
-                        TurretConstants.ClosedLoopController.kI,
-                        TurretConstants.ClosedLoopController.kD),
+                        TurretConstants.ClosedLoopController.SIM.kP,
+                        TurretConstants.ClosedLoopController.SIM.kI,
+                        TurretConstants.ClosedLoopController.SIM.kD),
                     ExponentialProfilePIDController.createConstraints(
                         TurretConstants.MAX_VOLTS,
                         TurretConstants.Velocity.MAX_VELOCITY,
