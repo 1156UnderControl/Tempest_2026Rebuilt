@@ -10,6 +10,8 @@ import static edu.wpi.first.units.Units.RPM;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -58,12 +60,12 @@ public class SpindexerSubsystem extends SubsystemBase {
     this.smartSpindexerMotorConfig =
         new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
-            .withClosedLoopController(0, 0, 0, RPM.of(3000), DegreesPerSecondPerSecond.of(80))
-            .withSimClosedLoopController(0, 0, 0, RPM.of(3000), DegreesPerSecondPerSecond.of(80))
-            .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
-            .withIdleMode(MotorMode.COAST)
-            // TODO configurate correctly, this seems wrong, it is the circunference of the wheel
-            .withMechanismCircumference(Meters.of(0.47))
+            .withClosedLoopController(0.07, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
+            .withSimClosedLoopController(0, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
+            .withGearing(new MechanismGearing(GearBox.fromReductionStages(9)))
+            .withIdleMode(MotorMode.BRAKE)
+            .withFeedforward(new SimpleMotorFeedforward(0.16, 0.94, 0))
+            .withMechanismCircumference(Meters.of(0.478))
             .withStatorCurrentLimit(Amps.of(60))
             .withMotorInverted(false)
             .withTelemetry("SpindexerMotor", TelemetryVerbosity.HIGH);
@@ -106,7 +108,7 @@ public class SpindexerSubsystem extends SubsystemBase {
   }
 
   public Command shoot() {
-    return spindexer.set(1);
+    return spindexer.setSpeed(SpindexerConstants.setpoints.SHOOTING);
   }
 
   public Command stop() {
