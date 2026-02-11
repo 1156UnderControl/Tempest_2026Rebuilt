@@ -2,11 +2,11 @@ package frc.robot.subsystems.shooter.turret;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Milliseconds;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -65,9 +65,9 @@ public class TurretConstants {
 
   public static final Current STATOR_CURRENT_LIMIT = Amps.of(60);
 
-  public static final AngularVelocity MAX_VELOCITY = DegreesPerSecond.of(10000);
+  public static final AngularVelocity MAX_VELOCITY = RotationsPerSecond.of(1.88);
 
-  public static final AngularAcceleration ACCELERATION = DegreesPerSecondPerSecond.of(10000);
+  public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(49.3);
 
   public static final Transform2d TURRET_OFFSET_FROM_ROBOT_CENTER =
       new Transform2d(-0.127, -0.18415, Rotation2d.kZero);
