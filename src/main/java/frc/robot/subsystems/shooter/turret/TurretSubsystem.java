@@ -1,22 +1,22 @@
 package frc.robot.subsystems.shooter.turret;
 
-import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotStates;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import org.littletonrobotics.junction.Logger;
-import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.PivotConfig;
 import yams.mechanisms.positional.Pivot;
 import yams.motorcontrollers.SmartMotorController;
@@ -52,17 +52,21 @@ public class TurretSubsystem extends SubsystemBase {
             .withStatorCurrentLimit(TurretConstants.STATOR_CURRENT_LIMIT)
             .withClosedLoopRampRate(TurretConstants.CLOSED_RAMP_RATE)
             .withClosedLoopController(
-                        TurretConstants.FeedBackController.kP,
-                        TurretConstants.FeedBackController.kI,
-                        TurretConstants.FeedBackController.kD,
-                        TurretConstants.MAX_VELOCITY,
-                        TurretConstants.ACCELERATION)
+                new ProfiledPIDController(
+                    TurretConstants.FeedBackController.kP,
+                    TurretConstants.FeedBackController.kI,
+                    TurretConstants.FeedBackController.kD,
+                    new Constraints(
+                        TurretConstants.MAX_VELOCITY.in(RotationsPerSecond),
+                        TurretConstants.MAX_ACCELERATION.in(RotationsPerSecondPerSecond))))
             .withSimClosedLoopController(
-                        TurretConstants.FeedBackController.SIM.kP,
-                        TurretConstants.FeedBackController.SIM.kI,
-                        TurretConstants.FeedBackController.SIM.kD,
-                        TurretConstants.MAX_VELOCITY,
-                        TurretConstants.ACCELERATION)
+                new ProfiledPIDController(
+                    TurretConstants.FeedBackController.kP,
+                    TurretConstants.FeedBackController.kI,
+                    TurretConstants.FeedBackController.kD,
+                    new Constraints(
+                        TurretConstants.MAX_VELOCITY.in(RotationsPerSecond),
+                        TurretConstants.MAX_ACCELERATION.in(RotationsPerSecondPerSecond))))
             .withFeedforward(
                 new SimpleMotorFeedforward(
                     TurretConstants.FeedForwardController.kS,
@@ -123,8 +127,8 @@ public class TurretSubsystem extends SubsystemBase {
   private void updateInputs() {
     inputs.currentAngle = turret.getAngle().in(Degrees);
     inputs.targetAngle =
-        turret.getMechanismSetpoint().isEmpty() ?
-            0
+        turret.getMechanismSetpoint().isEmpty()
+            ? 0
             : turret.getMechanismSetpoint().get().in(Degrees);
     inputs.atTarget = isAtTargetAngle();
     inputs.turret =
@@ -164,11 +168,11 @@ public class TurretSubsystem extends SubsystemBase {
             TurretConstants.ANGLE_ERROR_ALLOWED);
   }
 
-  public Command aimLeft(){
+  public Command aimLeft() {
     return turret.setAngle(Degrees.of(-100));
   }
 
-  public Command aimRight(){
+  public Command aimRight() {
     return turret.setAngle(Degrees.of(100));
   }
 
