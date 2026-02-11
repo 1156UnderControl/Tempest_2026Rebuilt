@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -72,7 +73,7 @@ public class TurretConstants {
 
   public static final Angle TURRET_MAX_ANGLE = Degrees.of(180);
 
-  public static final Time CLOSED_RAMP_RATE = Seconds.of(0.5);
+  public static final Time CLOSED_RAMP_RATE = Milliseconds.of(10);
 
   public static class FeedBackController {
     public static final double kP = 0;
