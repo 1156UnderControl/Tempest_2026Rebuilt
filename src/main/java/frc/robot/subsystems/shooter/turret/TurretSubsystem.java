@@ -96,7 +96,6 @@ public class TurretSubsystem extends SubsystemBase {
     turretMechanismConfig =
         new PivotConfig(turretMotor)
             .withHardLimit(TurretConstants.TURRET_MIN_ANGLE, TurretConstants.TURRET_MAX_ANGLE)
-            .withSoftLimits(TurretConstants.TURRET_MIN_ANGLE, TurretConstants.TURRET_MAX_ANGLE)
             .withMOI(TurretConstants.TURRET_SIZE, TurretConstants.TURRET_MASS)
             .withTelemetry(TurretConstants.TURRET_MECHANISM_NAME, TurretConstants.TELEMETRY);
 
