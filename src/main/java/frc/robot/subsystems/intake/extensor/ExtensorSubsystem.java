@@ -10,7 +10,6 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
@@ -71,12 +70,16 @@ public class ExtensorSubsystem extends SubsystemBase {
                 new ExponentialProfilePIDController(
                     new PIDController(0, 0, 0),
                     ExponentialProfilePIDController.createConstraints(
-                    ExtensorConstants.maxVolts, ExtensorConstants.maxVel, ExtensorConstants.maxAccel)))
+                        ExtensorConstants.maxVolts,
+                        ExtensorConstants.maxVel,
+                        ExtensorConstants.maxAccel)))
             .withSimClosedLoopController(
                 new ExponentialProfilePIDController(
                     new PIDController(0, 0, 0),
                     ExponentialProfilePIDController.createConstraints(
-                    ExtensorConstants.maxVolts, ExtensorConstants.maxVel, ExtensorConstants.maxAccel)))
+                        ExtensorConstants.maxVolts,
+                        ExtensorConstants.maxVel,
+                        ExtensorConstants.maxAccel)))
             .withGearing(ExtensorConstants.gearing)
             .withIdleMode(MotorMode.BRAKE)
             .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
