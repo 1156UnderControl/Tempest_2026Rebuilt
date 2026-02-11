@@ -94,7 +94,9 @@
       "guid": "030000005e040000220b000023050000",
       "useGamepad": true
     },
-    {},
+    {
+      "useGamepad": true
+    },
     {},
     {},
     {

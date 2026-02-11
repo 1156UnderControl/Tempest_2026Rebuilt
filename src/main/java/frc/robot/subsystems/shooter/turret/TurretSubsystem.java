@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter.turret;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Rotations;
 
 import com.revrobotics.spark.SparkAbsoluteEncoder;
@@ -87,7 +88,8 @@ public class TurretSubsystem extends SubsystemBase {
                     TurretConstants.FeedForwardController.SIM.kS,
                     TurretConstants.FeedForwardController.SIM.kV,
                     TurretConstants.FeedForwardController.SIM.kA))
-            .withControlMode(TurretConstants.CONTROL_MODE);
+            .withControlMode(TurretConstants.CONTROL_MODE)
+            .withStartingPosition(TurretConstants.STARTING_ANGLE);
 
     turretFlex = new SparkFlex(TurretConstants.TURRET_MOTOR_ID, TurretConstants.MOTOR_TYPE);
 

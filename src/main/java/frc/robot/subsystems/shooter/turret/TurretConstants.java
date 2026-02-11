@@ -73,6 +73,8 @@ public class TurretConstants {
 
   public static final Angle TURRET_MAX_ANGLE = Degrees.of(180);
 
+  public static final Angle STARTING_ANGLE = Degrees.of(0);
+
   public static final Time CLOSED_RAMP_RATE = Milliseconds.of(10);
 
   public static class FeedBackController {
