@@ -10,6 +10,8 @@ import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import com.revrobotics.spark.SparkAbsoluteEncoder;
@@ -69,15 +71,14 @@ public class KickerSubsystem extends SubsystemBase {
         new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
             .withClosedLoopController(0.03, 0, 1, RPM.of(2423), RotationsPerSecondPerSecond.of(150))
+            .withSimClosedLoopController(0.03, 0, 1, RPM.of(2423), RotationsPerSecondPerSecond.of(150))
             .withFeedforward(new SimpleMotorFeedforward(0.16, 0.26))
-            .withSimClosedLoopController(
-                50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+            .withSimFeedforward(new SimpleMotorFeedforward(0.16, 0.26))
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(2.5)))
             .withIdleMode(MotorMode.COAST)
             .withMechanismCircumference(Inches.of(2))
             .withMotorInverted(false)
-            .withStatorCurrentLimit(Amps.of(50))
-            .withTelemetry("Kicker Motor", TelemetryVerbosity.HIGH);
+            .withStatorCurrentLimit(Amps.of(50));
 
     kickerMotor = new SparkWrapper(kickerFlex, DCMotor.getNeoVortex(1), smartKickerMotorConfig);
 
@@ -123,7 +124,7 @@ public class KickerSubsystem extends SubsystemBase {
   }
 
   public Command shoot() {
-    return kicker.set(-1);
+    return kicker.setSpeed(RPM.of(2423));
   }
 
   public Command stop() {
