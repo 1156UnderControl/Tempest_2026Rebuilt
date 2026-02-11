@@ -59,7 +59,7 @@ public class TurretSubsystem extends SubsystemBase {
     calculator = ShooterCalculator.getInstance();
     smartTurretMotorConfig =
         new SmartMotorControllerConfig(this)
-            .withIdleMode(MotorMode.COAST)
+            .withIdleMode(MotorMode.BRAKE)
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(60.3428)))
             .withMotorInverted(false)
             .withTelemetry("TurretMotor", TurretConstants.TELEMETRY)

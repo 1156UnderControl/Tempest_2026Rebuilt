@@ -201,16 +201,4 @@ public class ExtensorSubsystem extends SubsystemBase {
     return new Trigger(
         () -> extensor.getHeight().isNear(setpoint, ExtensorConstants.DEADBAND_IS_AT));
   }
-
-  public Command extendTest() {
-    return extensor.setHeight(Meters.of(0.3));
-  }
-
-  public Command retractBitTest() {
-    return extensor.setHeight(Meters.of(0.05));
-  }
-
-  public Command retractTest() {
-    return extensor.setHeight(Meters.of(0.05));
-  }
 }
