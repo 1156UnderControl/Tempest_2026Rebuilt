@@ -77,7 +77,7 @@ public class KickerSubsystem extends SubsystemBase {
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(2.5)))
             .withIdleMode(MotorMode.COAST)
             .withMechanismCircumference(Inches.of(2))
-            .withMotorInverted(false)
+            .withMotorInverted(true)
             .withStatorCurrentLimit(Amps.of(50));
 
     kickerMotor = new SparkWrapper(kickerFlex, DCMotor.getNeoVortex(1), smartKickerMotorConfig);
