@@ -13,6 +13,4 @@ public class TurretInputs {
   public Pose2d turret;
   public double encoder1;
   public double encoder2;
-  public double crtError;
-  public String crtStatus;
 }
