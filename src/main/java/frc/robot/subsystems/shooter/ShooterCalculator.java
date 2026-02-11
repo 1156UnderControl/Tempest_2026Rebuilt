@@ -18,7 +18,6 @@ import frc.robot.subsystems.shooter.interpolatingTreeMaps.FeedingMaps;
 import frc.robot.subsystems.shooter.interpolatingTreeMaps.InterpolatingTreeMaps;
 import frc.robot.subsystems.shooter.interpolatingTreeMaps.ShootingMaps;
 import frc.robot.subsystems.shooter.turret.TurretConstants;
-
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterCalculator {

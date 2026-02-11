@@ -1,16 +1,15 @@
 package frc.robot.subsystems.climber;
+
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Rotations;
 
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.climber.ClimberConstants;
-
 import org.littletonrobotics.junction.Logger;
 import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.ElevatorConfig;
@@ -45,52 +44,54 @@ public class ClimberSubsystem extends SubsystemBase {
     this.climberInputs = new ClimberInputsAutoLogged();
     this.climberMotorConfig =
         new SmartMotorControllerConfig(this)
-          .withIdleMode(ClimberConstants.MOTOR_MODE)
-          .withGearing(ClimberConstants.GEARING)
-          .withMotorInverted(ClimberConstants.INVERTED)
-          .withStatorCurrentLimit(ClimberConstants.STATOR_CURRENT_LIMIT)
-          .withClosedLoopRampRate(ClimberConstants.CLOSED_RAMP_RATE)
-          .withMechanismCircumference(ClimberConstants.MECHANISM_CIRCUNFERENCE)
-          .withSoftLimit(ClimberConstants.CLIMBER_MIN_HEIGHT, ClimberConstants.CLIMBER_MAX_HEIGHT)
-          .withClosedLoopController(
-              new ExponentialProfilePIDController(
-                  new PIDController(
-                      ClimberConstants.FeedBackController.kP,
-                      ClimberConstants.FeedBackController.kI,
-                      ClimberConstants.FeedBackController.kD), 
-                  ExponentialProfilePIDController.createConstraints(
-                      ClimberConstants.MAX_VOLTS,
-                      ClimberConstants.MAX_VELOCITY,
-                      ClimberConstants.ACCELERATION)))
-          .withSimClosedLoopController(
-              new ExponentialProfilePIDController(
-                  new PIDController(
-                      ClimberConstants.FeedBackController.SIM.kP,
-                      ClimberConstants.FeedBackController.SIM.kI,
-                      ClimberConstants.FeedBackController.SIM.kD), 
-                  ExponentialProfilePIDController.createConstraints(
-                      ClimberConstants.MAX_VOLTS,
-                      ClimberConstants.MAX_VELOCITY,
-                      ClimberConstants.ACCELERATION)))
-          .withFeedforward(
-              new SimpleMotorFeedforward(
-                  ClimberConstants.FeedForwardController.kS, 
-                  ClimberConstants.FeedForwardController.kS, 
-                  ClimberConstants.FeedForwardController.kA))
-          .withFeedforward(
-              new SimpleMotorFeedforward(
-                  ClimberConstants.FeedForwardController.SIM.kS, 
-                  ClimberConstants.FeedForwardController.SIM.kS, 
-                  ClimberConstants.FeedForwardController.SIM.kA))
-          .withControlMode(ClimberConstants.CONTROL_MODE);
+            .withIdleMode(ClimberConstants.MOTOR_MODE)
+            .withGearing(ClimberConstants.GEARING)
+            .withMotorInverted(ClimberConstants.INVERTED)
+            .withStatorCurrentLimit(ClimberConstants.STATOR_CURRENT_LIMIT)
+            .withClosedLoopRampRate(ClimberConstants.CLOSED_RAMP_RATE)
+            .withMechanismCircumference(ClimberConstants.MECHANISM_CIRCUNFERENCE)
+            .withSoftLimit(ClimberConstants.CLIMBER_MIN_HEIGHT, ClimberConstants.CLIMBER_MAX_HEIGHT)
+            .withClosedLoopController(
+                new ExponentialProfilePIDController(
+                    new PIDController(
+                        ClimberConstants.FeedBackController.kP,
+                        ClimberConstants.FeedBackController.kI,
+                        ClimberConstants.FeedBackController.kD),
+                    ExponentialProfilePIDController.createConstraints(
+                        ClimberConstants.MAX_VOLTS,
+                        ClimberConstants.MAX_VELOCITY,
+                        ClimberConstants.ACCELERATION)))
+            .withSimClosedLoopController(
+                new ExponentialProfilePIDController(
+                    new PIDController(
+                        ClimberConstants.FeedBackController.SIM.kP,
+                        ClimberConstants.FeedBackController.SIM.kI,
+                        ClimberConstants.FeedBackController.SIM.kD),
+                    ExponentialProfilePIDController.createConstraints(
+                        ClimberConstants.MAX_VOLTS,
+                        ClimberConstants.MAX_VELOCITY,
+                        ClimberConstants.ACCELERATION)))
+            .withFeedforward(
+                new SimpleMotorFeedforward(
+                    ClimberConstants.FeedForwardController.kS,
+                    ClimberConstants.FeedForwardController.kS,
+                    ClimberConstants.FeedForwardController.kA))
+            .withFeedforward(
+                new SimpleMotorFeedforward(
+                    ClimberConstants.FeedForwardController.SIM.kS,
+                    ClimberConstants.FeedForwardController.SIM.kS,
+                    ClimberConstants.FeedForwardController.SIM.kA))
+            .withControlMode(ClimberConstants.CONTROL_MODE);
 
     this.climberFlex = new SparkFlex(ClimberConstants.TURRET_MOTOR_ID, ClimberConstants.MOTOR_TYPE);
 
-    this.climberMotor = new SparkWrapper(climberFlex, ClimberConstants.DC_MOTOR, climberMotorConfig);
+    this.climberMotor =
+        new SparkWrapper(climberFlex, ClimberConstants.DC_MOTOR, climberMotorConfig);
 
     this.climberConfig =
         new ElevatorConfig(climberMotor)
-            .withHardLimits(ClimberConstants.CLIMBER_MIN_HEIGHT, ClimberConstants.CLIMBER_MAX_HEIGHT)
+            .withHardLimits(
+                ClimberConstants.CLIMBER_MIN_HEIGHT, ClimberConstants.CLIMBER_MAX_HEIGHT)
             .withStartingHeight(ClimberConstants.STARTING_HEIGHT)
             .withMass(ClimberConstants.CLIMBER_MASS)
             .withTelemetry(ClimberConstants.CLIMBER_MECHANISM_NAME, ClimberConstants.TELEMETRY);
@@ -119,12 +120,15 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public boolean isClimbed() {
-    return climber.getHeight().isNear(climber.getMechanismSetpoint().isEmpty()
-        ? Meters.of(0)
-        : Meters.of(
-              climber.getMechanismSetpoint().get().in(Rotations)
-                  * ClimberConstants.MECHANISM_CIRCUNFERENCE.in(Meters)), 
-        ClimberConstants.HEIGHT_ERROR_ALLOWED);
+    return climber
+        .getHeight()
+        .isNear(
+            climber.getMechanismSetpoint().isEmpty()
+                ? Meters.of(0)
+                : Meters.of(
+                    climber.getMechanismSetpoint().get().in(Rotations)
+                        * ClimberConstants.MECHANISM_CIRCUNFERENCE.in(Meters)),
+            ClimberConstants.HEIGHT_ERROR_ALLOWED);
   }
 
   public Command setDutyCycle(double dutycycle) {
@@ -135,11 +139,13 @@ public class ClimberSubsystem extends SubsystemBase {
     climberInputs.climberAppliedVolts = climberMotor.getVoltage();
     climberInputs.climberCurrent = climberMotor.getStatorCurrent();
     climberInputs.climberPosition = climber.getHeight();
-    climberInputs.climberSetpoint = climber.getMechanismSetpoint().isEmpty()
-        ? Meters.of(0)
-        : Meters.of(
+    climberInputs.climberSetpoint =
+        climber.getMechanismSetpoint().isEmpty()
+            ? Meters.of(0)
+            : Meters.of(
                 climber.getMechanismSetpoint().get().in(Rotations)
-                    * ClimberConstants.MECHANISM_CIRCUNFERENCE.in(Meters));;
+                    * ClimberConstants.MECHANISM_CIRCUNFERENCE.in(Meters));
+    ;
     climberInputs.climberVelocity = climber.getVelocity();
   }
 

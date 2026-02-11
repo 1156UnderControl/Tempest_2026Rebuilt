@@ -39,7 +39,7 @@ public class ClimberConstants {
   public static final Voltage MAX_VOLTS = Volts.of(12.0);
 
   public static final ControlMode CONTROL_MODE = ControlMode.CLOSED_LOOP;
-  
+
   public static final Distance MECHANISM_CIRCUNFERENCE = Meters.of(2 * Math.PI * 0.015875);
 
   public static final MechanismGearing GEARING =
