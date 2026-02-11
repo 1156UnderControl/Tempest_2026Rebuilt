@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter.turret;
 
+import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
 
 import com.revrobotics.spark.SparkAbsoluteEncoder;
@@ -34,13 +35,13 @@ public class TurretSubsystem extends SubsystemBase {
   private final PivotConfig turretMechanismConfig;
   private final Pivot turret;
 
-  private final SparkAbsoluteEncoder encoder1;
-  private final SparkAbsoluteEncoder encoder2;
+  // private final SparkAbsoluteEncoder encoder1;
+  // private final SparkAbsoluteEncoder encoder2;
 
-  private double absoluteAngle;
+  // private double absoluteAngle;
 
   private TurretSubsystem(SparkAbsoluteEncoder kickerEncoder, SparkAbsoluteEncoder climberEncoder) {
-    this.absoluteAngle = 2;
+    // this.absoluteAngle = 2;
     calculator = ShooterCalculator.getInstance();
     smartTurretMotorConfig =
         new SmartMotorControllerConfig(this)
@@ -95,15 +96,15 @@ public class TurretSubsystem extends SubsystemBase {
 
     turret = new Pivot(turretMechanismConfig);
 
-    this.encoder1 = kickerEncoder;
-    this.encoder2 = climberEncoder;
+    // this.encoder1 = kickerEncoder;
+    // this.encoder2 = climberEncoder;
 
-    this.absoluteAngle =
-        determineTurretAngleDegrees(
-            Units.rotationsToDegrees(this.encoder1.getPosition()),
-            Units.rotationsToDegrees(this.encoder2.getPosition()));
+    // this.absoluteAngle =
+    //     determineTurretAngleDegrees(
+    //         Units.rotationsToDegrees(this.encoder1.getPosition()),
+    //         Units.rotationsToDegrees(this.encoder2.getPosition()));
 
-    this.turretMotor.setEncoderPosition(Degrees.of(this.absoluteAngle));
+    // this.turretMotor.setEncoderPosition(Degrees.of(this.absoluteAngle));
 
     inputs = new TurretInputsAutoLogged();
   }
@@ -130,9 +131,9 @@ public class TurretSubsystem extends SubsystemBase {
   private void updateInputs() {
     inputs.currentAngle = turret.getAngle().in(Degrees);
     inputs.targetAngle =
-        calculator.getLastParameters() != null
-            ? calculator.getLastParameters().turretAngle().getDegrees()
-            : 0;
+        turret.getMechanismSetpoint().isEmpty() ?
+            0
+            : turret.getMechanismSetpoint().get().in(Degrees);
     inputs.atTarget = isAtTargetAngle();
     inputs.turret =
         RobotStates.getInstance()
@@ -141,9 +142,9 @@ public class TurretSubsystem extends SubsystemBase {
             .plus(
                 new Transform2d(
                     Translation2d.kZero, Rotation2d.fromDegrees(turret.getAngle().in(Degrees))));
-    inputs.absoluteAngle = this.absoluteAngle;
-    inputs.encoder1 = this.encoder1.getPosition();
-    inputs.encoder2 = this.encoder2.getPosition();
+    // inputs.absoluteAngle = this.absoluteAngle;
+    // inputs.encoder1 = this.encoder1.getPosition();
+    // inputs.encoder2 = this.encoder2.getPosition();
 
     Logger.processInputs("Subsystems/Shooter/Turret/", inputs);
   }
