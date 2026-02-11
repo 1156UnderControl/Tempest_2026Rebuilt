@@ -3,10 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.swerve.GoToClimbPoseLeft;
-import frc.robot.commands.swerve.GoToClimbPoseRight;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
 import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
@@ -177,29 +174,25 @@ public class States {
         .repeatedly();
   }
 
-  public Command goClimbStateLeft() {
-    return new SequentialCommandGroup(
-        new GoToClimbPoseLeft(drive)
-            .alongWith(
-                this.climber.idle(),
-                Commands.runOnce(() -> driveState = "Going To Climb Pose Left")),
-        Commands.runOnce(
-            () -> {
-              this.climberState = "Climbed State";
-              this.driveState = "At Climb Pose State Left";
-            }));
-  }
-
-  public Command goClimbStateRight() {
-    return new SequentialCommandGroup(
-        new GoToClimbPoseRight(drive)
-            .alongWith(
-                this.climber.idle(),
-                Commands.runOnce(() -> driveState = "Going To Climb Pose Right")),
+  public Command climbState() {
+    return Commands.parallel(
+        Commands.run(() -> drive.driveHeadingBackwards(), drive),
+        this.climber.climb(),
         Commands.runOnce(
             () -> {
               this.climberState = "Climbed State";
               this.driveState = "At Climb Pose State Right";
             }));
+  }
+
+  public Command defaultClimberState() {
+    return this.climber
+        .defaultPosition()
+        .alongWith(
+            Commands.runOnce(
+                () -> {
+                  this.climberState = "Climbed State";
+                  this.driveState = "At Climb Pose State Right";
+                }));
   }
 }

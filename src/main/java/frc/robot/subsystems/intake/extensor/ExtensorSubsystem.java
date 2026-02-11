@@ -3,18 +3,16 @@ package frc.robot.subsystems.intake.extensor;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
@@ -25,8 +23,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.intake.ExtensorConstants;
 import org.littletonrobotics.junction.Logger;
-import yams.gearing.GearBox;
-import yams.gearing.MechanismGearing;
 import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.ElevatorConfig;
 import yams.mechanisms.positional.Elevator;
@@ -69,35 +65,35 @@ public class ExtensorSubsystem extends SubsystemBase {
     this.extensorMotorConfig =
         new SmartMotorControllerConfig(this)
             .withMechanismCircumference(ExtensorConstants.MECHANISM_CIRCUNFERENCE)
+            .withClosedLoopRampRate(Milliseconds.of(10))
             .withClosedLoopController(
                 new ExponentialProfilePIDController(
-                    4.5,
-                    0,
-                    0,
+                    new PIDController(0, 0, 0),
                     ExponentialProfilePIDController.createConstraints(
-                        Volts.of(10), RotationsPerSecond.of(2), RotationsPerSecondPerSecond.of(2))))
+                        ExtensorConstants.maxVolts,
+                        ExtensorConstants.maxVel,
+                        ExtensorConstants.maxAccel)))
             .withSimClosedLoopController(
                 new ExponentialProfilePIDController(
-                    4.5,
-                    0,
-                    0,
+                    new PIDController(0, 0, 0),
                     ExponentialProfilePIDController.createConstraints(
-                        Volts.of(10), RotationsPerSecond.of(2), RotationsPerSecondPerSecond.of(2))))
-            .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
-            .withIdleMode(MotorMode.COAST)
+                        ExtensorConstants.maxVolts,
+                        ExtensorConstants.maxVel,
+                        ExtensorConstants.maxAccel)))
+            .withGearing(ExtensorConstants.gearing)
+            .withIdleMode(MotorMode.BRAKE)
             .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
-            .withStatorCurrentLimit(Amps.of(40))
+            .withStatorCurrentLimit(Amps.of(60))
             .withMotorInverted(false)
-            .withFeedforward(new SimpleMotorFeedforward(0, 4.4, 0.05))
-            .withSimFeedforward(new SimpleMotorFeedforward(0, 4.4, 0.05))
             .withControlMode(ControlMode.CLOSED_LOOP);
 
     this.extensorMotor =
-        new SparkWrapper(extensorSparkFlex, DCMotor.getNeoVortex(1), extensorMotorConfig);
+        new SparkWrapper(extensorSparkFlex, ExtensorConstants.motor, extensorMotorConfig);
 
     this.extensorConfig =
         new ElevatorConfig(extensorMotor)
             .withMass(ExtensorConstants.mass)
+            .withDrumRadius(ExtensorConstants.drumRadius)
             .withSoftLimits(
                 ExtensorConstants.limits.MIN_EXTENSION, ExtensorConstants.limits.MAX_EXTENSION)
             .withHardLimits(

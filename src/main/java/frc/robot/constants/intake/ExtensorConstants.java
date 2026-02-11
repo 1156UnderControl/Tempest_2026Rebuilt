@@ -2,10 +2,14 @@ package frc.robot.constants.intake;
 
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.AngularAcceleration;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.Voltage;
@@ -22,7 +26,9 @@ public class ExtensorConstants {
     public static final Distance MIN_EXTENSION = Meters.of(0);
   }
 
-  public static final Voltage maxVolts = Volts.of(10);
+  public static final Voltage maxVolts = Volts.of(12);
+  public static final AngularVelocity maxVel = RPM.of(27.9695232386);
+  public static final AngularAcceleration maxAccel = RotationsPerSecondPerSecond.of(199.961218377);
   public static final DCMotor motor = DCMotor.getNeoVortex(1);
   public static final Mass mass = Kilograms.of(5);
   public static final Distance drumRadius = Meters.of(0.0305 / 2.0);

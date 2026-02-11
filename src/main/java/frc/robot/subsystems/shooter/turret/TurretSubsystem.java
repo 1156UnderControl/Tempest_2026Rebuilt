@@ -52,39 +52,40 @@ public class TurretSubsystem extends SubsystemBase {
 
   private TurretSubsystem(SparkAbsoluteEncoder kickerEncoder, SparkAbsoluteEncoder climberEncoder) {
     calculator = ShooterCalculator.getInstance();
-    smartTurretMotorConfig = new SmartMotorControllerConfig(this)
-        .withIdleMode(MotorMode.BRAKE)
-        .withGearing(new MechanismGearing(GearBox.fromReductionStages(60.3428)))
-        .withMotorInverted(false)
-        .withTelemetry("TurretMotor", TurretConstants.TELEMETRY)
-        .withSoftLimit(
-            TurretConstants.Position.TURRET_MIN_ANGLE,
-            TurretConstants.Position.TURRET_MAX_ANGLE)
-        .withStatorCurrentLimit(Amps.of(40))
-        .withClosedLoopRampRate(Seconds.of(0.5))
-        .withClosedLoopController(
-            new ExponentialProfilePIDController(
-                new PIDController(
-                    TurretConstants.ClosedLoopController.kP,
-                    TurretConstants.ClosedLoopController.kI,
-                    TurretConstants.ClosedLoopController.kD),
-                ExponentialProfilePIDController.createConstraints(
-                    TurretConstants.MAX_VOLTS,
-                    TurretConstants.Velocity.MAX_VELOCITY,
-                    TurretConstants.Velocity.ACCELERATION)))
-        .withSimClosedLoopController(
-            new ExponentialProfilePIDController(
-                new PIDController(
-                    TurretConstants.ClosedLoopController.kP,
-                    TurretConstants.ClosedLoopController.kI,
-                    TurretConstants.ClosedLoopController.kD),
-                ExponentialProfilePIDController.createConstraints(
-                    TurretConstants.MAX_VOLTS,
-                    TurretConstants.Velocity.MAX_VELOCITY,
-                    TurretConstants.Velocity.ACCELERATION)))
-        .withFeedforward(new SimpleMotorFeedforward(0.5, 0.5, 0))
-        .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
-        .withControlMode(ControlMode.CLOSED_LOOP);
+    smartTurretMotorConfig =
+        new SmartMotorControllerConfig(this)
+            .withIdleMode(MotorMode.BRAKE)
+            .withGearing(new MechanismGearing(GearBox.fromReductionStages(60.3428)))
+            .withMotorInverted(false)
+            .withTelemetry("TurretMotor", TurretConstants.TELEMETRY)
+            .withSoftLimit(
+                TurretConstants.Position.TURRET_MIN_ANGLE,
+                TurretConstants.Position.TURRET_MAX_ANGLE)
+            .withStatorCurrentLimit(Amps.of(40))
+            .withClosedLoopRampRate(Seconds.of(0.5))
+            .withClosedLoopController(
+                new ExponentialProfilePIDController(
+                    new PIDController(
+                        TurretConstants.ClosedLoopController.kP,
+                        TurretConstants.ClosedLoopController.kI,
+                        TurretConstants.ClosedLoopController.kD),
+                    ExponentialProfilePIDController.createConstraints(
+                        TurretConstants.MAX_VOLTS,
+                        TurretConstants.Velocity.MAX_VELOCITY,
+                        TurretConstants.Velocity.ACCELERATION)))
+            .withSimClosedLoopController(
+                new ExponentialProfilePIDController(
+                    new PIDController(
+                        TurretConstants.ClosedLoopController.SIM.kP,
+                        TurretConstants.ClosedLoopController.SIM.kI,
+                        TurretConstants.ClosedLoopController.SIM.kD),
+                    ExponentialProfilePIDController.createConstraints(
+                        TurretConstants.MAX_VOLTS,
+                        TurretConstants.Velocity.MAX_VELOCITY,
+                        TurretConstants.Velocity.ACCELERATION)))
+            .withFeedforward(new SimpleMotorFeedforward(0.5, 0.5, 0))
+            .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+            .withControlMode(ControlMode.CLOSED_LOOP);
 
     turretFlex = new SparkFlex(7, MotorType.kBrushless);
 

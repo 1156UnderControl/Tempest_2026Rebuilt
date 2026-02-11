@@ -43,5 +43,11 @@ public class TurretConstants {
     public static final double kP = 100;
     public static final double kI = 0;
     public static final double kD = 0;
+
+    public static class SIM {
+      public static final double kP = 200;
+      public static final double kI = 0;
+      public static final double kD = 0;
+    }
   }
 }
