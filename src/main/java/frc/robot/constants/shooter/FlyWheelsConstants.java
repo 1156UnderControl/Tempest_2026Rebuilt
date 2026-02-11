@@ -2,7 +2,7 @@ package frc.robot.constants.shooter;
 
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Kilograms;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Volts;
 
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -22,11 +22,11 @@ public class FlyWheelsConstants {
   public static final Voltage MAX_VOLTS = Volts.of(12.0);
 
   public static class Velocity {
-    public static final AngularVelocity VELOCITY_ERROR_ALLOWED = RotationsPerSecond.of(0.5);
+    public static final AngularVelocity VELOCITY_ERROR_ALLOWED = RPM.of(0.5);
   }
 
   public static class ClosedLoopController {
-    public static final double kP = 0.4;
+    public static final double kP = 17;
     public static final double kI = 0;
     public static final double kD = 0;
   }

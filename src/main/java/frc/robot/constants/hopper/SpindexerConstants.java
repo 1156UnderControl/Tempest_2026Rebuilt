@@ -18,13 +18,13 @@ public final class SpindexerConstants {
   public static final Current STATOR_CURRENT_LIMIT = Amps.of(60);
   public static final Time CLOSED_LOOP_RAMP = Milliseconds.of(10);
   public static final Voltage MAX_VOLTS = Volts.of(12);
-  public static final AngularVelocity MAX_VELOCITY = RotationsPerSecond.of(28);
-  public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(9.64);
+  public static final AngularVelocity MAX_VELOCITY = RotationsPerSecond.of(12.5);
+  public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(120);
 
-  public static final AngularVelocity DEADBAND_IS_AT = RPM.of(20);
+  public static final AngularVelocity DEADBAND_IS_AT = RPM.of(10);
 
   public static class setpoints {
-    public static final AngularVelocity SHOOTING = RotationsPerSecond.of(27);
+    public static final AngularVelocity SHOOTING = RotationsPerSecond.of(5);
     public static final AngularVelocity STOPPED = RPM.of(0);
   }
 }
