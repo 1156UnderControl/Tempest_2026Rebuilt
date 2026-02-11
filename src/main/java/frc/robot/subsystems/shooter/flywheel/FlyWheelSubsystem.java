@@ -1,7 +1,6 @@
 package frc.robot.subsystems.shooter.flywheel;
 
 import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
@@ -11,6 +10,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.FlyWheelsConstants;
@@ -53,19 +53,10 @@ public class FlyWheelSubsystem extends SubsystemBase {
             .withGearing(FlyWheelsConstants.MOTOR_GEARING)
             .withTelemetry("FlyWheelLeadMotor", TelemetryVerbosity.HIGH)
             .withStatorCurrentLimit(Amps.of(60))
-            .withClosedLoopRampRate(Milliseconds.of(100))
             .withClosedLoopController(
-                new ExponentialProfilePIDController(
-                    new PIDController(
-                        FlyWheelsConstants.ClosedLoopController.kP,
-                        FlyWheelsConstants.ClosedLoopController.kI,
-                        FlyWheelsConstants.ClosedLoopController.kD),
-                    ExponentialProfilePIDController.createFlywheelConstraints(
-                        FlyWheelsConstants.MAX_VOLTS,
-                        FlyWheelsConstants.FLYWHEEL_MOTOR,
-                        FlyWheelsConstants.FLYWHEEL_MASS,
-                        FlyWheelsConstants.FLYWHEEL_SIZE,
-                        FlyWheelsConstants.MOTOR_GEARING)))
+                FlyWheelsConstants.ClosedLoopController.kP,
+                FlyWheelsConstants.ClosedLoopController.kI,
+                FlyWheelsConstants.ClosedLoopController.kD)
             .withSimClosedLoopController(
                 new ExponentialProfilePIDController(
                     new PIDController(
@@ -115,27 +106,23 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   private void updateInputs() {
-    this.inputs.currentVelocity = this.smartFlywheelMotor.getRotorVelocity().in(RotationsPerSecond);
-    this.inputs.targetVelocity =
-        this.smartFlywheelMotor.getMechanismSetpointVelocity().isEmpty()
-            ? 0
-            : this.smartFlywheelMotor.getMechanismSetpointVelocity().get().in(RotationsPerSecond);
+    this.inputs.currentVelocity = this.smartFlywheelMotor.getRotorVelocity().in(RPM);
+    this.inputs.targetVelocity = torqueCurrentRequest.getVelocityMeasure().in(RPM);
     this.inputs.atTarget = isAtTargetVelocity();
 
     Logger.processInputs("Subsystems/Shooter/FlyWheels/", inputs);
   }
 
   public Command runVelocity() {
-    return this.flywheelMechanism.setSpeed(RPM.of(4800));
+    return this.runVelocityTorqueControl(RPM.of(4800));
   }
 
   public Command stoppedVelocity() {
-    return this.flywheelMechanism.setSpeed(RotationsPerSecond.of(0));
+    return this.runVelocityTorqueControl(RPM.of(0));
   }
 
-  public Command runVelocityTorqueControl(double velocityRPM) {
-    return this.run(
-        () -> leadMotor.setControl(torqueCurrentRequest.withVelocity(RPM.of(velocityRPM))));
+  public Command runVelocityTorqueControl(AngularVelocity velocity) {
+    return this.run(() -> leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity)));
   }
 
   public boolean isAtTargetVelocity() {

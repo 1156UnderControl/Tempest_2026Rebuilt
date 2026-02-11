@@ -91,21 +91,24 @@ public class TurretSubsystem extends SubsystemBase {
 
     turretMotor = new SparkWrapper(turretFlex, DCMotor.getNeoVortex(1), smartTurretMotorConfig);
 
-    turretMechanismConfig = new PivotConfig(turretMotor)
-        .withHardLimit(
-            TurretConstants.Position.TURRET_MIN_ANGLE,
-            TurretConstants.Position.TURRET_MAX_ANGLE)
-        .withMOI(Meters.of(0.25), Kilograms.of(6))
-        .withStartingPosition(TurretConstants.Position.TURRET_STARTING_ANGLE)
-        .withTelemetry("Turret", TurretConstants.TELEMETRY);
+    turretMechanismConfig =
+        new PivotConfig(turretMotor)
+            .withHardLimit(
+                TurretConstants.Position.TURRET_MIN_ANGLE,
+                TurretConstants.Position.TURRET_MAX_ANGLE)
+            .withMOI(Meters.of(0.25), Kilograms.of(6))
+            .withStartingPosition(TurretConstants.Position.TURRET_STARTING_ANGLE)
+            .withTelemetry("Turret", TurretConstants.TELEMETRY);
 
     turret = new Pivot(turretMechanismConfig);
 
     this.encoder1 = kickerEncoder;
     this.encoder2 = climberEncoder;
 
-    this.absoluteAngle = determineTurretAngleDegrees(Units.rotationsToDegrees(this.encoder1.getPosition()),
-        Units.rotationsToDegrees(this.encoder2.getPosition()));
+    this.absoluteAngle =
+        determineTurretAngleDegrees(
+            Units.rotationsToDegrees(this.encoder1.getPosition()),
+            Units.rotationsToDegrees(this.encoder2.getPosition()));
 
     this.turretMotor.setEncoderPosition(Degrees.of(this.absoluteAngle));
 
@@ -134,16 +137,18 @@ public class TurretSubsystem extends SubsystemBase {
 
   private void updateInputs() {
     inputs.currentAngle = turret.getAngle().in(Degrees);
-    inputs.targetAngle = calculator.getLastParameters() != null
-        ? calculator.getLastParameters().turretAngle().getDegrees()
-        : 0;
+    inputs.targetAngle =
+        calculator.getLastParameters() != null
+            ? calculator.getLastParameters().turretAngle().getDegrees()
+            : 0;
     inputs.atTarget = isAtTargetAngle();
-    inputs.turret = RobotStates.getInstance()
-        .getRobotPose()
-        .transformBy(TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER)
-        .plus(
-            new Transform2d(
-                Translation2d.kZero, Rotation2d.fromDegrees(turret.getAngle().in(Degrees))));
+    inputs.turret =
+        RobotStates.getInstance()
+            .getRobotPose()
+            .transformBy(TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER)
+            .plus(
+                new Transform2d(
+                    Translation2d.kZero, Rotation2d.fromDegrees(turret.getAngle().in(Degrees))));
     inputs.absoluteAngle = this.absoluteAngle;
     inputs.encoder1 = this.encoder1.getPosition();
     inputs.encoder2 = this.encoder2.getPosition();
@@ -153,15 +158,17 @@ public class TurretSubsystem extends SubsystemBase {
 
   public Command trackHub() {
     return turret.setAngle(
-        () -> Degrees.of(
-            getReachableTurretAngle(calculator.getParameters().turretAngle().getDegrees())));
+        () ->
+            Degrees.of(
+                getReachableTurretAngle(calculator.getParameters().turretAngle().getDegrees())));
   }
 
   public Command trackPass() {
     return turret.setAngle(
-        () -> Degrees.of(
-            getReachableTurretAngle(
-                calculator.getParameters(false).turretAngle().getDegrees())));
+        () ->
+            Degrees.of(
+                getReachableTurretAngle(
+                    calculator.getParameters(false).turretAngle().getDegrees())));
   }
 
   public boolean isAtTargetAngle() {
@@ -192,14 +199,19 @@ public class TurretSubsystem extends SubsystemBase {
     }
     difference *= TurretConstants.SLOPE;
 
-    double e1Rotations = (difference * TurretConstants.GEAR_0_TOOTH_COUNT / TurretConstants.GEAR_1_TOOTH_COUNT) / 360.0;
+    double e1Rotations =
+        (difference * TurretConstants.GEAR_0_TOOTH_COUNT / TurretConstants.GEAR_1_TOOTH_COUNT)
+            / 360.0;
     double e1RotationsFloored = Math.floor(e1Rotations);
-    double turretAngle = (e1RotationsFloored * 360.0 + e1)
-        * (TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT);
+    double turretAngle =
+        (e1RotationsFloored * 360.0 + e1)
+            * (TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT);
     if (turretAngle - difference < -100) {
-      turretAngle += TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
+      turretAngle +=
+          TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
     } else if (turretAngle - difference > 100) {
-      turretAngle -= TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
+      turretAngle -=
+          TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
     }
     return -turretAngle;
   }
