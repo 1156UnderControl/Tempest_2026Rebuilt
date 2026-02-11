@@ -7,7 +7,6 @@ import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Milliseconds;
-import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -47,7 +46,13 @@ public class TurretConstants {
 
   public static final Voltage MAX_VOLTS = Volts.of(12.0);
 
-  public static final int TURRET_GEAR_TEETH = 96;
+  public static final double GEAR_0_TOOTH_COUNT = 96.0;
+  public static final double GEAR_1_TOOTH_COUNT = 14.0;
+  public static final double GEAR_2_TOOTH_COUNT = 15.0;
+
+  public static final double SLOPE =
+      (GEAR_2_TOOTH_COUNT * GEAR_1_TOOTH_COUNT)
+          / ((GEAR_1_TOOTH_COUNT - GEAR_2_TOOTH_COUNT) * GEAR_0_TOOTH_COUNT);
 
   public static final ControlMode CONTROL_MODE = ControlMode.CLOSED_LOOP;
 

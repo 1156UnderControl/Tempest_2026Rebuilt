@@ -11,4 +11,6 @@ public class TurretInputs {
   public double distanceToTarget = Double.NaN;
   public double absoluteAngle;
   public Pose2d turret;
+  public double encoder1;
+  public double encoder2;
 }

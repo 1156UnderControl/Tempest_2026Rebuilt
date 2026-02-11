@@ -11,6 +11,7 @@ import static edu.wpi.first.units.Units.Volts;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -66,20 +67,15 @@ public class ExtensorSubsystem extends SubsystemBase {
         new SmartMotorControllerConfig(this)
             .withMechanismCircumference(ExtensorConstants.MECHANISM_CIRCUNFERENCE)
             .withClosedLoopRampRate(Milliseconds.of(10))
-            .withClosedLoopController(
-                new ExponentialProfilePIDController(
-                    new PIDController(0, 0, 0),
-                    ExponentialProfilePIDController.createConstraints(
-                        ExtensorConstants.maxVolts,
+            .withClosedLoopController(0.5,0,0,
                         ExtensorConstants.maxVel,
-                        ExtensorConstants.maxAccel)))
+                        ExtensorConstants.maxAccel)
             .withSimClosedLoopController(
                 new ExponentialProfilePIDController(
                     new PIDController(0, 0, 0),
                     ExponentialProfilePIDController.createConstraints(
-                        ExtensorConstants.maxVolts,
-                        ExtensorConstants.maxVel,
-                        ExtensorConstants.maxAccel)))
+                    ExtensorConstants.maxVolts, ExtensorConstants.maxVel, ExtensorConstants.maxAccel)))
+            .withFeedforward(new SimpleMotorFeedforward(0.17, 0.2 ,0))
             .withGearing(ExtensorConstants.gearing)
             .withIdleMode(MotorMode.BRAKE)
             .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
@@ -131,14 +127,11 @@ public class ExtensorSubsystem extends SubsystemBase {
   }
 
   public Command extend() {
-    return this.setLength(ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION)
-        .onlyWhile(isAtCollision())
-        .andThen(softStopExtensor())
-        .repeatedly();
+    return this.setLength(Meters.of(0.3));
   }
 
   public Command retract() {
-    return this.setLength(ExtensorConstants.setpoints.INTAKE_HOMED_POSITION);
+    return this.setLength(Meters.of(0.05));
   }
 
   public Command shake() {
