@@ -65,9 +65,9 @@ public class TurretConstants {
 
   public static final Current STATOR_CURRENT_LIMIT = Amps.of(60);
 
-  public static final AngularVelocity MAX_VELOCITY = DegreesPerSecond.of(360);
+  public static final AngularVelocity MAX_VELOCITY = DegreesPerSecond.of(10000);
 
-  public static final AngularAcceleration ACCELERATION = DegreesPerSecondPerSecond.of(200);
+  public static final AngularAcceleration ACCELERATION = DegreesPerSecondPerSecond.of(10000);
 
   public static final Transform2d TURRET_OFFSET_FROM_ROBOT_CENTER =
       new Transform2d(-0.127, -0.18415, Rotation2d.kZero);
@@ -95,8 +95,8 @@ public class TurretConstants {
   }
 
   public static class FeedForwardController {
-    public static final double kV = 0;
-    public static final double kS = 0;
+    public static final double kV = 1;
+    public static final double kS = 0.1075;
     public static final double kA = 0;
 
     public static class SIM {

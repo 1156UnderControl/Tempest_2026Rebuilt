@@ -119,7 +119,6 @@ public class TurretSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     turret.updateTelemetry();
-
     updateInputs();
   }
 
@@ -170,6 +169,14 @@ public class TurretSubsystem extends SubsystemBase {
         .isNear(
             turret.getMechanismSetpoint().isEmpty() ? Degrees.of(0) : turret.getAngle(),
             TurretConstants.ANGLE_ERROR_ALLOWED);
+  }
+
+  public Command aimLeft(){
+    return turret.setAngle(Degrees.of(-100));
+  }
+
+  public Command aimRight(){
+    return turret.setAngle(Degrees.of(100));
   }
 
   private double getReachableTurretAngle(double targetAngle) {
