@@ -127,14 +127,11 @@ public class ExtensorSubsystem extends SubsystemBase {
   }
 
   public Command extend() {
-    return this.setLength(ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION)
-        .onlyWhile(isAtCollision())
-        .andThen(softStopExtensor())
-        .repeatedly();
+    return this.setLength(Meters.of(0.3));
   }
 
   public Command retract() {
-    return this.setLength(ExtensorConstants.setpoints.INTAKE_HOMED_POSITION);
+    return this.setLength(Meters.of(0.05));
   }
 
   public Command shake() {
