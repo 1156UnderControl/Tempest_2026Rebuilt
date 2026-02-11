@@ -10,6 +10,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.FlyWheelsConstants;
@@ -113,16 +114,16 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   public Command runVelocity() {
-    return this.flywheelMechanism.setSpeed(RPM.of(4800));
+    return this.runVelocityTorqueControl(RPM.of(4800));
   }
 
   public Command stoppedVelocity() {
-    return this.flywheelMechanism.setSpeed(RotationsPerSecond.of(0));
+    return this.runVelocityTorqueControl(RPM.of(0));
   }
 
-  public Command runVelocityTorqueControl(double velocityRPM) {
+  public Command runVelocityTorqueControl(AngularVelocity velocity) {
     return this.run(
-        () -> leadMotor.setControl(torqueCurrentRequest.withVelocity(RPM.of(velocityRPM))));
+        () -> leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity)));
   }
 
   public boolean isAtTargetVelocity() {
