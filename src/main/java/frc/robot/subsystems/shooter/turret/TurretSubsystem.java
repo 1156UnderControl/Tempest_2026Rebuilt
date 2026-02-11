@@ -52,25 +52,17 @@ public class TurretSubsystem extends SubsystemBase {
             .withStatorCurrentLimit(TurretConstants.STATOR_CURRENT_LIMIT)
             .withClosedLoopRampRate(TurretConstants.CLOSED_RAMP_RATE)
             .withClosedLoopController(
-                new ExponentialProfilePIDController(
-                    new PIDController(
                         TurretConstants.FeedBackController.kP,
                         TurretConstants.FeedBackController.kI,
-                        TurretConstants.FeedBackController.kD),
-                    ExponentialProfilePIDController.createConstraints(
-                        TurretConstants.MAX_VOLTS,
+                        TurretConstants.FeedBackController.kD,
                         TurretConstants.MAX_VELOCITY,
-                        TurretConstants.ACCELERATION)))
+                        TurretConstants.ACCELERATION)
             .withSimClosedLoopController(
-                new ExponentialProfilePIDController(
-                    new PIDController(
                         TurretConstants.FeedBackController.SIM.kP,
                         TurretConstants.FeedBackController.SIM.kI,
-                        TurretConstants.FeedBackController.SIM.kD),
-                    ExponentialProfilePIDController.createConstraints(
-                        TurretConstants.MAX_VOLTS,
+                        TurretConstants.FeedBackController.SIM.kD,
                         TurretConstants.MAX_VELOCITY,
-                        TurretConstants.ACCELERATION)))
+                        TurretConstants.ACCELERATION)
             .withFeedforward(
                 new SimpleMotorFeedforward(
                     TurretConstants.FeedForwardController.kS,
