@@ -112,7 +112,7 @@ public class SpindexerSubsystem extends SubsystemBase {
   }
 
   public Command stop() {
-    return spindexer.set(0);
+    return spindexer.setSpeed(SpindexerConstants.setpoints.STOPPED);
   }
 
   public Command setDutyCycle(double dutycycle) {
