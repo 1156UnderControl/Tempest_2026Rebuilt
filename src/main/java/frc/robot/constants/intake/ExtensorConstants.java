@@ -22,7 +22,7 @@ public class ExtensorConstants {
   public static final int ID_MOTOR = 4;
 
   public class limits {
-    public static final Distance MAX_EXTENSION = Meters.of(5000);
+    public static final Distance MAX_EXTENSION = Meters.of(0.34);
     public static final Distance MIN_EXTENSION = Meters.of(0);
   }
 
