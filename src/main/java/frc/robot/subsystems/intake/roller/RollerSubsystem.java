@@ -126,16 +126,8 @@ public class RollerSubsystem extends SubsystemBase {
     return this.setDutyCycle(-1);
   }
 
-  public Command runRollerReversed() {
-    return this.setDutyCycle(RollerConstants.setpoints.REVERSE_DUTY_CYCLE);
-  }
-
   public Command stopRoller() {
     return this.setDutyCycle(RollerConstants.setpoints.STOP_DUTY_CYCLE);
-  }
-
-  private Command setVoltage(Voltage voltage) {
-    return roller.setVoltage(voltage);
   }
 
   private Command setDutyCycle(double dutycycle) {
