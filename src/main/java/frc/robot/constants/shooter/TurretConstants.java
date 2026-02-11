@@ -16,7 +16,13 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 public class TurretConstants {
   public static final TelemetryVerbosity TELEMETRY = TelemetryVerbosity.HIGH;
   public static final Voltage MAX_VOLTS = Volts.of(12.0);
-  public static final int TURRET_GEAR_TEETH = 96;
+  public static final double GEAR_0_TOOTH_COUNT = 96.0;
+  public static final double GEAR_1_TOOTH_COUNT = 14.0;
+  public static final double GEAR_2_TOOTH_COUNT = 15.0;
+
+  public static final double SLOPE = (GEAR_2_TOOTH_COUNT * GEAR_1_TOOTH_COUNT)
+            / ((GEAR_1_TOOTH_COUNT - GEAR_2_TOOTH_COUNT) * GEAR_0_TOOTH_COUNT);
+
   public static final double PHASE_DELAY = 0.03;
 
   public static class Velocity {
@@ -37,5 +43,11 @@ public class TurretConstants {
     public static final double kP = 100;
     public static final double kI = 0;
     public static final double kD = 0;
+
+    public static class SIM {
+      public static final double kP = 200;
+      public static final double kI = 0;
+      public static final double kD = 0;
+    }
   }
 }

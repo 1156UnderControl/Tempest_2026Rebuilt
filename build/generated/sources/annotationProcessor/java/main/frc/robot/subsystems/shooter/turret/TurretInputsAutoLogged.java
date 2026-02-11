@@ -14,6 +14,10 @@ public class TurretInputsAutoLogged extends TurretInputs implements LoggableInpu
     table.put("DistanceToTarget", distanceToTarget);
     table.put("AbsoluteAngle", absoluteAngle);
     table.put("Turret", turret);
+    table.put("Encoder1", encoder1);
+    table.put("Encoder2", encoder2);
+    table.put("CrtError", crtError);
+    table.put("CrtStatus", crtStatus);
   }
 
   @Override
@@ -24,6 +28,10 @@ public class TurretInputsAutoLogged extends TurretInputs implements LoggableInpu
     distanceToTarget = table.get("DistanceToTarget", distanceToTarget);
     absoluteAngle = table.get("AbsoluteAngle", absoluteAngle);
     turret = table.get("Turret", turret);
+    encoder1 = table.get("Encoder1", encoder1);
+    encoder2 = table.get("Encoder2", encoder2);
+    crtError = table.get("CrtError", crtError);
+    crtStatus = table.get("CrtStatus", crtStatus);
   }
 
   public TurretInputsAutoLogged clone() {
@@ -33,7 +41,14 @@ public class TurretInputsAutoLogged extends TurretInputs implements LoggableInpu
     copy.atTarget = this.atTarget;
     copy.distanceToTarget = this.distanceToTarget;
     copy.absoluteAngle = this.absoluteAngle;
+<<<<<<< Updated upstream
     copy.turret = this.turret;
+=======
+    copy.encoder1 = this.encoder1;
+    copy.encoder2 = this.encoder2;
+    copy.crtError = this.crtError;
+    copy.crtStatus = this.crtStatus;
+>>>>>>> Stashed changes
     return copy;
   }
 }
