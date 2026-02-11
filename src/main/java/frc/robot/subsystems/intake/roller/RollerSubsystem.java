@@ -79,7 +79,7 @@ public class RollerSubsystem extends SubsystemBase {
             .withStatorCurrentLimit(Amps.of(40))
             .withMotorInverted(false)
             .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
-            .withControlMode(ControlMode.CLOSED_LOOP)
+            .withControlMode(ControlMode.OPEN_LOOP)
             .withClosedLoopRampRate(Seconds.of(0.25))
             .withOpenLoopRampRate(Seconds.of(0.25));
 
