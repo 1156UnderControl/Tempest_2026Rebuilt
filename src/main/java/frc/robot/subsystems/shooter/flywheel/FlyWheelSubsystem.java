@@ -122,8 +122,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   public Command runVelocityTorqueControl(AngularVelocity velocity) {
-    return this.run(
-        () -> leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity)));
+    return this.run(() -> leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity)));
   }
 
   public boolean isAtTargetVelocity() {
