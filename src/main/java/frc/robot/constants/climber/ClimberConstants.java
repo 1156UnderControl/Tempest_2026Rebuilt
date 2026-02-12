@@ -45,19 +45,15 @@ public class ClimberConstants {
   public static final MechanismGearing GEARING =
       new MechanismGearing(GearBox.fromReductionStages(3, 3, 4));
 
-  public static final boolean INVERTED = false;
+  public static final boolean INVERTED = true;
 
   public static final Current STATOR_CURRENT_LIMIT = Amps.of(40);
-
-  public static final AngularVelocity MAX_VELOCITY = DegreesPerSecond.of(360);
-
-  public static final AngularAcceleration ACCELERATION = DegreesPerSecondPerSecond.of(200);
 
   public static final Distance HEIGHT_ERROR_ALLOWED = Meters.of(0);
 
   public static final Distance CLIMBER_MIN_HEIGHT = Meters.of(0);
 
-  public static final Distance CLIMBER_MAX_HEIGHT = Meters.of(1);
+  public static final Distance CLIMBER_MAX_HEIGHT = Meters.of(0.124);
 
   public static final Time CLOSED_RAMP_RATE = Milliseconds.of(10);
 
