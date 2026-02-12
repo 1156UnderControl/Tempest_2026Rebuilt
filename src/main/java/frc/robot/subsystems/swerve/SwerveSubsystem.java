@@ -104,11 +104,11 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   private static PoseEstimator configureMulticameraPoseEstimation() {
     List<PoseEstimator> listOfEstimators = new ArrayList<PoseEstimator>();
     PoseEstimator limelightCenter = new LimelightPoseEstimator("limelight-center", false, false, 2);
-    PhotonCamera cameraLeftBack = new PhotonCamera(VisionConstants.leftBackArducamName);
-    PoseEstimator photonLeftBack =
-        new PhotonVisionPoseEstimator(cameraLeftBack, VisionConstants.robotToCamArducamLeftBack);
+    PhotonCamera cameraRightFront = new PhotonCamera(VisionConstants.rightFrontArducamName);
+    PoseEstimator photonRightFront =
+        new PhotonVisionPoseEstimator(cameraRightFront, VisionConstants.robotToCamArducamRightFront);
     listOfEstimators.add(limelightCenter);
-    listOfEstimators.add(photonLeftBack);
+    listOfEstimators.add(photonRightFront);
     PoseEstimator estimatorMultiCamera =
         new MultiCameraPoseEstimator(listOfEstimators, "Teleop Multi Pose Estimator");
     return estimatorMultiCamera;
