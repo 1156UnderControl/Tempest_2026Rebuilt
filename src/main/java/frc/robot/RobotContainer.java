@@ -123,6 +123,7 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
+    this.states.setDefaultStates();
     this.driverController
         .turboActivate()
         .onTrue(this.drive.boostRobotJoystickControlVelocity())

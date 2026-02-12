@@ -89,40 +89,6 @@ public class States {
         Commands.run(() -> drive.driveAlignAngleJoystick(), drive)
             .onlyIf(() -> DriverStation.isTeleopEnabled())
             .alongWith(Commands.runOnce(() -> this.driveState = "Drive Align Joystick State")));
-
-    this.extensor.setDefaultCommand(
-        this.extensor
-            .retract()
-            .alongWith(Commands.runOnce(() -> this.extensorState = "Retracted State")));
-
-    this.roller.setDefaultCommand(
-        this.roller
-            .stopRoller()
-            .alongWith(Commands.runOnce(() -> this.rollerState = "Stopped State")));
-
-    this.kicker.setDefaultCommand(
-        this.kicker.stop().alongWith(Commands.runOnce(() -> this.kickerState = "Stopped State")));
-
-    this.spindexer.setDefaultCommand(
-        this.spindexer
-            .stop()
-            .alongWith(Commands.runOnce(() -> this.spindexerState = "Stopped State")));
-
-    new Trigger(() -> RobotStates.getInstance().isOnAllianceZone())
-        .onTrue(this.turret.trackHub())
-        .onFalse(this.turret.trackPass());
-
-    this.hood.setDefaultCommand(this.hood.goToTargetAngle());
-
-    this.flyWheel.setDefaultCommand(
-        this.flyWheel
-            .runVelocity()
-            .alongWith(Commands.runOnce(() -> this.flyWheelState = "Running State")));
-
-    this.climber.setDefaultCommand(
-        this.climber
-            .defaultPosition()
-            .alongWith(Commands.runOnce(() -> this.climberState = "Default State")));
   }
 
   public Command shootState() {
