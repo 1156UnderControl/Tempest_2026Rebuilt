@@ -140,25 +140,13 @@ public class States {
   public Command collectState() {
     return this.extensor
         .extend()
-        .alongWith(
+        .andThen(
             this.roller.runRoller(),
             Commands.runOnce(
                 () -> {
                   this.extensorState = "Extended State";
                   this.rollerState = "Running State";
-                }))
-        .onlyWhile(this.extensor.isAtCollision().negate())
-        .andThen(
-            this.extensor
-                .softStopExtensor()
-                .alongWith(
-                    this.roller.stopRoller(),
-                    Commands.runOnce(
-                        () -> {
-                          this.extensorState = "Bumped State";
-                          this.rollerState = "Bumped State";
-                        })))
-        .repeatedly();
+                }));
   }
 
   public Command retractState() {
@@ -170,8 +158,7 @@ public class States {
                 () -> {
                   this.extensorState = "Retracted State";
                   this.rollerState = "Stopped State";
-                }))
-        .repeatedly();
+                }));
   }
 
   public Command climbState() {

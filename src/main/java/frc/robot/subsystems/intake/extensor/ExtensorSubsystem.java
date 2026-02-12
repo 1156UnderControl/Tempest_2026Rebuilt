@@ -67,16 +67,14 @@ public class ExtensorSubsystem extends SubsystemBase {
         new SmartMotorControllerConfig(this)
             .withMechanismCircumference(ExtensorConstants.MECHANISM_CIRCUNFERENCE)
             .withClosedLoopRampRate(Milliseconds.of(10))
-            .withClosedLoopController(
-                0.5, 0, 0, ExtensorConstants.maxVel, ExtensorConstants.maxAccel)
-            .withSimClosedLoopController(
-                new ExponentialProfilePIDController(
-                    new PIDController(0, 0, 0),
-                    ExponentialProfilePIDController.createConstraints(
-                        ExtensorConstants.maxVolts,
+            .withClosedLoopController(0.5,0,0,
                         ExtensorConstants.maxVel,
-                        ExtensorConstants.maxAccel)))
-            .withFeedforward(new SimpleMotorFeedforward(0.17, 0.2, 0))
+                        ExtensorConstants.maxAccel)
+            .withSimClosedLoopController(0.5,0,0,
+                        ExtensorConstants.maxVel,
+                        ExtensorConstants.maxAccel)
+            .withFeedforward(new SimpleMotorFeedforward(0.17, 0.2 ,0))
+            .withSimFeedforward(new SimpleMotorFeedforward(0.17, 0.2 ,0))
             .withGearing(ExtensorConstants.gearing)
             .withIdleMode(MotorMode.BRAKE)
             .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
