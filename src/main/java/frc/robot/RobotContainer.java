@@ -123,13 +123,14 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    this.states.setDefaultStates();
     this.driverController
         .turboActivate()
         .onTrue(this.drive.boostRobotJoystickControlVelocity())
         .onFalse(this.drive.limitRobotJoystickControlVelocity());
     this.driverController.a().whileTrue(this.turret.aimLeft());
     this.driverController.b().whileTrue(this.turret.aimRight());
+    this.driverController.y().whileTrue(this.turret.aimDefault());
+    this.driverController.x().onTrue(this.flyWheel.runVelocity());
   }
 
   public Command getAutonomousCommand() {
