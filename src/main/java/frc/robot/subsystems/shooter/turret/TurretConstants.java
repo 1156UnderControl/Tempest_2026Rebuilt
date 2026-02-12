@@ -65,9 +65,9 @@ public class TurretConstants {
 
   public static final Current STATOR_CURRENT_LIMIT = Amps.of(60);
 
-  public static final AngularVelocity MAX_VELOCITY = RotationsPerSecond.of(1.88);
+  public static final AngularVelocity MAX_VELOCITY = RotationsPerSecond.of(2);
 
-  public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(49.3);
+  public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(200);
 
   public static final Transform2d TURRET_OFFSET_FROM_ROBOT_CENTER =
       new Transform2d(-0.127, -0.18415, Rotation2d.kZero);
@@ -83,7 +83,7 @@ public class TurretConstants {
   public static final Time CLOSED_RAMP_RATE = Milliseconds.of(10);
 
   public static class FeedBackController {
-    public static final double kP = 0;
+    public static final double kP = 30;
     public static final double kI = 0;
     public static final double kD = 0;
 
