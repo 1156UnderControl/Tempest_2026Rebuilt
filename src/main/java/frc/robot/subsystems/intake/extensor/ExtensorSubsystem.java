@@ -122,7 +122,7 @@ public class ExtensorSubsystem extends SubsystemBase {
   }
 
   public Command extend() {
-    return this.setLength(Meters.of(39.7)).until(isAtTargetHeight());
+    return this.setLength(Meters.of(0.397));
   }
 
   public Command retract() {

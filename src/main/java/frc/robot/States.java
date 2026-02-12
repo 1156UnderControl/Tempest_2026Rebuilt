@@ -150,15 +150,14 @@ public class States {
   }
 
   public Command retractState() {
-    return this.extensor
-        .retract()
-        .alongWith(
-            this.roller.stopRoller(),
-            Commands.runOnce(
-                () -> {
-                  this.extensorState = "Retracted State";
-                  this.rollerState = "Stopped State";
-                }));
+    return Commands.parallel(this.extensor
+        .retract(),
+        this.roller.stopRoller(),
+        Commands.runOnce(
+            () -> {
+              this.extensorState = "Retracted State";
+              this.rollerState = "Stopped State";
+        }));
   }
 
   public Command climbState() {
