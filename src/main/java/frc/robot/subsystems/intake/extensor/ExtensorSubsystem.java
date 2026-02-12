@@ -10,7 +10,6 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
@@ -24,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.intake.ExtensorConstants;
 import org.littletonrobotics.junction.Logger;
-import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.ElevatorConfig;
 import yams.mechanisms.positional.Elevator;
 import yams.motorcontrollers.SmartMotorController;
@@ -67,14 +65,12 @@ public class ExtensorSubsystem extends SubsystemBase {
         new SmartMotorControllerConfig(this)
             .withMechanismCircumference(ExtensorConstants.MECHANISM_CIRCUNFERENCE)
             .withClosedLoopRampRate(Milliseconds.of(10))
-            .withClosedLoopController(0.5,0,0,
-                        ExtensorConstants.maxVel,
-                        ExtensorConstants.maxAccel)
-            .withSimClosedLoopController(0.5,0,0,
-                        ExtensorConstants.maxVel,
-                        ExtensorConstants.maxAccel)
-            .withFeedforward(new SimpleMotorFeedforward(0.17, 0.2 ,0))
-            .withSimFeedforward(new SimpleMotorFeedforward(0.17, 0.2 ,0))
+            .withClosedLoopController(
+                0.5, 0, 0, ExtensorConstants.maxVel, ExtensorConstants.maxAccel)
+            .withSimClosedLoopController(
+                0.5, 0, 0, ExtensorConstants.maxVel, ExtensorConstants.maxAccel)
+            .withFeedforward(new SimpleMotorFeedforward(0.17, 0.2, 0))
+            .withSimFeedforward(new SimpleMotorFeedforward(0.17, 0.2, 0))
             .withGearing(ExtensorConstants.gearing)
             .withIdleMode(MotorMode.BRAKE)
             .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)

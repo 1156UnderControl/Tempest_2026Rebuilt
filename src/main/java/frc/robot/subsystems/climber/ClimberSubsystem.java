@@ -50,15 +50,15 @@ public class ClimberSubsystem extends SubsystemBase {
             .withMechanismCircumference(ClimberConstants.MECHANISM_CIRCUNFERENCE)
             .withSoftLimit(ClimberConstants.CLIMBER_MIN_HEIGHT, ClimberConstants.CLIMBER_MAX_HEIGHT)
             .withClosedLoopController(
-                    new PIDController(
-                        ClimberConstants.FeedBackController.kP,
-                        ClimberConstants.FeedBackController.kI,
-                        ClimberConstants.FeedBackController.kD))
+                new PIDController(
+                    ClimberConstants.FeedBackController.kP,
+                    ClimberConstants.FeedBackController.kI,
+                    ClimberConstants.FeedBackController.kD))
             .withSimClosedLoopController(
-                    new PIDController(
-                        ClimberConstants.FeedBackController.SIM.kP,
-                        ClimberConstants.FeedBackController.SIM.kI,
-                        ClimberConstants.FeedBackController.SIM.kD))
+                new PIDController(
+                    ClimberConstants.FeedBackController.SIM.kP,
+                    ClimberConstants.FeedBackController.SIM.kI,
+                    ClimberConstants.FeedBackController.SIM.kD))
             .withFeedforward(
                 new SimpleMotorFeedforward(
                     ClimberConstants.FeedForwardController.kS,
@@ -72,7 +72,8 @@ public class ClimberSubsystem extends SubsystemBase {
             .withControlMode(ClimberConstants.CONTROL_MODE)
             .withTelemetry(ClimberConstants.CLIMBER_MECHANISM_NAME, ClimberConstants.TELEMETRY);
 
-    this.climberFlex = new SparkFlex(ClimberConstants.CLIMBER_MOTOR_ID, ClimberConstants.MOTOR_TYPE);
+    this.climberFlex =
+        new SparkFlex(ClimberConstants.CLIMBER_MOTOR_ID, ClimberConstants.MOTOR_TYPE);
 
     this.climberMotor =
         new SparkWrapper(climberFlex, ClimberConstants.DC_MOTOR, climberMotorConfig);
