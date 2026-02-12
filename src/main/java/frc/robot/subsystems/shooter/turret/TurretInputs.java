@@ -7,6 +7,7 @@ import org.littletonrobotics.junction.AutoLog;
 public class TurretInputs {
   public double currentAngle = 0;
   public double targetAngle = 0;
+  public double targetVelocity = 0;
   public boolean atTarget = false;
   public double distanceToTarget = Double.NaN;
   public double absoluteAngle;

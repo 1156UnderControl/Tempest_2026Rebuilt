@@ -35,6 +35,9 @@ public class TurretSubsystem extends SubsystemBase {
   private final PivotConfig turretMechanismConfig;
   private final Pivot turret;
 
+  private final ProfiledPIDController pidController;
+  private final ProfiledPIDController pidSimController;
+
   // private final SparkAbsoluteEncoder encoder1;
   // private final SparkAbsoluteEncoder encoder2;
 
@@ -43,6 +46,22 @@ public class TurretSubsystem extends SubsystemBase {
   private TurretSubsystem(SparkAbsoluteEncoder kickerEncoder, SparkAbsoluteEncoder climberEncoder) {
     // this.absoluteAngle = 2;
     calculator = ShooterCalculator.getInstance();
+    pidController =
+        new ProfiledPIDController(
+            TurretConstants.FeedBackController.kP,
+            TurretConstants.FeedBackController.kI,
+            TurretConstants.FeedBackController.kD,
+            new Constraints(
+                TurretConstants.MAX_VELOCITY.in(RotationsPerSecond),
+                TurretConstants.MAX_ACCELERATION.in(RotationsPerSecondPerSecond)));
+    pidSimController =
+        new ProfiledPIDController(
+            TurretConstants.FeedBackController.SIM.kP,
+            TurretConstants.FeedBackController.SIM.kI,
+            TurretConstants.FeedBackController.SIM.kD,
+            new Constraints(
+                TurretConstants.MAX_VELOCITY.in(RotationsPerSecond),
+                TurretConstants.MAX_ACCELERATION.in(RotationsPerSecondPerSecond)));
     smartTurretMotorConfig =
         new SmartMotorControllerConfig(this)
             .withIdleMode(TurretConstants.MOTOR_MODE)
@@ -51,22 +70,8 @@ public class TurretSubsystem extends SubsystemBase {
             .withSoftLimit(TurretConstants.TURRET_MIN_ANGLE, TurretConstants.TURRET_MAX_ANGLE)
             .withStatorCurrentLimit(TurretConstants.STATOR_CURRENT_LIMIT)
             .withClosedLoopRampRate(TurretConstants.CLOSED_RAMP_RATE)
-            .withClosedLoopController(
-                new ProfiledPIDController(
-                    TurretConstants.FeedBackController.kP,
-                    TurretConstants.FeedBackController.kI,
-                    TurretConstants.FeedBackController.kD,
-                    new Constraints(
-                        TurretConstants.MAX_VELOCITY.in(RotationsPerSecond),
-                        TurretConstants.MAX_ACCELERATION.in(RotationsPerSecondPerSecond))))
-            .withSimClosedLoopController(
-                new ProfiledPIDController(
-                    TurretConstants.FeedBackController.kP,
-                    TurretConstants.FeedBackController.kI,
-                    TurretConstants.FeedBackController.kD,
-                    new Constraints(
-                        TurretConstants.MAX_VELOCITY.in(RotationsPerSecond),
-                        TurretConstants.MAX_ACCELERATION.in(RotationsPerSecondPerSecond))))
+            .withClosedLoopController(pidController)
+            .withSimClosedLoopController(pidSimController)
             .withFeedforward(
                 new SimpleMotorFeedforward(
                     TurretConstants.FeedForwardController.kS,
@@ -126,10 +131,8 @@ public class TurretSubsystem extends SubsystemBase {
 
   private void updateInputs() {
     inputs.currentAngle = turret.getAngle().in(Degrees);
-    inputs.targetAngle =
-        turret.getMechanismSetpoint().isEmpty()
-            ? 0
-            : turret.getMechanismSetpoint().get().in(Degrees);
+    inputs.targetAngle = pidController.getSetpoint().position;
+    inputs.targetVelocity = pidController.getSetpoint().velocity;
     inputs.atTarget = isAtTargetAngle();
     inputs.turret =
         RobotStates.getInstance()
