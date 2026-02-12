@@ -22,7 +22,7 @@ public class ExtensorConstants {
   public static final int ID_MOTOR = 4;
 
   public class limits {
-    public static final Distance MAX_EXTENSION = Meters.of(0.399);
+    public static final Distance MAX_EXTENSION = Meters.of(0.29);
     public static final Distance MIN_EXTENSION = Meters.of(0);
   }
 
@@ -31,7 +31,7 @@ public class ExtensorConstants {
   public static final AngularAcceleration maxAccel = RotationsPerSecondPerSecond.of(10000);
   public static final DCMotor motor = DCMotor.getNeoVortex(1);
   public static final Mass mass = Kilograms.of(5);
-  public static final Distance drumRadius = Meters.of(0.0305 / 2.0);
+  public static final Distance drumRadius = Meters.of(0.02277 / 2.0);
   public static final MechanismGearing gearing =
       new MechanismGearing(GearBox.fromReductionStages(4));
 
@@ -49,6 +49,6 @@ public class ExtensorConstants {
 
   public class setpoints {
     public static final Distance INTAKE_EXTENDED_POSITION = limits.MAX_EXTENSION;
-    public static final Distance INTAKE_HOMED_POSITION = limits.MIN_EXTENSION;
+    public static final Distance INTAKE_HOMED_POSITION = Meters.of(0.05);
   }
 }

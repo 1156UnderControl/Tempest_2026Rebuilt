@@ -122,11 +122,11 @@ public class ExtensorSubsystem extends SubsystemBase {
   }
 
   public Command extend() {
-    return this.setLength(Meters.of(0.397));
+    return this.setLength(ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION);
   }
 
   public Command retract() {
-    return this.setLength(Meters.of(0.05));
+    return this.setLength(ExtensorConstants.setpoints.INTAKE_HOMED_POSITION);
   }
 
   public Command shake() {
