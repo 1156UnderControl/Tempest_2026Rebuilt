@@ -9,9 +9,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.climber.ClimberConstants;
 import org.littletonrobotics.junction.Logger;
-import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.ElevatorConfig;
 import yams.mechanisms.positional.Elevator;
 import yams.motorcontrollers.SmartMotorController;
@@ -71,7 +69,8 @@ public class ClimberSubsystem extends SubsystemBase {
                     ClimberConstants.FeedForwardController.SIM.kS,
                     ClimberConstants.FeedForwardController.SIM.kS,
                     ClimberConstants.FeedForwardController.SIM.kA))
-            .withControlMode(ClimberConstants.CONTROL_MODE);
+            .withControlMode(ClimberConstants.CONTROL_MODE)
+            .withTelemetry(ClimberConstants.CLIMBER_MECHANISM_NAME, ClimberConstants.TELEMETRY);
 
     this.climberFlex = new SparkFlex(ClimberConstants.CLIMBER_MOTOR_ID, ClimberConstants.MOTOR_TYPE);
 
@@ -102,11 +101,11 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public Command climb() {
-    return climber.setHeight(ClimberConstants.Setpoints.CLIMBED_HEIGHT).until(() -> isClimbed());
+    return climber.setHeight(Meters.of(0.1));
   }
 
   public Command defaultPosition() {
-    return climber.setHeight(ClimberConstants.Setpoints.DEFAULT_HEIGHT).until(() -> isClimbed());
+    return climber.setHeight(Meters.of(0));
   }
 
   public boolean isClimbed() {

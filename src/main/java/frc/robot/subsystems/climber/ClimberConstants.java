@@ -1,4 +1,4 @@
-package frc.robot.constants.climber;
+package frc.robot.subsystems.climber;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
@@ -67,7 +67,7 @@ public class ClimberConstants {
   }
 
   public static class FeedBackController {
-    public static final double kP = 0;
+    public static final double kP = 5.5;
     public static final double kI = 0;
     public static final double kD = 0;
 

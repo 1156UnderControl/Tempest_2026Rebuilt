@@ -124,10 +124,8 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    this.driverController.x().whileTrue(this.flyWheel.runVelocity());
-
-    this.driverController.a().whileTrue(this.turret.aimLeft());
-        this.driverController.a().whileTrue(this.turret.aimRight());
+    this.driverController.a().onTrue(this.climber.climb());
+    this.driverController.b().onTrue(this.climber.defaultPosition());
   }
 
   public Command getAutonomousCommand() {
