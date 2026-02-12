@@ -5,13 +5,9 @@
 package frc.robot.subsystems.hopper.kicker;
 
 import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import com.revrobotics.spark.SparkAbsoluteEncoder;
@@ -71,7 +67,8 @@ public class KickerSubsystem extends SubsystemBase {
         new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
             .withClosedLoopController(0.03, 0, 1, RPM.of(2423), RotationsPerSecondPerSecond.of(150))
-            .withSimClosedLoopController(0.03, 0, 1, RPM.of(2423), RotationsPerSecondPerSecond.of(150))
+            .withSimClosedLoopController(
+                0.03, 0, 1, RPM.of(2423), RotationsPerSecondPerSecond.of(150))
             .withFeedforward(new SimpleMotorFeedforward(0.16, 0.26))
             .withSimFeedforward(new SimpleMotorFeedforward(0.16, 0.26))
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(2.5)))
