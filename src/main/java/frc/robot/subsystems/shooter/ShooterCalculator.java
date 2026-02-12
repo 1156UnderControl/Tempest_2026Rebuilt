@@ -14,10 +14,10 @@ import frc.robot.Constants;
 import frc.robot.RobotStates;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.FieldConstants.FieldStructurePoses;
-import frc.robot.constants.shooter.TurretConstants;
 import frc.robot.subsystems.shooter.interpolatingTreeMaps.FeedingMaps;
 import frc.robot.subsystems.shooter.interpolatingTreeMaps.InterpolatingTreeMaps;
 import frc.robot.subsystems.shooter.interpolatingTreeMaps.ShootingMaps;
+import frc.robot.subsystems.shooter.turret.TurretConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterCalculator {
@@ -53,8 +53,7 @@ public class ShooterCalculator {
 
   private boolean lastState;
 
-  private final Transform2d robotToTurret =
-      TurretConstants.Position.TURRET_OFFSET_FROM_ROBOT_CENTER;
+  private final Transform2d robotToTurret = TurretConstants.TURRET_OFFSET_FROM_ROBOT_CENTER;
 
   private static double phaseDelay = TurretConstants.PHASE_DELAY;
 

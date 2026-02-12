@@ -1,31 +1,19 @@
 package frc.robot.subsystems.climber;
 
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
-import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.Seconds;
 
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.climber.ClimberConstants;
 import org.littletonrobotics.junction.Logger;
-import yams.gearing.GearBox;
-import yams.gearing.MechanismGearing;
 import yams.mechanisms.config.ElevatorConfig;
 import yams.mechanisms.positional.Elevator;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
-import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
-import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class ClimberSubsystem extends SubsystemBase {
@@ -38,11 +26,9 @@ public class ClimberSubsystem extends SubsystemBase {
     return instance;
   }
 
-  private final ClimberInputsAutoLogged climberInputs = new ClimberInputsAutoLogged();
+  private final ClimberInputsAutoLogged climberInputs;
 
   private final SparkFlex climberFlex;
-
-  private final DCMotor motors;
 
   private final SmartMotorControllerConfig climberMotorConfig;
 
@@ -52,46 +38,53 @@ public class ClimberSubsystem extends SubsystemBase {
 
   private final Elevator climber;
 
-  private Distance setpoint = ClimberConstants.setpoints.DEFAULT_HEIGHT;
-
   public ClimberSubsystem() {
-    this.climberFlex = new SparkFlex(ClimberConstants.ID_climberMotor, MotorType.kBrushless);
-
-    this.motors = DCMotor.getNeoVortex(1);
-
+    this.climberInputs = new ClimberInputsAutoLogged();
     this.climberMotorConfig =
         new SmartMotorControllerConfig(this)
-            .withControlMode(ControlMode.CLOSED_LOOP)
-            .withClosedLoopController(
-                1,
-                0,
-                0,
-                DegreesPerSecond.of(ClimberConstants.VELOCITY_M_PER_SECOND),
-                DegreesPerSecondPerSecond.of(ClimberConstants.ACCELERATION_M_PER_SECOND_SQRD))
-            .withSimClosedLoopController(
-                1,
-                0,
-                0,
-                DegreesPerSecond.of(ClimberConstants.VELOCITY_M_PER_SECOND),
-                DegreesPerSecondPerSecond.of(ClimberConstants.ACCELERATION_M_PER_SECOND_SQRD))
-            .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
-            .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
-            .withTelemetry("ClimberMotor", TelemetryVerbosity.HIGH)
-            .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 3, 4)))
-            .withMotorInverted(false)
-            .withClosedLoopRampRate(Seconds.of(0.25))
-            .withOpenLoopRampRate(Seconds.of(0.25))
+            .withIdleMode(ClimberConstants.MOTOR_MODE)
+            .withGearing(ClimberConstants.GEARING)
+            .withMotorInverted(ClimberConstants.INVERTED)
+            .withStatorCurrentLimit(ClimberConstants.STATOR_CURRENT_LIMIT)
+            .withClosedLoopRampRate(ClimberConstants.CLOSED_RAMP_RATE)
             .withMechanismCircumference(ClimberConstants.MECHANISM_CIRCUNFERENCE)
-            .withControlMode(ControlMode.CLOSED_LOOP);
+            .withSoftLimit(ClimberConstants.CLIMBER_MIN_HEIGHT, ClimberConstants.CLIMBER_MAX_HEIGHT)
+            .withClosedLoopController(
+                new PIDController(
+                    ClimberConstants.FeedBackController.kP,
+                    ClimberConstants.FeedBackController.kI,
+                    ClimberConstants.FeedBackController.kD))
+            .withSimClosedLoopController(
+                new PIDController(
+                    ClimberConstants.FeedBackController.SIM.kP,
+                    ClimberConstants.FeedBackController.SIM.kI,
+                    ClimberConstants.FeedBackController.SIM.kD))
+            .withFeedforward(
+                new SimpleMotorFeedforward(
+                    ClimberConstants.FeedForwardController.kS,
+                    ClimberConstants.FeedForwardController.kS,
+                    ClimberConstants.FeedForwardController.kA))
+            .withFeedforward(
+                new SimpleMotorFeedforward(
+                    ClimberConstants.FeedForwardController.SIM.kS,
+                    ClimberConstants.FeedForwardController.SIM.kS,
+                    ClimberConstants.FeedForwardController.SIM.kA))
+            .withControlMode(ClimberConstants.CONTROL_MODE)
+            .withTelemetry(ClimberConstants.CLIMBER_MECHANISM_NAME, ClimberConstants.TELEMETRY);
 
-    this.climberMotor = new SparkWrapper(climberFlex, motors, climberMotorConfig);
+    this.climberFlex =
+        new SparkFlex(ClimberConstants.CLIMBER_MOTOR_ID, ClimberConstants.MOTOR_TYPE);
+
+    this.climberMotor =
+        new SparkWrapper(climberFlex, ClimberConstants.DC_MOTOR, climberMotorConfig);
 
     this.climberConfig =
         new ElevatorConfig(climberMotor)
-            .withHardLimits(ClimberConstants.limits.MIN_HEIGHT, ClimberConstants.limits.MAX_HEIGHT)
-            .withStartingHeight(ClimberConstants.limits.MIN_HEIGHT)
-            .withMass(Mass.ofBaseUnits(2, Kilograms))
-            .withTelemetry("ClimberMechanism", TelemetryVerbosity.HIGH);
+            .withHardLimits(
+                ClimberConstants.CLIMBER_MIN_HEIGHT, ClimberConstants.CLIMBER_MAX_HEIGHT)
+            .withStartingHeight(ClimberConstants.STARTING_HEIGHT)
+            .withMass(ClimberConstants.CLIMBER_MASS)
+            .withTelemetry(ClimberConstants.CLIMBER_MECHANISM_NAME, ClimberConstants.TELEMETRY);
 
     this.climber = new Elevator(climberConfig);
   }
@@ -101,12 +94,6 @@ public class ClimberSubsystem extends SubsystemBase {
     this.updateInputs();
     Logger.processInputs("Subsystems/Climber", climberInputs);
     climber.updateTelemetry();
-    this.setpoint =
-        climber.getMechanismSetpoint().isEmpty()
-            ? Meters.of(0)
-            : Meters.of(
-                climber.getMechanismSetpoint().get().in(Rotations)
-                    * ClimberConstants.MECHANISM_CIRCUNFERENCE.in(Meters));
   }
 
   @Override
@@ -114,28 +101,24 @@ public class ClimberSubsystem extends SubsystemBase {
     climber.simIterate();
   }
 
-  public Command holdPID() {
-    return climber.setHeight(setpoint);
-  }
-
   public Command climb() {
-    return climber.setHeight(ClimberConstants.setpoints.CLIMBED_HEIGHT).until(() -> isClimbed());
+    return climber.setHeight(Meters.of(0.1));
   }
 
   public Command defaultPosition() {
-    return climber.setHeight(ClimberConstants.setpoints.DEFAULT_HEIGHT).until(() -> isClimbed());
-  }
-
-  public Command raise() {
-    return this.setHeight(ClimberConstants.setpoints.RAISED_HEIGHT);
-  }
-
-  public Command setHeight(Distance height) {
-    return climber.setHeight(height).until(() -> isClimbed());
+    return climber.setHeight(Meters.of(0));
   }
 
   public boolean isClimbed() {
-    return climber.getHeight().isNear(setpoint, ClimberConstants.DEADBAND_IS_AT);
+    return climber
+        .getHeight()
+        .isNear(
+            climber.getMechanismSetpoint().isEmpty()
+                ? Meters.of(0)
+                : Meters.of(
+                    climber.getMechanismSetpoint().get().in(Rotations)
+                        * ClimberConstants.MECHANISM_CIRCUNFERENCE.in(Meters)),
+            ClimberConstants.HEIGHT_ERROR_ALLOWED);
   }
 
   public Command setDutyCycle(double dutycycle) {
@@ -146,7 +129,13 @@ public class ClimberSubsystem extends SubsystemBase {
     climberInputs.climberAppliedVolts = climberMotor.getVoltage();
     climberInputs.climberCurrent = climberMotor.getStatorCurrent();
     climberInputs.climberPosition = climber.getHeight();
-    climberInputs.climberSetpoint = setpoint;
+    climberInputs.climberSetpoint =
+        climber.getMechanismSetpoint().isEmpty()
+            ? Meters.of(0)
+            : Meters.of(
+                climber.getMechanismSetpoint().get().in(Rotations)
+                    * ClimberConstants.MECHANISM_CIRCUNFERENCE.in(Meters));
+    ;
     climberInputs.climberVelocity = climber.getVelocity();
   }
 
