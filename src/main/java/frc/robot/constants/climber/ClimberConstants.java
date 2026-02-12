@@ -24,7 +24,7 @@ import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 
 public class ClimberConstants {
-  public static final int TURRET_MOTOR_ID = 5;
+  public static final int CLIMBER_MOTOR_ID = 5;
 
   public static final MotorType MOTOR_TYPE = MotorType.kBrushless;
 

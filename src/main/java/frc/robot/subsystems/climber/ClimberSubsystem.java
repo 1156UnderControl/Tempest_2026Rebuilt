@@ -52,25 +52,15 @@ public class ClimberSubsystem extends SubsystemBase {
             .withMechanismCircumference(ClimberConstants.MECHANISM_CIRCUNFERENCE)
             .withSoftLimit(ClimberConstants.CLIMBER_MIN_HEIGHT, ClimberConstants.CLIMBER_MAX_HEIGHT)
             .withClosedLoopController(
-                new ExponentialProfilePIDController(
                     new PIDController(
                         ClimberConstants.FeedBackController.kP,
                         ClimberConstants.FeedBackController.kI,
-                        ClimberConstants.FeedBackController.kD),
-                    ExponentialProfilePIDController.createConstraints(
-                        ClimberConstants.MAX_VOLTS,
-                        ClimberConstants.MAX_VELOCITY,
-                        ClimberConstants.ACCELERATION)))
+                        ClimberConstants.FeedBackController.kD))
             .withSimClosedLoopController(
-                new ExponentialProfilePIDController(
                     new PIDController(
                         ClimberConstants.FeedBackController.SIM.kP,
                         ClimberConstants.FeedBackController.SIM.kI,
-                        ClimberConstants.FeedBackController.SIM.kD),
-                    ExponentialProfilePIDController.createConstraints(
-                        ClimberConstants.MAX_VOLTS,
-                        ClimberConstants.MAX_VELOCITY,
-                        ClimberConstants.ACCELERATION)))
+                        ClimberConstants.FeedBackController.SIM.kD))
             .withFeedforward(
                 new SimpleMotorFeedforward(
                     ClimberConstants.FeedForwardController.kS,
@@ -83,7 +73,7 @@ public class ClimberSubsystem extends SubsystemBase {
                     ClimberConstants.FeedForwardController.SIM.kA))
             .withControlMode(ClimberConstants.CONTROL_MODE);
 
-    this.climberFlex = new SparkFlex(ClimberConstants.TURRET_MOTOR_ID, ClimberConstants.MOTOR_TYPE);
+    this.climberFlex = new SparkFlex(ClimberConstants.CLIMBER_MOTOR_ID, ClimberConstants.MOTOR_TYPE);
 
     this.climberMotor =
         new SparkWrapper(climberFlex, ClimberConstants.DC_MOTOR, climberMotorConfig);
