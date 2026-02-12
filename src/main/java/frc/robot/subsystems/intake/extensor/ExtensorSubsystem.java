@@ -122,7 +122,7 @@ public class ExtensorSubsystem extends SubsystemBase {
   }
 
   public Command extend() {
-    return this.setLength(Meters.of(0.3));
+    return this.setLength(Meters.of(39.7)).until(isAtTargetHeight());
   }
 
   public Command retract() {
@@ -131,9 +131,9 @@ public class ExtensorSubsystem extends SubsystemBase {
 
   public Command shake() {
     return this.extend()
-        .until(isAtTargetAngle())
+        .until(isAtTargetHeight())
         .andThen(Commands.waitSeconds(0.5))
-        .andThen(this.retract().until(isAtTargetAngle()))
+        .andThen(this.retract().until(isAtTargetHeight()))
         .andThen(Commands.waitSeconds(0.5))
         .repeatedly();
   }
@@ -186,10 +186,10 @@ public class ExtensorSubsystem extends SubsystemBase {
 
   public Trigger isAtCollision() {
     Debouncer isAtPositionDebouncer = new Debouncer(3, DebounceType.kFalling);
-    return new Trigger(() -> isAtPositionDebouncer.calculate(isAtTargetAngle().getAsBoolean()));
+    return new Trigger(() -> isAtPositionDebouncer.calculate(isAtTargetHeight().getAsBoolean()));
   }
 
-  public Trigger isAtTargetAngle() {
+  public Trigger isAtTargetHeight() {
     return new Trigger(
         () -> extensor.getHeight().isNear(setpoint, ExtensorConstants.DEADBAND_IS_AT));
   }
