@@ -103,30 +103,55 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
   private static PoseEstimator configureMulticameraPoseEstimation() {
     List<PoseEstimator> listOfEstimators = new ArrayList<PoseEstimator>();
-    PoseEstimator limelightCenter = new LimelightPoseEstimator("limelight-center", false, false, 2);
-    PhotonCamera cameraRightFront = new PhotonCamera(VisionConstants.rightFrontArducamName);
-    PoseEstimator photonRightFront =
-        new PhotonVisionPoseEstimator(cameraRightFront, VisionConstants.robotToCamArducamRightFront);
-    listOfEstimators.add(limelightCenter);
-    listOfEstimators.add(photonRightFront);
+    PoseEstimator limelightLeftBack = new LimelightPoseEstimator("limelight-left-back", false, false, 2);
+     PoseEstimator limelightLeftFront = new LimelightPoseEstimator("limelight-left-front", false, false, 2);
+    PhotonCamera cameraFrontRight = new PhotonCamera(VisionConstants.frontRightArducamName);
+     PhotonCamera cameraBackRight = new PhotonCamera(VisionConstants.backRightArducamName);
+     
+    PoseEstimator photonFrontRight =
+        new PhotonVisionPoseEstimator(cameraFrontRight, VisionConstants.robotToCamArducamFrontRight);
+
+        PoseEstimator photonBackRight =
+        new PhotonVisionPoseEstimator(cameraBackRight, VisionConstants.robotToCamArducamBackRight);
+
+    listOfEstimators.add(limelightLeftBack);
+    listOfEstimators.add(limelightLeftFront);
+    listOfEstimators.add(photonFrontRight);
+     listOfEstimators.add(photonBackRight);
+
     PoseEstimator estimatorMultiCamera =
         new MultiCameraPoseEstimator(listOfEstimators, "Teleop Multi Pose Estimator");
     return estimatorMultiCamera;
   }
 
   public void resetOdometryLimelight(Translation2d defaultPosition) {
-    PoseEstimator limelightLeft = new LimelightPoseEstimator("limelight-center", false, false, 2);
-    Optional<PoseEstimation> limelightPoseEstimation =
-        limelightLeft.getEstimatedPose(this.getPose());
-    if (limelightPoseEstimation.isEmpty()) {
+    PoseEstimator limelightLeftBack = new LimelightPoseEstimator("limelight-left-back", false, false, 2);
+        PoseEstimator limelightLeftFront= new LimelightPoseEstimator("limelight-left-front", false, false, 2);
+    Optional<PoseEstimation> limelightLeftBackPoseEstimation =
+        limelightLeftBack.getEstimatedPose(this.getPose());
+
+    if (limelightLeftBackPoseEstimation.isEmpty()) {
       resetTranslation(defaultPosition);
       this.positionUpdated = true;
     } else {
       resetTranslation(
-          limelightPoseEstimation.get().estimatedPose.getTranslation().toTranslation2d());
+          limelightLeftBackPoseEstimation.get().estimatedPose.getTranslation().toTranslation2d());
+      this.positionUpdated = true;
+    }
+
+    Optional<PoseEstimation> limelightLeftFrontPoseEstimation =
+        limelightLeftFront.getEstimatedPose(this.getPose());
+    if (limelightLeftFrontPoseEstimation.isEmpty()) {
+      resetTranslation(defaultPosition);
+      this.positionUpdated = true;
+    } else {
+      resetTranslation(
+          limelightLeftFrontPoseEstimation.get().estimatedPose.getTranslation().toTranslation2d());
       this.positionUpdated = true;
     }
   }
+
+  
 
   public Supplier<Pose2d> getOdometryPose() {
     return this.robotPose;
@@ -178,7 +203,10 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   public void periodic() {
     super.periodic();
     LimelightHelpers.SetRobotOrientation(
-        "limelight-center", OdometryEnabledSwerveSubsystem.robotOrientation, 0, 0, 0, 0, 0);
+        "limelight-left-back", OdometryEnabledSwerveSubsystem.robotOrientation, 0, 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation(
+        "limelight-left-front", OdometryEnabledSwerveSubsystem.robotOrientation, 0, 0, 0, 0, 0);
+   
   }
 
   public boolean isAtTargetPositionWithHeading() {
