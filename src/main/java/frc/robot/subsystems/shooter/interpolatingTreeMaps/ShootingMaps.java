@@ -21,16 +21,15 @@ public class ShootingMaps implements InterpolatingTreeMaps {
     maxDistance = 5.60;
 
     // TODO: Get our own distances to HoodAngle
-    shotHoodAngleMap.put(1.34, Rotation2d.fromDegrees(19.0));
-    shotHoodAngleMap.put(1.78, Rotation2d.fromDegrees(19.0));
-    shotHoodAngleMap.put(2.17, Rotation2d.fromDegrees(24.0));
-    shotHoodAngleMap.put(2.81, Rotation2d.fromDegrees(27.0));
-    shotHoodAngleMap.put(3.82, Rotation2d.fromDegrees(29.0));
-    shotHoodAngleMap.put(4.09, Rotation2d.fromDegrees(30.0));
-    shotHoodAngleMap.put(4.40, Rotation2d.fromDegrees(31.0));
-    shotHoodAngleMap.put(4.77, Rotation2d.fromDegrees(32.0));
-    shotHoodAngleMap.put(5.57, Rotation2d.fromDegrees(32.0));
-    shotHoodAngleMap.put(5.60, Rotation2d.fromDegrees(35.0));
+    shotHoodAngleMap.put(1.25, Rotation2d.fromDegrees(75));
+    shotHoodAngleMap.put(1.48, Rotation2d.fromDegrees(75));
+    shotHoodAngleMap.put(2.00, Rotation2d.fromDegrees(73));
+    shotHoodAngleMap.put(2.55, Rotation2d.fromDegrees(70));
+    shotHoodAngleMap.put(3.05, Rotation2d.fromDegrees(68));
+    shotHoodAngleMap.put(3.55, Rotation2d.fromDegrees(65));
+    shotHoodAngleMap.put(3.96, Rotation2d.fromDegrees(62));
+    shotHoodAngleMap.put(5.54, Rotation2d.fromDegrees(52));
+
 
     // TODO: Get our own distances to RPS
     shotFlywheelSpeedMap.put(1.34, 210.0);
