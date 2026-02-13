@@ -8,6 +8,9 @@ import edu.wpi.first.math.util.Units;
 public class VisionConstants {
   public static final String frontRightArducamName = "Arducam-Front-Right";
   public static final String backRightArducamName = "Arducam-Back-Right";
+  
+  public static final String frontLeftLimelightName = "limelight-fleft";
+  public static final String backLeftLimelightName = "limelight-bleft";
   public static final double xyStdDevCoefficient = 0.04;
   public static final double thetaStdDevCoefficient = 0.08;
 
