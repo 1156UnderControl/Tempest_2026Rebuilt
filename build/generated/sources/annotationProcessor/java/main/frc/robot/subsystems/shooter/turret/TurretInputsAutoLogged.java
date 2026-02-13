@@ -10,6 +10,8 @@ public class TurretInputsAutoLogged extends TurretInputs implements LoggableInpu
   public void toLog(LogTable table) {
     table.put("CurrentAngle", currentAngle);
     table.put("TargetAngle", targetAngle);
+    table.put("Current", current);
+    table.put("Voltage", voltage);
     table.put("AtTarget", atTarget);
     table.put("DistanceToTarget", distanceToTarget);
     table.put("AbsoluteAngle", absoluteAngle);
@@ -22,6 +24,8 @@ public class TurretInputsAutoLogged extends TurretInputs implements LoggableInpu
   public void fromLog(LogTable table) {
     currentAngle = table.get("CurrentAngle", currentAngle);
     targetAngle = table.get("TargetAngle", targetAngle);
+    current = table.get("Current", current);
+    voltage = table.get("Voltage", voltage);
     atTarget = table.get("AtTarget", atTarget);
     distanceToTarget = table.get("DistanceToTarget", distanceToTarget);
     absoluteAngle = table.get("AbsoluteAngle", absoluteAngle);
@@ -34,6 +38,8 @@ public class TurretInputsAutoLogged extends TurretInputs implements LoggableInpu
     TurretInputsAutoLogged copy = new TurretInputsAutoLogged();
     copy.currentAngle = this.currentAngle;
     copy.targetAngle = this.targetAngle;
+    copy.current = this.current;
+    copy.voltage = this.voltage;
     copy.atTarget = this.atTarget;
     copy.distanceToTarget = this.distanceToTarget;
     copy.absoluteAngle = this.absoluteAngle;
