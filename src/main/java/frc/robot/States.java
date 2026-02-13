@@ -108,9 +108,7 @@ public class States {
             .stop()
             .alongWith(Commands.runOnce(() -> this.spindexerState = "Stopped State")));
 
-    new Trigger(() -> RobotStates.getInstance().isOnAllianceZone())
-        .onTrue(this.turret.trackHub())
-        .onFalse(this.turret.trackPass());
+    this.turret.setDefaultCommand(this.turret.trackHub());
 
     this.hood.setDefaultCommand(this.hood.goToTargetAngle());
 

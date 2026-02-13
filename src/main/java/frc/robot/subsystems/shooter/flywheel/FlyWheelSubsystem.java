@@ -108,13 +108,13 @@ public class FlyWheelSubsystem extends SubsystemBase {
   private void updateInputs() {
     this.inputs.currentVelocity = this.smartFlywheelMotor.getRotorVelocity().in(RPM);
     this.inputs.targetVelocity = torqueCurrentRequest.getVelocityMeasure().in(RPM);
-    this.inputs.atTarget = isAtTargetVelocity();
+    this.inputs.atTarget = isAtTargetVelocityShoot();
 
     Logger.processInputs("Subsystems/Shooter/FlyWheels/", inputs);
   }
 
   public Command runVelocity() {
-    return this.runVelocityTorqueControl(RPM.of(3200));
+    return this.runVelocityTorqueControl(RPM.of(ShooterCalculator.getInstance().getParameters(true).flywheelSpeed()));
   }
 
   public Command stoppedVelocity() {
@@ -125,13 +125,10 @@ public class FlyWheelSubsystem extends SubsystemBase {
     return this.run(() -> leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity)));
   }
 
-  public boolean isAtTargetVelocity() {
+  public boolean isAtTargetVelocityShoot() {
     return this.flywheelMechanism
         .getSpeed()
-        .isNear(
-            this.smartFlywheelMotor.getMechanismSetpointVelocity().isEmpty() == true
-                ? RotationsPerSecond.of(0)
-                : this.smartFlywheelMotor.getMechanismSetpointVelocity().get(),
+        .isNear(RPM.of(ShooterCalculator.getInstance().getLastParameters().flywheelSpeed()),
             FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
   }
 }
