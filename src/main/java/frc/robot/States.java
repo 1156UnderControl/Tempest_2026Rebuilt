@@ -126,13 +126,12 @@ public class States {
   }
 
   public Command shootState() {
-    return Commands.parallel(this.kicker.shoot(), this.spindexer.shoot(), this.extensor.shake())
+    return Commands.parallel(this.kicker.shoot(), this.spindexer.shoot())
         .alongWith(
             Commands.runOnce(
                 () -> {
                   this.kickerState = "Running State";
                   this.spindexerState = "Running State";
-                  this.extensorState = "Shake State";
                 }))
         .repeatedly();
   }
