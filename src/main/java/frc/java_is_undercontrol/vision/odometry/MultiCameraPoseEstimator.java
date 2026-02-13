@@ -63,7 +63,10 @@ public class MultiCameraPoseEstimator implements PoseEstimator {
         boolean isRedAlliance =
             DriverStation.getAlliance().isPresent()
                 && DriverStation.getAlliance().get() == Alliance.Red;
-        double[] priorityTags = isRedAlliance ? new double[] {9, 10} : new double[] {25, 26};
+        double[] priorityTags =
+            isRedAlliance
+                ? new double[] {9, 10, 11, 2, 3, 4, 5, 8}
+                : new double[] {25, 26, 27, 18, 19, 20, 21, 24};
         int hubScore = 0;
         for (int tagSeen : pose.tagsSeen) {
           if (tagSeen == priorityTags[0] || tagSeen == priorityTags[1]) {
