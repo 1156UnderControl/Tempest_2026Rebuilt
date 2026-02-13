@@ -22,6 +22,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Optional;
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem {
 
@@ -93,6 +94,7 @@ public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem
     if (possibleEstimatedPose.isPresent()) {
       PoseEstimation estimatedPose = possibleEstimatedPose.get();
       Pose2d poseVision = estimatedPose.estimatedPose.toPose2d();
+      Logger.recordOutput("Odometry/PoseVision", poseVision);
       this.addVisionMeasurement(
           poseVision, estimatedPose.timestampSeconds, estimatedPose.visionStdDev);
     }

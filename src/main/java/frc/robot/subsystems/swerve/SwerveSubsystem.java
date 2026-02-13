@@ -22,7 +22,7 @@ import frc.java_is_undercontrol.swerve.configs.OdometryEnabledSwerveConfig;
 import frc.java_is_undercontrol.swerve.configs.SwerveDeadbandsConfig;
 import frc.java_is_undercontrol.swerve.configs.SwervePathPlannerConfig;
 import frc.java_is_undercontrol.util.StabilizeChecker;
-import frc.java_is_undercontrol.vision.deprecated.Cameras.LimelightHelpers;
+import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers;
 import frc.java_is_undercontrol.vision.odometry.LimelightPoseEstimator;
 import frc.java_is_undercontrol.vision.odometry.MultiCameraPoseEstimator;
 import frc.java_is_undercontrol.vision.odometry.PhotonVisionPoseEstimator;
@@ -103,21 +103,24 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
   private static PoseEstimator configureMulticameraPoseEstimation() {
     List<PoseEstimator> listOfEstimators = new ArrayList<PoseEstimator>();
-    PoseEstimator limelightLeftBack = new LimelightPoseEstimator("limelight-left-back", false, false, 2);
-     PoseEstimator limelightLeftFront = new LimelightPoseEstimator("limelight-left-front", false, false, 2);
+    PoseEstimator limelightLeftBack =
+        new LimelightPoseEstimator(VisionConstants.backLeftLimelightName, false, false, 2);
+    PoseEstimator limelightLeftFront =
+        new LimelightPoseEstimator(VisionConstants.frontLeftLimelightName, false, false, 2);
     PhotonCamera cameraFrontRight = new PhotonCamera(VisionConstants.frontRightArducamName);
-     PhotonCamera cameraBackRight = new PhotonCamera(VisionConstants.backRightArducamName);
-     
-    PoseEstimator photonFrontRight =
-        new PhotonVisionPoseEstimator(cameraFrontRight, VisionConstants.robotToCamArducamFrontRight);
+    PhotonCamera cameraBackRight = new PhotonCamera(VisionConstants.backRightArducamName);
 
-        PoseEstimator photonBackRight =
+    PoseEstimator photonFrontRight =
+        new PhotonVisionPoseEstimator(
+            cameraFrontRight, VisionConstants.robotToCamArducamFrontRight);
+
+    PoseEstimator photonBackRight =
         new PhotonVisionPoseEstimator(cameraBackRight, VisionConstants.robotToCamArducamBackRight);
 
     listOfEstimators.add(limelightLeftBack);
     listOfEstimators.add(limelightLeftFront);
     listOfEstimators.add(photonFrontRight);
-     listOfEstimators.add(photonBackRight);
+    listOfEstimators.add(photonBackRight);
 
     PoseEstimator estimatorMultiCamera =
         new MultiCameraPoseEstimator(listOfEstimators, "Teleop Multi Pose Estimator");
@@ -125,8 +128,10 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   }
 
   public void resetOdometryLimelight(Translation2d defaultPosition) {
-    PoseEstimator limelightLeftBack = new LimelightPoseEstimator("limelight-left-back", false, false, 2);
-        PoseEstimator limelightLeftFront= new LimelightPoseEstimator("limelight-left-front", false, false, 2);
+    PoseEstimator limelightLeftBack =
+        new LimelightPoseEstimator(VisionConstants.backLeftLimelightName, false, false, 2);
+    PoseEstimator limelightLeftFront =
+        new LimelightPoseEstimator(VisionConstants.frontLeftLimelightName, false, false, 2);
     Optional<PoseEstimation> limelightLeftBackPoseEstimation =
         limelightLeftBack.getEstimatedPose(this.getPose());
 
@@ -151,7 +156,45 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     }
   }
 
+public void resetOdometryPhotonvision(Translation2d defaultPosition){
+ PhotonCamera cameraFrontRight = new PhotonCamera(VisionConstants.backRightArducamName);
+    PoseEstimator photonFrontRight =
+        new PhotonVisionPoseEstimator(
+            cameraFrontRight, VisionConstants.robotToCamArducamFrontRight);
+
+   PhotonCamera cameraBackRight = new PhotonCamera(VisionConstants.backRightArducamName);
+    PoseEstimator photonBackRight =
+        new PhotonVisionPoseEstimator(
+            cameraBackRight, VisionConstants.robotToCamArducamFrontRight);
+                  
+    Optional<PoseEstimation> photonFrontRightPoseEstimation =
+        photonFrontRight.getEstimatedPose(this.getPose());
+
+    if (photonFrontRightPoseEstimation.isEmpty()) {
+      resetTranslation(defaultPosition);
+      this.positionUpdated = true;
+    } else {
+      resetTranslation(
+          photonFrontRightPoseEstimation.get().estimatedPose.getTranslation().toTranslation2d());
+      this.positionUpdated = true;
+    }
+
+     Optional<PoseEstimation> photonBackRightPoseEstimation =
+        photonBackRight.getEstimatedPose(this.getPose());
+
+    if (photonBackRightPoseEstimation.isEmpty()) {
+      resetTranslation(defaultPosition);
+      this.positionUpdated = true;
+    } else {
+      resetTranslation(
+          photonBackRightPoseEstimation.get().estimatedPose.getTranslation().toTranslation2d());
+      this.positionUpdated = true;
+    }
+
+
   
+
+}
 
   public Supplier<Pose2d> getOdometryPose() {
     return this.robotPose;
@@ -203,10 +246,21 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   public void periodic() {
     super.periodic();
     LimelightHelpers.SetRobotOrientation(
-        "limelight-left-back", OdometryEnabledSwerveSubsystem.robotOrientation, 0, 0, 0, 0, 0);
-        LimelightHelpers.SetRobotOrientation(
-        "limelight-left-front", OdometryEnabledSwerveSubsystem.robotOrientation, 0, 0, 0, 0, 0);
-   
+        VisionConstants.backLeftLimelightName,
+        OdometryEnabledSwerveSubsystem.robotOrientation,
+        0,
+        0,
+        0,
+        0,
+        0);
+    LimelightHelpers.SetRobotOrientation(
+        VisionConstants.frontLeftLimelightName,
+        OdometryEnabledSwerveSubsystem.robotOrientation,
+        0,
+        0,
+        0,
+        0,
+        0);
   }
 
   public boolean isAtTargetPositionWithHeading() {

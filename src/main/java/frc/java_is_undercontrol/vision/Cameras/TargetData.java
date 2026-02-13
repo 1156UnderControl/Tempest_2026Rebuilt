@@ -1,4 +1,4 @@
-package frc.java_is_undercontrol.vision.deprecated.Cameras;
+package frc.java_is_undercontrol.vision.Cameras;
 
 import edu.wpi.first.math.geometry.Pose2d;
 
