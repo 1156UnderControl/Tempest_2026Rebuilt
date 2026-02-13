@@ -156,17 +156,16 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     }
   }
 
-public void resetOdometryPhotonvision(Translation2d defaultPosition){
- PhotonCamera cameraFrontRight = new PhotonCamera(VisionConstants.backRightArducamName);
+  public void resetOdometryPhotonvision(Translation2d defaultPosition) {
+    PhotonCamera cameraFrontRight = new PhotonCamera(VisionConstants.backRightArducamName);
     PoseEstimator photonFrontRight =
         new PhotonVisionPoseEstimator(
             cameraFrontRight, VisionConstants.robotToCamArducamFrontRight);
 
-   PhotonCamera cameraBackRight = new PhotonCamera(VisionConstants.backRightArducamName);
+    PhotonCamera cameraBackRight = new PhotonCamera(VisionConstants.backRightArducamName);
     PoseEstimator photonBackRight =
-        new PhotonVisionPoseEstimator(
-            cameraBackRight, VisionConstants.robotToCamArducamFrontRight);
-                  
+        new PhotonVisionPoseEstimator(cameraBackRight, VisionConstants.robotToCamArducamFrontRight);
+
     Optional<PoseEstimation> photonFrontRightPoseEstimation =
         photonFrontRight.getEstimatedPose(this.getPose());
 
@@ -179,7 +178,7 @@ public void resetOdometryPhotonvision(Translation2d defaultPosition){
       this.positionUpdated = true;
     }
 
-     Optional<PoseEstimation> photonBackRightPoseEstimation =
+    Optional<PoseEstimation> photonBackRightPoseEstimation =
         photonBackRight.getEstimatedPose(this.getPose());
 
     if (photonBackRightPoseEstimation.isEmpty()) {
@@ -190,11 +189,7 @@ public void resetOdometryPhotonvision(Translation2d defaultPosition){
           photonBackRightPoseEstimation.get().estimatedPose.getTranslation().toTranslation2d());
       this.positionUpdated = true;
     }
-
-
-  
-
-}
+  }
 
   public Supplier<Pose2d> getOdometryPose() {
     return this.robotPose;
