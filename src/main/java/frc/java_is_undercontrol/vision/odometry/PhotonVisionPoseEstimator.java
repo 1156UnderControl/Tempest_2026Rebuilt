@@ -7,6 +7,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import frc.robot.constants.VisionConstants;
+import java.util.ArrayList;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -95,12 +96,18 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
                 * Math.pow(avgTagDist, 2)
                 / photonPoseEstimation.targetsUsed.size()
             : Double.POSITIVE_INFINITY;
+
+    ArrayList<Integer> tagsInSight = new ArrayList<>();
+    for (var targets : photonPoseEstimation.targetsUsed) {
+      tagsInSight.add(targets.fiducialId);
+    }
     return new PoseEstimation(
         photonPoseEstimation.estimatedPose,
         photonPoseEstimation.timestampSeconds,
         photonPoseEstimation.targetsUsed.size(),
         avgTagDist,
-        VecBuilder.fill(stdDevXY, stdDevXY, stdDevTheta));
+        VecBuilder.fill(stdDevXY, stdDevXY, stdDevTheta),
+        tagsInSight);
   }
 
   public String getEstimatorName() {

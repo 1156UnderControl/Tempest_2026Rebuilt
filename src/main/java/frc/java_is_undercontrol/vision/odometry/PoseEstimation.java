@@ -5,6 +5,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import java.util.ArrayList;
 
 /** An estimated pose based on pipeline result */
 public class PoseEstimation {
@@ -19,6 +20,8 @@ public class PoseEstimation {
 
   /** The distance from the tag */
   public final double distanceToTag;
+
+  public ArrayList<Integer> tagsSeen = new ArrayList<>();
 
   public Matrix<N3, N1> visionStdDev = VecBuilder.fill(0.7, 0.7, Double.POSITIVE_INFINITY);
 
@@ -39,6 +42,21 @@ public class PoseEstimation {
     this.numberOfTargetsUsed = numberOfTargetsUsed;
     this.distanceToTag = distanceToTag;
     this.visionStdDev = visionStdDev;
+  }
+
+  public PoseEstimation(
+      Pose3d estimatedPose,
+      double timestampSeconds,
+      int numberOfTargetsUsed,
+      double distanceToTag,
+      Matrix<N3, N1> visionStdDev,
+      ArrayList<Integer> tagsSeen) {
+    this.estimatedPose = estimatedPose;
+    this.timestampSeconds = timestampSeconds;
+    this.numberOfTargetsUsed = numberOfTargetsUsed;
+    this.distanceToTag = distanceToTag;
+    this.visionStdDev = visionStdDev;
+    this.tagsSeen = tagsSeen;
   }
 
   public PoseEstimation(

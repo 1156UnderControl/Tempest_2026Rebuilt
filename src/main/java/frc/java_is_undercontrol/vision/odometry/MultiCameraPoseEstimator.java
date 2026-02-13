@@ -1,6 +1,8 @@
 package frc.java_is_undercontrol.vision.odometry;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,8 +39,8 @@ public class MultiCameraPoseEstimator implements PoseEstimator {
       return Optional.empty();
     }
     PoseEstimation poseEstimation;
-    poseEstimations.sort(new ComparatorPoseEstimationTagCount());
     if (poseEstimations.size() > 1) {
+      poseEstimations.sort(new ComparatorPoseEstimationTagCount());
       double TagCount1 = poseEstimations.get(poseEstimations.size() - 1).numberOfTargetsUsed;
       double TagCount2 = poseEstimations.get(poseEstimations.size() - 2).numberOfTargetsUsed;
       if (TagCount1 != TagCount2) {
@@ -54,6 +56,26 @@ public class MultiCameraPoseEstimator implements PoseEstimator {
       } else {
         poseEstimation = poseEstimations.get(poseEstimations.size() - 1);
       }
+      int bestHubScore = 0;
+      int bestHubScoreIndex = 0;
+      for (int i = 0; i < poseEstimations.size(); i++) {
+        PoseEstimation pose = poseEstimations.get(i);
+        boolean isRedAlliance =
+            DriverStation.getAlliance().isPresent()
+                && DriverStation.getAlliance().get() == Alliance.Red;
+        double[] priorityTags = isRedAlliance ? new double[] {9, 10} : new double[] {25, 26};
+        int hubScore = 0;
+        for (int tagSeen : pose.tagsSeen) {
+          if (tagSeen == priorityTags[0] || tagSeen == priorityTags[1]) {
+            hubScore++;
+          }
+          if (bestHubScore < hubScore) {
+            bestHubScore = hubScore;
+            bestHubScoreIndex = i;
+          }
+        }
+      }
+      poseEstimations.add(poseEstimations.get(bestHubScoreIndex));
     } else {
       poseEstimation = poseEstimations.get(poseEstimations.size() - 1);
     }
