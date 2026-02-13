@@ -166,18 +166,6 @@ public class TurretSubsystem extends SubsystemBase {
             TurretConstants.ANGLE_ERROR_ALLOWED);
   }
 
-  public Command aimLeft() {
-    return turret.setAngle(Degrees.of(-100));
-  }
-
-  public Command aimRight() {
-    return turret.setAngle(Degrees.of(100));
-  }
-
-  public Command aimDefault() {
-    return turret.setAngle(Degrees.of(0));
-  }
-
   private double getReachableTurretAngle(double targetAngle) {
     if (targetAngle > TurretConstants.TURRET_MAX_ANGLE.in(Degrees)) {
       return targetAngle - 360;
