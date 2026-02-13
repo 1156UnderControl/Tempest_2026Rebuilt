@@ -1,7 +1,7 @@
-package frc.java_is_undercontrol.vision.deprecated.Localization;
+package frc.java_is_undercontrol.vision.Localization;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import frc.java_is_undercontrol.vision.deprecated.Cameras.TargetData;
+import frc.java_is_undercontrol.vision.Cameras.TargetData;
 import java.util.Map;
 
 public class PoseEstimation {

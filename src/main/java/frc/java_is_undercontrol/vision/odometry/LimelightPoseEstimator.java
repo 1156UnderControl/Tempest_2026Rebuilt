@@ -6,8 +6,8 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.java_is_undercontrol.swerve.base.odometry.OdometryEnabledSwerveSubsystem;
-import frc.java_is_undercontrol.vision.deprecated.Cameras.LimelightHelpers;
-import frc.java_is_undercontrol.vision.deprecated.Cameras.LimelightHelpers.PoseEstimate;
+import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers;
+import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers.PoseEstimate;
 import java.util.Optional;
 
 public class LimelightPoseEstimator implements PoseEstimator {

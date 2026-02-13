@@ -1,4 +1,4 @@
-package frc.java_is_undercontrol.vision.deprecated.ObjectDetection;
+package frc.java_is_undercontrol.vision.ObjectDetection;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
