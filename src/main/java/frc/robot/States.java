@@ -3,7 +3,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
 import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
@@ -114,7 +113,7 @@ public class States {
 
     this.flyWheel.setDefaultCommand(
         this.flyWheel
-            .runVelocity()
+            .runLowVelocity()
             .alongWith(Commands.runOnce(() -> this.flyWheelState = "Running State")));
 
     this.climber.setDefaultCommand(
@@ -124,7 +123,7 @@ public class States {
   }
 
   public Command shootState() {
-    return Commands.parallel(this.kicker.shoot(), this.spindexer.shoot())
+    return Commands.parallel(this.kicker.shoot(), this.spindexer.shoot(), this.flyWheel.runVelocity())
         .alongWith(
             Commands.runOnce(
                 () -> {

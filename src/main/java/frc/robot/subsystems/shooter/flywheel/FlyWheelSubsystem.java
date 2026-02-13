@@ -117,11 +117,15 @@ public class FlyWheelSubsystem extends SubsystemBase {
     return this.runVelocityTorqueControl(RPM.of(ShooterCalculator.getInstance().getParameters(true).flywheelSpeed()));
   }
 
+  public Command runLowVelocity() {
+    return this.runVelocityTorqueControl(RPM.of(1500));
+  }
+
   public Command stoppedVelocity() {
     return this.runVelocityTorqueControl(RPM.of(0));
   }
 
-  public Command runVelocityTorqueControl(AngularVelocity velocity) {
+  private Command runVelocityTorqueControl(AngularVelocity velocity) {
     return this.run(() -> leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity)));
   }
 

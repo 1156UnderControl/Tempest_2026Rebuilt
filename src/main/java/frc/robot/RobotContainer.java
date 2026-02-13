@@ -130,9 +130,7 @@ public class RobotContainer {
         .onTrue(this.drive.boostRobotJoystickControlVelocity())
         .onFalse(this.drive.limitRobotJoystickControlVelocity());
 
-    new Trigger(() -> this.hood.isAtTargetAngleShoot() &&
-            this.flyWheel.isAtTargetVelocityShoot() &&
-            this.turret.isAtTargetAngleShoot())
+    this.driverController.a()
         .whileTrue(this.states.shootState());
 
     this.driverController.x().onTrue(this.states.collectState());
