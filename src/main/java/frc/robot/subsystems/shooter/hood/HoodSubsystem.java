@@ -115,21 +115,18 @@ public class HoodSubsystem extends SubsystemBase {
   private void updateInputs() {
     inputs.currentAngle = hood.getAngle().in(Degrees);
     inputs.targetAngle = calculator.getParameters().hoodAngle();
-    inputs.atTarget = isAtTargetAngle();
+    inputs.atTarget = isAtTargetAngleShoot();
 
     Logger.processInputs("Subsystems/Shooter/Hood/", inputs);
   }
 
   public Command goToTargetAngle() {
-    return hood.setAngle(() -> Degrees.of(calculator.getParameters().turretAngle().getDegrees()));
+    return hood.setAngle(() -> Degrees.of(calculator.getParameters(true).hoodAngle()));
   }
 
-  public boolean isAtTargetAngle() {
+  public boolean isAtTargetAngleShoot() {
     return hood.getAngle()
-        .isNear(
-            hood.getMechanismSetpoint().isEmpty()
-                ? Degrees.of(0)
-                : hood.getMechanismSetpoint().get(),
+        .isNear(Degrees.of(calculator.getLastParameters().hoodAngle()),
             HoodConstants.Position.ANGLE_ERROR_ALLOWED);
   }
 

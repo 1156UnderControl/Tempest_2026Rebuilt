@@ -123,7 +123,7 @@ public class TurretSubsystem extends SubsystemBase {
             turret.getMechanismSetpoint().isEmpty()
                 ? 0
                 : turret.getMechanismSetpoint().get().in(Degrees);
-    inputs.atTarget = isAtTargetAngle();
+    inputs.atTarget = isAtTargetAngleShoot();
     inputs.current = turretMotor.getStatorCurrent();
     inputs.voltage = turretMotor.getVoltage();
     inputs.turret =
@@ -155,11 +155,10 @@ public class TurretSubsystem extends SubsystemBase {
                     calculator.getParameters(false).turretAngle().getDegrees())));
   }
 
-  public boolean isAtTargetAngle() {
+  public boolean isAtTargetAngleShoot() {
     return turret
         .getAngle()
-        .isNear(
-            turret.getMechanismSetpoint().isEmpty() ? Degrees.of(0) : turret.getAngle(),
+        .isNear(Degrees.of(calculator.getParameters(true).turretAngle().getDegrees()),
             TurretConstants.ANGLE_ERROR_ALLOWED);
   }
 
