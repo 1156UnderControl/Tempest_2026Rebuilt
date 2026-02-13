@@ -156,6 +156,46 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     }
   }
 
+public void resetOdometryPhotonvision(Translation2d defaultPosition){
+ PhotonCamera cameraFrontRight = new PhotonCamera(VisionConstants.backRightArducamName);
+    PoseEstimator photonFrontRight =
+        new PhotonVisionPoseEstimator(
+            cameraFrontRight, VisionConstants.robotToCamArducamFrontRight);
+
+   PhotonCamera cameraBackRight = new PhotonCamera(VisionConstants.backRightArducamName);
+    PoseEstimator photonBackRight =
+        new PhotonVisionPoseEstimator(
+            cameraBackRight, VisionConstants.robotToCamArducamFrontRight);
+                  
+    Optional<PoseEstimation> photonFrontRightPoseEstimation =
+        photonFrontRight.getEstimatedPose(this.getPose());
+
+    if (photonFrontRightPoseEstimation.isEmpty()) {
+      resetTranslation(defaultPosition);
+      this.positionUpdated = true;
+    } else {
+      resetTranslation(
+          photonFrontRightPoseEstimation.get().estimatedPose.getTranslation().toTranslation2d());
+      this.positionUpdated = true;
+    }
+
+     Optional<PoseEstimation> photonBackRightPoseEstimation =
+        photonBackRight.getEstimatedPose(this.getPose());
+
+    if (photonBackRightPoseEstimation.isEmpty()) {
+      resetTranslation(defaultPosition);
+      this.positionUpdated = true;
+    } else {
+      resetTranslation(
+          photonBackRightPoseEstimation.get().estimatedPose.getTranslation().toTranslation2d());
+      this.positionUpdated = true;
+    }
+
+
+  
+
+}
+
   public Supplier<Pose2d> getOdometryPose() {
     return this.robotPose;
   }
