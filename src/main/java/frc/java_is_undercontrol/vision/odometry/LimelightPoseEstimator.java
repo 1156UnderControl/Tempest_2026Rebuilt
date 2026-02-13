@@ -8,6 +8,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.java_is_undercontrol.swerve.base.odometry.OdometryEnabledSwerveSubsystem;
 import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers;
 import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers.PoseEstimate;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class LimelightPoseEstimator implements PoseEstimator {
@@ -97,6 +98,11 @@ public class LimelightPoseEstimator implements PoseEstimator {
         useVisionHeadingCorrection
             ? 0.14 * Math.pow(limelightPoseEstimate.avgTagDist, 2) / limelightPoseEstimate.tagCount
             : Double.POSITIVE_INFINITY;
+
+    ArrayList<Integer> tagsInSight = new ArrayList<>();
+    for (var targets : limelightPoseEstimate.rawFiducials) {
+      tagsInSight.add(targets.id);
+    }
     return new PoseEstimation(
         new Pose3d(limelightPoseEstimate.pose),
         limelightPoseEstimate.timestampSeconds,
