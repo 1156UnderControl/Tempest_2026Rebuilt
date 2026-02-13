@@ -88,7 +88,7 @@ public class TurretConstants {
     public static final double kD = 0;
 
     public static class SIM {
-      public static final double kP = 0;
+      public static final double kP = 36;
       public static final double kI = 0;
       public static final double kD = 0;
     }
@@ -100,8 +100,8 @@ public class TurretConstants {
     public static final double kA = 0;
 
     public static class SIM {
-      public static final double kV = 200;
-      public static final double kS = 0;
+      public static final double kV = 6.15;
+      public static final double kS = 0.1075;
       public static final double kA = 0;
     }
   }
