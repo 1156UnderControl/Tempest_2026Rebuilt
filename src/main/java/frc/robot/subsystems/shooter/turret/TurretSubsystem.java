@@ -1,17 +1,13 @@
 package frc.robot.subsystems.shooter.turret;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotStates;
@@ -122,10 +118,11 @@ public class TurretSubsystem extends SubsystemBase {
 
   private void updateInputs() {
     inputs.currentAngle = turret.getAngle().in(Degrees);
-    inputs.targetAngle = inputs.targetAngle =
-        turret.getMechanismSetpoint().isEmpty()
-            ? 0
-            : turret.getMechanismSetpoint().get().in(Degrees);
+    inputs.targetAngle =
+        inputs.targetAngle =
+            turret.getMechanismSetpoint().isEmpty()
+                ? 0
+                : turret.getMechanismSetpoint().get().in(Degrees);
     inputs.atTarget = isAtTargetAngle();
     inputs.current = turretMotor.getStatorCurrent();
     inputs.voltage = turretMotor.getVoltage();
