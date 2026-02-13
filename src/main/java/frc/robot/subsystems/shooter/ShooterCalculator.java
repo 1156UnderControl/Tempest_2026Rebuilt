@@ -18,6 +18,8 @@ import frc.robot.subsystems.shooter.interpolatingTreeMaps.FeedingMaps;
 import frc.robot.subsystems.shooter.interpolatingTreeMaps.InterpolatingTreeMaps;
 import frc.robot.subsystems.shooter.interpolatingTreeMaps.ShootingMaps;
 import frc.robot.subsystems.shooter.turret.TurretConstants;
+
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterCalculator {
@@ -56,6 +58,8 @@ public class ShooterCalculator {
   private final Transform2d robotToTurret = TurretConstants.TURRET_OFFSET_FROM_ROBOT_CENTER;
 
   private static double phaseDelay = TurretConstants.PHASE_DELAY;
+
+  @AutoLogOutput private double distanceToTarget = 0;
 
   public ShootingParameters getParameters() {
     return this.getParameters(true);
@@ -116,6 +120,7 @@ public class ShooterCalculator {
               turretPosition.getTranslation().plus(new Translation2d(offsetX, offsetY)),
               turretPosition.getRotation());
       lookaheadTurretToTargetDistance = target.getDistance(lookaheadPose.getTranslation());
+      distanceToTarget = lookaheadTurretToTargetDistance;
     }
 
     // Calculate parameters accounted for imparted velocity
