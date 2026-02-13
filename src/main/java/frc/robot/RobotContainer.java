@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.java_is_undercontrol.swerve.SwerveDevices;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIO;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIOPigeon2;
@@ -129,19 +130,18 @@ public class RobotContainer {
         .onTrue(this.drive.boostRobotJoystickControlVelocity())
         .onFalse(this.drive.limitRobotJoystickControlVelocity());
 
-    this.driverController
-        .a()
-        .or(() -> RobotStates.getInstance().isOnAllianceZone())
-        .and(() -> !RobotStates.getInstance().isOnNotShootZone())
+    new Trigger(() -> this.hood.isAtTargetAngleShoot() &&
+            this.flyWheel.isAtTargetVelocityShoot() &&
+            this.turret.isAtTargetAngleShoot())
         .whileTrue(this.states.shootState());
 
     this.driverController.x().onTrue(this.states.collectState());
     this.driverController.b().onTrue(this.states.retractState());
 
     this.driverController.upArrow().onTrue(this.states.climbState());
-    this.driverController.downArrow().onTrue(this.states.defaultClimberState());
+    this.driverController.downArrow().onTrue(this.states.defaultClimberState());  
   }
-
+  
   public Command getAutonomousCommand() {
     return autoChooser.get();
   }
