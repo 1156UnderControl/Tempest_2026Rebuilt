@@ -66,7 +66,7 @@ public class KickerSubsystem extends SubsystemBase {
     smartKickerMotorConfig =
         new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
-            .withClosedLoopController(0.03, 0, 1, RPM.of(2423), RotationsPerSecondPerSecond.of(150))
+            .withClosedLoopController(0.03, 0, 1, RPM.of(3000), RotationsPerSecondPerSecond.of(150))
             .withSimClosedLoopController(
                 0.03, 0, 1, RPM.of(2423), RotationsPerSecondPerSecond.of(150))
             .withFeedforward(new SimpleMotorFeedforward(0.16, 0.26))
@@ -121,7 +121,7 @@ public class KickerSubsystem extends SubsystemBase {
   }
 
   public Command shoot() {
-    return kicker.setSpeed(RPM.of(2423));
+    return kicker.setSpeed(RPM.of(2600));
   }
 
   public Command stop() {
