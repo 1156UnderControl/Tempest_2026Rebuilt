@@ -44,11 +44,11 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
             photonPoseEstimator.estimateCoprocMultiTagPose(result);
         if (photonPoseEstimation.isEmpty()) {
           photonPoseEstimation = photonPoseEstimator.estimateLowestAmbiguityPose(result);
-          if(photonPoseEstimation.isEmpty()){
+          if (photonPoseEstimation.isEmpty()) {
             return Optional.empty();
           }
         }
-        
+
         PoseEstimation poseEstimation = convertPhotonPoseEstimation(photonPoseEstimation.get());
         if (only2TagsMeasurements && poseEstimation.numberOfTargetsUsed < 2) {
           return Optional.empty();
@@ -84,7 +84,7 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
                             .getFiducialId())
                     .get()
                     .getTranslation());
-    
+
     double stdDevXY =
         VisionConstants.xyStdDevCoefficient
             * Math.pow(avgTagDist, 2)
