@@ -88,12 +88,12 @@ public class TurretSubsystem extends SubsystemBase {
     this.encoder1 = kickerEncoder;
     this.encoder2 = climberEncoder;
 
-    this.absoluteAngle =
-        determineTurretAngleDegrees(
-            Units.rotationsToDegrees(this.encoder1.getPosition()),
-            Units.rotationsToDegrees(this.encoder2.getPosition()));
+    // this.absoluteAngle =
+    //     determineTurretAngleDegrees(
+    //         Units.rotationsToDegrees(this.encoder1.getPosition()),
+    //         Units.rotationsToDegrees(this.encoder2.getPosition()));
 
-    this.turretMotor.setEncoderPosition(Degrees.of(this.absoluteAngle));
+    // this.turretMotor.setEncoderPosition(Degrees.of(this.absoluteAngle));
 
     inputs = new TurretInputsAutoLogged();
   }
