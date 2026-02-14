@@ -12,6 +12,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.FlyWheelsConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
@@ -113,10 +114,6 @@ public class FlyWheelSubsystem extends SubsystemBase {
     Logger.processInputs("Subsystems/Shooter/FlyWheels/", inputs);
   }
 
-  public Command runVelocity() {
-    return this.runVelocityTorqueControl(RPM.of(ShooterCalculator.getInstance().getParameters(true).flywheelSpeed()));
-  }
-
   public Command runLowVelocity() {
     return this.runVelocityTorqueControl(RPM.of(1500));
   }
@@ -125,14 +122,21 @@ public class FlyWheelSubsystem extends SubsystemBase {
     return this.runVelocityTorqueControl(RPM.of(0));
   }
 
-  private Command runVelocityTorqueControl(AngularVelocity velocity) {
+  public Command runVelocity() {
+    return this.run(() -> {
+      AngularVelocity velocity = RPM.of(ShooterCalculator.getInstance().getParameters(true).flywheelSpeed());
+      leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity));
+    });
+  }
+
+  private Command runVelocityTorqueControl(AngularVelocity velocity){
     return this.run(() -> leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity)));
   }
 
   public boolean isAtTargetVelocityShoot() {
     return this.flywheelMechanism
         .getSpeed()
-        .isNear(RPM.of(ShooterCalculator.getInstance().getLastParameters().flywheelSpeed()),
+        .isNear(RPM.of(ShooterCalculator.getInstance().getParameters(true).flywheelSpeed()),
             FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
   }
 }

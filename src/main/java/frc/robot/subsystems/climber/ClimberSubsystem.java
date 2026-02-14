@@ -102,7 +102,7 @@ public class ClimberSubsystem extends SubsystemBase {
   }
 
   public Command climb() {
-    return climber.setHeight(Meters.of(0.1));
+    return climber.setHeight(Meters.of(0.165));
   }
 
   public Command defaultPosition() {

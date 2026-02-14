@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import com.ctre.phoenix6.hardware.ParentDevice;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -122,7 +123,7 @@ public class ExtensorSubsystem extends SubsystemBase {
   }
 
   public Command extend() {
-    return this.setLength(ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION);
+    return this.setLength(ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION).until(this.isAtTargetHeight());
   }
 
   public Command retract() {
@@ -137,7 +138,7 @@ public class ExtensorSubsystem extends SubsystemBase {
         .andThen(Commands.waitSeconds(0.5))
         .repeatedly();
   }
-
+  
   public Command softStopExtensor() {
     return disableExtensor()
         .andThen(this.setDutyCycle(0).withTimeout(Seconds.of(1.0)))

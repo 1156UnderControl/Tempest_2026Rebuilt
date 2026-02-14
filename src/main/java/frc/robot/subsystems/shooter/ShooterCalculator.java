@@ -124,7 +124,7 @@ public class ShooterCalculator {
 
     // Calculate parameters accounted for imparted velocity
     turretAngle = target.minus(lookaheadPose.getTranslation()).getAngle();
-    hoodAngle = maps.getHoodAngleMap().get(lookaheadTurretToTargetDistance).getRadians();
+    hoodAngle = maps.getHoodAngleMap().get(lookaheadTurretToTargetDistance).getDegrees();
     if (lastTurretAngle == null) lastTurretAngle = turretAngle;
     if (Double.isNaN(lastHoodAngle)) lastHoodAngle = hoodAngle;
     turretVelocity =

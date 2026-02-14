@@ -130,8 +130,7 @@ public class RobotContainer {
         .onTrue(this.drive.boostRobotJoystickControlVelocity())
         .onFalse(this.drive.limitRobotJoystickControlVelocity());
 
-    this.driverController.a()
-        .whileTrue(this.states.shootState());
+    this.driverController.a().whileTrue(this.flyWheel.runVelocity());
 
     this.driverController.x().onTrue(this.states.collectState());
     this.driverController.b().onTrue(this.states.retractState());
