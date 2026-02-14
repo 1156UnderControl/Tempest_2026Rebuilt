@@ -129,13 +129,10 @@ public class RobotContainer {
         .onTrue(this.drive.boostRobotJoystickControlVelocity())
         .onFalse(this.drive.limitRobotJoystickControlVelocity());
 
-    this.driverController.a().whileTrue(this.flyWheel.runVelocity());
+    this.driverController.b().whileTrue(this.flyWheel.runVelocity());
 
-    this.driverController.x().onTrue(this.states.collectState());
-    this.driverController.b().onTrue(this.states.retractState());
-
-    this.driverController.upArrow().onTrue(this.states.climbState());
-    this.driverController.downArrow().onTrue(this.states.defaultClimberState());
+    this.driverController.leftArrow().onTrue(this.states.collectState());
+    this.driverController.rightArrow().onTrue(this.states.retractState());
   }
 
   public Command getAutonomousCommand() {
