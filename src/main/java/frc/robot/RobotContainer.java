@@ -124,22 +124,20 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
-    this.driverController.x().onTrue(this.turret.resetEncoder().ignoringDisable(true));
+    this.states.setDefaultStates();
+    this.driverController
+        .turboActivate()
+        .onTrue(this.drive.boostRobotJoystickControlVelocity())
+        .onFalse(this.drive.limitRobotJoystickControlVelocity());
 
-    // this.states.setDefaultStates();
-    // this.driverController
-    //     .turboActivate()
-    //     .onTrue(this.drive.boostRobotJoystickControlVelocity())
-    //     .onFalse(this.drive.limitRobotJoystickControlVelocity());
+    this.driverController.a()
+        .whileTrue(this.states.shootState());
 
-    // this.driverController.a()
-    //     .whileTrue(this.states.shootState());
+    this.driverController.x().onTrue(this.states.collectState());
+    this.driverController.b().onTrue(this.states.retractState());
 
-    // this.driverController.x().onTrue(this.states.collectState());
-    // this.driverController.b().onTrue(this.states.retractState());
-
-    // this.driverController.upArrow().onTrue(this.states.climbState());
-    // this.driverController.downArrow().onTrue(this.states.defaultClimberState());  
+    this.driverController.upArrow().onTrue(this.states.climbState());
+    this.driverController.downArrow().onTrue(this.states.defaultClimberState());  
   }
   
   public Command getAutonomousCommand() {
