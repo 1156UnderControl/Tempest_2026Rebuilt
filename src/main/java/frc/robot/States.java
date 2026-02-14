@@ -140,7 +140,6 @@ public class States {
     return this.extensor
         .extend()
         .andThen(
-            this.roller.runRoller(),
             Commands.runOnce(
                 () -> {
                   this.extensorState = "Extended State";
