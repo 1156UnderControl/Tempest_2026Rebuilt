@@ -17,12 +17,13 @@ public class VisionConstants {
   public static Transform3d robotToCamArducamFrontRight =
       new Transform3d(
           new Translation3d(
-              Units.inchesToMeters(-3.260735), Units.inchesToMeters(-12.958429), 7.641844),
+             (-0.082102), (-0.330660), 0.153222),
           new Rotation3d(
               0, Units.degreesToRadians(-14.245433), Units.degreesToRadians(25.418201 - 90)));
 
   public static Transform3d robotToCamArducamBackRight =
       new Transform3d(
-          new Translation3d((0.275339), (-0.281729), 0.251841),
+          new Translation3d(
+             (-0.307143), (-0.275344), 0.251786),
           new Rotation3d(0, Units.degreesToRadians(15), Units.degreesToRadians(200)));
 }
