@@ -158,7 +158,8 @@ public class TurretSubsystem extends SubsystemBase {
   public boolean isAtTargetAngleShoot() {
     return turret
         .getAngle()
-        .isNear(Degrees.of(calculator.getParameters(true).turretAngle().getDegrees()),
+        .isNear(
+            Degrees.of(calculator.getParameters(true).turretAngle().getDegrees()),
             TurretConstants.ANGLE_ERROR_ALLOWED);
   }
 
