@@ -129,7 +129,8 @@ public class RobotContainer {
         .onTrue(this.drive.boostRobotJoystickControlVelocity())
         .onFalse(this.drive.limitRobotJoystickControlVelocity());
 
-    this.driverController.b().whileTrue(this.flyWheel.runVelocity());
+    this.driverController.b().and(() -> RobotStates.getInstance().isOnAllianceZone()).whileTrue(this.flyWheel.shootHub()).onFalse(this.flyWheel.runLowVelocity());
+    this.driverController.b().and(() -> !RobotStates.getInstance().isOnAllianceZone()).whileTrue(this.flyWheel.shootPass()).onFalse(this.flyWheel.runLowVelocity());
 
     this.driverController.leftArrow().onTrue(this.states.collectState());
     this.driverController.rightArrow().onTrue(this.states.retractState());
