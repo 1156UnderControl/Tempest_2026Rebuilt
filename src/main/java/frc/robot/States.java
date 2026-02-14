@@ -85,44 +85,11 @@ public class States {
   }
 
   public void setDefaultStates() {
-    this.drive.setDefaultCommand(
-        Commands.run(() -> drive.driveAlignAngleJoystick(), drive)
-            .onlyIf(() -> DriverStation.isTeleopEnabled())
-            .alongWith(Commands.runOnce(() -> this.driveState = "Drive Align Joystick State")));
-
-    this.extensor.setDefaultCommand(
-        this.extensor
-            .retract()
-            .alongWith(Commands.runOnce(() -> this.extensorState = "Retracted State")));
-
-    this.roller.setDefaultCommand(
-        this.roller
-            .stopRoller()
-            .alongWith(Commands.runOnce(() -> this.rollerState = "Stopped State")));
-
-    this.kicker.setDefaultCommand(
-        this.kicker.stop().alongWith(Commands.runOnce(() -> this.kickerState = "Stopped State")));
-
-    this.spindexer.setDefaultCommand(
-        this.spindexer
-            .stop()
-            .alongWith(Commands.runOnce(() -> this.spindexerState = "Stopped State")));
-
-    this.turret.setDefaultCommand(this.turret.trackHub());
-
-    this.hood.setDefaultCommand(this.hood.goToTargetAngle());
-
-    this.flyWheel.setDefaultCommand(
-        this.flyWheel
-            .runLowVelocity()
-            .alongWith(Commands.runOnce(() -> this.flyWheelState = "Running State")));
-
-    new Trigger(() -> this.flyWheel.isAtTargetVelocityShoot()).whileTrue(this.shootState());
-
-    this.climber.setDefaultCommand(
-        this.climber
-            .defaultPosition()
-            .alongWith(Commands.runOnce(() -> this.climberState = "Default State")));
+    this.setSwerveDefaultStates();
+    this.setIntakeDefaultStates();
+    this.setHopperDefaultStates();
+    this.setShooterDefaultStates();
+    this.setClimberDefaultStates();
   }
 
   public Command shootState() {
@@ -132,8 +99,7 @@ public class States {
                 () -> {
                   this.kickerState = "Running State";
                   this.spindexerState = "Running State";
-                }))
-        .repeatedly();
+                }));
   }
 
   public Command collectState() {
@@ -177,5 +143,56 @@ public class States {
                   this.climberState = "Climbed State";
                   this.driveState = "At Climb Pose State Right";
                 }));
+  }
+
+  private void setSwerveDefaultStates(){
+    this.drive.setDefaultCommand(
+        Commands.run(() -> drive.driveAlignAngleJoystick(), drive)
+            .onlyIf(() -> DriverStation.isTeleopEnabled())
+            .alongWith(Commands.runOnce(() -> this.driveState = "Drive Align Joystick State")));
+  }
+
+  private void setIntakeDefaultStates(){
+    this.extensor.setDefaultCommand(
+        Commands.parallel(
+            this.extensor.retract(),
+            Commands.runOnce(() -> this.extensorState = "Retracted State")
+    ));
+
+    this.roller.setDefaultCommand(
+        this.roller
+            .stopRoller()
+            .alongWith(Commands.runOnce(() -> this.rollerState = "Stopped State")));
+  }
+
+  private void setHopperDefaultStates(){
+    this.kicker.setDefaultCommand(
+        Commands.parallel(
+            this.kicker.stop(), 
+            Commands.runOnce(() -> this.kickerState = "Stopped State")
+    ));
+
+    this.spindexer.setDefaultCommand(
+        Commands.parallel(
+        this.spindexer.stop(),
+        Commands.runOnce(() -> this.spindexerState = "Stopped State")
+    ));
+  }
+
+  private void setClimberDefaultStates(){
+    this.climber.setDefaultCommand(
+        this.climber
+            .defaultPosition()
+            .alongWith(Commands.runOnce(() -> this.climberState = "Default State")));
+  }
+
+  private void setShooterDefaultStates() {
+    this.turret.setDefaultCommand(Commands.parallel(this.turret.trackHub(), Commands.runOnce(() -> this.turretState = "Tracking Hub")));
+    this.hood.setDefaultCommand(Commands.parallel(this.hood.trackHub(), Commands.runOnce(() -> this.hoodState = "Tracking Hub")));
+    this.flyWheel.setDefaultCommand(Commands.parallel(this.flyWheel.shootHub(), Commands.runOnce(() -> this.flyWheelState = "Shootig Hub")));
+
+    new Trigger(() -> RobotStates.getInstance().isOnAllianceZone())
+    .onTrue(Commands.parallel(this.turret.trackHub(), this.hood.trackHub()))
+    .onFalse(Commands.parallel(this.turret.trackPass(), this.hood.trackPass()));
   }
 }
