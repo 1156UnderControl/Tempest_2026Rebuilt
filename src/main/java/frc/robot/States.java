@@ -187,8 +187,8 @@ public class States {
   }
 
   private void setShooterDefaultStates() {
-    this.turret.setDefaultCommand(Commands.parallel(this.turret.trackHub(), Commands.runOnce(() -> this.turretState = "Tracking Hub")));
-    this.hood.setDefaultCommand(Commands.parallel(this.hood.trackHub(), Commands.runOnce(() -> this.hoodState = "Tracking Hub")));
+    this.turret.setDefaultCommand(Commands.parallel(Commands.either(this.turret.trackHub(), this.turret.trackPass(), () -> RobotStates.getInstance().isOnAllianceZone()), Commands.runOnce(() -> this.turretState = "Tracking Hub")));
+    this.hood.setDefaultCommand(Commands.parallel(Commands.either(this.hood.trackHub(), this.hood.trackPass(), () -> RobotStates.getInstance().isOnAllianceZone()), Commands.runOnce(() -> this.hoodState = "Tracking Hub")));
     this.flyWheel.setDefaultCommand(Commands.parallel(this.flyWheel.runLowVelocity(), Commands.runOnce(() -> this.flyWheelState = "Running Low Velocity")));
 
     new Trigger(() -> RobotStates.getInstance().isOnAllianceZone())
