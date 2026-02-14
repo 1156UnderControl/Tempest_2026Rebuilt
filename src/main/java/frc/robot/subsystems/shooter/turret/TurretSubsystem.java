@@ -209,6 +209,6 @@ public class TurretSubsystem extends SubsystemBase {
       turretAngle -=
           TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
     }
-    return -turretAngle;
+    return -turretAngle + 180;
   }
 }
