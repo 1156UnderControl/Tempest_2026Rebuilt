@@ -5,10 +5,13 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import frc.robot.constants.VisionConstants;
 import java.util.ArrayList;
 import java.util.Optional;
+
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -36,6 +39,7 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
     this.camera = camera;
     this.aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
     this.photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, cameraPosition);
+    Logger.recordOutput("PoseEstimator/PhotonVision/"+camera.getName(), new Pose3d());
   }
 
   public Optional<PoseEstimation> getEstimatedPose(Pose2d referencePose) {
@@ -46,27 +50,34 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
         if (photonPoseEstimation.isEmpty()) {
           photonPoseEstimation = photonPoseEstimator.estimateLowestAmbiguityPose(result);
           if (photonPoseEstimation.isEmpty()) {
+            Logger.recordOutput("PoseEstimator/PhotonVision/"+camera.getName(), new Pose3d());
             return Optional.empty();
           }
         }
 
         PoseEstimation poseEstimation = convertPhotonPoseEstimation(photonPoseEstimation.get());
         if (only2TagsMeasurements && poseEstimation.numberOfTargetsUsed < 2) {
+          Logger.recordOutput("PoseEstimator/PhotonVision/"+camera.getName(), new Pose3d());
           return Optional.empty();
         }
         if (poseEstimation.numberOfTargetsUsed == 1) {
           if (photonPoseEstimation.get().targetsUsed.get(0).getPoseAmbiguity() > 0.35) {
+            Logger.recordOutput("PoseEstimator/PhotonVision/"+camera.getName(), new Pose3d());
             return Optional.empty();
           }
 
           if (poseEstimation.distanceToTag > 1) {
+            Logger.recordOutput("PoseEstimator/PhotonVision/"+camera.getName(), new Pose3d());
             return Optional.empty();
           }
         }
+        Logger.recordOutput("PoseEstimator/PhotonVision/"+camera.getName(), poseEstimation.estimatedPose);
         return Optional.of(poseEstimation);
       }
+      Logger.recordOutput("PoseEstimator/PhotonVision/"+camera.getName(), new Pose3d());
       return Optional.empty();
     } catch (Exception e) {
+      Logger.recordOutput("PoseEstimator/PhotonVision/"+camera.getName(), new Pose3d());
       return Optional.empty();
     }
   }
