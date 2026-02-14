@@ -43,7 +43,7 @@ public class ClimberConstants {
 
   public static final boolean INVERTED = true;
 
-  public static final Current STATOR_CURRENT_LIMIT = Amps.of(40);
+  public static final Current STATOR_CURRENT_LIMIT = Amps.of(60);
 
   public static final Distance HEIGHT_ERROR_ALLOWED = Meters.of(0);
 
