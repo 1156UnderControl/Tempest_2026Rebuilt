@@ -1,9 +1,8 @@
 package frc.robot.util;
 
-import java.util.Optional;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import java.util.Optional;
 
 public class HubShift {
 
@@ -25,7 +24,8 @@ public class HubShift {
     // We're teleop enabled, compute.
     double matchTime = DriverStation.getMatchTime();
     String gameData = DriverStation.getGameSpecificMessage();
-    // If we have no game data, we cannot compute, assume hub is active, as it's likely early in teleop.
+    // If we have no game data, we cannot compute, assume hub is active, as it's likely early in
+    // teleop.
     if (gameData.isEmpty()) {
       return true;
     }
@@ -41,10 +41,11 @@ public class HubShift {
     }
 
     // Shift 1 is active for blue if red won auto, or red if blue won auto.
-    boolean shift1Active = switch (alliance.get()) {
-      case Red -> !redInactiveFirst;
-      case Blue -> redInactiveFirst;
-    };
+    boolean shift1Active =
+        switch (alliance.get()) {
+          case Red -> !redInactiveFirst;
+          case Blue -> redInactiveFirst;
+        };
 
     if (matchTime > 130) {
       // Transition shift, hub is active.
