@@ -39,7 +39,6 @@ public class TurretSubsystem extends SubsystemBase {
   private double absoluteAngle;
 
   private TurretSubsystem(SparkAbsoluteEncoder kickerEncoder, SparkAbsoluteEncoder climberEncoder) {
-    // this.absoluteAngle = 2;
     calculator = ShooterCalculator.getInstance();
     smartTurretMotorConfig =
         new SmartMotorControllerConfig(this)
@@ -97,8 +96,6 @@ public class TurretSubsystem extends SubsystemBase {
     this.turretMotor.setEncoderPosition(Degrees.of(this.absoluteAngle));
 
     inputs = new TurretInputsAutoLogged();
-
-    Logger.recordOutput("Teste/Reset", false);
   }
 
   public static TurretSubsystem getInstance(
@@ -157,15 +154,6 @@ public class TurretSubsystem extends SubsystemBase {
             Degrees.of(
                 getReachableTurretAngle(
                     calculator.getParameters(false).turretAngle().getDegrees())));
-  }
-
-  public Command resetEncoder(){
-    return Commands.runOnce(()->{
-      this.absoluteAngle = determineTurretAngleDegrees(Units.rotationsToDegrees(this.encoder1.getPosition()),
-            Units.rotationsToDegrees(this.encoder2.getPosition()));
-
-      Logger.recordOutput("Teste/Reset", true);
-    });
   }
 
   public boolean isAtTargetAngleShoot() {
