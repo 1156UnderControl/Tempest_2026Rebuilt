@@ -133,8 +133,8 @@ public class RobotContainer {
     this.driverController.b().and(() -> RobotStates.getInstance().isOnAllianceZone()).whileTrue(Commands.parallel(this.flyWheel.shootHub(), this.states.shootState()));
     this.driverController.b().and(() -> !RobotStates.getInstance().isOnAllianceZone()).whileTrue(Commands.parallel(this.flyWheel.shootPass(), this.states.shootState()));
 
-    this.driverController.leftArrow().onTrue(this.states.collectState());
-    this.driverController.rightArrow().onTrue(this.states.retractState());
+    this.driverController.rightArrow().onTrue(this.states.collectState());
+    this.driverController.leftArrow().onTrue(this.states.retractState());
   }
 
   public Command getAutonomousCommand() {
