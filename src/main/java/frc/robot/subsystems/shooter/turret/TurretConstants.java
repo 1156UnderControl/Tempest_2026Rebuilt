@@ -57,7 +57,7 @@ public class TurretConstants {
   public static final ControlMode CONTROL_MODE = ControlMode.CLOSED_LOOP;
 
   public static final MechanismGearing GEARING =
-      new MechanismGearing(GearBox.fromReductionStages(60.3428));
+      new MechanismGearing(GearBox.fromReductionStages(52.8));
 
   public static final double PHASE_DELAY = 0.03;
 
@@ -70,7 +70,7 @@ public class TurretConstants {
   public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(250);
 
   public static final Transform2d TURRET_OFFSET_FROM_ROBOT_CENTER =
-      new Transform2d(-0.127, -0.18415, Rotation2d.kZero);
+      new Transform2d(-0.127, -0.18415, Rotation2d.kCW_90deg);
 
   public static final Angle ANGLE_ERROR_ALLOWED = Degrees.of(1.0);
 
