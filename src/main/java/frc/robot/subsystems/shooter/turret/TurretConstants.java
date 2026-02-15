@@ -70,7 +70,7 @@ public class TurretConstants {
   public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(250);
 
   public static final Transform2d TURRET_OFFSET_FROM_ROBOT_CENTER =
-      new Transform2d(-0.127, -0.18415, Rotation2d.kCW_90deg);
+      new Transform2d(-0.127, -0.18415, Rotation2d.kZero);
 
   public static final Angle ANGLE_ERROR_ALLOWED = Degrees.of(1.0);
 

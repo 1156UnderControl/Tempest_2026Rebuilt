@@ -141,7 +141,7 @@ public class ShooterCalculator {
         new ShootingParameters(
             lookaheadTurretToTargetDistance >= maps.getMinDistance()
                 && lookaheadTurretToTargetDistance <= maps.getMaxDistance(),
-            turretAngle.minus(Rotation2d.fromRadians(robotAngle)).minus(turretPosition.getRotation()),
+            turretAngle.minus(Rotation2d.fromRadians(robotAngle)),
             turretVelocity,
             hoodAngle,
             hoodVelocity,
