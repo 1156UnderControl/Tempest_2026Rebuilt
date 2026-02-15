@@ -143,19 +143,18 @@ public class TurretSubsystem extends SubsystemBase {
     return turret.setAngle(
         () ->
             Degrees.of(
-                getReachableTurretAngle(calculator.getParameters().turretAngle().getDegrees())));
+                getClosestTargetAngle(calculator.getParameters(true).turretAngle().getDegrees(), turret.getAngle().in(Degrees))));
   }
 
   public Command trackPass() {
     return turret.setAngle(
         () ->
             Degrees.of(
-                getReachableTurretAngle(
-                    calculator.getParameters(false).turretAngle().getDegrees())));
+                getClosestTargetAngle(calculator.getParameters(false).turretAngle().getDegrees(), turret.getAngle().in(Degrees))));
   }
 
   public Command trackNonOdometry() {
-    return turret.setAngle(() -> Degrees.of(getReachableTurretAngle(180)));
+    return turret.setAngle(Degrees.of(getClosestTargetAngle(180, turret.getAngle().in(Degrees))));
   }
 
   public boolean isAtTargetAngleShoot() {
@@ -166,14 +165,24 @@ public class TurretSubsystem extends SubsystemBase {
             TurretConstants.ANGLE_ERROR_ALLOWED);
   }
 
-  private double getReachableTurretAngle(double targetAngle) {
-    if (targetAngle > TurretConstants.TURRET_MAX_ANGLE.in(Degrees)) {
-      return targetAngle - 360;
-    } else if (targetAngle < TurretConstants.TURRET_MIN_ANGLE.in(Degrees)) {
-      return targetAngle + 360;
-    } else {
-      return targetAngle;
+  private double getClosestTargetAngle(double targetAngle, double currentAngle) {
+    double delta = (targetAngle - currentAngle) % 360;
+
+    if (delta > 180) {
+      delta -= 360;
+    } else if (delta < -180) {
+      delta += 360;
     }
+
+    double potentialTarget = currentAngle + delta;
+
+    if (potentialTarget > TurretConstants.TURRET_MAX_ANGLE.in(Degrees)) {
+      potentialTarget -= 360;
+    } else if (potentialTarget < TurretConstants.TURRET_MIN_ANGLE.in(Degrees)) {
+      potentialTarget += 360;
+    }
+
+    return potentialTarget;
   }
 
   private double determineTurretAngleDegrees(double e1, double e2) {
