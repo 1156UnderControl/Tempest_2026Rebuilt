@@ -44,12 +44,12 @@ public class OperatorController implements IOperatorController {
   }
 
   @Override
-  public Trigger turboActivate() {
+  public Trigger rightTrigger() {
     return OperatorController.rightTrigger(0.2);
   }
 
   @Override
-  public Trigger slowActivate() {
+  public Trigger leftTrigger() {
     return OperatorController.leftTrigger(0.2);
   }
 

@@ -137,6 +137,16 @@ public class ControlBoard implements IDriverController, IOperatorController {
   }
 
   @Override
+  public Trigger rightTrigger() {
+    return mOperatorController.rightTrigger();
+  }
+
+  @Override
+  public Trigger leftTrigger() {
+    return mOperatorController.leftTrigger();
+  }
+
+  @Override
   public Trigger leftJoystick() {
     return mOperatorController.leftJoystick();
   }

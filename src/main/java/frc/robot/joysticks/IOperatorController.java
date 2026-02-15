@@ -12,9 +12,9 @@ public interface IOperatorController {
 
   double getSIN_Joystick();
 
-  Trigger turboActivate();
+  Trigger rightTrigger();
 
-  Trigger slowActivate();
+  Trigger leftTrigger();
 
   boolean notUsingJoystick();
 

@@ -134,12 +134,13 @@ public class RobotContainer {
         .onTrue(this.drive.boostRobotJoystickControlVelocity())
         .onFalse(this.drive.limitRobotJoystickControlVelocity());
 
-    this.operatorController.b().and(() -> RobotStates.getInstance().isOnAllianceZone() && !RobotStates.getInstance().isOnNonOdometryMode()).whileTrue(Commands.parallel(this.flyWheel.shootHub(), this.states.shootState()));
-    this.operatorController.b().and(() -> !RobotStates.getInstance().isOnAllianceZone() && !RobotStates.getInstance().isOnNonOdometryMode()).whileTrue(Commands.parallel(this.flyWheel.shootPass(), this.states.shootState()));
-    this.operatorController.b().and(() -> RobotStates.getInstance().isOnNonOdometryMode()).whileTrue(this.flyWheel.shootNonOdometry());
+    this.operatorController.rightTrigger().and(() -> RobotStates.getInstance().isOnAllianceZone() && !RobotStates.getInstance().isOnNonOdometryMode()).whileTrue(Commands.parallel(this.flyWheel.shootHub(), this.states.shootState()));
+    this.operatorController.rightTrigger().and(() -> !RobotStates.getInstance().isOnAllianceZone() && !RobotStates.getInstance().isOnNonOdometryMode()).whileTrue(Commands.parallel(this.flyWheel.shootPass(), this.states.shootState()));
+    this.operatorController.rightTrigger().and(() -> RobotStates.getInstance().isOnNonOdometryMode()).whileTrue(this.flyWheel.shootNonOdometry());
 
-    this.operatorController.rightArrow().onTrue(this.states.collectState());
-    this.operatorController.leftArrow().onTrue(this.states.retractState());
+    this.operatorController.a().onTrue(this.states.collectState());
+    this.operatorController.x().whileTrue(this.states.retractState());
+    this.operatorController.y().onTrue(this.states.retractState());
 
     this.operatorController.leftBumper().whileTrue(this.roller.expellRoller());
     this.operatorController.rightBumper().whileTrue(this.kicker.expell());
