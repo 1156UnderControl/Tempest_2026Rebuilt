@@ -135,4 +135,14 @@ public class ControlBoard implements IDriverController, IOperatorController {
   public Trigger downArrow() {
     return mDriverController.downArrow();
   }
+
+  @Override
+  public Trigger leftJoystick() {
+    return mOperatorController.leftJoystick();
+  }
+
+  @Override
+  public Trigger rightJoystick() {
+    return mOperatorController.rightJoystick();
+  }
 }

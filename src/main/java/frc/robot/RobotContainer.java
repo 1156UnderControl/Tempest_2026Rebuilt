@@ -134,11 +134,14 @@ public class RobotContainer {
         .onTrue(this.drive.boostRobotJoystickControlVelocity())
         .onFalse(this.drive.limitRobotJoystickControlVelocity());
 
-    this.driverController.b().and(() -> RobotStates.getInstance().isOnAllianceZone()).whileTrue(Commands.parallel(this.flyWheel.shootHub(), this.states.shootState()));
-    this.driverController.b().and(() -> !RobotStates.getInstance().isOnAllianceZone()).whileTrue(Commands.parallel(this.flyWheel.shootPass(), this.states.shootState()));
+    this.driverController.b().and(() -> RobotStates.getInstance().isOnAllianceZone() && !RobotStates.getInstance().isOnNonOdometryMode()).whileTrue(Commands.parallel(this.flyWheel.shootHub(), this.states.shootState()));
+    this.driverController.b().and(() -> !RobotStates.getInstance().isOnAllianceZone() && !RobotStates.getInstance().isOnNonOdometryMode()).whileTrue(Commands.parallel(this.flyWheel.shootPass(), this.states.shootState()));
+    this.driverController.b().and(() -> RobotStates.getInstance().isOnNonOdometryMode()).whileTrue(this.flyWheel.shootNonOdometry());
 
     this.driverController.rightArrow().onTrue(this.states.collectState());
     this.driverController.leftArrow().onTrue(this.states.retractState());
+
+    this.operatorController.leftJoystick().toggleOnTrue(Commands.runOnce(() -> this.states.enableNoNOdometryShootState())).toggleOnFalse(Commands.runOnce(() -> this.states.disableNoNOdometryShootState()));
   }
 
   public Command getAutonomousCommand() {

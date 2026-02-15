@@ -156,6 +156,13 @@ public class TurretSubsystem extends SubsystemBase {
                     calculator.getParameters(false).turretAngle().getDegrees())));
   }
 
+  public Command trackNonOdometry() {
+    return turret.setAngle(
+        () ->
+            Degrees.of(
+                getReachableTurretAngle(180)));
+  }
+
   public boolean isAtTargetAngleShoot() {
     return turret
         .getAngle()

@@ -43,4 +43,8 @@ public interface IOperatorController {
   Trigger upArrow();
 
   Trigger downArrow();
+
+  Trigger leftJoystick();
+
+  Trigger rightJoystick();
 }

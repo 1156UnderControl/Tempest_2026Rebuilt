@@ -129,5 +129,15 @@ public class OperatorController implements IOperatorController {
   public Trigger downArrow() {
     return OperatorController.povDown();
   }
+
+  @Override
+  public Trigger leftJoystick() {
+    return OperatorController.leftStick();
+  }
+
+  @Override
+  public Trigger rightJoystick() {
+    return OperatorController.rightStick();
+  }
 }
 

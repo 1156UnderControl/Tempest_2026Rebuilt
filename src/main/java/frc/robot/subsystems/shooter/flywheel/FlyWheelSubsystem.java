@@ -138,6 +138,15 @@ public class FlyWheelSubsystem extends SubsystemBase {
         });
   }
 
+  public Command shootNonOdometry() {
+    return this.run(
+        () -> {
+          AngularVelocity velocity =
+              RPM.of(2700.0);
+          leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity));
+        });
+  }
+
   public Command runVelocity() {
     return this.run(
         () -> {

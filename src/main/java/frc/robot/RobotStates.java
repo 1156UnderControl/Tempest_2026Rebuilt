@@ -15,6 +15,8 @@ public class RobotStates {
 
   private static RobotStates instance;
 
+  private static boolean isNonOdometryMode = false;
+
   public static RobotStates getInstance() {
     if (instance == null) {
       instance = new RobotStates();
@@ -82,5 +84,13 @@ public class RobotStates {
   private boolean isOnShootZoneToFeed() {
     return (AllianceFlipUtil.apply(robotPose).getX()
         < FieldConstants.FieldStrategicPoses.ShootZoneX);
+  }
+
+  public void setNonOdometryMode(boolean isNonMode){
+    isNonOdometryMode = isNonMode;
+  }
+
+  public boolean isOnNonOdometryMode(){
+    return isNonOdometryMode;
   }
 }
