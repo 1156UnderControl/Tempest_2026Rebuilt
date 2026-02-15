@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.java_is_undercontrol.util.AllianceFlipUtil;
 import frc.robot.constants.FieldConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class RobotStates {
 
@@ -14,6 +15,10 @@ public class RobotStates {
   private static ChassisSpeeds robotVelocity = new ChassisSpeeds();
 
   private static RobotStates instance;
+
+  private static boolean isNonOdometryMode = false;
+
+  private static boolean extendedMode = false;
 
   public static RobotStates getInstance() {
     if (instance == null) {
@@ -82,5 +87,22 @@ public class RobotStates {
   private boolean isOnShootZoneToFeed() {
     return (AllianceFlipUtil.apply(robotPose).getX()
         < FieldConstants.FieldStrategicPoses.ShootZoneX);
+  }
+
+  public void setNonOdometryMode(boolean isNonMode) {
+    isNonOdometryMode = isNonMode;
+  }
+
+  public boolean isOnNonOdometryMode() {
+    return isNonOdometryMode;
+  }
+
+  public void setExtendedMode(boolean isExtended) {
+    Logger.recordOutput("ExtendedMode", isExtended);
+    extendedMode = isExtended;
+  }
+
+  public boolean isExtendedMode() {
+    return extendedMode;
   }
 }

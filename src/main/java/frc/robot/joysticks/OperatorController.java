@@ -1,8 +1,12 @@
 package frc.robot.joysticks;
 
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.java_is_undercontrol.util.Util;
+import frc.robot.constants.JoystickConstants;
 
 public class OperatorController implements IOperatorController {
+
   private static OperatorController mInstance = null;
 
   public static OperatorController getInstance() {
@@ -13,101 +17,126 @@ public class OperatorController implements IOperatorController {
     return mInstance;
   }
 
-  KeyboardController keyboard;
+  final CommandXboxController OperatorController;
 
   private OperatorController() {
-    keyboard = new KeyboardController();
+    OperatorController = new CommandXboxController(1);
   }
 
-  public Trigger goToReefA() {
-    return keyboard.getATrigger();
+  @Override
+  public double getLeftX() {
+    return -OperatorController.getLeftX();
   }
 
-  public Trigger goToReefB() {
-    return keyboard.getBTrigger();
+  @Override
+  public double getLeftY() {
+    return -OperatorController.getLeftY();
   }
 
-  public Trigger goToReefC() {
-    return keyboard.getCTrigger();
+  @Override
+  public double getCOS_Joystick() {
+    return -OperatorController.getRightX();
   }
 
-  public Trigger goToReefD() {
-    return keyboard.getDTrigger();
+  @Override
+  public double getSIN_Joystick() {
+    return -OperatorController.getRightY();
   }
 
-  public Trigger goToReefE() {
-    return keyboard.getETrigger();
+  @Override
+  public Trigger rightTrigger() {
+    return OperatorController.rightTrigger(0.2);
   }
 
-  public Trigger goToReefF() {
-    return keyboard.getFTrigger();
+  @Override
+  public Trigger leftTrigger() {
+    return OperatorController.leftTrigger(0.2);
   }
 
-  public Trigger goToReefG() {
-    return keyboard.getGTrigger();
+  @Override
+  public boolean notUsingJoystick() {
+    return Util.inRange(
+            getCOS_Joystick(),
+            -JoystickConstants.DEADBAND_ROTATION,
+            JoystickConstants.DEADBAND_ROTATION)
+        && Util.inRange(
+            getSIN_Joystick(),
+            -JoystickConstants.DEADBAND_ROTATION,
+            JoystickConstants.DEADBAND_ROTATION);
   }
 
-  public Trigger goToReefH() {
-    return keyboard.getHTrigger();
+  @Override
+  public Trigger a() {
+    return OperatorController.a();
   }
 
-  public Trigger goToReefI() {
-    return keyboard.getITrigger();
+  @Override
+  public Trigger y() {
+    return OperatorController.y();
   }
 
-  public Trigger goToReefJ() {
-    return keyboard.getJTrigger();
+  @Override
+  public Trigger x() {
+    return OperatorController.x();
   }
 
-  public Trigger goToReefK() {
-    return keyboard.getKTrigger();
+  @Override
+  public Trigger b() {
+    return OperatorController.b();
   }
 
-  public Trigger goToReefL() {
-    return keyboard.getLTrigger();
+  @Override
+  public Trigger leftBumper() {
+    return OperatorController.leftBumper();
   }
 
-  public Trigger reefL1() {
-    return keyboard.get1Trigger();
+  @Override
+  public Trigger rightBumper() {
+    return OperatorController.rightBumper();
   }
 
-  public Trigger reefL2() {
-    return keyboard.get2Trigger();
+  @Override
+  public Trigger isForcingDriverControl() {
+    return OperatorController.leftTrigger(0.4);
   }
 
-  public Trigger reefL3() {
-    return keyboard.get3Trigger();
+  @Override
+  public Trigger start() {
+    return OperatorController.start();
   }
 
-  public Trigger reefL4() {
-    return keyboard.get4Trigger();
+  @Override
+  public Trigger miniLeft() {
+    return OperatorController.button(6);
   }
 
-  public Trigger alignToClimb() {
-    return keyboard.get8Trigger();
+  @Override
+  public Trigger leftArrow() {
+    return OperatorController.povLeft();
   }
 
-  public Trigger climb() {
-    return keyboard.get9Trigger();
+  @Override
+  public Trigger rightArrow() {
+    return OperatorController.povRight();
   }
 
-  public Trigger prepareToScore() {
-    return keyboard.get0Trigger();
+  @Override
+  public Trigger upArrow() {
+    return OperatorController.povUp();
   }
 
-  public Trigger scoreObject() {
-    return keyboard.getPTrigger();
+  @Override
+  public Trigger downArrow() {
+    return OperatorController.povDown();
   }
 
-  public Trigger collectCoral() {
-    return keyboard.getZTrigger();
+  @Override
+  public Trigger leftJoystick() {
+    return OperatorController.leftStick();
   }
 
-  public Trigger cancelAction() {
-    return keyboard.getXTrigger();
-  }
-
-  public Trigger removeAlgaeFromBranch() {
-    return keyboard.getVTrigger();
+  @Override
+  public Trigger rightJoystick() {
+    return OperatorController.rightStick();
   }
 }

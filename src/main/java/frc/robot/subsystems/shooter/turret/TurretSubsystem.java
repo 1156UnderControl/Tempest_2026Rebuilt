@@ -8,9 +8,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotStates;
 import frc.robot.subsystems.shooter.ShooterCalculator;
@@ -154,6 +152,10 @@ public class TurretSubsystem extends SubsystemBase {
             Degrees.of(
                 getReachableTurretAngle(
                     calculator.getParameters(false).turretAngle().getDegrees())));
+  }
+
+  public Command trackNonOdometry() {
+    return turret.setAngle(() -> Degrees.of(getReachableTurretAngle(180)));
   }
 
   public boolean isAtTargetAngleShoot() {

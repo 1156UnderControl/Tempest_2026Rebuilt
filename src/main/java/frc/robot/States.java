@@ -102,15 +102,25 @@ public class States {
                 }));
   }
 
+  public void enableNoNOdometryShootState() {
+    RobotStates.getInstance().setNonOdometryMode(true);
+  }
+
+  public void disableNoNOdometryShootState() {
+    RobotStates.getInstance().setNonOdometryMode(true);
+  }
+
   public Command collectState() {
     return this.extensor
         .extend()
         .andThen(
-            Commands.runOnce(
-                () -> {
-                  this.extensorState = "Extended State";
-                  this.rollerState = "Running State";
-                }));
+            Commands.parallel(
+                this.roller.runRoller(),
+                Commands.runOnce(
+                    () -> {
+                      this.extensorState = "Extended State";
+                      this.rollerState = "Running State";
+                    })));
   }
 
   public Command retractState() {
@@ -145,41 +155,54 @@ public class States {
                 }));
   }
 
-  private void setSwerveDefaultStates(){
+  public Command expellIntakeState() {
+    return this.roller.expellRoller();
+  }
+
+  public Command expellKickerState() {
+    return this.kicker.expell();
+  }
+
+  private void setSwerveDefaultStates() {
     this.drive.setDefaultCommand(
         Commands.run(() -> drive.driveAlignAngleJoystick(), drive)
             .onlyIf(() -> DriverStation.isTeleopEnabled())
             .alongWith(Commands.runOnce(() -> this.driveState = "Drive Align Joystick State")));
   }
 
-  private void setIntakeDefaultStates(){
+  private void setIntakeDefaultStates() {
     this.extensor.setDefaultCommand(
-        Commands.parallel(
-            this.extensor.retract(),
-            Commands.runOnce(() -> this.extensorState = "Retracted State")
-    ));
+        Commands.either(
+            Commands.parallel(
+                this.extensor.extend(),
+                Commands.runOnce(() -> this.extensorState = "Extended State")),
+            Commands.parallel(
+                this.extensor.retract(),
+                Commands.runOnce(() -> this.extensorState = "Retracted State")),
+            () -> RobotStates.getInstance().isExtendedMode()));
 
     this.roller.setDefaultCommand(
-        this.roller
-            .stopRoller()
-            .alongWith(Commands.runOnce(() -> this.rollerState = "Stopped State")));
+        Commands.either(
+            Commands.parallel(
+                this.roller.runRoller(),
+                Commands.runOnce(() -> this.rollerState = "Running State")),
+            Commands.parallel(
+                this.roller.stopRoller(),
+                Commands.runOnce(() -> this.rollerState = "Stopped State")),
+            () -> RobotStates.getInstance().isExtendedMode()));
   }
 
-  private void setHopperDefaultStates(){
+  private void setHopperDefaultStates() {
     this.kicker.setDefaultCommand(
         Commands.parallel(
-            this.kicker.stop(), 
-            Commands.runOnce(() -> this.kickerState = "Stopped State")
-    ));
+            this.kicker.stop(), Commands.runOnce(() -> this.kickerState = "Stopped State")));
 
     this.spindexer.setDefaultCommand(
         Commands.parallel(
-        this.spindexer.stop(),
-        Commands.runOnce(() -> this.spindexerState = "Stopped State")
-    ));
+            this.spindexer.stop(), Commands.runOnce(() -> this.spindexerState = "Stopped State")));
   }
 
-  private void setClimberDefaultStates(){
+  private void setClimberDefaultStates() {
     this.climber.setDefaultCommand(
         this.climber
             .defaultPosition()
@@ -187,12 +210,33 @@ public class States {
   }
 
   private void setShooterDefaultStates() {
-    this.turret.setDefaultCommand(Commands.parallel(Commands.either(this.turret.trackHub(), this.turret.trackPass(), () -> RobotStates.getInstance().isOnAllianceZone()), Commands.runOnce(() -> this.turretState = "Tracking Hub")));
-    this.hood.setDefaultCommand(Commands.parallel(Commands.either(this.hood.trackHub(), this.hood.trackPass(), () -> RobotStates.getInstance().isOnAllianceZone()), Commands.runOnce(() -> this.hoodState = "Tracking Hub")));
-    this.flyWheel.setDefaultCommand(Commands.parallel(this.flyWheel.runLowVelocity(), Commands.runOnce(() -> this.flyWheelState = "Running Low Velocity")));
+    this.turret.setDefaultCommand(
+        Commands.parallel(
+            Commands.either(
+                this.turret.trackHub(),
+                this.turret.trackPass(),
+                () -> RobotStates.getInstance().isOnAllianceZone()),
+            Commands.runOnce(() -> this.turretState = "Tracking Hub")));
+    this.hood.setDefaultCommand(
+        Commands.parallel(
+            Commands.either(
+                this.hood.trackHub(),
+                this.hood.trackPass(),
+                () -> RobotStates.getInstance().isOnAllianceZone()),
+            Commands.runOnce(() -> this.hoodState = "Tracking Hub")));
+    this.flyWheel.setDefaultCommand(
+        Commands.parallel(
+            this.flyWheel.runLowVelocity(),
+            Commands.runOnce(() -> this.flyWheelState = "Running Low Velocity")));
 
-    new Trigger(() -> RobotStates.getInstance().isOnAllianceZone())
-    .onTrue(Commands.parallel(this.turret.trackHub(), this.hood.trackHub()))
-    .onFalse(Commands.parallel(this.turret.trackPass(), this.hood.trackPass()));
+    new Trigger(
+            () ->
+                RobotStates.getInstance().isOnAllianceZone()
+                    && !RobotStates.getInstance().isOnNonOdometryMode())
+        .onTrue(Commands.parallel(this.turret.trackHub(), this.hood.trackHub()))
+        .onFalse(Commands.parallel(this.turret.trackPass(), this.hood.trackPass()));
+
+    new Trigger(() -> RobotStates.getInstance().isOnNonOdometryMode())
+        .onTrue(Commands.parallel(this.turret.trackNonOdometry(), this.hood.trackNonOdometry()));
   }
 }

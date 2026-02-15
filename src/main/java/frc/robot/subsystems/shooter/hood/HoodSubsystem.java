@@ -128,6 +128,10 @@ public class HoodSubsystem extends SubsystemBase {
     return hood.setAngle(() -> Degrees.of(calculator.getParameters(false).hoodAngle()));
   }
 
+  public Command trackNonOdometry() {
+    return hood.setAngle(() -> Degrees.of(73));
+  }
+
   public boolean isAtTargetAngleShoot() {
     return hood.getAngle()
         .isNear(

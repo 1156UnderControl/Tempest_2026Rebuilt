@@ -125,6 +125,10 @@ public class RollerSubsystem extends SubsystemBase {
     return this.setDutyCycle(-1);
   }
 
+  public Command expellRoller() {
+    return this.setDutyCycle(1);
+  }
+
   public Command stopRoller() {
     return this.setDutyCycle(RollerConstants.setpoints.STOP_DUTY_CYCLE);
   }
