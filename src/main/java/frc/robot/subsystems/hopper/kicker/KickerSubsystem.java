@@ -124,7 +124,7 @@ public class KickerSubsystem extends SubsystemBase {
     return kicker.setSpeed(RPM.of(2600));
   }
 
-  public Command expell(){
+  public Command expell() {
     return kicker.setSpeed(RPM.of(-1000));
   }
 

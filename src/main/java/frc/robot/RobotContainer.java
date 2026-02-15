@@ -134,18 +134,46 @@ public class RobotContainer {
         .onTrue(this.drive.boostRobotJoystickControlVelocity())
         .onFalse(this.drive.limitRobotJoystickControlVelocity());
 
-    this.operatorController.rightTrigger().and(() -> RobotStates.getInstance().isOnAllianceZone() && !RobotStates.getInstance().isOnNonOdometryMode()).whileTrue(Commands.parallel(this.flyWheel.shootHub(), this.states.shootState()));
-    this.operatorController.rightTrigger().and(() -> !RobotStates.getInstance().isOnAllianceZone() && !RobotStates.getInstance().isOnNonOdometryMode()).whileTrue(Commands.parallel(this.flyWheel.shootPass(), this.states.shootState()));
-    this.operatorController.rightTrigger().and(() -> RobotStates.getInstance().isOnNonOdometryMode()).whileTrue(this.flyWheel.shootNonOdometry());
+    this.operatorController
+        .rightTrigger()
+        .and(
+            () ->
+                RobotStates.getInstance().isOnAllianceZone()
+                    && !RobotStates.getInstance().isOnNonOdometryMode())
+        .whileTrue(Commands.parallel(this.flyWheel.shootHub(), this.states.shootState()));
+    this.operatorController
+        .rightTrigger()
+        .and(
+            () ->
+                !RobotStates.getInstance().isOnAllianceZone()
+                    && !RobotStates.getInstance().isOnNonOdometryMode())
+        .whileTrue(Commands.parallel(this.flyWheel.shootPass(), this.states.shootState()));
+    this.operatorController
+        .rightTrigger()
+        .and(() -> RobotStates.getInstance().isOnNonOdometryMode())
+        .whileTrue(this.flyWheel.shootNonOdometry());
 
-    this.operatorController.a().onTrue(this.states.collectState());
+    this.operatorController
+        .a()
+        .onTrue(
+            Commands.parallel(
+                this.states.collectState(),
+                Commands.runOnce(() -> RobotStates.getInstance().setExtendedMode(true))));
     this.operatorController.x().whileTrue(this.states.retractState());
-    this.operatorController.y().onTrue(this.states.retractState());
+    this.operatorController
+        .y()
+        .onTrue(
+            Commands.parallel(
+                this.states.retractState(),
+                Commands.runOnce(() -> RobotStates.getInstance().setExtendedMode(false))));
 
     this.operatorController.leftBumper().whileTrue(this.roller.expellRoller());
     this.operatorController.rightBumper().whileTrue(this.kicker.expell());
 
-    this.operatorController.leftJoystick().toggleOnTrue(Commands.runOnce(() -> this.states.enableNoNOdometryShootState())).toggleOnFalse(Commands.runOnce(() -> this.states.disableNoNOdometryShootState()));
+    this.operatorController
+        .leftJoystick()
+        .toggleOnTrue(Commands.runOnce(() -> this.states.enableNoNOdometryShootState()))
+        .toggleOnFalse(Commands.runOnce(() -> this.states.disableNoNOdometryShootState()));
   }
 
   public Command getAutonomousCommand() {

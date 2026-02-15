@@ -140,4 +140,3 @@ public class OperatorController implements IOperatorController {
     return OperatorController.rightStick();
   }
 }
-
