@@ -20,7 +20,7 @@ public class OperatorController implements IOperatorController {
   final CommandXboxController OperatorController;
 
   private OperatorController() {
-    OperatorController = new CommandXboxController(0);
+    OperatorController = new CommandXboxController(1);
   }
 
   @Override

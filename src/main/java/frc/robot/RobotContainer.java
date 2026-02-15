@@ -16,6 +16,8 @@ import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
+import frc.robot.joysticks.IOperatorController;
+import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
 import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
@@ -46,7 +48,8 @@ public class RobotContainer {
   private final KickerSubsystem kicker;
   private final RollerSubsystem roller;
   private final ExtensorSubsystem extensor;
-  public final IDriverController driverController;
+  private final IDriverController driverController;
+  private final IOperatorController operatorController;
 
   private final NamedCommandsRegistery namedCommandsRegistry;
 
@@ -78,6 +81,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     this.driverController = DriverController.getInstance();
+    this.operatorController = OperatorController.getInstance();
 
     switch (Constants.getMode()) {
       case REAL:
