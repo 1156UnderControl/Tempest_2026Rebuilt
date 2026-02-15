@@ -102,6 +102,14 @@ public class States {
                 }));
   }
 
+  public void enableNoNOdometryShootState(){
+    RobotStates.getInstance().setNonOdometryMode(true);
+  }
+
+  public void disableNoNOdometryShootState(){
+    RobotStates.getInstance().setNonOdometryMode(true);
+  }
+
   public Command collectState() {
     return this.extensor
         .extend()
@@ -143,6 +151,14 @@ public class States {
                   this.climberState = "Climbed State";
                   this.driveState = "At Climb Pose State Right";
                 }));
+  }
+
+  public Command expellIntakeState(){
+    return this.roller.expellRoller();
+  }
+
+  public Command expellKickerState(){
+    return this.kicker.expell();
   }
 
   private void setSwerveDefaultStates(){
@@ -191,8 +207,11 @@ public class States {
     this.hood.setDefaultCommand(Commands.parallel(Commands.either(this.hood.trackHub(), this.hood.trackPass(), () -> RobotStates.getInstance().isOnAllianceZone()), Commands.runOnce(() -> this.hoodState = "Tracking Hub")));
     this.flyWheel.setDefaultCommand(Commands.parallel(this.flyWheel.runLowVelocity(), Commands.runOnce(() -> this.flyWheelState = "Running Low Velocity")));
 
-    new Trigger(() -> RobotStates.getInstance().isOnAllianceZone())
+    new Trigger(() -> RobotStates.getInstance().isOnAllianceZone() && !RobotStates.getInstance().isOnNonOdometryMode())
     .onTrue(Commands.parallel(this.turret.trackHub(), this.hood.trackHub()))
     .onFalse(Commands.parallel(this.turret.trackPass(), this.hood.trackPass()));
+
+    new Trigger(() -> RobotStates.getInstance().isOnNonOdometryMode())
+    .onTrue(Commands.parallel(this.turret.trackNonOdometry(), this.hood.trackNonOdometry()));
   }
 }

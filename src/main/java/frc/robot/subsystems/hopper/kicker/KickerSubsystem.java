@@ -124,6 +124,10 @@ public class KickerSubsystem extends SubsystemBase {
     return kicker.setSpeed(RPM.of(2600));
   }
 
+  public Command expell(){
+    return kicker.setSpeed(RPM.of(-1000));
+  }
+
   public Command stop() {
     return kicker.setSpeed(KickerConstants.setpoints.STOPPED);
   }
