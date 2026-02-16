@@ -60,7 +60,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
                 3,
                 0,
                 0)
-            .withFeedforward(new SimpleMotorFeedforward(1, 0, 0))
+            .withFeedforward(new SimpleMotorFeedforward(3.05, 0.0008, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0.05, 0, 0))
             .withControlMode(ControlMode.CLOSED_LOOP);
 
