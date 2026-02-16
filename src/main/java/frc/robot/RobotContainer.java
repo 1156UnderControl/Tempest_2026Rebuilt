@@ -173,6 +173,9 @@ public class RobotContainer {
                 this.states.retractState(),
                 Commands.runOnce(() -> RobotStates.getInstance().setExtendedMode(false))));
 
+    this.operatorController.rightBumper().whileTrue(this.kicker.expell());
+    this.operatorController.leftBumper().whileTrue(this.roller.expellRoller());
+
     this.operatorController
         .leftJoystick()
         .toggleOnTrue(Commands.runOnce(() -> this.states.enableNoNOdometryShootState()))
