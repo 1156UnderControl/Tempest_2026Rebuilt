@@ -10,7 +10,6 @@ import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers;
 import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers.PoseEstimate;
 import java.util.ArrayList;
 import java.util.Optional;
-
 import org.littletonrobotics.junction.Logger;
 
 public class LimelightPoseEstimator implements PoseEstimator {
@@ -39,7 +38,7 @@ public class LimelightPoseEstimator implements PoseEstimator {
     this.only2TagsMeasurements = only2TagsMeasurements;
     this.useMegaTag1 = useMegaTag1;
     this.limitAngVelForUpdating = limitAngVelForUpdating;
-    Logger.recordOutput("PoseEstimator/Limelight/"+limelightName, new Pose3d());
+    Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, new Pose3d());
   }
 
   public LimelightPoseEstimator(String limelightName, boolean only2TagsMeasurements) {
@@ -55,7 +54,7 @@ public class LimelightPoseEstimator implements PoseEstimator {
       if (!LimelightHelpers.getTV(this.limelightName)
           || Math.abs(OdometryEnabledSwerveSubsystem.robotAngularVelocity)
               >= limitAngVelForUpdating) {
-        Logger.recordOutput("PoseEstimator/Limelight/"+limelightName, new Pose3d());
+        Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, new Pose3d());
         return Optional.empty();
       }
       PoseEstimate limelightPoseEstimate;
@@ -66,7 +65,7 @@ public class LimelightPoseEstimator implements PoseEstimator {
             LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(this.limelightName);
       }
       if (limelightPoseEstimate == null) {
-        Logger.recordOutput("PoseEstimator/Limelight/"+limelightName, new Pose3d());
+        Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, new Pose3d());
         return Optional.empty();
       }
 
@@ -78,18 +77,18 @@ public class LimelightPoseEstimator implements PoseEstimator {
 
       PoseEstimation poseEstimation = convertPoseEstimate(limelightPoseEstimate);
       if (poseOutOfField(poseEstimation)) {
-        Logger.recordOutput("PoseEstimator/Limelight/"+limelightName, new Pose3d());
+        Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, new Pose3d());
         return Optional.empty();
       }
       if (only2TagsMeasurements && poseEstimation.numberOfTargetsUsed < 2) {
-        Logger.recordOutput("PoseEstimator/Limelight/"+limelightName, new Pose3d());
+        Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, new Pose3d());
         return Optional.empty();
       }
 
-      Logger.recordOutput("PoseEstimator/Limelight/"+limelightName, poseEstimation.estimatedPose);
+      Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, poseEstimation.estimatedPose);
       return Optional.of(poseEstimation);
     } catch (Exception e) {
-      Logger.recordOutput("PoseEstimator/Limelight/"+limelightName, new Pose3d());
+      Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, new Pose3d());
       return Optional.empty();
     }
   }

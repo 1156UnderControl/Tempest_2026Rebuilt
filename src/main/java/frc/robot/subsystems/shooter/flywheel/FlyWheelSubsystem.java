@@ -57,19 +57,11 @@ public class FlyWheelSubsystem extends SubsystemBase {
                 FlyWheelsConstants.ClosedLoopController.kI,
                 FlyWheelsConstants.ClosedLoopController.kD)
             .withSimClosedLoopController(
-                new ExponentialProfilePIDController(
-                    new PIDController(
-                        FlyWheelsConstants.ClosedLoopController.kP,
-                        FlyWheelsConstants.ClosedLoopController.kI,
-                        FlyWheelsConstants.ClosedLoopController.kD),
-                    ExponentialProfilePIDController.createFlywheelConstraints(
-                        FlyWheelsConstants.MAX_VOLTS,
-                        FlyWheelsConstants.FLYWHEEL_MOTOR,
-                        FlyWheelsConstants.FLYWHEEL_MASS,
-                        FlyWheelsConstants.FLYWHEEL_SIZE,
-                        FlyWheelsConstants.MOTOR_GEARING)))
+                3,
+                0,
+                0)
             .withFeedforward(new SimpleMotorFeedforward(0.19, 0.11, 0))
-            .withSimFeedforward(new SimpleMotorFeedforward(0.19, 0.11, 0))
+            .withSimFeedforward(new SimpleMotorFeedforward(0.05, 0, 0))
             .withControlMode(ControlMode.CLOSED_LOOP);
 
     this.leadMotor = new TalonFX(19);
@@ -118,6 +110,32 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   public Command stoppedVelocity() {
     return this.runVelocityTorqueControl(RPM.of(0));
+  }
+
+  public Command shootHub() {
+    return this.run(
+        () -> {
+          AngularVelocity velocity =
+              RPM.of(ShooterCalculator.getInstance().getParameters(true).flywheelSpeed());
+          leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity));
+        });
+  }
+
+  public Command shootPass() {
+    return this.run(
+        () -> {
+          AngularVelocity velocity =
+              RPM.of(ShooterCalculator.getInstance().getParameters(false).flywheelSpeed());
+          leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity));
+        });
+  }
+
+  public Command shootNonOdometry() {
+    return this.run(
+        () -> {
+          AngularVelocity velocity = RPM.of(2700.0);
+          leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity));
+        });
   }
 
   public Command runVelocity() {

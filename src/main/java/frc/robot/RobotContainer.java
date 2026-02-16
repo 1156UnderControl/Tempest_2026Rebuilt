@@ -5,7 +5,10 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.java_is_undercontrol.swerve.SwerveDevices;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIO;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIOPigeon2;
@@ -15,6 +18,8 @@ import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
+import frc.robot.joysticks.IOperatorController;
+import frc.robot.joysticks.OperatorController;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
 import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
@@ -45,7 +50,8 @@ public class RobotContainer {
   private final KickerSubsystem kicker;
   private final RollerSubsystem roller;
   private final ExtensorSubsystem extensor;
-  public final IDriverController driverController;
+  private final IDriverController driverController;
+  private final IOperatorController operatorController;
 
   private final NamedCommandsRegistery namedCommandsRegistry;
 
@@ -77,6 +83,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     this.driverController = DriverController.getInstance();
+    this.operatorController = OperatorController.getInstance();
 
     switch (Constants.getMode()) {
       case REAL:
@@ -129,10 +136,47 @@ public class RobotContainer {
         .onTrue(this.drive.boostRobotJoystickControlVelocity())
         .onFalse(this.drive.limitRobotJoystickControlVelocity());
 
-    this.driverController.b().whileTrue(this.flyWheel.runVelocity());
+    this.operatorController
+        .rightTrigger()
+        .and(
+            () ->
+                RobotStates.getInstance().isOnAllianceZone()
+                    && !RobotStates.getInstance().isOnNonOdometryMode()
+                    && !RobotStates.getInstance().isOnNotShootZone()
+                    && this.hood.isAtTargetAngleShoot())
+        .whileTrue(Commands.parallel(this.flyWheel.shootHub(), this.states.shootState()));
+    this.operatorController
+        .rightTrigger()
+        .and(
+            () ->
+                !RobotStates.getInstance().isOnAllianceZone()
+                    && !RobotStates.getInstance().isOnNonOdometryMode()
+                    && !RobotStates.getInstance().isOnNotShootZone()
+                    && this.hood.isAtTargetAngleShoot())
+        .whileTrue(Commands.parallel(this.flyWheel.shootPass(), this.states.shootState()));
+    this.operatorController
+        .rightTrigger()
+        .and(() -> RobotStates.getInstance().isOnNonOdometryMode())
+        .whileTrue(this.flyWheel.shootNonOdometry());
 
-    this.driverController.leftArrow().onTrue(this.states.collectState());
-    this.driverController.rightArrow().onTrue(this.states.retractState());
+    this.operatorController
+        .a()
+        .onTrue(
+            Commands.parallel(
+                this.states.collectState(),
+                Commands.runOnce(() -> RobotStates.getInstance().setExtendedMode(true))));
+    this.operatorController.x().whileTrue(this.states.retractState());
+    this.operatorController
+        .y()
+        .onTrue(
+            Commands.parallel(
+                this.states.retractState(),
+                Commands.runOnce(() -> RobotStates.getInstance().setExtendedMode(false))));
+
+    this.operatorController
+        .leftJoystick()
+        .toggleOnTrue(Commands.runOnce(() -> this.states.enableNoNOdometryShootState()))
+        .toggleOnFalse(Commands.runOnce(() -> this.states.disableNoNOdometryShootState()));
   }
 
   public Command getAutonomousCommand() {

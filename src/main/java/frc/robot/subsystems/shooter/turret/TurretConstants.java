@@ -57,7 +57,7 @@ public class TurretConstants {
   public static final ControlMode CONTROL_MODE = ControlMode.CLOSED_LOOP;
 
   public static final MechanismGearing GEARING =
-      new MechanismGearing(GearBox.fromReductionStages(60.3428));
+      new MechanismGearing(GearBox.fromReductionStages(52.8));
 
   public static final double PHASE_DELAY = 0.03;
 
@@ -74,9 +74,9 @@ public class TurretConstants {
 
   public static final Angle ANGLE_ERROR_ALLOWED = Degrees.of(1.0);
 
-  public static final Angle TURRET_MIN_ANGLE = Degrees.of(-180);
+  public static final Angle TURRET_MIN_ANGLE = Degrees.of(-310);
 
-  public static final Angle TURRET_MAX_ANGLE = Degrees.of(180);
+  public static final Angle TURRET_MAX_ANGLE = Degrees.of(130);
 
   public static final Angle STARTING_ANGLE = Degrees.of(0);
 
@@ -95,7 +95,7 @@ public class TurretConstants {
   }
 
   public static class FeedForwardController {
-    public static final double kV = 6.15;
+    public static final double kV = 5.8;
     public static final double kS = 0.1075;
     public static final double kA = 0;
 

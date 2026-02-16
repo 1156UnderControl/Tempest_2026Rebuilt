@@ -43,13 +43,13 @@ public class ClimberConstants {
 
   public static final boolean INVERTED = true;
 
-  public static final Current STATOR_CURRENT_LIMIT = Amps.of(40);
+  public static final Current STATOR_CURRENT_LIMIT = Amps.of(60);
 
   public static final Distance HEIGHT_ERROR_ALLOWED = Meters.of(0);
 
   public static final Distance CLIMBER_MIN_HEIGHT = Meters.of(0);
 
-  public static final Distance CLIMBER_MAX_HEIGHT = Meters.of(0.124);
+  public static final Distance CLIMBER_MAX_HEIGHT = Meters.of(0.17);
 
   public static final Time CLOSED_RAMP_RATE = Milliseconds.of(10);
 
@@ -63,7 +63,7 @@ public class ClimberConstants {
   }
 
   public static class FeedBackController {
-    public static final double kP = 5.5;
+    public static final double kP = 500;
     public static final double kI = 0;
     public static final double kD = 0;
 

@@ -120,8 +120,16 @@ public class HoodSubsystem extends SubsystemBase {
     Logger.processInputs("Subsystems/Shooter/Hood/", inputs);
   }
 
-  public Command goToTargetAngle() {
+  public Command trackHub() {
     return hood.setAngle(() -> Degrees.of(calculator.getParameters(true).hoodAngle()));
+  }
+
+  public Command trackPass() {
+    return hood.setAngle(() -> Degrees.of(calculator.getParameters(false).hoodAngle()));
+  }
+
+  public Command trackNonOdometry() {
+    return hood.setAngle(() -> Degrees.of(73));
   }
 
   public boolean isAtTargetAngleShoot() {
