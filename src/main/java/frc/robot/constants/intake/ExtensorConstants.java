@@ -22,7 +22,7 @@ public class ExtensorConstants {
   public static final int ID_MOTOR = 4;
 
   public class limits {
-    public static final Distance MAX_EXTENSION = Meters.of(0.29);
+    public static final Distance MAX_EXTENSION = Meters.of(0.32);
     public static final Distance MIN_EXTENSION = Meters.of(0);
   }
 
@@ -48,7 +48,7 @@ public class ExtensorConstants {
   public static final Distance DEADBAND_IS_AT = Meters.of(0.01);
 
   public class setpoints {
-    public static final Distance INTAKE_EXTENDED_POSITION = limits.MAX_EXTENSION;
+    public static final Distance INTAKE_EXTENDED_POSITION = Meters.of(0.31);
     public static final Distance INTAKE_HOMED_POSITION = Meters.of(0.05);
   }
 }
