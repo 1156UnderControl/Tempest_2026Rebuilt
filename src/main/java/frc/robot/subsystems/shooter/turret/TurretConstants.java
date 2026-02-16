@@ -95,7 +95,7 @@ public class TurretConstants {
   }
 
   public static class FeedForwardController {
-    public static final double kV = 6.15;
+    public static final double kV = 5.8;
     public static final double kS = 0.1075;
     public static final double kA = 0;
 
