@@ -7,12 +7,15 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.java_is_undercontrol.util.AllianceFlipUtil;
 import frc.robot.constants.FieldConstants;
+import frc.robot.util.HubShift;
+
 import org.littletonrobotics.junction.Logger;
 
 public class RobotStates {
 
   private static Pose2d robotPose = Pose2d.kZero;
   private static ChassisSpeeds robotVelocity = new ChassisSpeeds();
+  private static HubShift hubShift = new HubShift();
 
   private static RobotStates instance;
 
@@ -49,6 +52,10 @@ public class RobotStates {
 
   public ChassisSpeeds getFieldVelocity() {
     return ChassisSpeeds.fromRobotRelativeSpeeds(robotVelocity, getRobotRotation());
+  }
+
+  public boolean getHubShift(){
+   return hubShift.isHubActive();
   }
 
   public boolean isOnBlueDepotSide() {
