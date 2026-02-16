@@ -1,7 +1,6 @@
 package frc.robot.joysticks;
 
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.java_is_undercontrol.util.Util;
 import frc.robot.constants.JoystickConstants;

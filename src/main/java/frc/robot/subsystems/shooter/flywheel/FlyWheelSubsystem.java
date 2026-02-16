@@ -7,7 +7,6 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.Pair;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.FlyWheelsConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import org.littletonrobotics.junction.Logger;
-import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.FlyWheelConfig;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
@@ -56,10 +54,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
                 FlyWheelsConstants.ClosedLoopController.kP,
                 FlyWheelsConstants.ClosedLoopController.kI,
                 FlyWheelsConstants.ClosedLoopController.kD)
-            .withSimClosedLoopController(
-                3,
-                0,
-                0)
+            .withSimClosedLoopController(3, 0, 0)
             .withFeedforward(new SimpleMotorFeedforward(3.05, 0.0008, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0.05, 0, 0))
             .withControlMode(ControlMode.CLOSED_LOOP);

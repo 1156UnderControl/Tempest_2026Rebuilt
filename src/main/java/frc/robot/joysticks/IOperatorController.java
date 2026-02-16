@@ -29,7 +29,7 @@ public interface IOperatorController {
   Trigger leftBumper();
 
   Trigger rightBumper();
-  
+
   Trigger isForcingDriverControl();
 
   Trigger leftArrow();
