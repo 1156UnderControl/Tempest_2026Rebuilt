@@ -115,6 +115,7 @@ public class States {
         .extend()
         .andThen(
             Commands.parallel(
+                this.roller.runRoller(),
                 Commands.runOnce(
                     () -> {
                       this.extensorState = "Extended State";
