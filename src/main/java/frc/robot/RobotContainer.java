@@ -142,7 +142,9 @@ public class RobotContainer {
             () ->
                 RobotStates.getInstance().isOnAllianceZone()
                     && !RobotStates.getInstance().isOnNonOdometryMode()
-                    && !RobotStates.getInstance().isOnNotShootZone())
+                    && !RobotStates.getInstance().isOnNotShootZone()
+                    && this.turret.isAtTargetAngleShoot()
+                    && this.hood.isAtTargetAngleShoot())
         .whileTrue(Commands.parallel(this.flyWheel.shootHub(), this.states.shootState()));
     this.operatorController
         .rightTrigger()
@@ -150,7 +152,9 @@ public class RobotContainer {
             () ->
                 !RobotStates.getInstance().isOnAllianceZone()
                     && !RobotStates.getInstance().isOnNonOdometryMode()
-                    && !RobotStates.getInstance().isOnNotShootZone())
+                    && !RobotStates.getInstance().isOnNotShootZone()
+                    && this.turret.isAtTargetAngleShoot()
+                    && this.hood.isAtTargetAngleShoot())
         .whileTrue(Commands.parallel(this.flyWheel.shootPass(), this.states.shootState()));
     this.operatorController
         .rightTrigger()
