@@ -173,7 +173,7 @@ public class RobotContainer {
                 this.states.retractState(),
                 Commands.runOnce(() -> RobotStates.getInstance().setExtendedMode(false))));
 
-    this.operatorController.rightBumper().whileTrue(this.kicker.expell());
+    this.operatorController.rightBumper().whileTrue(this.spindexer.expell());
     this.operatorController.leftBumper().whileTrue(this.roller.expellRoller());
 
     this.operatorController

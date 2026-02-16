@@ -112,6 +112,10 @@ public class SpindexerSubsystem extends SubsystemBase {
     return spindexer.setSpeed(SpindexerConstants.setpoints.SHOOTING);
   }
 
+  public Command expell() {
+    return spindexer.setSpeed(SpindexerConstants.setpoints.EXPELLING);
+  }
+
   public Command stop() {
     return spindexer.setSpeed(SpindexerConstants.setpoints.STOPPED);
   }
