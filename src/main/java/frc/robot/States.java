@@ -115,7 +115,6 @@ public class States {
         .extend()
         .andThen(
             Commands.parallel(
-                this.roller.runRoller(),
                 Commands.runOnce(
                     () -> {
                       this.extensorState = "Extended State";
@@ -179,16 +178,6 @@ public class States {
             Commands.parallel(
                 this.extensor.retract(),
                 Commands.runOnce(() -> this.extensorState = "Retracted State")),
-            () -> RobotStates.getInstance().isExtendedMode()));
-
-    this.roller.setDefaultCommand(
-        Commands.either(
-            Commands.parallel(
-                this.roller.runRoller(),
-                Commands.runOnce(() -> this.rollerState = "Running State")),
-            Commands.parallel(
-                this.roller.stopRoller(),
-                Commands.runOnce(() -> this.rollerState = "Stopped State")),
             () -> RobotStates.getInstance().isExtendedMode()));
   }
 
