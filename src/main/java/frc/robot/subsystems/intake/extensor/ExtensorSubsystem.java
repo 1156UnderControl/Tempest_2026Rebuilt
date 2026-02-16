@@ -123,7 +123,6 @@ public class ExtensorSubsystem extends SubsystemBase {
 
   public Command extend() {
     return this.setLength(ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION)
-        .repeatedly()
         .until(this.isAtTargetHeight());
   }
 
@@ -194,5 +193,10 @@ public class ExtensorSubsystem extends SubsystemBase {
   public Trigger isAtTargetHeight() {
     return new Trigger(
         () -> extensor.getHeight().isNear(setpoint, ExtensorConstants.DEADBAND_IS_AT));
+  }
+
+  public Trigger isAtTargetHeightCollect() {
+    return new Trigger(
+        () -> extensor.getHeight().isNear(ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION, ExtensorConstants.DEADBAND_IS_AT));
   }
 }

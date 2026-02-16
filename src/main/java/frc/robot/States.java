@@ -115,7 +115,6 @@ public class States {
         .extend()
         .andThen(
             Commands.parallel(
-                this.roller.runRoller(),
                 Commands.runOnce(
                     () -> {
                       this.extensorState = "Extended State";
@@ -126,7 +125,6 @@ public class States {
   public Command retractState() {
     return Commands.parallel(
         this.extensor.retract(),
-        this.roller.stopRoller(),
         Commands.runOnce(
             () -> {
               this.extensorState = "Retracted State";
@@ -180,6 +178,7 @@ public class States {
                 this.extensor.retract(),
                 Commands.runOnce(() -> this.extensorState = "Retracted State")),
             () -> RobotStates.getInstance().isExtendedMode()));
+    new Trigger(this.extensor.isAtTargetHeightCollect()).whileTrue(this.roller.runRoller()).whileFalse(this.roller.stopRoller());
   }
 
   private void setHopperDefaultStates() {
