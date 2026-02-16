@@ -123,6 +123,7 @@ public class ExtensorSubsystem extends SubsystemBase {
 
   public Command extend() {
     return this.setLength(ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION)
+        .repeatedly()
         .until(this.isAtTargetHeight());
   }
 
