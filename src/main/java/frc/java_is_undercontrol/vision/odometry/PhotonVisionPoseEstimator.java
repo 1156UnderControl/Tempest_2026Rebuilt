@@ -70,6 +70,7 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
             photonPoseEstimation = photonPoseEstimator.estimateCoprocMultiTagPose(result);
             break;
           case PNP_CONSTRAINED:
+            //TODO: add PNP Constrained implementation
             photonPoseEstimation = photonPoseEstimator.estimateCoprocMultiTagPose(result);
             break;
           default:
