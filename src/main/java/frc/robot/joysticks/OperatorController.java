@@ -1,5 +1,6 @@
 package frc.robot.joysticks;
 
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.java_is_undercontrol.util.Util;
@@ -17,10 +18,10 @@ public class OperatorController implements IOperatorController {
     return mInstance;
   }
 
-  final CommandXboxController OperatorController;
+  final CommandPS5Controller OperatorController;
 
   private OperatorController() {
-    OperatorController = new CommandXboxController(1);
+    OperatorController = new CommandPS5Controller(1);
   }
 
   @Override
@@ -45,12 +46,12 @@ public class OperatorController implements IOperatorController {
 
   @Override
   public Trigger rightTrigger() {
-    return OperatorController.rightTrigger(0.2);
+    return new Trigger(() -> OperatorController.getR2Axis() > 0.2);
   }
 
   @Override
   public Trigger leftTrigger() {
-    return OperatorController.leftTrigger(0.2);
+    return new Trigger(() -> OperatorController.getL2Axis() > 0.2);
   }
 
   @Override
@@ -67,47 +68,37 @@ public class OperatorController implements IOperatorController {
 
   @Override
   public Trigger a() {
-    return OperatorController.a();
+    return OperatorController.cross();
   }
 
   @Override
   public Trigger y() {
-    return OperatorController.y();
+    return OperatorController.triangle();
   }
 
   @Override
   public Trigger x() {
-    return OperatorController.x();
+    return OperatorController.square();
   }
 
   @Override
   public Trigger b() {
-    return OperatorController.b();
+    return OperatorController.circle();
   }
 
   @Override
   public Trigger leftBumper() {
-    return OperatorController.leftBumper();
+    return OperatorController.L1();
   }
 
   @Override
   public Trigger rightBumper() {
-    return OperatorController.rightBumper();
+    return OperatorController.R1();
   }
 
   @Override
   public Trigger isForcingDriverControl() {
-    return OperatorController.leftTrigger(0.4);
-  }
-
-  @Override
-  public Trigger start() {
-    return OperatorController.start();
-  }
-
-  @Override
-  public Trigger miniLeft() {
-    return OperatorController.button(6);
+    return new Trigger(() -> OperatorController.getL2Axis() > 0.4);
   }
 
   @Override
@@ -132,11 +123,11 @@ public class OperatorController implements IOperatorController {
 
   @Override
   public Trigger leftJoystick() {
-    return OperatorController.leftStick();
+    return OperatorController.L3();
   }
 
   @Override
   public Trigger rightJoystick() {
-    return OperatorController.rightStick();
+    return OperatorController.R3();
   }
 }

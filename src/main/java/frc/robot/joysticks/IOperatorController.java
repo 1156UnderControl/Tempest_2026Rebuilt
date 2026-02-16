@@ -29,11 +29,7 @@ public interface IOperatorController {
   Trigger leftBumper();
 
   Trigger rightBumper();
-
-  Trigger start();
-
-  Trigger miniLeft();
-
+  
   Trigger isForcingDriverControl();
 
   Trigger leftArrow();
