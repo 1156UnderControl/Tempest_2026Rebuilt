@@ -60,7 +60,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
                 3,
                 0,
                 0)
-            .withFeedforward(new SimpleMotorFeedforward(0.19, 0.11, 0))
+            .withFeedforward(new SimpleMotorFeedforward(1, 0, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0.05, 0, 0))
             .withControlMode(ControlMode.CLOSED_LOOP);
 
@@ -105,7 +105,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   public Command runLowVelocity() {
-    return this.runVelocityTorqueControl(RPM.of(1500));
+    return this.runVelocityTorqueControl(RPM.of(3600));
   }
 
   public Command stoppedVelocity() {
