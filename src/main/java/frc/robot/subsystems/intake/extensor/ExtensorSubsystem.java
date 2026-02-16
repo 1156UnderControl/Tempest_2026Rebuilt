@@ -123,6 +123,7 @@ public class ExtensorSubsystem extends SubsystemBase {
 
   public Command extend() {
     return this.setLength(ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION)
+    .alongWith()
         .until(this.isAtTargetHeight());
   }
 
@@ -145,7 +146,7 @@ public class ExtensorSubsystem extends SubsystemBase {
         .finallyDo(() -> this.extensorMotor.startClosedLoopController());
   }
 
-  private Command disableExtensor() {
+  public Command disableExtensor() {
     return this.runOnce(
         () -> {
           this.extensorMotor.setIdleMode(MotorMode.COAST);
@@ -195,8 +196,10 @@ public class ExtensorSubsystem extends SubsystemBase {
         () -> extensor.getHeight().isNear(setpoint, ExtensorConstants.DEADBAND_IS_AT));
   }
 
+
   public Trigger isAtTargetHeightCollect() {
     return new Trigger(
         () -> extensor.getHeight().isNear(ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION, ExtensorConstants.DEADBAND_IS_AT));
   }
+
 }

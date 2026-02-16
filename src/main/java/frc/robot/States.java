@@ -111,10 +111,11 @@ public class States {
   }
 
   public Command collectState() {
-    return this.extensor
-        .extend()
+    return this.extensor.extend()
+    .alongWith(this.extensor.disableExtensor())
         .andThen(
             Commands.parallel(
+
                 Commands.runOnce(
                     () -> {
                       this.extensorState = "Extended State";
