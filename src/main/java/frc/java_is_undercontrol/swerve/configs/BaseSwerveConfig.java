@@ -12,7 +12,7 @@ public class BaseSwerveConfig {
 
   public final SwerveDeadbandsConfig deadbandsConfig = new SwerveDeadbandsConfig(0.05, 0.5);
 
-  public double velocityReductionFactor = 0.6;
+  public double velocityReductionFactor = 0.4;
 
   public BaseSwerveConfig(
       double maxRotationSpeed,

@@ -304,7 +304,7 @@ public class BaseSwerveSubsystem extends SubsystemBase {
       double x, double y, double angularRate) {
     double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), translationDeadband);
     if (!robotBoostedOnJoystickControl) {
-      linearMagnitude = linearMagnitude * 0.6;
+      linearMagnitude = linearMagnitude * velocityReductionFactor;
     }
     Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
     linearMagnitude = linearMagnitude * linearMagnitude;
