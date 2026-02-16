@@ -28,17 +28,34 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
 
   private Boolean useVisionHeadingCorrection = false;
 
+  private double distanceToRefuse1TagMeasurement;
+
+  private String state;
+
+  private String keyPoseEstimatedLog;
+
+  private String keyStateLog;
+
   public PhotonVisionPoseEstimator(PhotonCamera camera, Transform3d cameraPosition) {
-    this(camera, cameraPosition, false);
+    this(camera, cameraPosition, false, 1, PhotonPoseEstimatorStrategies.MULTITAG_COPROCESSOR);
   }
 
   public PhotonVisionPoseEstimator(
-      PhotonCamera camera, Transform3d cameraPosition, boolean only2TagsMeasurements) {
+      PhotonCamera camera,
+      Transform3d cameraPosition,
+      boolean only2TagsMeasurements,
+      double distanceToRefuse1TagMeasurement,
+      PhotonPoseEstimatorStrategies strategy) {
     this.only2TagsMeasurements = only2TagsMeasurements;
     this.camera = camera;
     this.aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
     this.photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, cameraPosition);
-    Logger.recordOutput("PoseEstimator/PhotonVision/" + camera.getName(), new Pose3d());
+    this.distanceToRefuse1TagMeasurement = distanceToRefuse1TagMeasurement;
+    this.state = "INITIALIZED";
+    this.keyPoseEstimatedLog = "PoseEstimator/PhotonVision/" + camera.getName() + "/EstimatedPose";
+    this.keyStateLog = "PoseEstimator/PhotonVision/" + camera.getName() + "/StateMeasure";
+    Logger.recordOutput(this.keyPoseEstimatedLog, new Pose3d());
+    Logger.recordOutput(this.keyPoseEstimatedLog, new Pose3d());
   }
 
   public Optional<PoseEstimation> getEstimatedPose(Pose2d referencePose) {
@@ -49,35 +66,48 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
         if (photonPoseEstimation.isEmpty()) {
           photonPoseEstimation = photonPoseEstimator.estimateLowestAmbiguityPose(result);
           if (photonPoseEstimation.isEmpty()) {
-            Logger.recordOutput("PoseEstimator/PhotonVision/" + camera.getName(), new Pose3d());
+            state = "NO_ESTIMATION_AVAILABLE";
+            Logger.recordOutput(keyStateLog, state);
+            Logger.recordOutput(this.keyPoseEstimatedLog, new Pose3d());
             return Optional.empty();
           }
         }
 
         PoseEstimation poseEstimation = convertPhotonPoseEstimation(photonPoseEstimation.get());
         if (only2TagsMeasurements && poseEstimation.numberOfTargetsUsed < 2) {
-          Logger.recordOutput("PoseEstimator/PhotonVision/" + camera.getName(), new Pose3d());
+          state = "TWO_TAGS_ONLY";
+          Logger.recordOutput(keyStateLog, state);
+          Logger.recordOutput(this.keyPoseEstimatedLog, new Pose3d());
           return Optional.empty();
         }
         if (poseEstimation.numberOfTargetsUsed == 1) {
           if (photonPoseEstimation.get().targetsUsed.get(0).getPoseAmbiguity() > 0.35) {
-            Logger.recordOutput("PoseEstimator/PhotonVision/" + camera.getName(), new Pose3d());
+            state = "ONE_TAG_TOO_AMBIGUOUS";
+            Logger.recordOutput(keyStateLog, state);
+            Logger.recordOutput(this.keyPoseEstimatedLog, new Pose3d());
             return Optional.empty();
           }
 
-          if (poseEstimation.distanceToTag > 1) {
-            Logger.recordOutput("PoseEstimator/PhotonVision/" + camera.getName(), new Pose3d());
+          if (poseEstimation.distanceToTag > this.distanceToRefuse1TagMeasurement) {
+            state = "ONE_TAG_TOO_FAR";
+            Logger.recordOutput(keyStateLog, state);
+            Logger.recordOutput(this.keyPoseEstimatedLog, new Pose3d());
             return Optional.empty();
           }
         }
-        Logger.recordOutput(
-            "PoseEstimator/PhotonVision/" + camera.getName(), poseEstimation.estimatedPose);
+        state = "SENDING_ESTIMATION";
+        Logger.recordOutput(keyStateLog, state);
+        Logger.recordOutput(this.keyPoseEstimatedLog, poseEstimation.estimatedPose);
         return Optional.of(poseEstimation);
       }
-      Logger.recordOutput("PoseEstimator/PhotonVision/" + camera.getName(), new Pose3d());
+      state = "NO_TARGETS";
+      Logger.recordOutput(keyStateLog, state);
+      Logger.recordOutput(this.keyPoseEstimatedLog, new Pose3d());
       return Optional.empty();
     } catch (Exception e) {
-      Logger.recordOutput("PoseEstimator/PhotonVision/" + camera.getName(), new Pose3d());
+      state = "EXCEPTION THROWED";
+      Logger.recordOutput(keyStateLog, state);
+      Logger.recordOutput(this.keyPoseEstimatedLog, new Pose3d());
       return Optional.empty();
     }
   }
