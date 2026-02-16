@@ -180,6 +180,8 @@ public class RobotContainer {
         .leftJoystick()
         .toggleOnTrue(Commands.runOnce(() -> this.states.enableNoNOdometryShootState()))
         .toggleOnFalse(Commands.runOnce(() -> this.states.disableNoNOdometryShootState()));
+
+    this.driverController.a().onTrue(this.turret.resetCRT());
   }
 
   public Command getAutonomousCommand() {
