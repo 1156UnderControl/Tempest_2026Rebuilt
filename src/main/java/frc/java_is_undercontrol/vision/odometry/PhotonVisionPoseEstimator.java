@@ -36,6 +36,8 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
 
   private String keyStateLog;
 
+  private PhotonPoseEstimatorStrategies strategy;
+
   public PhotonVisionPoseEstimator(PhotonCamera camera, Transform3d cameraPosition) {
     this(camera, cameraPosition, false, 1, PhotonPoseEstimatorStrategies.MULTITAG_COPROCESSOR);
   }
@@ -52,6 +54,7 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
     this.photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, cameraPosition);
     this.distanceToRefuse1TagMeasurement = distanceToRefuse1TagMeasurement;
     this.state = "INITIALIZED";
+    this.strategy = strategy;
     this.keyPoseEstimatedLog = "PoseEstimator/PhotonVision/" + camera.getName() + "/EstimatedPose";
     this.keyStateLog = "PoseEstimator/PhotonVision/" + camera.getName() + "/StateMeasure";
     Logger.recordOutput(this.keyPoseEstimatedLog, new Pose3d());
@@ -61,8 +64,18 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
   public Optional<PoseEstimation> getEstimatedPose(Pose2d referencePose) {
     try {
       for (var result : camera.getAllUnreadResults()) {
-        Optional<EstimatedRobotPose> photonPoseEstimation =
-            photonPoseEstimator.estimateCoprocMultiTagPose(result);
+        Optional<EstimatedRobotPose> photonPoseEstimation;
+        switch (strategy) {
+          case MULTITAG_COPROCESSOR:
+            photonPoseEstimation = photonPoseEstimator.estimateCoprocMultiTagPose(result);
+            break;
+          case PNP_CONSTRAINED:
+            photonPoseEstimation = photonPoseEstimator.estimateCoprocMultiTagPose(result);
+            break;
+          default:
+            photonPoseEstimation = photonPoseEstimator.estimateCoprocMultiTagPose(result);
+            break;
+        }
         if (photonPoseEstimation.isEmpty()) {
           photonPoseEstimation = photonPoseEstimator.estimateLowestAmbiguityPose(result);
           if (photonPoseEstimation.isEmpty()) {
