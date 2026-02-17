@@ -58,8 +58,8 @@ public class HoodSubsystem extends SubsystemBase {
                 HoodConstants.ClosedLoopController.kP,
                 HoodConstants.ClosedLoopController.kI,
                 HoodConstants.ClosedLoopController.kD)
-            .withFeedforward(new SimpleMotorFeedforward(0.135, 0.6, 0))
-            .withSimFeedforward(new SimpleMotorFeedforward(0.135, 0.6, 0))
+            .withFeedforward(new SimpleMotorFeedforward(0.135, 4, 0))
+            .withSimFeedforward(new SimpleMotorFeedforward(0.135, 4, 0))
             .withControlMode(ControlMode.CLOSED_LOOP);
 
     hoodMax = new SparkMax(8, MotorType.kBrushless);
