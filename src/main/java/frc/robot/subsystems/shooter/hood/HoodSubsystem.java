@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotStates;
 import frc.robot.constants.shooter.HoodConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import org.littletonrobotics.junction.Logger;
@@ -99,7 +100,7 @@ public class HoodSubsystem extends SubsystemBase {
   private void updateInputs() {
     inputs.currentAngle = hood.getAngle().in(Degrees);
     inputs.targetAngle = calculator.getParameters().hoodAngle();
-    inputs.atTarget = isAtTargetAngleShoot();
+    inputs.atTarget = RobotStates.getInstance().isOnAllianceZone() ? isAtTargetAngleShootHub() : isAtTargetAngleShootPass();
     inputs.angleError = Math.abs(hood.getAngle().in(Degrees) - calculator.getParameters().hoodAngle());
 
     Logger.processInputs("Subsystems/Shooter/Hood/", inputs);
@@ -117,10 +118,17 @@ public class HoodSubsystem extends SubsystemBase {
     return hood.setAngle(() -> Degrees.of(73));
   }
 
-  public boolean isAtTargetAngleShoot() {
+  public boolean isAtTargetAngleShootHub() {
     return hood.getAngle()
         .isNear(
-            Degrees.of(calculator.getLastParameters().hoodAngle()),
+            Degrees.of(calculator.getParameters(true).hoodAngle()),
+            HoodConstants.Position.ANGLE_ERROR_ALLOWED);
+  }
+
+  public boolean isAtTargetAngleShootPass() {
+    return hood.getAngle()
+        .isNear(
+            Degrees.of(calculator.getParameters(false).hoodAngle()),
             HoodConstants.Position.ANGLE_ERROR_ALLOWED);
   }
 
