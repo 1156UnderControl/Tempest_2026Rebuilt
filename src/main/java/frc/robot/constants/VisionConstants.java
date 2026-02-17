@@ -7,9 +7,9 @@ import edu.wpi.first.math.util.Units;
 
 public class VisionConstants {
   public static final String frontRightArducamName = "Arducam-Front-Right";
-  public static final String backRightArducamName = "Arducam-Front-Left";
+  public static final String frontLeftArducamName = "Arducam-Front-Left";
 
-  public static final String frontLeftLimelightName = "limelight-bright";
+  public static final String backRightLimelightName = "limelight-bright";
   public static final String backLeftLimelightName = "limelight-bleft";
   public static final double xyStdDevCoefficient = 0.04;
   public static final double thetaStdDevCoefficient = 0.08;
@@ -20,7 +20,7 @@ public class VisionConstants {
           new Rotation3d(
               0, Units.degreesToRadians(-14.245433), Units.degreesToRadians(25.418201 - 90)));
 
-  public static Transform3d robotToCamArducamBackRight =
+  public static Transform3d robotToCamArducamFrontLeft =
       new Transform3d(
           new Translation3d((-0.307143), (-0.275344), 0.251786),
           new Rotation3d(0, Units.degreesToRadians(15), Units.degreesToRadians(200)));

@@ -103,24 +103,24 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
   private static PoseEstimator configureMulticameraPoseEstimation() {
     List<PoseEstimator> listOfEstimators = new ArrayList<PoseEstimator>();
-    PoseEstimator limelightLeftBack =
+    PoseEstimator limelightBackLeft =
         new LimelightPoseEstimator(VisionConstants.backLeftLimelightName, false, false, 2);
-    PoseEstimator limelightLeftFront =
-        new LimelightPoseEstimator(VisionConstants.frontLeftLimelightName, false, false, 2);
+    PoseEstimator limelightBackRight =
+        new LimelightPoseEstimator(VisionConstants.backRightLimelightName, false, false, 2);
     PhotonCamera cameraFrontRight = new PhotonCamera(VisionConstants.frontRightArducamName);
-    PhotonCamera cameraBackRight = new PhotonCamera(VisionConstants.backRightArducamName);
+    PhotonCamera cameraFrontLeft = new PhotonCamera(VisionConstants.frontLeftArducamName);
 
     PoseEstimator photonFrontRight =
         new PhotonVisionPoseEstimator(
             cameraFrontRight, VisionConstants.robotToCamArducamFrontRight);
 
-    PoseEstimator photonBackRight =
-        new PhotonVisionPoseEstimator(cameraBackRight, VisionConstants.robotToCamArducamBackRight);
+    PoseEstimator photonFrontLeft =
+        new PhotonVisionPoseEstimator(cameraFrontLeft, VisionConstants.robotToCamArducamFrontLeft);
 
-    listOfEstimators.add(limelightLeftBack);
-    listOfEstimators.add(limelightLeftFront);
+    listOfEstimators.add(limelightBackLeft);
+    listOfEstimators.add(limelightBackRight);
     listOfEstimators.add(photonFrontRight);
-    listOfEstimators.add(photonBackRight);
+    listOfEstimators.add(photonFrontLeft);
 
     PoseEstimator estimatorMultiCamera =
         new MultiCameraPoseEstimator(listOfEstimators, "Teleop Multi Pose Estimator");
@@ -128,43 +128,44 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   }
 
   public void resetOdometryLimelight(Translation2d defaultPosition) {
-    PoseEstimator limelightLeftBack =
+    PoseEstimator limelightBackLeft=
         new LimelightPoseEstimator(VisionConstants.backLeftLimelightName, false, false, 2);
-    PoseEstimator limelightLeftFront =
-        new LimelightPoseEstimator(VisionConstants.frontLeftLimelightName, false, false, 2);
-    Optional<PoseEstimation> limelightLeftBackPoseEstimation =
-        limelightLeftBack.getEstimatedPose(this.getPose());
+    PoseEstimator limelightBackRight =
+        new LimelightPoseEstimator(VisionConstants.backRightLimelightName, false, false, 2);
 
-    if (limelightLeftBackPoseEstimation.isEmpty()) {
+    Optional<PoseEstimation> limelightBackLeftPoseEstimation =
+        limelightBackLeft.getEstimatedPose(this.getPose());
+
+    if (limelightBackLeftPoseEstimation.isEmpty()) {
       resetTranslation(defaultPosition);
       this.positionUpdated = true;
     } else {
       resetTranslation(
-          limelightLeftBackPoseEstimation.get().estimatedPose.getTranslation().toTranslation2d());
+          limelightBackLeftPoseEstimation.get().estimatedPose.getTranslation().toTranslation2d());
       this.positionUpdated = true;
     }
 
-    Optional<PoseEstimation> limelightLeftFrontPoseEstimation =
-        limelightLeftFront.getEstimatedPose(this.getPose());
-    if (limelightLeftFrontPoseEstimation.isEmpty()) {
+    Optional<PoseEstimation> limelightBackRightPoseEstimation =
+        limelightBackRight.getEstimatedPose(this.getPose());
+    if (limelightBackRightPoseEstimation.isEmpty()) {
       resetTranslation(defaultPosition);
       this.positionUpdated = true;
     } else {
       resetTranslation(
-          limelightLeftFrontPoseEstimation.get().estimatedPose.getTranslation().toTranslation2d());
+          limelightBackRightPoseEstimation.get().estimatedPose.getTranslation().toTranslation2d());
       this.positionUpdated = true;
     }
   }
 
   public void resetOdometryPhotonvision(Translation2d defaultPosition) {
-    PhotonCamera cameraFrontRight = new PhotonCamera(VisionConstants.backRightArducamName);
+    PhotonCamera cameraFrontRight = new PhotonCamera(VisionConstants.frontRightArducamName);
     PoseEstimator photonFrontRight =
         new PhotonVisionPoseEstimator(
             cameraFrontRight, VisionConstants.robotToCamArducamFrontRight);
 
-    PhotonCamera cameraBackRight = new PhotonCamera(VisionConstants.backRightArducamName);
-    PoseEstimator photonBackRight =
-        new PhotonVisionPoseEstimator(cameraBackRight, VisionConstants.robotToCamArducamFrontRight);
+    PhotonCamera cameraFrontLeft = new PhotonCamera(VisionConstants.frontLeftArducamName);
+    PoseEstimator photonFrontLeft =
+        new PhotonVisionPoseEstimator(cameraFrontLeft, VisionConstants.robotToCamArducamFrontLeft);
 
     Optional<PoseEstimation> photonFrontRightPoseEstimation =
         photonFrontRight.getEstimatedPose(this.getPose());
@@ -178,15 +179,15 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
       this.positionUpdated = true;
     }
 
-    Optional<PoseEstimation> photonBackRightPoseEstimation =
-        photonBackRight.getEstimatedPose(this.getPose());
+    Optional<PoseEstimation> photonFrontLeftPoseEstimation =
+        photonFrontLeft.getEstimatedPose(this.getPose());
 
-    if (photonBackRightPoseEstimation.isEmpty()) {
+    if (photonFrontLeftPoseEstimation.isEmpty()) {
       resetTranslation(defaultPosition);
       this.positionUpdated = true;
     } else {
       resetTranslation(
-          photonBackRightPoseEstimation.get().estimatedPose.getTranslation().toTranslation2d());
+          photonFrontLeftPoseEstimation.get().estimatedPose.getTranslation().toTranslation2d());
       this.positionUpdated = true;
     }
   }
@@ -249,7 +250,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
         0,
         0);
     LimelightHelpers.SetRobotOrientation(
-        VisionConstants.frontLeftLimelightName,
+        VisionConstants.backRightLimelightName,
         OdometryEnabledSwerveSubsystem.robotOrientation,
         0,
         0,
