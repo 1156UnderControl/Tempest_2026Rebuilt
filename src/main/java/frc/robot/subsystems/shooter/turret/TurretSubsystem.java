@@ -134,7 +134,7 @@ public class TurretSubsystem extends SubsystemBase {
             turret.getMechanismSetpoint().isEmpty()
                 ? 0
                 : turret.getMechanismSetpoint().get().in(Degrees);
-    inputs.atTarget = isAtTargetAngleShoot();
+    inputs.atTarget = RobotStates.getInstance().isOnAllianceZone() ? isAtTargetAngleShootHub() : isAtTargetAngleShootPass();
     inputs.current = turretMotor.getStatorCurrent();
     inputs.voltage = turretMotor.getVoltage();
     inputs.turret =
@@ -173,11 +173,19 @@ public class TurretSubsystem extends SubsystemBase {
     return turret.setAngle(Degrees.of(getClosestTargetAngle(180, turret.getAngle().in(Degrees))));
   }
 
-  public boolean isAtTargetAngleShoot() {
+  public boolean isAtTargetAngleShootHub() {
     return turret
         .getAngle()
         .isNear(
             Degrees.of(calculator.getParameters(true).turretAngle().getDegrees()),
+            TurretConstants.ANGLE_ERROR_ALLOWED);
+  }
+
+  public boolean isAtTargetAngleShootPass() {
+    return turret
+        .getAngle()
+        .isNear(
+            Degrees.of(calculator.getParameters(false).turretAngle().getDegrees()),
             TurretConstants.ANGLE_ERROR_ALLOWED);
   }
 
