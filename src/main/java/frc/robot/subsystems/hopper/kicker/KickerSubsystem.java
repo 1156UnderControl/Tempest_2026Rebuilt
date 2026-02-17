@@ -121,11 +121,11 @@ public class KickerSubsystem extends SubsystemBase {
   }
 
   public Command shoot() {
-    return kicker.setSpeed(RPM.of(2600));
+    return kicker.setSpeed(KickerConstants.setpoints.SHOOTING);
   }
 
   public Command expell() {
-    return kicker.setSpeed(RPM.of(-1000));
+    return kicker.setSpeed(KickerConstants.setpoints.EXPEL);
   }
 
   public Command stop() {
