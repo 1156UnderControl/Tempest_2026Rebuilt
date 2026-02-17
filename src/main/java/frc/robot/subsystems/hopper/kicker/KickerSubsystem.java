@@ -66,7 +66,7 @@ public class KickerSubsystem extends SubsystemBase {
     smartKickerMotorConfig =
         new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
-            .withClosedLoopController(0.03, 0, 1, RPM.of(3000), RotationsPerSecondPerSecond.of(150))
+            .withClosedLoopController(0.03, 0, 0, RPM.of(3000), RotationsPerSecondPerSecond.of(150))
             .withSimClosedLoopController(
                 0.1, 0, 0, RPM.of(2423), RotationsPerSecondPerSecond.of(150))
             .withFeedforward(new SimpleMotorFeedforward(0.16, 0.26))
@@ -75,7 +75,7 @@ public class KickerSubsystem extends SubsystemBase {
             .withIdleMode(MotorMode.COAST)
             .withMechanismCircumference(Inches.of(2))
             .withMotorInverted(true)
-            .withStatorCurrentLimit(Amps.of(50));
+            .withStatorCurrentLimit(Amps.of(30));
 
     kickerMotor = new SparkWrapper(kickerFlex, DCMotor.getNeoVortex(1), smartKickerMotorConfig);
 
