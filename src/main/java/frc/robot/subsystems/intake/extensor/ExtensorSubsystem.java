@@ -122,30 +122,14 @@ public class ExtensorSubsystem extends SubsystemBase {
   }
 
   public Command extend() {
-    return this.setLength(ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION)
-        .until(this.isAtTargetHeight());
+    return this.setLength(ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION);
   }
 
   public Command retract() {
-    return this.setLength(ExtensorConstants.setpoints.INTAKE_HOMED_POSITION);
+    return this.extensor.setHeight(ExtensorConstants.setpoints.INTAKE_HOMED_POSITION);
   }
 
-  public Command shake() {
-    return this.extend()
-        .until(isAtTargetHeight())
-        .andThen(Commands.waitSeconds(0.5))
-        .andThen(this.retract().until(isAtTargetHeight()))
-        .andThen(Commands.waitSeconds(0.5))
-        .repeatedly();
-  }
-
-  public Command softStopExtensor() {
-    return disableExtensor()
-        .andThen(this.setDutyCycle(0).withTimeout(Seconds.of(1.0)))
-        .finallyDo(() -> this.extensorMotor.startClosedLoopController());
-  }
-
-  private Command disableExtensor() {
+  public Command disableExtensor() {
     return this.runOnce(
         () -> {
           this.extensorMotor.setIdleMode(MotorMode.COAST);
@@ -153,41 +137,8 @@ public class ExtensorSubsystem extends SubsystemBase {
         });
   }
 
-  public Command homeReset(Current threshhold) {
-    Debouncer currentDebouncer = new Debouncer(0.4);
-    Voltage runVolts = Volts.of(-2);
-    AngularVelocity velocityThreshold = DegreesPerSecond.of(2);
-    return Commands.startRun(
-            this.extensorMotor::stopClosedLoopController,
-            () -> this.extensorMotor.setVoltage(runVolts))
-        .until(
-            () ->
-                currentDebouncer.calculate(
-                    this.extensorMotor.getStatorCurrent().gte(threshhold)
-                        && this.extensorMotor.getMechanismVelocity().abs(DegreesPerSecond)
-                            <= velocityThreshold.in(DegreesPerSecond)))
-        .finallyDo(
-            () -> {
-              extensorMotor.setEncoderPosition(ExtensorConstants.limits.MIN_EXTENSION);
-              extensorMotor.startClosedLoopController();
-            });
-  }
-
-  public Command holdPID() {
-    return this.setLength(setpoint);
-  }
-
-  public Command setLength(Distance length) {
-    return this.extensor.setHeight(length);
-  }
-
-  public Command setDutyCycle(double dutyCycle) {
-    return this.extensor.set(dutyCycle);
-  }
-
-  public Trigger isAtCollision() {
-    Debouncer isAtPositionDebouncer = new Debouncer(3, DebounceType.kFalling);
-    return new Trigger(() -> isAtPositionDebouncer.calculate(isAtTargetHeight().getAsBoolean()));
+  private Command setLength(Distance length) {
+    return this.extensor.runTo(length, ExtensorConstants.DEADBAND_IS_AT);
   }
 
   public Trigger isAtTargetHeight() {
