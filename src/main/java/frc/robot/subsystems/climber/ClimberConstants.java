@@ -49,7 +49,7 @@ public class ClimberConstants {
 
   public static final Distance CLIMBER_MIN_HEIGHT = Meters.of(0);
 
-  public static final Distance CLIMBER_MAX_HEIGHT = Meters.of(0.17);
+  public static final Distance CLIMBER_MAX_HEIGHT = Meters.of(0.17655);
 
   public static final Time CLOSED_RAMP_RATE = Milliseconds.of(10);
 
