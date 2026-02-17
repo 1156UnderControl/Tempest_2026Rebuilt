@@ -59,12 +59,12 @@ public class SpindexerSubsystem extends SubsystemBase {
         new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
             .withClosedLoopController(
-                0.07, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
+                0.1, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
             .withSimClosedLoopController(
                 0.03, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(20)))
             .withIdleMode(MotorMode.BRAKE)
-            .withFeedforward(new SimpleMotorFeedforward(0.15, 2.1, 0))
+            .withFeedforward(new SimpleMotorFeedforward(0.11, 2.2, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0.1, 0.9, 0))
             .withMechanismCircumference(Meters.of(0.478))
             .withStatorCurrentLimit(Amps.of(60))

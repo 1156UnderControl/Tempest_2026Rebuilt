@@ -24,8 +24,8 @@ public final class SpindexerConstants {
   public static final AngularVelocity DEADBAND_IS_AT = RPM.of(10);
 
   public static class setpoints {
-    public static final AngularVelocity SHOOTING = RotationsPerSecond.of(12.5);
-    public static final AngularVelocity EXPELLING = RotationsPerSecond.of(-12.5);
+    public static final AngularVelocity SHOOTING = RotationsPerSecond.of(5);
+    public static final AngularVelocity EXPELLING = RotationsPerSecond.of(-5);
     public static final AngularVelocity STOPPED = RPM.of(0);
   }
 }
