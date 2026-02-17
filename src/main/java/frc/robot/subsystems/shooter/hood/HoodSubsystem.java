@@ -50,29 +50,13 @@ public class HoodSubsystem extends SubsystemBase {
             .withStatorCurrentLimit(Amps.of(60))
             .withClosedLoopRampRate(Milliseconds.of(100))
             .withClosedLoopController(
-                new ExponentialProfilePIDController(
-                    new PIDController(
-                        HoodConstants.ClosedLoopController.kP,
-                        HoodConstants.ClosedLoopController.kI,
-                        HoodConstants.ClosedLoopController.kD),
-                    ExponentialProfilePIDController.createArmConstraints(
-                        HoodConstants.MAX_VOLTS,
-                        HoodConstants.HOOD_MOTOR,
-                        HoodConstants.HOOD_MASS,
-                        HoodConstants.HOOD_SIZE,
-                        HoodConstants.MOTOR_GEARING)))
+                HoodConstants.ClosedLoopController.kP,
+                HoodConstants.ClosedLoopController.kI,
+                HoodConstants.ClosedLoopController.kD)
             .withSimClosedLoopController(
-                new ExponentialProfilePIDController(
-                    new PIDController(
-                        HoodConstants.ClosedLoopController.kP,
-                        HoodConstants.ClosedLoopController.kI,
-                        HoodConstants.ClosedLoopController.kD),
-                    ExponentialProfilePIDController.createArmConstraints(
-                        HoodConstants.MAX_VOLTS,
-                        HoodConstants.HOOD_MOTOR,
-                        HoodConstants.HOOD_MASS,
-                        HoodConstants.HOOD_SIZE,
-                        HoodConstants.MOTOR_GEARING)))
+                HoodConstants.ClosedLoopController.kP,
+                HoodConstants.ClosedLoopController.kI,
+                HoodConstants.ClosedLoopController.kD)
             .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
             .withControlMode(ControlMode.CLOSED_LOOP);
