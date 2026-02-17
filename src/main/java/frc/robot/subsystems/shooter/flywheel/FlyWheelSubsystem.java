@@ -102,7 +102,10 @@ public class FlyWheelSubsystem extends SubsystemBase {
   private void updateInputs() {
     this.inputs.currentVelocity = this.smartFlywheelMotor.getRotorVelocity().in(RPM);
     this.inputs.targetVelocity = torqueCurrentRequest.getVelocityMeasure().in(RPM);
-    this.inputs.atTarget = RobotStates.getInstance().isOnAllianceZone() ? isAtTargetVelocityShootHub() : isAtTargetVelocityShootPass();
+    this.inputs.atTarget =
+        RobotStates.getInstance().isOnAllianceZone()
+            ? isAtTargetVelocityShootHub()
+            : isAtTargetVelocityShootPass();
 
     Logger.processInputs("Subsystems/Shooter/FlyWheels/", inputs);
   }

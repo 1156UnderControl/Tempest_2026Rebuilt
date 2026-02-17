@@ -105,8 +105,12 @@ public class HoodSubsystem extends SubsystemBase {
   private void updateInputs() {
     inputs.currentAngle = hood.getAngle().in(Degrees);
     inputs.targetAngle = calculator.getParameters().hoodAngle();
-    inputs.atTarget = RobotStates.getInstance().isOnAllianceZone() ? isAtTargetAngleShootHub() : isAtTargetAngleShootPass();
-    inputs.angleError = Math.abs(hood.getAngle().in(Degrees) - calculator.getParameters().hoodAngle());
+    inputs.atTarget =
+        RobotStates.getInstance().isOnAllianceZone()
+            ? isAtTargetAngleShootHub()
+            : isAtTargetAngleShootPass();
+    inputs.angleError =
+        Math.abs(hood.getAngle().in(Degrees) - calculator.getParameters().hoodAngle());
 
     Logger.processInputs("Subsystems/Shooter/Hood/", inputs);
   }
