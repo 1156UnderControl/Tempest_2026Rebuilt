@@ -12,6 +12,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotStates;
 import frc.robot.constants.shooter.FlyWheelsConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import org.littletonrobotics.junction.Logger;
@@ -101,7 +102,10 @@ public class FlyWheelSubsystem extends SubsystemBase {
   private void updateInputs() {
     this.inputs.currentVelocity = this.smartFlywheelMotor.getRotorVelocity().in(RPM);
     this.inputs.targetVelocity = torqueCurrentRequest.getVelocityMeasure().in(RPM);
-    this.inputs.atTarget = isAtTargetVelocityShoot();
+    this.inputs.atTarget =
+        RobotStates.getInstance().isOnAllianceZone()
+            ? isAtTargetVelocityShootHub()
+            : isAtTargetVelocityShootPass();
 
     Logger.processInputs("Subsystems/Shooter/FlyWheels/", inputs);
   }
@@ -158,11 +162,19 @@ public class FlyWheelSubsystem extends SubsystemBase {
         () -> leadMotor.setControl(torqueCurrentRequest.withVelocity(this.flyWheelRPM / 60)));
   }
 
-  public boolean isAtTargetVelocityShoot() {
+  public boolean isAtTargetVelocityShootHub() {
     return this.flywheelMechanism
         .getSpeed()
         .isNear(
             RPM.of(ShooterCalculator.getInstance().getParameters(true).flywheelSpeed()),
+            FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
+  }
+
+  public boolean isAtTargetVelocityShootPass() {
+    return this.flywheelMechanism
+        .getSpeed()
+        .isNear(
+            RPM.of(ShooterCalculator.getInstance().getParameters(false).flywheelSpeed()),
             FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
   }
 }
