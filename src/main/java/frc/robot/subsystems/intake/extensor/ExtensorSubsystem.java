@@ -123,7 +123,6 @@ public class ExtensorSubsystem extends SubsystemBase {
   public Command disableExtensor() {
     return this.runOnce(
         () -> {
-          this.extensorMotor.setIdleMode(MotorMode.COAST);
           this.extensorMotor.stopClosedLoopController();
         });
   }
