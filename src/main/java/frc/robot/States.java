@@ -229,4 +229,10 @@ public class States {
     new Trigger(() -> RobotStates.getInstance().isOnNonOdometryMode())
         .onTrue(Commands.parallel(this.turret.trackNonOdometry(), this.hood.trackNonOdometry()));
   }
+
+  public Command calibrationState() {
+    return Commands.parallel(
+        this.hood.goToTargetAngleCalibration(),
+        this.flyWheel.runVelocityTorqueControlCalibration());
+  }
 }

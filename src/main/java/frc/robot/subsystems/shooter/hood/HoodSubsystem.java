@@ -6,14 +6,13 @@ import static edu.wpi.first.units.Units.Milliseconds;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.shooter.HoodConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import org.littletonrobotics.junction.Logger;
-import yams.math.ExponentialProfilePIDController;
 import yams.mechanisms.config.ArmConfig;
 import yams.mechanisms.positional.Arm;
 import yams.motorcontrollers.SmartMotorController;
@@ -36,6 +35,8 @@ public class HoodSubsystem extends SubsystemBase {
   private final HoodInputsAutoLogged inputs;
 
   private static HoodSubsystem instance;
+
+  private double angleCalibration;
 
   private HoodSubsystem() {
     calculator = ShooterCalculator.getInstance();
@@ -76,6 +77,9 @@ public class HoodSubsystem extends SubsystemBase {
     hood = new Arm(hoodMechanismConfig);
 
     inputs = new HoodInputsAutoLogged();
+
+    SmartDashboard.putNumber("Calibration/Hood", 41);
+    angleCalibration = 41;
   }
 
   public static HoodSubsystem getInstance() {
@@ -89,6 +93,7 @@ public class HoodSubsystem extends SubsystemBase {
   public void periodic() {
     hood.updateTelemetry();
     updateInputs();
+    this.angleCalibration = SmartDashboard.getNumber("Calibration/Hood", 41);
   }
 
   @Override
@@ -100,7 +105,8 @@ public class HoodSubsystem extends SubsystemBase {
     inputs.currentAngle = hood.getAngle().in(Degrees);
     inputs.targetAngle = calculator.getParameters().hoodAngle();
     inputs.atTarget = isAtTargetAngleShoot();
-    inputs.angleError = Math.abs(hood.getAngle().in(Degrees) - calculator.getParameters().hoodAngle());
+    inputs.angleError =
+        Math.abs(hood.getAngle().in(Degrees) - calculator.getParameters().hoodAngle());
 
     Logger.processInputs("Subsystems/Shooter/Hood/", inputs);
   }
@@ -130,5 +136,9 @@ public class HoodSubsystem extends SubsystemBase {
 
   public double getMaxAngleDegrees() {
     return HoodConstants.Position.HOOD_MAX_ANGLE.in(Degrees);
+  }
+
+  public Command goToTargetAngleCalibration() {
+    return hood.setAngle(() -> Degrees.of(angleCalibration));
   }
 }
