@@ -85,7 +85,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     super(
         new OdometryEnabledSwerveConfig(
             0.75,
-            0.5,
+            0.6,
             new SwerveDeadbandsConfig(
                 JoystickConstants.DEADBAND_TRANSLATION, JoystickConstants.DEADBAND_ROTATION),
             pathPlannerConfig,
