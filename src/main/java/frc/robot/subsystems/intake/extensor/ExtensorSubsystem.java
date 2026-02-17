@@ -127,6 +127,13 @@ public class ExtensorSubsystem extends SubsystemBase {
         });
   }
 
+  public Command enableExtensor(){
+    return this.runOnce(
+        () -> {
+          this.extensorMotor.startClosedLoopController();
+        });
+  }
+
   private Command setLength(Distance length) {
     return this.extensor.runTo(length, ExtensorConstants.DEADBAND_IS_AT);
   }

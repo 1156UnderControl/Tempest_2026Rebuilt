@@ -115,7 +115,7 @@ public class States {
         .extend()
         .andThen(
             Commands.parallel(
-              this.extensor.disableExtensor(),
+                this.extensor.disableExtensor(),
                 this.roller.runRoller(),
                 Commands.runOnce(
                     () -> {
@@ -125,13 +125,16 @@ public class States {
   }
 
   public Command retractState() {
-    return Commands.parallel(
-        this.extensor.retract(),
-        Commands.runOnce(
-            () -> {
-              this.extensorState = "Retracted State";
-              this.rollerState = "Stopped State";
-            }));
+
+    return this.extensor
+        .enableExtensor()
+        .andThen(Commands.parallel(
+            this.extensor.retract(),
+            Commands.runOnce(
+                () -> {
+                  this.extensorState = "Retracted State";
+                  this.rollerState = "Stopped State";
+                })));
   }
 
   public Command climbState() {
@@ -221,9 +224,8 @@ public class States {
             Commands.runOnce(() -> this.flyWheelState = "Running Low Velocity")));
 
     new Trigger(
-            () ->
-                RobotStates.getInstance().isOnAllianceZone()
-                    && !RobotStates.getInstance().isOnNonOdometryMode())
+        () -> RobotStates.getInstance().isOnAllianceZone()
+            && !RobotStates.getInstance().isOnNonOdometryMode())
         .onTrue(Commands.parallel(this.turret.trackHub(), this.hood.trackHub()))
         .onFalse(Commands.parallel(this.turret.trackPass(), this.hood.trackPass()));
 
