@@ -41,10 +41,10 @@ public class HoodSubsystem extends SubsystemBase {
     calculator = ShooterCalculator.getInstance();
     smartHoodMotorConfig =
         new SmartMotorControllerConfig(this)
+            .withTelemetry("HoodMotor", TelemetryVerbosity.HIGH)
             .withIdleMode(MotorMode.BRAKE)
             .withGearing(HoodConstants.MOTOR_GEARING)
             .withMotorInverted(false)
-            .withTelemetry("HoodMotor", TelemetryVerbosity.HIGH)
             .withSoftLimit(
                 HoodConstants.Position.HOOD_MIN_ANGLE, HoodConstants.Position.HOOD_MAX_ANGLE)
             .withStatorCurrentLimit(Amps.of(60))
@@ -57,8 +57,8 @@ public class HoodSubsystem extends SubsystemBase {
                 HoodConstants.ClosedLoopController.kP,
                 HoodConstants.ClosedLoopController.kI,
                 HoodConstants.ClosedLoopController.kD)
-            .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
-            .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+            .withFeedforward(new SimpleMotorFeedforward(0.135, 0.6, 0))
+            .withSimFeedforward(new SimpleMotorFeedforward(0.135, 0.6, 0))
             .withControlMode(ControlMode.CLOSED_LOOP);
 
     hoodMax = new SparkMax(8, MotorType.kBrushless);
@@ -100,6 +100,7 @@ public class HoodSubsystem extends SubsystemBase {
     inputs.currentAngle = hood.getAngle().in(Degrees);
     inputs.targetAngle = calculator.getParameters().hoodAngle();
     inputs.atTarget = isAtTargetAngleShoot();
+    inputs.angleError = Math.abs(hood.getAngle().in(Degrees) - calculator.getParameters().hoodAngle());
 
     Logger.processInputs("Subsystems/Shooter/Hood/", inputs);
   }

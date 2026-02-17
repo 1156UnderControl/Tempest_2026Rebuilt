@@ -6,5 +6,6 @@ import org.littletonrobotics.junction.AutoLog;
 public class HoodInputs {
   public double currentAngle = 0;
   public double targetAngle = 0;
+  public double angleError = 0;
   public boolean atTarget = false;
 }
