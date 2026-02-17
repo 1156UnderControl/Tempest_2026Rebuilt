@@ -75,7 +75,8 @@ public class KickerSubsystem extends SubsystemBase {
             .withIdleMode(MotorMode.COAST)
             .withMechanismCircumference(Inches.of(2))
             .withMotorInverted(true)
-            .withStatorCurrentLimit(Amps.of(30));
+            .withStatorCurrentLimit(Amps.of(30))
+            .withTelemetry("Kicker", TelemetryVerbosity.HIGH);
 
     kickerMotor = new SparkWrapper(kickerFlex, DCMotor.getNeoVortex(1), smartKickerMotorConfig);
 
