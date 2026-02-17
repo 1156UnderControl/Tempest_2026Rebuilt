@@ -100,7 +100,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   public Command runLowVelocity() {
-    return this.runVelocityTorqueControl(RPM.of(1500));
+    return this.runVelocityTorqueControl(RPM.of(2000));
   }
 
   public Command stoppedVelocity() {
