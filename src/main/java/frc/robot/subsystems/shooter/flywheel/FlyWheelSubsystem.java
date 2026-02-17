@@ -9,7 +9,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotStates;
@@ -40,6 +40,8 @@ public class FlyWheelSubsystem extends SubsystemBase {
   private static FlyWheelSubsystem instance;
 
   private VelocityTorqueCurrentFOC torqueCurrentRequest = new VelocityTorqueCurrentFOC(RPM.of(0));
+
+  private double flyWheelRPM;
 
   private FlyWheelSubsystem() {
     this.calculator = ShooterCalculator.getInstance();
@@ -73,6 +75,9 @@ public class FlyWheelSubsystem extends SubsystemBase {
     this.flywheelMechanism = new FlyWheel(flyWheelConfig);
 
     this.inputs = new FlyWheelInputsAutoLogged();
+
+    SmartDashboard.putNumber("Calibration/FlyWheelRPM", 0);
+    this.flyWheelRPM = 0;
   }
 
   public static FlyWheelSubsystem getInstance() {
@@ -86,6 +91,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
   public void periodic() {
     this.flywheelMechanism.updateTelemetry();
     this.updateInputs();
+    this.flyWheelRPM = SmartDashboard.getNumber("Calibration/FlyWheelRPM", 0);
   }
 
   @Override
@@ -146,6 +152,11 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   private Command runVelocityTorqueControl(AngularVelocity velocity) {
     return this.run(() -> leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity)));
+  }
+
+  public Command runVelocityTorqueControlCalibration() {
+    return this.run(
+        () -> leadMotor.setControl(torqueCurrentRequest.withVelocity(this.flyWheelRPM / 60)));
   }
 
   public boolean isAtTargetVelocityShootHub() {

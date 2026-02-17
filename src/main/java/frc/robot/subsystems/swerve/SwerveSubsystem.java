@@ -128,7 +128,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   }
 
   public void resetOdometryLimelight(Translation2d defaultPosition) {
-    PoseEstimator limelightBackLeft=
+    PoseEstimator limelightBackLeft =
         new LimelightPoseEstimator(VisionConstants.backLeftLimelightName, false, false, 2);
     PoseEstimator limelightBackRight =
         new LimelightPoseEstimator(VisionConstants.backRightLimelightName, false, false, 2);
