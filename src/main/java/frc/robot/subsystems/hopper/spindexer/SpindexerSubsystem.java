@@ -64,7 +64,7 @@ public class SpindexerSubsystem extends SubsystemBase {
                 0.03, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(20)))
             .withIdleMode(MotorMode.BRAKE)
-            .withFeedforward(new SimpleMotorFeedforward(0.16, 2.1, 0))
+            .withFeedforward(new SimpleMotorFeedforward(0.15, 2.1, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0.1, 0.9, 0))
             .withMechanismCircumference(Meters.of(0.478))
             .withStatorCurrentLimit(Amps.of(60))
