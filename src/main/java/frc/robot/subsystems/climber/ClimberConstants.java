@@ -39,7 +39,7 @@ public class ClimberConstants {
   public static final Distance MECHANISM_CIRCUNFERENCE = Meters.of(2 * Math.PI * 0.015875);
 
   public static final MechanismGearing GEARING =
-      new MechanismGearing(GearBox.fromReductionStages(3, 3, 4));
+      new MechanismGearing(GearBox.fromReductionStages(45));
 
   public static final boolean INVERTED = true;
 
