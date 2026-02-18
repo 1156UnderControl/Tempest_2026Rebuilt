@@ -21,7 +21,7 @@ public class FlyWheelsConstants {
   public static final Distance FLYWHEEL_SIZE = Inches.of(2);
   public static final Voltage MAX_VOLTS = Volts.of(12.0);
 
-  public static final boolean RUN_TORQUE_CURRENT = false;
+  public static final boolean RUN_TORQUE_CURRENT = true;
 
   public static class Velocity {
     public static final AngularVelocity VELOCITY_ERROR_ALLOWED = RPM.of(300);
