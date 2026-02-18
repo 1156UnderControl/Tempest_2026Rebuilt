@@ -144,7 +144,11 @@ public class RobotContainer {
                     && this.hood.isAtTargetAngleShootHub()
                     && this.turret.isAtTargetAngleShootHub()
                     && this.flyWheel.isAtTargetVelocityShootHub())
-        .whileTrue(Commands.parallel(this.flyWheel.shootHub(), this.states.shootState(), Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
+        .whileTrue(
+            Commands.parallel(
+                this.flyWheel.shootHub(),
+                this.states.shootState(),
+                Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
         .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
 
     this.operatorController
@@ -157,13 +161,21 @@ public class RobotContainer {
                     && this.hood.isAtTargetAngleShootPass()
                     && this.turret.isAtTargetAngleShootPass()
                     && this.flyWheel.isAtTargetVelocityShootPass())
-        .whileTrue(Commands.parallel(this.flyWheel.shootPass(), this.states.shootState(), Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
+        .whileTrue(
+            Commands.parallel(
+                this.flyWheel.shootPass(),
+                this.states.shootState(),
+                Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
         .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
 
     this.operatorController
         .rightTrigger()
         .and(() -> RobotStates.getInstance().isOnNonOdometryMode())
-        .whileTrue(Commands.parallel(this.flyWheel.shootNonOdometry(), this.states.shootState(), Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
+        .whileTrue(
+            Commands.parallel(
+                this.flyWheel.shootNonOdometry(),
+                this.states.shootState(),
+                Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
         .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
 
     this.operatorController

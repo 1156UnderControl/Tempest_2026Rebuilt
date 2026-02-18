@@ -134,7 +134,10 @@ public class TurretSubsystem extends SubsystemBase {
             turret.getMechanismSetpoint().isEmpty()
                 ? 0
                 : turret.getMechanismSetpoint().get().in(Degrees);
-    inputs.atTarget = RobotStates.getInstance().isOnAllianceZone() ? isAtTargetAngleShootHub() : isAtTargetAngleShootPass();
+    inputs.atTarget =
+        RobotStates.getInstance().isOnAllianceZone()
+            ? isAtTargetAngleShootHub()
+            : isAtTargetAngleShootPass();
     inputs.current = turretMotor.getStatorCurrent();
     inputs.voltage = turretMotor.getVoltage();
     inputs.turret =

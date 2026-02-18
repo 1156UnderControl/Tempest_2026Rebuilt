@@ -174,8 +174,7 @@ public class States {
     this.extensor.setDefaultCommand(
         Commands.either(
             Commands.parallel(
-                this.collectState(),
-                Commands.runOnce(() -> this.extensorState = "Extended State")),
+                this.collectState(), Commands.runOnce(() -> this.extensorState = "Extended State")),
             Commands.parallel(
                 this.retractState(),
                 Commands.runOnce(() -> this.extensorState = "Retracted State")),
@@ -192,13 +191,12 @@ public class States {
         Commands.parallel(
             this.spindexer.stop(), Commands.runOnce(() -> this.spindexerState = "Stopped State")));
 
-    new Trigger(
-        () -> RobotStates.getInstance().isShootingMode())
-        .whileTrue(this.spindexer.shoot());
+    new Trigger(() -> RobotStates.getInstance().isShootingMode()).whileTrue(this.spindexer.shoot());
 
-    new Trigger(() ->
-        !RobotStates.getInstance().isShootingMode()
-        && RobotStates.getInstance().isExtendedMode())
+    new Trigger(
+            () ->
+                !RobotStates.getInstance().isShootingMode()
+                    && RobotStates.getInstance().isExtendedMode())
         .whileTrue(this.spindexer.expell());
   }
 
