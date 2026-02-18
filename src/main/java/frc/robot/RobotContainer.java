@@ -140,9 +140,9 @@ public class RobotContainer {
             () ->
                 !RobotStates.getInstance().isOnNonOdometryMode()
                     // && !RobotStates.getInstance().isOnNotShootZone()
-                    // && this.hood.isAtTargetAngle()
-                    // && this.turret.isAtTargetAngle()
-                    // && this.flyWheel.isAtTargetVelocityShootHub()
+                    && this.hood.isAtTargetAngle()
+                    && this.turret.isAtTargetAngle()
+                    && this.flyWheel.isAtTargetVelocity()
         )
         .whileTrue(
             Commands.parallel(
