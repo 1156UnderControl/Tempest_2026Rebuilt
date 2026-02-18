@@ -127,11 +127,11 @@ public class ExtensorSubsystem extends SubsystemBase {
   }
 
   public Command springyMode(){
-    return this.runOnce(() -> extensorMotor.setSupplyCurrentLimit(ExtensorConstants.SPRINGY_MODE_CURRENT_LIMIT));
+    return this.runOnce(() -> extensorMotor.setStatorCurrentLimit(ExtensorConstants.SPRINGY_MODE_CURRENT_LIMIT));
   }
 
   public Command normalMode(){
-    return this.runOnce(() -> extensorMotor.setSupplyCurrentLimit(ExtensorConstants.NORMAL_MODE_CURRENT_LIMIT));
+    return this.runOnce(() -> extensorMotor.setStatorCurrentLimit(ExtensorConstants.NORMAL_MODE_CURRENT_LIMIT));
   }
 
   public Command enableExtensor(){
