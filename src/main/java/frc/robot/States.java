@@ -185,7 +185,7 @@ public class States {
   private void setHopperDefaultStates() {
     this.kicker.setDefaultCommand(
         Commands.parallel(
-            this.kicker.stop(), Commands.runOnce(() -> this.kickerState = "Stopped State")));
+            this.kicker.expell(), Commands.runOnce(() -> this.kickerState = "Expelling State")));
 
     this.spindexer.setDefaultCommand(
         Commands.parallel(
