@@ -96,11 +96,11 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   private void updateInputs() {
     this.inputs.currentVelocity = this.smartFlywheelMotor.getRotorVelocity().in(RPM);
-    if(FlyWheelsConstants.RUN_TORQUE_CURRENT){
-      this.inputs.targetVelocity = torqueCurrentRequest.getVelocityMeasure().in(RPM);
-    }else{
-      this.inputs.targetVelocity = smartFlywheelMotor.getMechanismSetpointVelocity().isEmpty() ? 0 : smartFlywheelMotor.getMechanismSetpointVelocity().get().in(RPM);
-    }
+    // if(FlyWheelsConstants.RUN_TORQUE_CURRENT){
+    //   this.inputs.targetVelocity = torqueCurrentRequest.getVelocityMeasure().in(RPM);
+    // }else{
+    //   this.inputs.targetVelocity = smartFlywheelMotor.getMechanismSetpointVelocity().isEmpty() ? 0 : smartFlywheelMotor.getMechanismSetpointVelocity().get().in(RPM);
+    // }
     this.inputs.targetVelocity = torqueCurrentRequest.getVelocityMeasure().in(RPM);
     this.inputs.atTarget = isAtTargetVelocity();
 
@@ -140,16 +140,10 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   public boolean isAtTargetVelocity() {
-    AngularVelocity currentSetpoint;
-    if(FlyWheelsConstants.RUN_TORQUE_CURRENT){
-      currentSetpoint = torqueCurrentRequest.getVelocityMeasure();
-    }else{
-      currentSetpoint = smartFlywheelMotor.getMechanismSetpointVelocity().orElse(RPM.of(0));
-    }
     return this.flywheelMechanism
         .getSpeed()
         .isNear(
-            currentSetpoint,
+            this.smartFlywheelMotor.getMechanismSetpointVelocity().orElse(RPM.of(0)),
             FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
   }
 }
