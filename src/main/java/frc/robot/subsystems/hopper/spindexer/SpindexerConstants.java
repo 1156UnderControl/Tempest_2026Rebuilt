@@ -1,4 +1,4 @@
-package frc.robot.constants.hopper;
+package frc.robot.subsystems.hopper.spindexer;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Milliseconds;
@@ -25,7 +25,7 @@ public final class SpindexerConstants {
 
   public static class setpoints {
     public static final AngularVelocity SHOOTING = RotationsPerSecond.of(5);
-    public static final AngularVelocity EXPELLING = RotationsPerSecond.of(-5);
+    public static final AngularVelocity EXPELLING = RotationsPerSecond.of(-2.5);
     public static final AngularVelocity STOPPED = RPM.of(0);
   }
 }

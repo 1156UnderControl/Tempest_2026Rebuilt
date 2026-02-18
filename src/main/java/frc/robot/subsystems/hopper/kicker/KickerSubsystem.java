@@ -20,7 +20,6 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.constants.hopper.KickerConstants;
 import org.littletonrobotics.junction.Logger;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -69,13 +68,14 @@ public class KickerSubsystem extends SubsystemBase {
             .withClosedLoopController(0.03, 0, 0, RPM.of(3000), RotationsPerSecondPerSecond.of(150))
             .withSimClosedLoopController(
                 0.1, 0, 0, RPM.of(2423), RotationsPerSecondPerSecond.of(150))
-            .withFeedforward(new SimpleMotorFeedforward(0.16, 0.26))
+            .withFeedforward(new SimpleMotorFeedforward(0, 0.3))
             .withSimFeedforward(new SimpleMotorFeedforward(0.1, 0.2))
-            .withGearing(new MechanismGearing(GearBox.fromReductionStages(2.16)))
+            .withGearing(new MechanismGearing(GearBox.fromReductionStages(2.6)))
             .withIdleMode(MotorMode.COAST)
             .withMechanismCircumference(Inches.of(2))
             .withMotorInverted(true)
-            .withStatorCurrentLimit(Amps.of(30));
+            .withStatorCurrentLimit(Amps.of(30))
+            .withTelemetry("Kicker", TelemetryVerbosity.HIGH);
 
     kickerMotor = new SparkWrapper(kickerFlex, DCMotor.getNeoVortex(1), smartKickerMotorConfig);
 

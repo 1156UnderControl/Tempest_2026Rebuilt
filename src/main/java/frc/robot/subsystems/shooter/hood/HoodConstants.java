@@ -1,4 +1,4 @@
-package frc.robot.constants.shooter;
+package frc.robot.subsystems.shooter.hood;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Kilograms;

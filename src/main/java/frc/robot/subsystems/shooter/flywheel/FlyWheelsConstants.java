@@ -1,4 +1,4 @@
-package frc.robot.constants.shooter;
+package frc.robot.subsystems.shooter.flywheel;
 
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Kilograms;

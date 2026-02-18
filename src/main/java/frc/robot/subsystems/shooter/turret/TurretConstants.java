@@ -72,7 +72,7 @@ public class TurretConstants {
   public static final Transform2d TURRET_OFFSET_FROM_ROBOT_CENTER =
       new Transform2d(-0.127, -0.18415, Rotation2d.kZero);
 
-  public static final Angle ANGLE_ERROR_ALLOWED = Degrees.of(1.0);
+  public static final Angle ANGLE_ERROR_ALLOWED = Degrees.of(5);
 
   public static final Angle TURRET_MIN_ANGLE = Degrees.of(-310);
 

@@ -93,7 +93,7 @@ public class States {
   }
 
   public Command shootState() {
-    return Commands.parallel(this.kicker.shoot(), this.spindexer.shoot())
+    return Commands.parallel(this.kicker.shoot())
         .alongWith(
             Commands.runOnce(
                 () -> {
@@ -125,16 +125,14 @@ public class States {
   }
 
   public Command retractState() {
-
-    return this.extensor
-        .enableExtensor()
-        .andThen(Commands.parallel(
-            this.extensor.retract(),
-            Commands.runOnce(
-                () -> {
-                  this.extensorState = "Retracted State";
-                  this.rollerState = "Stopped State";
-                })));
+    return Commands.parallel(
+        this.extensor.retract(),
+        this.roller.stopRoller(),
+        Commands.runOnce(
+            () -> {
+              this.extensorState = "Retracted State";
+              this.rollerState = "Stopped State";
+            }));
   }
 
   public Command climbState() {
@@ -177,10 +175,9 @@ public class States {
     this.extensor.setDefaultCommand(
         Commands.either(
             Commands.parallel(
-                this.extensor.extend(),
-                Commands.runOnce(() -> this.extensorState = "Extended State")),
+                this.collectState(), Commands.runOnce(() -> this.extensorState = "Extended State")),
             Commands.parallel(
-                this.extensor.retract(),
+                this.retractState(),
                 Commands.runOnce(() -> this.extensorState = "Retracted State")),
             () -> RobotStates.getInstance().isExtendedMode()));
     this.roller.setDefaultCommand(this.roller.stopRoller());
@@ -194,6 +191,14 @@ public class States {
     this.spindexer.setDefaultCommand(
         Commands.parallel(
             this.spindexer.stop(), Commands.runOnce(() -> this.spindexerState = "Stopped State")));
+
+    new Trigger(() -> RobotStates.getInstance().isShootingMode()).whileTrue(this.spindexer.shoot());
+
+    new Trigger(
+            () ->
+                !RobotStates.getInstance().isShootingMode()
+                    && RobotStates.getInstance().isExtendedMode())
+        .whileTrue(this.spindexer.expell());
   }
 
   private void setClimberDefaultStates() {

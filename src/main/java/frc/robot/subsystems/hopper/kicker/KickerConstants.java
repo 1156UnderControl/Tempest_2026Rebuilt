@@ -1,4 +1,4 @@
-package frc.robot.constants.hopper;
+package frc.robot.subsystems.hopper.kicker;
 
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Kilograms;

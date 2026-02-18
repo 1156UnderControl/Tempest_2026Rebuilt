@@ -138,35 +138,35 @@ public class RobotContainer {
         .rightTrigger()
         .and(
             () ->
-                RobotStates.getInstance().isOnAllianceZone()
-                    && !RobotStates.getInstance().isOnNonOdometryMode()
-                    && !RobotStates.getInstance().isOnNotShootZone()
-                    && this.hood.isAtTargetAngleShootHub()
-                    && this.flyWheel.isAtTargetVelocityShootHub())
-        .whileTrue(Commands.parallel(this.flyWheel.shootHub(), this.states.shootState()));
-
-    this.operatorController
-        .rightTrigger()
-        .and(
-            () ->
-                !RobotStates.getInstance().isOnAllianceZone()
-                    && !RobotStates.getInstance().isOnNonOdometryMode()
-                    && !RobotStates.getInstance().isOnNotShootZone()
-                    && this.hood.isAtTargetAngleShootPass()
-                    && this.flyWheel.isAtTargetVelocityShootPass())
-        .whileTrue(Commands.parallel(this.flyWheel.shootPass(), this.states.shootState()));
+                !RobotStates.getInstance().isOnNonOdometryMode()
+                    // && !RobotStates.getInstance().isOnNotShootZone()
+                    && this.hood.isAtTargetAngle()
+                    && this.turret.isAtTargetAngle()
+                    && this.flyWheel.isAtTargetVelocity()
+        )
+        .whileTrue(
+            Commands.parallel(
+                this.states.shootState(),
+                Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
+        .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
 
     this.operatorController
         .rightTrigger()
         .and(() -> RobotStates.getInstance().isOnNonOdometryMode())
-        .whileTrue(Commands.parallel(this.flyWheel.shootNonOdometry(), this.states.shootState()));
+        .whileTrue(
+            Commands.parallel(
+                this.flyWheel.shootNonOdometry(),
+                this.states.shootState(),
+                Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
+        .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
 
     this.operatorController
         .rightTrigger()
         .and(
             () ->
                 RobotStates.getInstance().isOnAllianceZone()
-                    && !this.flyWheel.isAtTargetVelocityShootHub())
+                && !RobotStates.getInstance().isOnNonOdometryMode()
+            )
         .whileTrue(this.flyWheel.shootHub());
 
     this.operatorController
@@ -174,7 +174,8 @@ public class RobotContainer {
         .and(
             () ->
                 !RobotStates.getInstance().isOnAllianceZone()
-                    && !this.flyWheel.isAtTargetVelocityShootPass())
+                && !RobotStates.getInstance().isOnNonOdometryMode()
+                )
         .whileTrue(this.flyWheel.shootPass());
 
     this.operatorController
@@ -183,7 +184,9 @@ public class RobotContainer {
             Commands.parallel(
                 this.states.collectState(),
                 Commands.runOnce(() -> RobotStates.getInstance().setExtendedMode(true))));
+
     this.operatorController.x().whileTrue(this.states.retractState());
+
     this.operatorController
         .y()
         .onTrue(
