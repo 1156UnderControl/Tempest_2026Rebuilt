@@ -107,7 +107,7 @@ public class States {
   }
 
   public void disableNoNOdometryShootState() {
-    RobotStates.getInstance().setNonOdometryMode(true);
+    RobotStates.getInstance().setNonOdometryMode(false);
   }
 
   public Command collectState() {
