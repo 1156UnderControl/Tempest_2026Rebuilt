@@ -101,10 +101,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
   private void updateInputs() {
     this.inputs.currentVelocity = this.smartFlywheelMotor.getRotorVelocity().in(RPM);
     this.inputs.targetVelocity = torqueCurrentRequest.getVelocityMeasure().in(RPM);
-    this.inputs.atTarget =
-        RobotStates.getInstance().isOnAllianceZone()
-            ? isAtTargetVelocityShootHub()
-            : isAtTargetVelocityShootPass();
+    this.inputs.atTarget = isAtTargetVelocity();
 
     Logger.processInputs("Subsystems/Shooter/FlyWheels/", inputs);
   }
@@ -161,19 +158,11 @@ public class FlyWheelSubsystem extends SubsystemBase {
         () -> leadMotor.setControl(torqueCurrentRequest.withVelocity(this.flyWheelRPM / 60)));
   }
 
-  public boolean isAtTargetVelocityShootHub() {
+  public boolean isAtTargetVelocity() {
     return this.flywheelMechanism
         .getSpeed()
         .isNear(
-            RPM.of(ShooterCalculator.getInstance().getParameters(true).flywheelSpeed()),
-            FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
-  }
-
-  public boolean isAtTargetVelocityShootPass() {
-    return this.flywheelMechanism
-        .getSpeed()
-        .isNear(
-            RPM.of(ShooterCalculator.getInstance().getParameters(false).flywheelSpeed()),
+            this.torqueCurrentRequest.getVelocityMeasure(),
             FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
   }
 }
