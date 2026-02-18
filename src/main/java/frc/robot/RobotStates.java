@@ -22,6 +22,8 @@ public class RobotStates {
 
   private static boolean extendedMode = false;
 
+  private static boolean shootingMode = false;
+
   public static RobotStates getInstance() {
     if (instance == null) {
       instance = new RobotStates();
@@ -104,11 +106,20 @@ public class RobotStates {
   }
 
   public void setExtendedMode(boolean isExtended) {
-    Logger.recordOutput("ExtendedMode", isExtended);
+    Logger.recordOutput("Mode/ExtendedMode", isExtended);
     extendedMode = isExtended;
   }
 
   public boolean isExtendedMode() {
     return extendedMode;
+  }
+
+  public void setShootingMode(boolean isShooting) {
+    Logger.recordOutput("Mode/ShootingMode", isShooting);
+    shootingMode = isShooting;
+  }
+
+  public boolean isShootingMode() {
+    return shootingMode;
   }
 }
