@@ -7,11 +7,9 @@ import static edu.wpi.first.units.Units.Milliseconds;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotStates;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import org.littletonrobotics.junction.Logger;
 import yams.mechanisms.config.ArmConfig;
@@ -127,7 +125,7 @@ public class HoodSubsystem extends SubsystemBase {
   public boolean isAtTargetAngle() {
     return hood.getAngle()
         .isNear(
-            this.hood.getMechanismSetpoint().orElseGet(()-> Degrees.of(75)),
+            this.hood.getMechanismSetpoint().orElseGet(() -> Degrees.of(75)),
             HoodConstants.Position.ANGLE_ERROR_ALLOWED);
   }
 

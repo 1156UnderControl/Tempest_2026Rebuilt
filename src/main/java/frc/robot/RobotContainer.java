@@ -138,7 +138,7 @@ public class RobotContainer {
         .rightTrigger()
         .and(
             () ->
-                    !RobotStates.getInstance().isOnNonOdometryMode()
+                !RobotStates.getInstance().isOnNonOdometryMode()
                     && !RobotStates.getInstance().isOnNotShootZone()
                     && this.hood.isAtTargetAngle()
                     // && this.turret.isAtTargetAngleShootHub()
