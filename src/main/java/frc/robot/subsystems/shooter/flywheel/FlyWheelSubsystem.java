@@ -100,11 +100,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   private void updateInputs() {
     this.inputs.currentVelocity = this.smartFlywheelMotor.getRotorVelocity().in(RPM);
-    if(FlyWheelsConstants.RUN_TORQUE_CURRENT){
-      this.inputs.targetVelocity = torqueCurrentRequest.getVelocityMeasure().in(RPM);
-    }else{
-      this.inputs.targetVelocity = smartFlywheelMotor.getMechanismSetpointVelocity().isEmpty() ? 0 : smartFlywheelMotor.getMechanismSetpointVelocity().get().in(RPM);
-    }
+    this.inputs.targetVelocity = torqueCurrentRequest.getVelocityMeasure().in(RPM);
     this.inputs.atTarget =
         RobotStates.getInstance().isOnAllianceZone()
             ? isAtTargetVelocityShootHub()
@@ -114,30 +110,50 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   public Command runLowVelocity() {
-    return this.runFlywheel(RPM.of(2000));
+    return this.runVelocityTorqueControl(RPM.of(2000));
   }
 
   public Command stoppedVelocity() {
-    return this.runFlywheel(RPM.of(0));
+    return this.runVelocityTorqueControl(RPM.of(0));
   }
 
   public Command shootHub() {
-    return this.runFlywheel(RPM.of(ShooterCalculator.getInstance().getParameters(true).flywheelSpeed()));
+    return this.run(
+        () -> {
+          AngularVelocity velocity =
+              RPM.of(ShooterCalculator.getInstance().getParameters(true).flywheelSpeed());
+          leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity));
+        });
   }
 
   public Command shootPass() {
-    return this.runFlywheel(RPM.of(ShooterCalculator.getInstance().getParameters(false).flywheelSpeed()));
+    return this.run(
+        () -> {
+          AngularVelocity velocity =
+              RPM.of(ShooterCalculator.getInstance().getParameters(false).flywheelSpeed());
+          leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity));
+        });
   }
 
   public Command shootNonOdometry() {
-    return this.runFlywheel(RPM.of(2700.0));
+    return this.run(
+        () -> {
+          AngularVelocity velocity = RPM.of(2700.0);
+          leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity));
+        });
   }
 
-  private Command runFlywheel(AngularVelocity velocity) {
-    if(FlyWheelsConstants.RUN_TORQUE_CURRENT){
-      return this.run(() -> leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity)));
-    }
-    return this.flywheelMechanism.run(velocity);
+  public Command runVelocity() {
+    return this.run(
+        () -> {
+          AngularVelocity velocity =
+              RPM.of(ShooterCalculator.getInstance().getParameters(true).flywheelSpeed());
+          leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity));
+        });
+  }
+
+  private Command runVelocityTorqueControl(AngularVelocity velocity) {
+    return this.run(() -> leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity)));
   }
 
   public Command runVelocityTorqueControlCalibration() {
