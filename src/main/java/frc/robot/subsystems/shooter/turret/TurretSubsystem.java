@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -134,10 +135,7 @@ public class TurretSubsystem extends SubsystemBase {
             turret.getMechanismSetpoint().isEmpty()
                 ? 0
                 : turret.getMechanismSetpoint().get().in(Degrees);
-    inputs.atTarget =
-        RobotStates.getInstance().isOnAllianceZone()
-            ? isAtTargetAngleShootHub()
-            : isAtTargetAngleShootPass();
+    inputs.atTarget = isAtTargetAngle();
     inputs.current = turretMotor.getStatorCurrent();
     inputs.voltage = turretMotor.getVoltage();
     inputs.turret =
@@ -176,19 +174,11 @@ public class TurretSubsystem extends SubsystemBase {
     return turret.setAngle(Degrees.of(getClosestTargetAngle(180, turret.getAngle().in(Degrees))));
   }
 
-  public boolean isAtTargetAngleShootHub() {
+  public boolean isAtTargetAngle() {
     return turret
         .getAngle()
         .isNear(
-            Degrees.of(calculator.getParameters(true).turretAngle().getDegrees()),
-            TurretConstants.ANGLE_ERROR_ALLOWED);
-  }
-
-  public boolean isAtTargetAngleShootPass() {
-    return turret
-        .getAngle()
-        .isNear(
-            Degrees.of(calculator.getParameters(false).turretAngle().getDegrees()),
+            this.turret.getMechanismSetpoint().orElse(Degrees.of(0)),
             TurretConstants.ANGLE_ERROR_ALLOWED);
   }
 
