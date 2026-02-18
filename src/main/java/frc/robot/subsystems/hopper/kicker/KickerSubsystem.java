@@ -69,9 +69,9 @@ public class KickerSubsystem extends SubsystemBase {
             .withClosedLoopController(0.03, 0, 0, RPM.of(3000), RotationsPerSecondPerSecond.of(150))
             .withSimClosedLoopController(
                 0.1, 0, 0, RPM.of(2423), RotationsPerSecondPerSecond.of(150))
-            .withFeedforward(new SimpleMotorFeedforward(0.16, 0.26))
+            .withFeedforward(new SimpleMotorFeedforward(0, 0.3))
             .withSimFeedforward(new SimpleMotorFeedforward(0.1, 0.2))
-            .withGearing(new MechanismGearing(GearBox.fromReductionStages(2.16)))
+            .withGearing(new MechanismGearing(GearBox.fromReductionStages(2.6)))
             .withIdleMode(MotorMode.COAST)
             .withMechanismCircumference(Inches.of(2))
             .withMotorInverted(true)
