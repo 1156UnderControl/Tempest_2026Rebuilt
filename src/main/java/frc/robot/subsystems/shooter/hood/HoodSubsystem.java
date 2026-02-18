@@ -125,7 +125,7 @@ public class HoodSubsystem extends SubsystemBase {
   public boolean isAtTargetAngle() {
     return hood.getAngle()
         .isNear(
-            this.hood.getMechanismSetpoint().orElseGet(() -> Degrees.of(75)),
+            this.hood.getMechanismSetpoint().orElse(Degrees.of(75)),
             HoodConstants.Position.ANGLE_ERROR_ALLOWED);
   }
 
