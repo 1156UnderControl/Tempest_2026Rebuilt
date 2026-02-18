@@ -202,6 +202,9 @@ public class RobotContainer {
         .toggleOnTrue(Commands.runOnce(() -> this.states.enableNoNOdometryShootState()))
         .toggleOnFalse(Commands.runOnce(() -> this.states.disableNoNOdometryShootState()));
 
+    this.operatorController.upArrow().onTrue(this.states.climbState());
+    this.operatorController.downArrow().onTrue(this.states.defaultClimberState());
+
     this.driverController.a().onTrue(this.turret.resetCRT());
   }
 
