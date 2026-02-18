@@ -115,7 +115,7 @@ public class States {
         .extend()
         .andThen(
             Commands.parallel(
-                this.extensor.disableExtensor(),
+                this.extensor.springyMode(),
                 this.roller.runRoller(),
                 Commands.runOnce(
                     () -> {
@@ -126,7 +126,7 @@ public class States {
 
   public Command retractState() {
     return Commands.parallel(
-        this.extensor.retract(),
+        this.extensor.normalMode().andThen(this.extensor.retract()),
         this.roller.stopRoller(),
         Commands.runOnce(
             () -> {

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.intake.extensor;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
@@ -10,6 +11,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.Voltage;
@@ -25,6 +27,9 @@ public class ExtensorConstants {
     public static final Distance MAX_EXTENSION = Meters.of(0.32);
     public static final Distance MIN_EXTENSION = Meters.of(0);
   }
+
+  public static final Current SPRINGY_MODE_CURRENT_LIMIT = Amps.of(3);
+  public static final Current NORMAL_MODE_CURRENT_LIMIT = Amps.of(60);
 
   public static final Voltage maxVolts = Volts.of(12);
   public static final AngularVelocity maxVel = RotationsPerSecond.of(1000);
