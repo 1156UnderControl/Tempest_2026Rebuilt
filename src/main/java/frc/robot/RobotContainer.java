@@ -199,8 +199,8 @@ public class RobotContainer {
 
     this.operatorController
         .leftJoystick()
-        .toggleOnTrue(Commands.runOnce(() -> this.states.enableNoNOdometryShootState()))
-        .toggleOnFalse(Commands.runOnce(() -> this.states.disableNoNOdometryShootState()));
+        .whileTrue(Commands.runOnce(() -> this.states.enableNoNOdometryShootState()))
+        .whileFalse(Commands.runOnce(() -> this.states.disableNoNOdometryShootState()));
 
     this.operatorController.upArrow().onTrue(this.states.climbState());
     this.operatorController.downArrow().onTrue(this.states.defaultClimberState());
