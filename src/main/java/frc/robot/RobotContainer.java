@@ -142,8 +142,7 @@ public class RobotContainer {
                     && !RobotStates.getInstance().isOnNotShootZone()
                     && this.hood.isAtTargetAngle()
                     && this.turret.isAtTargetAngle()
-                    && this.flyWheel.isAtTargetVelocity()
-        )
+                    && this.flyWheel.isAtTargetVelocityShootHub())
         .whileTrue(
             Commands.parallel(
                 this.states.shootState(),
