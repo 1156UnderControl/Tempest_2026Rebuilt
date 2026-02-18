@@ -164,6 +164,7 @@ public class RobotContainer {
         .and(
             () ->
                 RobotStates.getInstance().isOnAllianceZone()
+                && !RobotStates.getInstance().isOnNonOdometryMode()
             )
         .whileTrue(this.flyWheel.shootHub());
 
@@ -172,6 +173,7 @@ public class RobotContainer {
         .and(
             () ->
                 !RobotStates.getInstance().isOnAllianceZone()
+                && !RobotStates.getInstance().isOnNonOdometryMode()
                 )
         .whileTrue(this.flyWheel.shootPass());
 
