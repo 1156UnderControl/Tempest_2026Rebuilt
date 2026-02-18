@@ -14,7 +14,6 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotStates;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import org.littletonrobotics.junction.Logger;
 import yams.mechanisms.config.FlyWheelConfig;
@@ -43,6 +42,8 @@ public class FlyWheelSubsystem extends SubsystemBase {
   private VelocityTorqueCurrentFOC torqueCurrentRequest = new VelocityTorqueCurrentFOC(RPM.of(0));
 
   private double flyWheelRPM;
+
+  private AngularVelocity setpoint = RPM.of(0);
 
   private FlyWheelSubsystem() {
     this.calculator = ShooterCalculator.getInstance();
@@ -103,15 +104,12 @@ public class FlyWheelSubsystem extends SubsystemBase {
   private void updateInputs() {
     this.inputs.currentVelocity = this.smartFlywheelMotor.getRotorVelocity().in(RPM);
     if(FlyWheelsConstants.RUN_TORQUE_CURRENT){
-      this.inputs.targetVelocity = torqueCurrentRequest.getVelocityMeasure().in(RPM);
+      this.setpoint = torqueCurrentRequest.getVelocityMeasure();
     }else{
-      this.inputs.targetVelocity = smartFlywheelMotor.getMechanismSetpointVelocity().isEmpty() ? 0 : smartFlywheelMotor.getMechanismSetpointVelocity().get().in(RPM);
+      this.setpoint = smartFlywheelMotor.getMechanismSetpointVelocity().orElse(RPM.of(0));
     }
-    this.inputs.atTarget =
-        RobotStates.getInstance().isOnAllianceZone()
-            ? isAtTargetVelocityShootHub()
-            : isAtTargetVelocityShootPass();
-
+    this.inputs.targetVelocity = setpoint.in(RPM);
+    this.inputs.atTarget = isAtTargetVelocity();
     Logger.processInputs("Subsystems/Shooter/FlyWheels/", inputs);
   }
 
@@ -151,7 +149,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
     return this.flywheelMechanism
         .getSpeed()
         .isNear(
-            this.torqueCurrentRequest.getVelocityMeasure(),
+            setpoint,
             FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
   }
 }
