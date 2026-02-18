@@ -142,11 +142,10 @@ public class RobotContainer {
                     && !RobotStates.getInstance().isOnNonOdometryMode()
                     && !RobotStates.getInstance().isOnNotShootZone()
                     && this.hood.isAtTargetAngleShootHub()
-                    && this.turret.isAtTargetAngleShootHub()
+                    // && this.turret.isAtTargetAngleShootHub()
                     && this.flyWheel.isAtTargetVelocityShootHub())
         .whileTrue(
             Commands.parallel(
-                this.flyWheel.shootHub(),
                 this.states.shootState(),
                 Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
         .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
@@ -159,11 +158,10 @@ public class RobotContainer {
                     && !RobotStates.getInstance().isOnNonOdometryMode()
                     && !RobotStates.getInstance().isOnNotShootZone()
                     && this.hood.isAtTargetAngleShootPass()
-                    && this.turret.isAtTargetAngleShootPass()
+                    // && this.turret.isAtTargetAngleShootPass()
                     && this.flyWheel.isAtTargetVelocityShootPass())
         .whileTrue(
             Commands.parallel(
-                this.flyWheel.shootPass(),
                 this.states.shootState(),
                 Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
         .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
@@ -183,7 +181,7 @@ public class RobotContainer {
         .and(
             () ->
                 RobotStates.getInstance().isOnAllianceZone()
-                    && !this.flyWheel.isAtTargetVelocityShootHub())
+            )
         .whileTrue(this.flyWheel.shootHub());
 
     this.operatorController
@@ -191,7 +189,7 @@ public class RobotContainer {
         .and(
             () ->
                 !RobotStates.getInstance().isOnAllianceZone()
-                    && !this.flyWheel.isAtTargetVelocityShootPass())
+                )
         .whileTrue(this.flyWheel.shootPass());
 
     this.operatorController
