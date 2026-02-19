@@ -27,6 +27,9 @@ import frc.robot.subsystems.shooter.flywheel.FlyWheelSubsystem;
 import frc.robot.subsystems.shooter.hood.HoodSubsystem;
 import frc.robot.subsystems.shooter.turret.TurretSubsystem;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
+
+import static edu.wpi.first.units.Units.Amps;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -206,6 +209,7 @@ public class RobotContainer {
     this.operatorController.downArrow().onTrue(this.states.defaultClimberState());
 
     this.driverController.a().onTrue(this.turret.resetCRT());
+    this.operatorController.leftArrow().onTrue(this.extensor.homing(Amps.of(60)));
   }
 
   public Command getAutonomousCommand() {
