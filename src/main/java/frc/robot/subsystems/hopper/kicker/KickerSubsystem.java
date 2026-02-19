@@ -67,7 +67,7 @@ public class KickerSubsystem extends SubsystemBase {
     smartKickerMotorConfig =
         new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
-            .withClosedLoopController(0, 0, 0, RPM.of(0), RotationsPerSecondPerSecond.of(0))
+            .withClosedLoopController(0, 0, 0, RPM.of(3000), RotationsPerSecondPerSecond.of(1500))
             .withSimClosedLoopController(
                 0, 0, 0, RPM.of(0), RotationsPerSecondPerSecond.of(0))
             .withFeedforward(new SimpleMotorFeedforward(0, 0))
