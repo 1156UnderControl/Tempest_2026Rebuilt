@@ -115,7 +115,7 @@ public class States {
         .extend()
         .andThen(
             Commands.parallel(
-                this.extensor.springyMode(),
+                this.extensor.springyMode().andThen(this.extensor.extend().until(() -> this.extensor.isBehindSetpoint())).repeatedly(),
                 this.roller.runRoller(),
                 Commands.runOnce(
                     () -> {

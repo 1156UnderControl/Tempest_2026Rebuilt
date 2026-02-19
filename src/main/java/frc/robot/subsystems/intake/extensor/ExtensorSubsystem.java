@@ -144,7 +144,7 @@ public class ExtensorSubsystem extends SubsystemBase {
     return this.extensor.runTo(length, ExtensorConstants.DEADBAND_IS_AT);
   }
 
-  private boolean isBehindSetpoint(){
+  public boolean isBehindSetpoint(){
     Debouncer behindSetpointDebouncer = new Debouncer(0.7);    
     return behindSetpointDebouncer.calculate(!isAtTargetHeight().getAsBoolean());
   }
