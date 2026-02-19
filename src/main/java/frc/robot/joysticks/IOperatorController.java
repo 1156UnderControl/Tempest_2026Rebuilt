@@ -12,23 +12,23 @@ public interface IOperatorController {
 
   double getSIN_Joystick();
 
-  Trigger rightTrigger();
+  Trigger r2();
 
-  Trigger leftTrigger();
+  Trigger l2();
 
   boolean notUsingJoystick();
 
-  Trigger y();
+  Trigger triangle();
 
-  Trigger b();
+  Trigger circle();
 
-  Trigger a();
+  Trigger cross();
 
-  Trigger x();
+  Trigger square();
 
-  Trigger leftBumper();
+  Trigger l1();
 
-  Trigger rightBumper();
+  Trigger r1();
 
   Trigger isForcingDriverControl();
 
@@ -40,7 +40,7 @@ public interface IOperatorController {
 
   Trigger downArrow();
 
-  Trigger leftJoystick();
+  Trigger l3();
 
-  Trigger rightJoystick();
+  Trigger r3();
 }
