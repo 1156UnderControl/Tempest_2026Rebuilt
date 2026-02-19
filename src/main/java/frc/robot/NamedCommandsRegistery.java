@@ -42,6 +42,7 @@ public class NamedCommandsRegistery {
     this.registerResetOdometryCommands();
     this.registerIntakeCommands();
     this.registerShooterCommands();
+    this.registerClimberCommands();
   }
 
   private void registerGoToPoseCommands() {
