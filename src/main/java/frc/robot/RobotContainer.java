@@ -209,7 +209,7 @@ public class RobotContainer {
     this.operatorController.downArrow().onTrue(this.states.defaultClimberState());
 
     this.driverController.a().onTrue(this.turret.resetCRT());
-    this.operatorController.leftArrow().onTrue(this.extensor.homing(Amps.of(60)));
+    this.operatorController.leftArrow().onTrue(this.extensor.homing(Amps.of(30)));
   }
 
   public Command getAutonomousCommand() {
