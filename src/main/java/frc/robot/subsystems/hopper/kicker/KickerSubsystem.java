@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -32,6 +33,7 @@ import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
+import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class KickerSubsystem extends SubsystemBase {
   private static KickerSubsystem instance;
@@ -47,7 +49,7 @@ public class KickerSubsystem extends SubsystemBase {
 
   private AngularVelocity setpoint;
 
-  private final SparkFlex kickerFlex;
+  private final TalonFX kickerTalon;
 
   private SmartMotorControllerConfig smartKickerMotorConfig;
 
@@ -60,24 +62,24 @@ public class KickerSubsystem extends SubsystemBase {
   private KickerSubsystem() {
     kickerInputs = new KickerInputsAutoLogged();
 
-    kickerFlex = new SparkFlex(6, MotorType.kBrushless);
+    kickerTalon = new TalonFX(16);
 
     smartKickerMotorConfig =
         new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
-            .withClosedLoopController(0.03, 0, 0, RPM.of(3000), RotationsPerSecondPerSecond.of(150))
+            .withClosedLoopController(0, 0, 0, RPM.of(0), RotationsPerSecondPerSecond.of(0))
             .withSimClosedLoopController(
-                0.1, 0, 0, RPM.of(2423), RotationsPerSecondPerSecond.of(150))
-            .withFeedforward(new SimpleMotorFeedforward(0, 0.3))
-            .withSimFeedforward(new SimpleMotorFeedforward(0.1, 0.2))
+                0, 0, 0, RPM.of(0), RotationsPerSecondPerSecond.of(0))
+            .withFeedforward(new SimpleMotorFeedforward(0, 0))
+            .withSimFeedforward(new SimpleMotorFeedforward(0, 0))
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(2.6)))
             .withIdleMode(MotorMode.COAST)
             .withMechanismCircumference(Inches.of(2))
-            .withMotorInverted(true)
-            .withStatorCurrentLimit(Amps.of(30))
+            .withMotorInverted(false)
+            .withStatorCurrentLimit(Amps.of(40))
             .withTelemetry("Kicker", TelemetryVerbosity.HIGH);
 
-    kickerMotor = new SparkWrapper(kickerFlex, DCMotor.getNeoVortex(1), smartKickerMotorConfig);
+    kickerMotor = new TalonFXWrapper(kickerTalon, DCMotor.getKrakenX60(1), smartKickerMotorConfig);
 
     kickerMechanismConfig =
         new FlyWheelConfig(kickerMotor)
@@ -138,9 +140,5 @@ public class KickerSubsystem extends SubsystemBase {
 
   public Trigger isAtVelocity() {
     return kicker.isNear(setpoint, KickerConstants.VELOCITY_ERROR_ALOWED);
-  }
-
-  public SparkAbsoluteEncoder getTurreAbsoluteEncoder() {
-    return this.kickerFlex.getAbsoluteEncoder();
   }
 }
