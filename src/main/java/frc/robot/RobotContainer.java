@@ -137,7 +137,7 @@ public class RobotContainer {
         .onFalse(this.drive.limitRobotJoystickControlVelocity());
 
     this.operatorController
-        .rightTrigger()
+        .r2()
         .and(
             () ->
                 !RobotStates.getInstance().isOnNonOdometryMode()
@@ -153,7 +153,7 @@ public class RobotContainer {
         .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
 
     this.operatorController
-        .rightTrigger()
+        .r2()
         .and(() -> RobotStates.getInstance().isOnNonOdometryMode())
         .whileTrue(
             Commands.parallel(
@@ -163,7 +163,7 @@ public class RobotContainer {
         .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
 
     this.operatorController
-        .rightTrigger()
+        .r2()
         .and(
             () ->
                 RobotStates.getInstance().isOnAllianceZone()
@@ -172,7 +172,7 @@ public class RobotContainer {
         .whileTrue(this.flyWheel.shootHub());
 
     this.operatorController
-        .rightTrigger()
+        .r2()
         .and(
             () ->
                 !RobotStates.getInstance().isOnAllianceZone()
@@ -181,26 +181,26 @@ public class RobotContainer {
         .whileTrue(this.flyWheel.shootPass());
 
     this.operatorController
-        .a()
+        .cross()
         .onTrue(
             Commands.parallel(
                 this.states.collectState(),
                 Commands.runOnce(() -> RobotStates.getInstance().setExtendedMode(true))));
 
-    this.operatorController.x().whileTrue(this.states.retractState()).onFalse(this.states.collectState());
+    this.operatorController.square().whileTrue(this.states.retractState()).onFalse(this.states.collectState());
 
     this.operatorController
-        .y()
+        .triangle()
         .onTrue(
             Commands.parallel(
                 this.states.retractState(),
                 Commands.runOnce(() -> RobotStates.getInstance().setExtendedMode(false))));
 
-    this.operatorController.rightBumper().whileTrue(this.spindexer.expell());
-    this.operatorController.leftBumper().whileTrue(this.roller.expellRoller());
+    this.operatorController.r1().whileTrue(this.spindexer.expell());
+    this.operatorController.l1().whileTrue(this.roller.expellRoller());
 
     this.operatorController
-        .leftJoystick()
+        .l3()
         .whileTrue(Commands.runOnce(() -> this.states.enableNoNOdometryShootState()))
         .whileFalse(Commands.runOnce(() -> this.states.disableNoNOdometryShootState()));
 
