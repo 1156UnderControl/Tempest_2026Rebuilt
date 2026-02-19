@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.java_is_undercontrol.swerve.SwerveDevices;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIO;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIOPigeon2;
@@ -184,7 +185,7 @@ public class RobotContainer {
                 this.states.collectState(),
                 Commands.runOnce(() -> RobotStates.getInstance().setExtendedMode(true))));
 
-    this.operatorController.square().whileTrue(this.states.retractState()).onFalse(this.states.collectState());
+    this.operatorController.square().whileTrue(this.states.retractState());
 
     this.operatorController
         .triangle()
@@ -192,6 +193,8 @@ public class RobotContainer {
             Commands.parallel(
                 this.states.retractState(),
                 Commands.runOnce(() -> RobotStates.getInstance().setExtendedMode(false))));
+
+    new Trigger(() -> RobotStates.getInstance().isExtendedMode()).and(this.operatorController.square().negate()).whileTrue(this.states.collectState());
 
     this.operatorController.r1().whileTrue(this.spindexer.expell());
     this.operatorController.l1().whileTrue(this.roller.expellRoller());
