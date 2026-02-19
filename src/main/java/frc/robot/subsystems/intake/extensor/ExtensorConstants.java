@@ -28,7 +28,7 @@ public class ExtensorConstants {
     public static final Distance MIN_EXTENSION = Meters.of(0);
   }
 
-  public static final Current SPRINGY_MODE_CURRENT_LIMIT = Amps.of(3);
+  public static final Current SPRINGY_MODE_CURRENT_LIMIT = Amps.of(1);
   public static final Current NORMAL_MODE_CURRENT_LIMIT = Amps.of(60);
 
   public static final Voltage maxVolts = Volts.of(12);

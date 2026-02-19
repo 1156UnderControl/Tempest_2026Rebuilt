@@ -4,11 +4,13 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.Volts;
 
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -127,11 +129,7 @@ public class ExtensorSubsystem extends SubsystemBase {
   }
 
   public Command springyMode(){
-    return this.runOnce(() -> extensorMotor.setStatorCurrentLimit(ExtensorConstants.SPRINGY_MODE_CURRENT_LIMIT));
-  }
-
-  public Command normalMode(){
-    return this.runOnce(() -> extensorMotor.setStatorCurrentLimit(ExtensorConstants.NORMAL_MODE_CURRENT_LIMIT));
+    return this.runOnce(() -> extensorMotor.setVoltage(Voltage.ofBaseUnits(0, Volts)));
   }
 
   public Command enableExtensor(){

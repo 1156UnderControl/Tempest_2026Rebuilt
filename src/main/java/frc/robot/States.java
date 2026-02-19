@@ -126,7 +126,7 @@ public class States {
 
   public Command retractState() {
     return Commands.parallel(
-        this.extensor.normalMode().andThen(this.extensor.retract()),
+        this.extensor.retract(),
         this.roller.stopRoller(),
         Commands.runOnce(
             () -> {
@@ -172,14 +172,14 @@ public class States {
   }
 
   private void setIntakeDefaultStates() {
-    this.extensor.setDefaultCommand(
-        Commands.either(
-            Commands.parallel(
-                this.collectState(), Commands.runOnce(() -> this.extensorState = "Extended State")),
-            Commands.parallel(
-                this.retractState(),
-                Commands.runOnce(() -> this.extensorState = "Retracted State")),
-            () -> RobotStates.getInstance().isExtendedMode()));
+    // this.extensor.setDefaultCommand(
+    //     Commands.either(
+    //         Commands.parallel(
+    //             this.collectState(), Commands.runOnce(() -> this.extensorState = "Extended State")),
+    //         Commands.parallel(
+    //             this.retractState(),
+    //             Commands.runOnce(() -> this.extensorState = "Retracted State")),
+    //         () -> RobotStates.getInstance().isExtendedMode()));
     this.roller.setDefaultCommand(this.roller.stopRoller());
   }
 
