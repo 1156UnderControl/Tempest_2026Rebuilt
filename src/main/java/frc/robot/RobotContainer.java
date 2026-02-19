@@ -185,7 +185,7 @@ public class RobotContainer {
                 this.states.collectState(),
                 Commands.runOnce(() -> RobotStates.getInstance().setExtendedMode(true))));
 
-    this.operatorController.x().whileTrue(this.states.retractState());
+    this.operatorController.x().whileTrue(this.states.retractState()).onFalse(this.states.collectState());
 
     this.operatorController
         .y()
