@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.Volts;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -129,7 +130,7 @@ public class ExtensorSubsystem extends SubsystemBase {
   }
 
   public Command springyMode(){
-    return this.runOnce(() -> extensorMotor.setVoltage(Voltage.ofBaseUnits(0, Volts)));
+    return this.runOnce(() -> extensorMotor.setVoltage(Voltage.ofBaseUnits(0, Volts))).until(() -> isBehindSetpoint());
   }
 
   public Command enableExtensor(){
@@ -141,6 +142,11 @@ public class ExtensorSubsystem extends SubsystemBase {
 
   private Command setLength(Distance length) {
     return this.extensor.runTo(length, ExtensorConstants.DEADBAND_IS_AT);
+  }
+
+  private boolean isBehindSetpoint(){
+    Debouncer behindSetpointDebouncer = new Debouncer(0.7);    
+    return behindSetpointDebouncer.calculate(!isAtTargetHeight().getAsBoolean());
   }
 
   public Trigger isAtTargetHeight() {
