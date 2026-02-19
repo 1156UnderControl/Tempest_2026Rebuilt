@@ -53,7 +53,7 @@ public class ExtensorConstants {
   public static final Distance DEADBAND_IS_AT = Meters.of(0.01);
 
   public class setpoints {
-    public static final Distance INTAKE_EXTENDED_POSITION = Meters.of(0.27785);
+    public static final Distance INTAKE_EXTENDED_POSITION = Meters.of(0.26);
     public static final Distance INTAKE_HOMED_POSITION = Meters.of(0.05);
   }
 }
