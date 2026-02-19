@@ -5,8 +5,11 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.java_is_undercontrol.swerve.SwerveDevices;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIO;
 import frc.java_is_undercontrol.swerve.io.gyro.GyroIOPigeon2;
@@ -108,7 +111,7 @@ public class RobotContainer {
     this.roller = RollerSubsystem.getInstance();
     this.extensor = ExtensorSubsystem.getInstance();
 
-    this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
+    this.namedCommandsRegistry = new NamedCommandsRegistery(drive, roller, extensor, kicker, spindexer);
     this.namedCommandsRegistry.registerAllAutoCommands();
 
     this.states =
@@ -206,6 +209,9 @@ public class RobotContainer {
     this.operatorController.downArrow().onTrue(this.states.defaultClimberState());
 
     this.driverController.a().onTrue(this.turret.resetCRT());
+
+    new Trigger(() -> DriverStation.isAutonomousEnabled() && RobotStates.getInstance().isOnAllianceZone() && !RobotStates.getInstance().isOnNotShootZone()).whileTrue(this.flyWheel.shootHub());
+    new Trigger(() -> DriverStation.isAutonomousEnabled() && !RobotStates.getInstance().isOnAllianceZone() && !RobotStates.getInstance().isOnNotShootZone()).whileTrue(this.flyWheel.shootPass());
   }
 
   public Command getAutonomousCommand() {
