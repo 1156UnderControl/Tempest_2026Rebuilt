@@ -103,8 +103,7 @@ public class RobotContainer {
     this.climber = ClimberSubsystem.getInstance();
     this.kicker = KickerSubsystem.getInstance();
     this.turret =
-        TurretSubsystem.getInstance(
-            this.kicker.getTurreAbsoluteEncoder(), this.climber.getAbsoluteEncoder());
+        TurretSubsystem.getInstance(this.climber.getAbsoluteEncoder());
     this.hood = HoodSubsystem.getInstance();
     this.flyWheel = FlyWheelSubsystem.getInstance();
     this.spindexer = SpindexerSubsystem.getInstance();
