@@ -13,7 +13,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Go to Depot Zone Score"
+            "pathName": "Climb From Depot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Go To Climb Left Pose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Default Climber"
           }
         }
       ]

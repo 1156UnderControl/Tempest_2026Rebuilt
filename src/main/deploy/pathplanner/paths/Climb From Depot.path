@@ -1,0 +1,146 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.301,
+        "y": 5.839
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.8605138924708793,
+        "y": 5.827844589736255
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.4387447381529532,
+        "y": 5.766708296654929
+      },
+      "prevControl": {
+        "x": 1.3862189514956504,
+        "y": 6.011128103004642
+      },
+      "nextControl": {
+        "x": 1.5098303691951442,
+        "y": 5.435923414042154
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.2258011967191065,
+        "y": 5.05715106625865
+      },
+      "prevControl": {
+        "x": 1.4587152156888243,
+        "y": 5.202495192200055
+      },
+      "nextControl": {
+        "x": 0.9494832808700093,
+        "y": 4.884721831905612
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.45913833259976533,
+        "y": 4.609073444341224
+      },
+      "prevControl": {
+        "x": 0.46831649863627817,
+        "y": 5.118384669104805
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 2,
+      "rotationDegrees": 90.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Shoot Fuels",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Shoot Fuels"
+        }
+      }
+    },
+    {
+      "name": "Extend Intake",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend Intake"
+        }
+      }
+    },
+    {
+      "name": "Retract Intake",
+      "waypointRelativePos": 0.9753039047151297,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract Intake"
+        }
+      }
+    },
+    {
+      "name": "Raise Climber",
+      "waypointRelativePos": 1.306122605599213,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Raise Climber"
+        }
+      }
+    },
+    {
+      "name": "Stop Shooting Fuels",
+      "waypointRelativePos": 2.8828124999999982,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 0.5,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Depot Collect - Score",
+  "idealStartingState": {
+    "velocity": 0.0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": false
+}
