@@ -40,7 +40,7 @@ public class TurretSubsystem extends SubsystemBase {
 
   private double absoluteAngle;
 
-  private TurretSubsystem(SparkAbsoluteEncoder kickerEncoder, SparkAbsoluteEncoder climberEncoder) {
+  private TurretSubsystem(SparkAbsoluteEncoder climberEncoder) {
     calculator = ShooterCalculator.getInstance();
     smartTurretMotorConfig =
         new SmartMotorControllerConfig(this)
@@ -88,7 +88,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     turret = new Pivot(turretMechanismConfig);
 
-    this.encoder1 = kickerEncoder;
+    this.encoder1 = this.turretFlex.getAbsoluteEncoder();
     this.encoder2 = climberEncoder;
 
     Logger.recordOutput("EncodersCRT/encoder1", this.encoder1.getPosition());
@@ -109,10 +109,9 @@ public class TurretSubsystem extends SubsystemBase {
     inputs = new TurretInputsAutoLogged();
   }
 
-  public static TurretSubsystem getInstance(
-      SparkAbsoluteEncoder kickerEncoder, SparkAbsoluteEncoder climberEncoder) {
+  public static TurretSubsystem getInstance(SparkAbsoluteEncoder climberEncoder) {
     if (instance == null) {
-      instance = new TurretSubsystem(kickerEncoder, climberEncoder);
+      instance = new TurretSubsystem(climberEncoder);
     }
     return instance;
   }
