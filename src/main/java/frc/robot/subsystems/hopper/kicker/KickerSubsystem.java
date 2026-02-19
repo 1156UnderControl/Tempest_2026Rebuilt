@@ -75,7 +75,7 @@ public class KickerSubsystem extends SubsystemBase {
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(2.6)))
             .withIdleMode(MotorMode.COAST)
             .withMechanismCircumference(Inches.of(2))
-            .withMotorInverted(false)
+            .withMotorInverted(true)
             .withStatorCurrentLimit(Amps.of(40))
             .withTelemetry("Kicker", TelemetryVerbosity.HIGH);
 
