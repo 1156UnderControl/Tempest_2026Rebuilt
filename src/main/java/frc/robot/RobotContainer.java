@@ -110,7 +110,7 @@ public class RobotContainer {
     this.roller = RollerSubsystem.getInstance();
     this.extensor = ExtensorSubsystem.getInstance();
 
-    this.namedCommandsRegistry = new NamedCommandsRegistery(drive, roller, extensor, kicker, spindexer);
+    this.namedCommandsRegistry = new NamedCommandsRegistery(drive, roller, extensor, kicker, spindexer, climber);
     this.namedCommandsRegistry.registerAllAutoCommands();
 
     this.states =
