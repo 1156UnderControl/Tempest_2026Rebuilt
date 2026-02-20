@@ -74,7 +74,7 @@ public class RollerSubsystem extends SubsystemBase {
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(2)))
             .withIdleMode(MotorMode.COAST)
             .withTelemetry("RollerMotor", TelemetryVerbosity.HIGH)
-            .withStatorCurrentLimit(Amps.of(40))
+            .withStatorCurrentLimit(Amps.of(20))
             .withMotorInverted(false)
             .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
             .withControlMode(ControlMode.OPEN_LOOP)
