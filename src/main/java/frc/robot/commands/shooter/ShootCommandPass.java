@@ -8,11 +8,10 @@ import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
 
 public class ShootCommandPass extends Command {
 
-    private final KickerSubsystem kicker;
-    private final SpindexerSubsystem spindexer;
+  private final KickerSubsystem kicker;
+  private final SpindexerSubsystem spindexer;
 
-  public ShootCommandPass(KickerSubsystem kicker,
-    SpindexerSubsystem spindexer) {
+  public ShootCommandPass(KickerSubsystem kicker, SpindexerSubsystem spindexer) {
     this.kicker = kicker;
     this.spindexer = spindexer;
   }
@@ -24,10 +23,10 @@ public class ShootCommandPass extends Command {
 
   @Override
   public void execute() {
-    if(!RobotStates.getInstance().isOnAllianceZone()){
-        Commands.parallel(this.kicker.shoot(), this.spindexer.shoot());
+    if (!RobotStates.getInstance().isOnAllianceZone()) {
+      Commands.parallel(this.kicker.shoot(), this.spindexer.shoot());
     } else {
-        Commands.parallel(this.kicker.stop(), this.spindexer.stop());
+      Commands.parallel(this.kicker.stop(), this.spindexer.stop());
     }
   }
 
@@ -37,6 +36,5 @@ public class ShootCommandPass extends Command {
   }
 
   @Override
-  public void end(boolean interrupted) {
-  }
+  public void end(boolean interrupted) {}
 }

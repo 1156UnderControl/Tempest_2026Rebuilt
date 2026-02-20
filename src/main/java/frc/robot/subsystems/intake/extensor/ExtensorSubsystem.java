@@ -128,11 +128,11 @@ public class ExtensorSubsystem extends SubsystemBase {
         });
   }
 
-  public Command springyMode(){
+  public Command springyMode() {
     return this.runOnce(() -> extensorMotor.setVoltage(Voltage.ofBaseUnits(0, Volts)));
   }
 
-  public Command enableExtensor(){
+  public Command enableExtensor() {
     return this.runOnce(
         () -> {
           this.extensorMotor.startClosedLoopController();

@@ -6,8 +6,8 @@ import frc.robot.subsystems.intake.roller.RollerSubsystem;
 
 public class ExtendIntake extends Command {
 
-    private final RollerSubsystem roller;
-    private final ExtensorSubsystem extensor;
+  private final RollerSubsystem roller;
+  private final ExtensorSubsystem extensor;
 
   public ExtendIntake(RollerSubsystem roller, ExtensorSubsystem extensor) {
     this.roller = roller;
@@ -30,6 +30,5 @@ public class ExtendIntake extends Command {
   }
 
   @Override
-  public void end(boolean interrupted) {
-  }
+  public void end(boolean interrupted) {}
 }

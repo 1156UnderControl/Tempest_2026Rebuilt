@@ -1,14 +1,9 @@
-
 package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.commands.intake.ExtendIntake;
-import frc.robot.commands.intake.RetractIntake;
-import frc.robot.commands.shooter.ShootCommandHub;
-import frc.robot.commands.shooter.ShootCommandPass;
 import frc.robot.commands.swerve.GoToClimbPoseLeft;
 import frc.robot.commands.swerve.GoToClimbPoseRight;
 import frc.robot.commands.swerve.odometry.ResetOdometryBlue;
@@ -28,7 +23,13 @@ public class NamedCommandsRegistery {
   SpindexerSubsystem spindexer;
   ClimberSubsystem climber;
 
-  public NamedCommandsRegistery(SwerveSubsystem drive, RollerSubsystem roller, ExtensorSubsystem extensor, KickerSubsystem kicker, SpindexerSubsystem spindexer, ClimberSubsystem climber) {
+  public NamedCommandsRegistery(
+      SwerveSubsystem drive,
+      RollerSubsystem roller,
+      ExtensorSubsystem extensor,
+      KickerSubsystem kicker,
+      SpindexerSubsystem spindexer,
+      ClimberSubsystem climber) {
     this.drive = drive;
     this.roller = roller;
     this.extensor = extensor;
@@ -61,13 +62,20 @@ public class NamedCommandsRegistery {
   }
 
   private void registerIntakeCommands() {
-    NamedCommands.registerCommand("Extend Intake", this.extensor.extend().andThen(this.roller.runRoller()));
-    NamedCommands.registerCommand("Retract Intake", this.extensor.retract().andThen(Commands.runOnce(() -> roller.stopRoller())));
+    NamedCommands.registerCommand(
+        "Extend Intake", this.extensor.extend().andThen(this.roller.runRoller()));
+    NamedCommands.registerCommand(
+        "Retract Intake",
+        this.extensor.retract().andThen(Commands.runOnce(() -> roller.stopRoller())));
   }
 
   private void registerShooterCommands() {
-    NamedCommands.registerCommand("Shoot Fuels", Commands.runOnce(() -> RobotStates.getInstance().setShouldShootAutonomous(true)));
-    NamedCommands.registerCommand("Stop Shooting Fuels", Commands.runOnce(() -> RobotStates.getInstance().setShouldShootAutonomous(false)));
+    NamedCommands.registerCommand(
+        "Shoot Fuels",
+        Commands.runOnce(() -> RobotStates.getInstance().setShouldShootAutonomous(true)));
+    NamedCommands.registerCommand(
+        "Stop Shooting Fuels",
+        Commands.runOnce(() -> RobotStates.getInstance().setShouldShootAutonomous(false)));
   }
 
   private void registerClimberCommands() {
