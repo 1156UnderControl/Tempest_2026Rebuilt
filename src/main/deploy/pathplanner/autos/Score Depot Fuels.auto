@@ -11,9 +11,33 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 4.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Retract Intake"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Go to Depot Zone Score"
+            "pathName": "Climb From Depot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Go To Climb Left Pose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Default Climber"
           }
         }
       ]

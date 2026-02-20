@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -100,15 +101,15 @@ public class RobotContainer {
 
     this.climber = ClimberSubsystem.getInstance();
     this.kicker = KickerSubsystem.getInstance();
-    this.turret =
-        TurretSubsystem.getInstance(this.climber.getAbsoluteEncoder());
+    this.turret = TurretSubsystem.getInstance(this.climber.getAbsoluteEncoder());
     this.hood = HoodSubsystem.getInstance();
     this.flyWheel = FlyWheelSubsystem.getInstance();
     this.spindexer = SpindexerSubsystem.getInstance();
     this.roller = RollerSubsystem.getInstance();
     this.extensor = ExtensorSubsystem.getInstance();
 
-    this.namedCommandsRegistry = new NamedCommandsRegistery(drive);
+    this.namedCommandsRegistry =
+        new NamedCommandsRegistery(drive, roller, extensor, kicker, spindexer, climber);
     this.namedCommandsRegistry.registerAllAutoCommands();
 
     this.states =
@@ -124,6 +125,7 @@ public class RobotContainer {
             this.climber);
 
     configureButtonBindings();
+    configAutoTriggers();
     this.autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
   }
 
@@ -142,8 +144,7 @@ public class RobotContainer {
                     // && !RobotStates.getInstance().isOnNotShootZone()
                     && this.hood.isAtTargetAngle()
                     && this.turret.isAtTargetAngle()
-                    && this.flyWheel.isAtTargetVelocity()
-        )
+                    && this.flyWheel.isAtTargetVelocity())
         .whileTrue(
             Commands.parallel(
                 this.states.shootState(),
@@ -165,8 +166,7 @@ public class RobotContainer {
         .and(
             () ->
                 RobotStates.getInstance().isOnAllianceZone()
-                && !RobotStates.getInstance().isOnNonOdometryMode()
-            )
+                    && !RobotStates.getInstance().isOnNonOdometryMode())
         .whileTrue(this.flyWheel.shootHub());
 
     this.operatorController
@@ -174,8 +174,7 @@ public class RobotContainer {
         .and(
             () ->
                 !RobotStates.getInstance().isOnAllianceZone()
-                && !RobotStates.getInstance().isOnNonOdometryMode()
-                )
+                    && !RobotStates.getInstance().isOnNonOdometryMode())
         .whileTrue(this.flyWheel.shootPass());
 
     this.operatorController
@@ -194,7 +193,9 @@ public class RobotContainer {
                 this.states.retractState(),
                 Commands.runOnce(() -> RobotStates.getInstance().setExtendedMode(false))));
 
-    new Trigger(() -> RobotStates.getInstance().isExtendedMode()).and(this.operatorController.square().negate()).whileTrue(this.states.collectState());
+    new Trigger(() -> RobotStates.getInstance().isExtendedMode())
+        .and(this.operatorController.square().negate())
+        .whileTrue(this.states.collectState());
 
     this.operatorController.r1().whileTrue(this.spindexer.expell());
     this.operatorController.l1().whileTrue(this.roller.expellRoller());
@@ -212,5 +213,35 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+
+  private void configAutoTriggers() {
+    new Trigger(
+            () ->
+                !RobotStates.getInstance().isOnNonOdometryMode()
+                    // && !RobotStates.getInstance().isOnNotShootZone()
+                    && this.hood.isAtTargetAngle()
+                    && this.turret.isAtTargetAngle()
+                    && this.flyWheel.isAtTargetVelocity()
+                    && DriverStation.isAutonomousEnabled()
+                    && RobotStates.getInstance().getShouldShootMode())
+        .whileTrue(
+            Commands.parallel(
+                this.states.shootState(),
+                Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
+        .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
+
+    new Trigger(
+            () ->
+                DriverStation.isAutonomousEnabled()
+                    && RobotStates.getInstance().isOnAllianceZone()
+                    && !RobotStates.getInstance().isOnNotShootZone())
+        .whileTrue(this.flyWheel.shootHub());
+    new Trigger(
+            () ->
+                DriverStation.isAutonomousEnabled()
+                    && !RobotStates.getInstance().isOnAllianceZone()
+                    && !RobotStates.getInstance().isOnNotShootZone())
+        .whileTrue(this.flyWheel.shootPass());
   }
 }

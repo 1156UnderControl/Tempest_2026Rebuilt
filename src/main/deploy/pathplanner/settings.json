@@ -3,9 +3,9 @@
   "robotLength": 0.66,
   "holonomicMode": true,
   "pathFolders": [
-    "Neutral Zone Collect Left & Score Right",
-    "Neutral Zone Collect Right & Score Left",
-    "Depot Collect & Score",
+    "Depot Collect - Score",
+    "Start Right - Collect Middle",
+    "Start Left - Collect Middle",
     "Tuning"
   ],
   "autoFolders": [
