@@ -154,7 +154,7 @@ public class ExtensorSubsystem extends SubsystemBase {
    */
   public Command homing(Current threshhold)
   {
-      Debouncer       currentDebouncer  = new Debouncer(0.4); // Current threshold is only detected if exceeded for 0.4 seconds.
+      Debouncer       currentDebouncer  = new Debouncer(0.1); // Current threshold is only detected if exceeded for 0.4 seconds.
       Voltage runVolts          = Volts.of(2); // Volts required to run the mechanism to the limit.
       Distance limitHit          = ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION;  // Limit which gets hit.
       AngularVelocity velocityThreshold = DegreesPerSecond.of(2); // The maximum amount of movement for the extensor to be considered "hitting the hard limit".
