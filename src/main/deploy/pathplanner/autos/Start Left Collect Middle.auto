@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Start Left - Go Middle"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Trench To Tower Left"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Match Autos",
+  "choreoAuto": false
+}
