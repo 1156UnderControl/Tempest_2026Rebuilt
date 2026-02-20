@@ -38,22 +38,22 @@ public class TunerConstants {
 
   private static final Slot0Configs ksteerGains =
       new Slot0Configs()
-          .withKP(35)
+          .withKP(100)
           .withKI(0)
-          .withKD(0)
-          .withKS(0.17692)
-          .withKV(0.27981)
-          .withKA(0.018027)
+          .withKD(0.5)
+          .withKS(0.1)
+          .withKV(0)
+          .withKA(0)
           .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
   private static final Slot0Configs kdriveGains =
       new Slot0Configs()
-          .withKP(1.6)
+          .withKP(1)
           .withKI(0)
           .withKD(0)
-          .withKS(0.13516)
-          .withKV(0.9)
-          .withKA(0.0044303);
+          .withKS(0.1)
+          .withKV(0.124)
+          .withKA(0);
 
   private static final ClosedLoopOutputType kSteerClosedLoopOutput = ClosedLoopOutputType.Voltage;
   // The closed-loop output type to use for the drive motors;
@@ -77,16 +77,22 @@ public class TunerConstants {
 
   // Initial configs for the drive and steer motors and the azimuth encoder; these cannot be null.
   // Some configs will be overwritten; check the `with*InitialConfigs()` API documentation.
-  private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration();
+  private static final TalonFXConfiguration driveInitialConfigs = 
+      new TalonFXConfiguration()
+      .withCurrentLimits(
+              new CurrentLimitsConfigs()
+                  .withStatorCurrentLimit(Amps.of(80))
+                  .withSupplyCurrentLimit(Amps.of(60))
+                  .withStatorCurrentLimitEnable(true));
+
   private static final TalonFXConfiguration steerInitialConfigs =
       new TalonFXConfiguration()
           .withCurrentLimits(
               new CurrentLimitsConfigs()
-                  // Swerve azimuth does not require much torque output, so we can set a relatively
-                  // low
-                  // stator current limit to help avoid brownouts without impacting performance.
                   .withStatorCurrentLimit(Amps.of(60))
                   .withStatorCurrentLimitEnable(true));
+
+
   private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
   // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs
   private static final Pigeon2Configuration pigeonConfigs = null;
