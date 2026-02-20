@@ -126,6 +126,7 @@ public class RobotContainer {
             this.climber);
 
     configureButtonBindings();
+    configAutoTriggers();
     this.autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
   }
 
@@ -210,12 +211,29 @@ public class RobotContainer {
     this.operatorController.downArrow().onTrue(this.states.defaultClimberState());
 
     this.driverController.a().onTrue(this.turret.resetCRT());
-
-    new Trigger(() -> DriverStation.isAutonomousEnabled() && RobotStates.getInstance().isOnAllianceZone() && !RobotStates.getInstance().isOnNotShootZone()).whileTrue(this.flyWheel.shootHub());
-    new Trigger(() -> DriverStation.isAutonomousEnabled() && !RobotStates.getInstance().isOnAllianceZone() && !RobotStates.getInstance().isOnNotShootZone()).whileTrue(this.flyWheel.shootPass());
   }
 
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+
+  private void configAutoTriggers(){
+    new Trigger(() ->
+                !RobotStates.getInstance().isOnNonOdometryMode()
+                    // && !RobotStates.getInstance().isOnNotShootZone()
+                    && this.hood.isAtTargetAngle()
+                    && this.turret.isAtTargetAngle()
+                    && this.flyWheel.isAtTargetVelocity()
+                    && DriverStation.isAutonomousEnabled()
+                    && RobotStates.getInstance().getShouldShootMode()
+        )
+        .whileTrue(
+            Commands.parallel(
+                this.states.shootState(),
+                Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
+        .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
+
+    new Trigger(() -> DriverStation.isAutonomousEnabled() && RobotStates.getInstance().isOnAllianceZone() && !RobotStates.getInstance().isOnNotShootZone()).whileTrue(this.flyWheel.shootHub());
+    new Trigger(() -> DriverStation.isAutonomousEnabled() && !RobotStates.getInstance().isOnAllianceZone() && !RobotStates.getInstance().isOnNotShootZone()).whileTrue(this.flyWheel.shootPass());
   }
 }

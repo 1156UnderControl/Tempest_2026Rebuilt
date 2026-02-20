@@ -8,52 +8,52 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.208293369297461,
-        "y": 5.931662861166707
+        "x": 2.650297570502871,
+        "y": 5.0452975541264165
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.536011666277366,
-        "y": 5.83856124376467
+        "x": 1.0880765735825895,
+        "y": 4.977612556851525
       },
       "prevControl": {
-        "x": 1.8011882295266033,
-        "y": 5.834633326466473
+        "x": 1.3240951256689244,
+        "y": 5.060045821199541
       },
       "nextControl": {
-        "x": 1.286039087887312,
-        "y": 5.842263952641738
+        "x": 0.7600110502109865,
+        "y": 4.863030411623936
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.8005931267918203,
-        "y": 5.83856124376467
+        "x": 0.37,
+        "y": 5.113
       },
       "prevControl": {
-        "x": 1.143085301595025,
-        "y": 5.840603659051092
+        "x": 0.4131199224323942,
+        "y": 4.830116253065529
       },
       "nextControl": {
-        "x": 0.41430220150305197,
-        "y": 5.83625763933555
+        "x": 0.33232768391782086,
+        "y": 5.360145294515199
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.301,
-        "y": 5.83856124376467
+        "x": 0.35,
+        "y": 6.104
       },
       "prevControl": {
-        "x": 0.5497688207056304,
-        "y": 5.813780730357359
+        "x": 0.35,
+        "y": 5.854
       },
       "nextControl": null,
       "isLocked": false,
@@ -63,11 +63,11 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": 180.0
+      "rotationDegrees": 90.0
     },
     {
       "waypointRelativePos": 2,
-      "rotationDegrees": 180.0
+      "rotationDegrees": 90.0
     }
   ],
   "constraintZones": [
@@ -89,7 +89,7 @@
   "eventMarkers": [
     {
       "name": "Shoot Fuels",
-      "waypointRelativePos": 0.9927323796660127,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -100,7 +100,7 @@
     },
     {
       "name": "Extend Intake",
-      "waypointRelativePos": 0.9980507121807477,
+      "waypointRelativePos": 0.13555992141453757,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -120,7 +120,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 180.0
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": "Depot Collect - Score",

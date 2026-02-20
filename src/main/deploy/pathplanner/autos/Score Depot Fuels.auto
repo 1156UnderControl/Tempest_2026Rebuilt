@@ -11,9 +11,21 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Climb From Depot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Retract Intake"
           }
         },
         {

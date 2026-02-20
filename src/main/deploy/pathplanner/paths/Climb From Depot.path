@@ -3,79 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.301,
-        "y": 5.839
+        "x": 0.35,
+        "y": 6.104
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.8605138924708793,
-        "y": 5.827844589736255
+        "x": 0.34241890608260794,
+        "y": 5.542858488343223
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.4387447381529532,
-        "y": 5.766708296654929
+        "x": 0.35,
+        "y": 4.694668626265418
       },
       "prevControl": {
-        "x": 1.3862189514956504,
-        "y": 6.011128103004642
-      },
-      "nextControl": {
-        "x": 1.5098303691951442,
-        "y": 5.435923414042154
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.2258011967191065,
-        "y": 5.05715106625865
-      },
-      "prevControl": {
-        "x": 1.4587152156888243,
-        "y": 5.202495192200055
-      },
-      "nextControl": {
-        "x": 0.9494832808700093,
-        "y": 4.884721831905612
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 0.45913833259976533,
-        "y": 4.609073444341224
-      },
-      "prevControl": {
-        "x": 0.46831649863627817,
-        "y": 5.118384669104805
+        "x": 0.3591781660365128,
+        "y": 5.203979851029
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1,
-      "rotationDegrees": 180.0
-    },
-    {
-      "waypointRelativePos": 2,
-      "rotationDegrees": 90.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "Shoot Fuels",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -86,7 +45,7 @@
     },
     {
       "name": "Extend Intake",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -96,19 +55,8 @@
       }
     },
     {
-      "name": "Retract Intake",
-      "waypointRelativePos": 0.9753039047151297,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Retract Intake"
-        }
-      }
-    },
-    {
       "name": "Raise Climber",
-      "waypointRelativePos": 1.306122605599213,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -119,9 +67,14 @@
     },
     {
       "name": "Stop Shooting Fuels",
-      "waypointRelativePos": 2.8828124999999982,
+      "waypointRelativePos": 0.99,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Stop Shooting Fuels"
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -134,13 +87,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 89.5633380328534
   },
   "reversed": false,
   "folder": "Depot Collect - Score",
   "idealStartingState": {
     "velocity": 0.0,
-    "rotation": 180.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": false
 }

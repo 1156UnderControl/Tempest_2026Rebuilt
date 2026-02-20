@@ -62,12 +62,12 @@ public class NamedCommandsRegistery {
 
   private void registerIntakeCommands() {
     NamedCommands.registerCommand("Extend Intake", this.extensor.extend().andThen(this.roller.runRoller()));
-    NamedCommands.registerCommand("Retract Intake", Commands.parallel(this.extensor.retract(), this.roller.runRoller()));
+    NamedCommands.registerCommand("Retract Intake", this.extensor.retract().andThen(Commands.runOnce(() -> roller.stopRoller())));
   }
 
   private void registerShooterCommands() {
-    NamedCommands.registerCommand("Shoot Fuels", Commands.parallel(kicker.shoot(), spindexer.shoot()));
-    NamedCommands.registerCommand("Stop Shooting Fuels", Commands.parallel(kicker.stop(), spindexer.stop()));
+    NamedCommands.registerCommand("Shoot Fuels", Commands.runOnce(() -> RobotStates.getInstance().setShouldShootAutonomous(true)));
+    NamedCommands.registerCommand("Stop Shooting Fuels", Commands.runOnce(() -> RobotStates.getInstance().setShouldShootAutonomous(false)));
   }
 
   private void registerClimberCommands() {
