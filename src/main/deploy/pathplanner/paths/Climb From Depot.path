@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.35,
-        "y": 6.104
+        "x": 0.37,
+        "y": 5.113
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.34241890608260794,
-        "y": 5.542858488343223
+        "x": 0.36241890608260796,
+        "y": 4.551858488343223
       },
       "isLocked": false,
       "linkedName": null
@@ -32,28 +32,6 @@
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
-    {
-      "name": "Shoot Fuels",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Shoot Fuels"
-        }
-      }
-    },
-    {
-      "name": "Extend Intake",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Extend Intake"
-        }
-      }
-    },
     {
       "name": "Raise Climber",
       "waypointRelativePos": 0.0,
@@ -87,7 +65,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 89.5633380328534
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": "Depot Collect - Score",
