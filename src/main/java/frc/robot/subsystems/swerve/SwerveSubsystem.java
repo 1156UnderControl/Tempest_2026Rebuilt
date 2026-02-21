@@ -91,7 +91,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
             pathPlannerConfig,
             configureMulticameraPoseEstimation(),
             configureMulticameraPoseEstimation(),
-            new ProfiledPIDConfig(3, 0, 0, 80, 50),
+            new ProfiledPIDConfig(4.0, 0, 0, 0, 720),
             new MoveToPosePIDConfig(
                 SwerveConstants.MOVE_TO_POSE_TRANSLATION_PID,
                 SwerveConstants.MOVE_TO_POSE_Y_CONSTRAINTS)),
@@ -129,9 +129,9 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
   public void resetOdometryLimelight(Translation2d defaultPosition) {
     PoseEstimator limelightBackLeft =
-        new LimelightPoseEstimator(VisionConstants.backLeftLimelightName, false, false, 2);
+        new LimelightPoseEstimator(VisionConstants.backLeftLimelightName, false, false, 1.2);
     PoseEstimator limelightBackRight =
-        new LimelightPoseEstimator(VisionConstants.backRightLimelightName, false, false, 2);
+        new LimelightPoseEstimator(VisionConstants.backRightLimelightName, false, false, 1.2);
 
     Optional<PoseEstimation> limelightBackLeftPoseEstimation =
         limelightBackLeft.getEstimatedPose(this.getPose());
