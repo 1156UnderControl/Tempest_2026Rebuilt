@@ -421,6 +421,17 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     return isAtHeading;
   }
 
+  protected boolean isAtTargetHeading(double targetHeading, double toleranceDegrees) {
+    if (targetHeading == Double.NaN) {
+      return false;
+    }
+    Rotation2d targetHeadingRotation = Rotation2d.fromDegrees(targetHeading);
+    Rotation2d currentHeading = this.getHeading();
+    double headingDifferenceDegrees = Math.abs(targetHeadingRotation.minus(currentHeading).getDegrees());
+    boolean isAtHeading = headingDifferenceDegrees <= toleranceDegrees;
+    return isAtHeading;
+  }
+
   public double[] getWheelRadiusCharacterizationPositions() {
     return drive.getWheelRadiusCharacterizationPositions();
   }
