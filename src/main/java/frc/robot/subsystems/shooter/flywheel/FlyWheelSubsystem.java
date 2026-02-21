@@ -3,8 +3,6 @@ package frc.robot.subsystems.shooter.flywheel;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.RPM;
 
-import java.util.function.Supplier;
-
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -15,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.shooter.ShooterCalculator;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 import yams.mechanisms.config.FlyWheelConfig;
 import yams.mechanisms.velocity.FlyWheel;
@@ -55,15 +54,18 @@ public class FlyWheelSubsystem extends SubsystemBase {
             .withIdleMode(MotorMode.BRAKE)
             .withGearing(FlyWheelsConstants.MOTOR_GEARING)
             .withTelemetry("FlyWheelLeadMotor", TelemetryVerbosity.HIGH)
-            .withStatorCurrentLimit(Amps.of(60))
+            .withSupplyCurrentLimit(Amps.of(60))
+            .withStatorCurrentLimit(Amps.of(120))
             .withClosedLoopController(
                 FlyWheelsConstants.ClosedLoopController.kP,
                 FlyWheelsConstants.ClosedLoopController.kI,
                 FlyWheelsConstants.ClosedLoopController.kD)
-            .withSimClosedLoopController(3, 0, 0)
-            .withFeedforward(new SimpleMotorFeedforward(0.19, 0.11, 0))
+            .withSimClosedLoopController(4, 0, 0)
+            .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0.19, 0.11, 0))
             .withControlMode(ControlMode.CLOSED_LOOP);
+
+    this.torqueCurrentRequest.withFeedForward(FlyWheelsConstants.FEEDFORWARD_TORQUE_CURRENT_A);
 
     this.leadMotor = new TalonFX(19);
 
@@ -103,11 +105,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   private void updateInputs() {
     this.inputs.currentVelocity = this.smartFlywheelMotor.getRotorVelocity().in(RPM);
-    if(FlyWheelsConstants.RUN_TORQUE_CURRENT){
-      this.setpoint = torqueCurrentRequest.getVelocityMeasure();
-    }else{
-      this.setpoint = smartFlywheelMotor.getMechanismSetpointVelocity().orElse(RPM.of(0));
-    }
+    this.setpoint = torqueCurrentRequest.getVelocityMeasure();
     this.inputs.targetVelocity = setpoint.in(RPM);
     this.inputs.atTarget = isAtTargetVelocity();
     Logger.processInputs("Subsystems/Shooter/FlyWheels/", inputs);
@@ -122,11 +120,13 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   public Command shootHub() {
-    return this.runFlywheel(() -> RPM.of(ShooterCalculator.getInstance().getParameters(true).flywheelSpeed()));
+    return this.runFlywheel(
+        () -> RPM.of(ShooterCalculator.getInstance().getParameters(true).flywheelSpeed()));
   }
 
   public Command shootPass() {
-    return this.runFlywheel(() -> RPM.of(ShooterCalculator.getInstance().getParameters(false).flywheelSpeed()));
+    return this.runFlywheel(
+        () -> RPM.of(ShooterCalculator.getInstance().getParameters(false).flywheelSpeed()));
   }
 
   public Command shootNonOdometry() {
@@ -134,10 +134,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   private Command runFlywheel(Supplier<AngularVelocity> velocity) {
-    if(FlyWheelsConstants.RUN_TORQUE_CURRENT){
-      return this.run(() -> leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity.get())));
-    }
-    return this.flywheelMechanism.run(velocity);
+    return this.run(() -> leadMotor.setControl(torqueCurrentRequest.withVelocity(velocity.get())));
   }
 
   public Command runVelocityTorqueControlCalibration() {
@@ -148,8 +145,6 @@ public class FlyWheelSubsystem extends SubsystemBase {
   public boolean isAtTargetVelocity() {
     return this.flywheelMechanism
         .getSpeed()
-        .isNear(
-            setpoint,
-            FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
+        .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
   }
 }

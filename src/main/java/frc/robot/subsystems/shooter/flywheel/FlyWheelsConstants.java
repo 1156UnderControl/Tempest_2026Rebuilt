@@ -21,14 +21,14 @@ public class FlyWheelsConstants {
   public static final Distance FLYWHEEL_SIZE = Inches.of(2);
   public static final Voltage MAX_VOLTS = Volts.of(12.0);
 
-  public static final boolean RUN_TORQUE_CURRENT = true;
-
   public static class Velocity {
     public static final AngularVelocity VELOCITY_ERROR_ALLOWED = RPM.of(300);
   }
 
+  public static final double FEEDFORWARD_TORQUE_CURRENT_A = 3;
+
   public static class ClosedLoopController {
-    public static final double kP = 0.4;
+    public static final double kP = 8;
     public static final double kI = 0;
     public static final double kD = 0;
   }
