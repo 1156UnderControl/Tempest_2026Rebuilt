@@ -70,17 +70,17 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
             photonPoseEstimation = photonPoseEstimator.estimateCoprocMultiTagPose(result);
             break;
           case PNP_CONSTRAINED:
-            // TODO: add PNP Constrained implementation
-            photonPoseEstimation = photonPoseEstimator.estimateCoprocMultiTagPose(result);
+            photonPoseEstimator.addHeadingData(result.getTimestampSeconds(), referencePose.getRotation());
+            photonPoseEstimation = photonPoseEstimator.estimateConstrainedSolvepnpPose(result, camera.getCameraMatrix().orElseThrow(), camera.getDistCoeffs().orElseThrow(), new Pose3d(referencePose), false, 1);
             break;
           default:
             photonPoseEstimation = photonPoseEstimator.estimateCoprocMultiTagPose(result);
             break;
         }
-        if (photonPoseEstimation.isEmpty()) {
+        if (photonPoseEstimation.isEmpty() || !result.hasTargets()) {
           photonPoseEstimation = photonPoseEstimator.estimateLowestAmbiguityPose(result);
           if (photonPoseEstimation.isEmpty()) {
-            state = "NO_ESTIMATION_AVAILABLE";
+            state = "NO_TARGETS";
             Logger.recordOutput(keyStateLog, state);
             Logger.recordOutput(this.keyPoseEstimatedLog, new Pose3d());
             return Optional.empty();
@@ -114,9 +114,6 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
         Logger.recordOutput(this.keyPoseEstimatedLog, poseEstimation.estimatedPose);
         return Optional.of(poseEstimation);
       }
-      state = "NO_TARGETS";
-      Logger.recordOutput(keyStateLog, state);
-      Logger.recordOutput(this.keyPoseEstimatedLog, new Pose3d());
       return Optional.empty();
     } catch (Exception e) {
       state = "EXCEPTION THROWED";
