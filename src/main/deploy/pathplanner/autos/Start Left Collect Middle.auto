@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Go to Neutral Zone from Left Bump"
+            "pathName": "Start Left - Go Middle"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Go Score Zone Right"
+            "pathName": "Trench To Tower Left"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
           }
         }
       ]
