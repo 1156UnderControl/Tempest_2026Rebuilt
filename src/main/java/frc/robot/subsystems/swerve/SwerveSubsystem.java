@@ -338,4 +338,48 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
       super.driveToPose(FieldConstants.FieldStructurePoses.BLUE_LEFT_TOWER);
     }
   }
+
+  public boolean isAtTargetSafeAllianceLeftTrenchPose(){
+    return DriverStation.getAlliance().isEmpty() ? 
+        isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE, 
+            goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband): 
+        DriverStation.getAlliance().get() == Alliance.Blue ?
+            isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE, 
+                goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband):
+            isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_RED, 
+                goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband);
+  }
+
+  public boolean isAtTargetSafeAllianceRightTrenchPose(){
+    return DriverStation.getAlliance().isEmpty() ? 
+        isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE, 
+            goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband): 
+        DriverStation.getAlliance().get() == Alliance.Blue ?
+            isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE, 
+                goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband):
+            isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_RED, 
+                goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband);
+  }
+
+  public boolean isAtTargetSafeMiddleLeftTrenchPose(){
+    return DriverStation.getAlliance().isEmpty() ? 
+        isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_MIDDLE_TRENCH_POSE_LEFT_BLUE, 
+            goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband): 
+        DriverStation.getAlliance().get() == Alliance.Blue ?
+            isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_MIDDLE_TRENCH_POSE_LEFT_BLUE, 
+                goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband):
+            isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_MIDDLE_TRENCH_POSE_LEFT_RED, 
+                goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband);
+  }
+
+  public boolean isAtTargetSafeMiddleRightTrenchPose(){
+    return DriverStation.getAlliance().isEmpty() ? 
+        isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_MIDDLE_TRENCH_POSE_RIGHT_BLUE, 
+            goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband): 
+        DriverStation.getAlliance().get() == Alliance.Blue ?
+            isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_MIDDLE_TRENCH_POSE_RIGHT_BLUE, 
+                goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband):
+            isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_MIDDLE_TRENCH_POSE_RIGHT_RED, 
+                goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband);
+  }
 }
