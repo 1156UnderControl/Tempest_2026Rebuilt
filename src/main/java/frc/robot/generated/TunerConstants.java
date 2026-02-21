@@ -55,7 +55,8 @@ public class TunerConstants {
           .withKV(0.9)
           .withKA(0.0044303);
 
-  private static final ClosedLoopOutputType kSteerClosedLoopOutput = ClosedLoopOutputType.TorqueCurrentFOC;
+  private static final ClosedLoopOutputType kSteerClosedLoopOutput =
+      ClosedLoopOutputType.TorqueCurrentFOC;
   // The closed-loop output type to use for the drive motors;
   // This affects the PID/FF gains for the drive motors
   private static final ClosedLoopOutputType kDriveClosedLoopOutput = ClosedLoopOutputType.Voltage;
@@ -77,9 +78,9 @@ public class TunerConstants {
 
   // Initial configs for the drive and steer motors and the azimuth encoder; these cannot be null.
   // Some configs will be overwritten; check the `with*InitialConfigs()` API documentation.
-  private static final TalonFXConfiguration driveInitialConfigs = 
+  private static final TalonFXConfiguration driveInitialConfigs =
       new TalonFXConfiguration()
-      .withCurrentLimits(
+          .withCurrentLimits(
               new CurrentLimitsConfigs()
                   .withSupplyCurrentLimit(Amps.of(60))
                   .withSupplyCurrentLimitEnable(true));
@@ -90,7 +91,6 @@ public class TunerConstants {
               new CurrentLimitsConfigs()
                   .withStatorCurrentLimit(Amps.of(50))
                   .withStatorCurrentLimitEnable(true));
-
 
   private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
   // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs

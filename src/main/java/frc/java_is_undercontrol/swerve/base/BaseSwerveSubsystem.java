@@ -1,8 +1,6 @@
 package frc.java_is_undercontrol.swerve.base;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -86,7 +84,8 @@ public class BaseSwerveSubsystem extends SubsystemBase {
             config.headingPidConfig.kI,
             config.headingPidConfig.kD,
             new TrapezoidProfile.Constraints(
-                drive.getMaxAngularSpeedDegreesPerSecond(), config.headingPidConfig.maxAcceleration));
+                drive.getMaxAngularSpeedDegreesPerSecond(),
+                config.headingPidConfig.maxAcceleration));
     angleController.enableContinuousInput(-Math.PI, Math.PI);
     pathPlannerConfig = config.pathPlannerConfig;
     configureAutoBuilder();

@@ -100,8 +100,7 @@ public class RobotContainer {
 
     this.climber = ClimberSubsystem.getInstance();
     this.kicker = KickerSubsystem.getInstance();
-    this.turret =
-        TurretSubsystem.getInstance(this.climber.getAbsoluteEncoder());
+    this.turret = TurretSubsystem.getInstance(this.climber.getAbsoluteEncoder());
     this.hood = HoodSubsystem.getInstance();
     this.flyWheel = FlyWheelSubsystem.getInstance();
     this.spindexer = SpindexerSubsystem.getInstance();
@@ -142,8 +141,7 @@ public class RobotContainer {
                     // && !RobotStates.getInstance().isOnNotShootZone()
                     && this.hood.isAtTargetAngle()
                     && this.turret.isAtTargetAngle()
-                    && this.flyWheel.isAtTargetVelocity()
-        )
+                    && this.flyWheel.isAtTargetVelocity())
         .whileTrue(
             Commands.parallel(
                 this.states.shootState(),
@@ -165,8 +163,7 @@ public class RobotContainer {
         .and(
             () ->
                 RobotStates.getInstance().isOnAllianceZone()
-                && !RobotStates.getInstance().isOnNonOdometryMode()
-            )
+                    && !RobotStates.getInstance().isOnNonOdometryMode())
         .whileTrue(this.flyWheel.shootHub());
 
     this.operatorController
@@ -174,8 +171,7 @@ public class RobotContainer {
         .and(
             () ->
                 !RobotStates.getInstance().isOnAllianceZone()
-                && !RobotStates.getInstance().isOnNonOdometryMode()
-                )
+                    && !RobotStates.getInstance().isOnNonOdometryMode())
         .whileTrue(this.flyWheel.shootPass());
 
     this.operatorController
@@ -194,7 +190,9 @@ public class RobotContainer {
                 this.states.retractState(),
                 Commands.runOnce(() -> RobotStates.getInstance().setExtendedMode(false))));
 
-    new Trigger(() -> RobotStates.getInstance().isExtendedMode()).and(this.operatorController.square().negate()).whileTrue(this.states.collectState());
+    new Trigger(() -> RobotStates.getInstance().isExtendedMode())
+        .and(this.operatorController.square().negate())
+        .whileTrue(this.states.collectState());
 
     this.operatorController.r1().whileTrue(this.spindexer.expell());
     this.operatorController.l1().whileTrue(this.roller.expellRoller());
