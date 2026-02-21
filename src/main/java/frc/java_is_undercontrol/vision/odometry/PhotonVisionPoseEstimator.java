@@ -70,8 +70,16 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
             photonPoseEstimation = photonPoseEstimator.estimateCoprocMultiTagPose(result);
             break;
           case PNP_CONSTRAINED:
-            photonPoseEstimator.addHeadingData(result.getTimestampSeconds(), referencePose.getRotation());
-            photonPoseEstimation = photonPoseEstimator.estimateConstrainedSolvepnpPose(result, camera.getCameraMatrix().orElseThrow(), camera.getDistCoeffs().orElseThrow(), new Pose3d(referencePose), false, 1);
+            photonPoseEstimator.addHeadingData(
+                result.getTimestampSeconds(), referencePose.getRotation());
+            photonPoseEstimation =
+                photonPoseEstimator.estimateConstrainedSolvepnpPose(
+                    result,
+                    camera.getCameraMatrix().orElseThrow(),
+                    camera.getDistCoeffs().orElseThrow(),
+                    new Pose3d(referencePose),
+                    false,
+                    1);
             break;
           default:
             photonPoseEstimation = photonPoseEstimator.estimateCoprocMultiTagPose(result);
