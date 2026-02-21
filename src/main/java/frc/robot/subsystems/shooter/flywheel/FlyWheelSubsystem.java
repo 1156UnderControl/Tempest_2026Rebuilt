@@ -61,8 +61,8 @@ public class FlyWheelSubsystem extends SubsystemBase {
                 FlyWheelsConstants.ClosedLoopController.kI,
                 FlyWheelsConstants.ClosedLoopController.kD)
             .withSimClosedLoopController(3, 0, 0)
-            .withFeedforward(new SimpleMotorFeedforward(3.05, 0.0008, 0))
-            .withSimFeedforward(new SimpleMotorFeedforward(0.05, 0, 0))
+            .withFeedforward(new SimpleMotorFeedforward(0.19, 0.11, 0))
+            .withSimFeedforward(new SimpleMotorFeedforward(0.19, 0.11, 0))
             .withControlMode(ControlMode.CLOSED_LOOP);
 
     this.leadMotor = new TalonFX(19);

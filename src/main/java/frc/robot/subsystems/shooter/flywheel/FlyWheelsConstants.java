@@ -28,7 +28,7 @@ public class FlyWheelsConstants {
   }
 
   public static class ClosedLoopController {
-    public static final double kP = 12;
+    public static final double kP = 0.4;
     public static final double kI = 0;
     public static final double kD = 0;
   }
