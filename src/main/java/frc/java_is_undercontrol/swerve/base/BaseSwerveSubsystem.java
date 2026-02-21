@@ -86,11 +86,8 @@ public class BaseSwerveSubsystem extends SubsystemBase {
             config.headingPidConfig.kI,
             config.headingPidConfig.kD,
             new TrapezoidProfile.Constraints(
-                drive.getMaxAngularSpeedRadPerSec(), config.headingPidConfig.maxAcceleration));
+                drive.getMaxAngularSpeedDegreesPerSecond(), config.headingPidConfig.maxAcceleration));
     angleController.enableContinuousInput(-Math.PI, Math.PI);
-    MaxAngularRate =
-        RotationsPerSecond.of(config.maxRotationRate)
-            .in(RadiansPerSecond); // fraction of a rotation per second
     pathPlannerConfig = config.pathPlannerConfig;
     configureAutoBuilder();
     this.translationDeadband = config.deadbandsConfig.translationDeadband;
