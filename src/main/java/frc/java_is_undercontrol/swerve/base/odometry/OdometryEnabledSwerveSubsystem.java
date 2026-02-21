@@ -150,7 +150,7 @@ public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem
   }
 
   protected void driveToPose(Pose2d targetPose) {
-    this.driveToPose(targetPose, Double.POSITIVE_INFINITY);
+    this.driveToPose(targetPose, 0.5);
   }
 
   protected void driveToPoseAimingAtPosition(

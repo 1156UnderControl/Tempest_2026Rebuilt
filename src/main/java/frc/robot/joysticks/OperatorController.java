@@ -44,12 +44,12 @@ public class OperatorController implements IOperatorController {
   }
 
   @Override
-  public Trigger rightTrigger() {
+  public Trigger r2() {
     return new Trigger(() -> OperatorController.getR2Axis() > 0.2);
   }
 
   @Override
-  public Trigger leftTrigger() {
+  public Trigger l2() {
     return new Trigger(() -> OperatorController.getL2Axis() > 0.2);
   }
 
@@ -66,32 +66,32 @@ public class OperatorController implements IOperatorController {
   }
 
   @Override
-  public Trigger a() {
+  public Trigger cross() {
     return OperatorController.cross();
   }
 
   @Override
-  public Trigger y() {
+  public Trigger triangle() {
     return OperatorController.triangle();
   }
 
   @Override
-  public Trigger x() {
+  public Trigger square() {
     return OperatorController.square();
   }
 
   @Override
-  public Trigger b() {
+  public Trigger circle() {
     return OperatorController.circle();
   }
 
   @Override
-  public Trigger leftBumper() {
+  public Trigger l1() {
     return OperatorController.L1();
   }
 
   @Override
-  public Trigger rightBumper() {
+  public Trigger r1() {
     return OperatorController.R1();
   }
 
@@ -121,12 +121,12 @@ public class OperatorController implements IOperatorController {
   }
 
   @Override
-  public Trigger leftJoystick() {
+  public Trigger l3() {
     return OperatorController.L3();
   }
 
   @Override
-  public Trigger rightJoystick() {
+  public Trigger r3() {
     return OperatorController.R3();
   }
 }

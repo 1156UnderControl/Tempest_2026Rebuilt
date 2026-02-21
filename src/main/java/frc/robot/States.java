@@ -107,7 +107,7 @@ public class States {
   }
 
   public void disableNoNOdometryShootState() {
-    RobotStates.getInstance().setNonOdometryMode(true);
+    RobotStates.getInstance().setNonOdometryMode(false);
   }
 
   public Command collectState() {
@@ -115,6 +115,7 @@ public class States {
         .extend()
         .andThen(
             Commands.parallel(
+                this.extensor.springyMode(),
                 this.roller.runRoller(),
                 Commands.runOnce(
                     () -> {
@@ -171,21 +172,22 @@ public class States {
   }
 
   private void setIntakeDefaultStates() {
-    this.extensor.setDefaultCommand(
-        Commands.either(
-            Commands.parallel(
-                this.collectState(), Commands.runOnce(() -> this.extensorState = "Extended State")),
-            Commands.parallel(
-                this.retractState(),
-                Commands.runOnce(() -> this.extensorState = "Retracted State")),
-            () -> RobotStates.getInstance().isExtendedMode()));
+    // this.extensor.setDefaultCommand(
+    //     Commands.either(
+    //         Commands.parallel(
+    //             this.collectState(), Commands.runOnce(() -> this.extensorState = "Extended
+    // State")),
+    //         Commands.parallel(
+    //             this.retractState(),
+    //             Commands.runOnce(() -> this.extensorState = "Retracted State")),
+    //         () -> RobotStates.getInstance().isExtendedMode()));
     this.roller.setDefaultCommand(this.roller.stopRoller());
   }
 
   private void setHopperDefaultStates() {
     this.kicker.setDefaultCommand(
         Commands.parallel(
-            this.kicker.stop(), Commands.runOnce(() -> this.kickerState = "Stopped State")));
+            this.kicker.expell(), Commands.runOnce(() -> this.kickerState = "Expelling State")));
 
     this.spindexer.setDefaultCommand(
         Commands.parallel(

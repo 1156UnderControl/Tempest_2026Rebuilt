@@ -137,22 +137,52 @@ public class ControlBoard implements IDriverController, IOperatorController {
   }
 
   @Override
-  public Trigger rightTrigger() {
-    return mOperatorController.rightTrigger();
+  public Trigger r2() {
+    return mOperatorController.r2();
   }
 
   @Override
-  public Trigger leftTrigger() {
-    return mOperatorController.leftTrigger();
+  public Trigger l2() {
+    return mOperatorController.l2();
   }
 
   @Override
-  public Trigger leftJoystick() {
-    return mOperatorController.leftJoystick();
+  public Trigger cross() {
+    return mOperatorController.cross();
   }
 
   @Override
-  public Trigger rightJoystick() {
-    return mOperatorController.rightJoystick();
+  public Trigger triangle() {
+    return mOperatorController.triangle();
+  }
+
+  @Override
+  public Trigger square() {
+    return mOperatorController.square();
+  }
+
+  @Override
+  public Trigger circle() {
+    return mOperatorController.circle();
+  }
+
+  @Override
+  public Trigger l1() {
+    return mOperatorController.l1();
+  }
+
+  @Override
+  public Trigger r1() {
+    return mOperatorController.r1();
+  }
+
+  @Override
+  public Trigger l3() {
+    return mOperatorController.l3();
+  }
+
+  @Override
+  public Trigger r3() {
+    return mOperatorController.r3();
   }
 }
