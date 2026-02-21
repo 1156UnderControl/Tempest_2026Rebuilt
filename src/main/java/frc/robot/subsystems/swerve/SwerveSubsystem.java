@@ -11,6 +11,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -28,6 +29,7 @@ import frc.java_is_undercontrol.vision.odometry.MultiCameraPoseEstimator;
 import frc.java_is_undercontrol.vision.odometry.PhotonVisionPoseEstimator;
 import frc.java_is_undercontrol.vision.odometry.PoseEstimation;
 import frc.java_is_undercontrol.vision.odometry.PoseEstimator;
+import frc.robot.RobotStates;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.JoystickConstants;
 import frc.robot.constants.SwerveConstants;
@@ -339,6 +341,30 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     }
   }
 
+  public void goToTargetSafeAllianceLeftTrench(){
+    if(DriverStation.getAlliance().isEmpty()) {
+        if(RobotStates.getInstance().getRobotPose().getRotation().getDegrees() > 90 || RobotStates.getInstance().getRobotPose().getRotation().getDegrees() > -90){
+          super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY(), Rotation2d.fromDegrees(180)), 1.0);
+        } else {
+          super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY(), Rotation2d.fromDegrees(180)), 1.0);
+        }
+    } else {
+      if(DriverStation.getAlliance().get() == Alliance.Blue) {
+        if(RobotStates.getInstance().getRobotPose().getRotation().getDegrees() > 90 || RobotStates.getInstance().getRobotPose().getRotation().getDegrees() > -90){
+          super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY(), Rotation2d.fromDegrees(180)), 1.0);
+        } else {
+          super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY(), Rotation2d.fromDegrees(180)), 1.0);
+        }
+      } else {
+        if(RobotStates.getInstance().getRobotPose().getRotation().getDegrees() > 90 || RobotStates.getInstance().getRobotPose().getRotation().getDegrees() > -90){
+          super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_RED.getY(), Rotation2d.fromDegrees(180)), 1.0);
+        } else {
+          super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_RED.getY(), Rotation2d.fromDegrees(180)), 1.0);
+        }
+      }
+    } 
+  }
+
   public boolean isAtTargetSafeAllianceLeftTrenchPose(){
     return DriverStation.getAlliance().isEmpty() ? 
         isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE, 
@@ -350,6 +376,30 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
                 goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband);
   }
 
+  public void goToTargetSafeAllianceRightTrench(){
+    if(DriverStation.getAlliance().isEmpty()) {
+        if(RobotStates.getInstance().getRobotPose().getRotation().getDegrees() > 90 || RobotStates.getInstance().getRobotPose().getRotation().getDegrees() > -90){
+          super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE.getY(), Rotation2d.fromDegrees(180)), 1.0);
+        } else {
+          super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE.getY(), Rotation2d.fromDegrees(180)), 1.0);
+        }
+    } else {
+      if(DriverStation.getAlliance().get() == Alliance.Blue) {
+        if(RobotStates.getInstance().getRobotPose().getRotation().getDegrees() > 90 || RobotStates.getInstance().getRobotPose().getRotation().getDegrees() > -90){
+          super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE.getY(), Rotation2d.fromDegrees(180)), 1.0);
+        } else {
+          super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE.getY(), Rotation2d.fromDegrees(180)), 1.0);
+        }
+      } else {
+        if(RobotStates.getInstance().getRobotPose().getRotation().getDegrees() > 90 || RobotStates.getInstance().getRobotPose().getRotation().getDegrees() > -90){
+          super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_RED.getY(), Rotation2d.fromDegrees(180)), 1.0);
+        } else {
+          super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_RED.getY(), Rotation2d.fromDegrees(180)), 1.0);
+        }
+      }
+    } 
+  }
+
   public boolean isAtTargetSafeAllianceRightTrenchPose(){
     return DriverStation.getAlliance().isEmpty() ? 
         isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE, 
@@ -358,28 +408,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
             isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE, 
                 goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband):
             isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_RED, 
-                goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband);
-  }
-
-  public boolean isAtTargetSafeMiddleLeftTrenchPose(){
-    return DriverStation.getAlliance().isEmpty() ? 
-        isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_MIDDLE_TRENCH_POSE_LEFT_BLUE, 
-            goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband): 
-        DriverStation.getAlliance().get() == Alliance.Blue ?
-            isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_MIDDLE_TRENCH_POSE_LEFT_BLUE, 
-                goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband):
-            isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_MIDDLE_TRENCH_POSE_LEFT_RED, 
-                goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband);
-  }
-
-  public boolean isAtTargetSafeMiddleRightTrenchPose(){
-    return DriverStation.getAlliance().isEmpty() ? 
-        isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_MIDDLE_TRENCH_POSE_RIGHT_BLUE, 
-            goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband): 
-        DriverStation.getAlliance().get() == Alliance.Blue ?
-            isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_MIDDLE_TRENCH_POSE_RIGHT_BLUE, 
-                goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband):
-            isAtTargetPoseWithHeading(FieldConstants.FieldStructurePoses.SAFE_MIDDLE_TRENCH_POSE_RIGHT_RED, 
                 goToPoseTranslationDeadband, goToPoseTranslationDeadband, goToPoseHeadingDeadband);
   }
 }
