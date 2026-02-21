@@ -81,6 +81,8 @@ public class Robot extends LoggedRobot {
   public void robotPeriodic() {
     ShooterCalculator.getInstance().clearShootingParameters();
     CommandScheduler.getInstance().run();
+    MatchStatusTracker.getInstance().sendHubStatusToDashboard();
+    MatchStatusTracker.getInstance().sendMatchTimeToDashboard();
   }
 
   @Override
