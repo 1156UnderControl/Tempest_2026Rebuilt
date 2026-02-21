@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.71,
-        "y": 7.435
+        "x": 4.381,
+        "y": 7.564
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4284800469483567,
-        "y": 7.3911397813967135
+        "x": 3.7116200850938963,
+        "y": 7.435007473224765
       },
       "isLocked": false,
       "linkedName": null
@@ -53,7 +53,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.0,
+      "minWaypointRelativePos": 0.11224521119842831,
       "maxWaypointRelativePos": 2.0,
       "constraints": {
         "maxVelocity": 1.2,
@@ -66,7 +66,30 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Shoot Fuels",
+      "waypointRelativePos": 0.03542485265225933,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Shoot Fuels"
+        }
+      }
+    },
+    {
+      "name": "",
+      "waypointRelativePos": 1.0001534872298627,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Raise Climber"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
@@ -82,7 +105,7 @@
   "reversed": false,
   "folder": "Start Left - Collect Middle",
   "idealStartingState": {
-    "velocity": 1.2,
+    "velocity": 1.8,
     "rotation": 0.0
   },
   "useDefaultConstraints": false
