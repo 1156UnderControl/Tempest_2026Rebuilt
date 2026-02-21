@@ -221,6 +221,18 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
         controller.notUsingJoystick() ? 0 : controller.getSIN_Joystick());
   }
 
+  public void driveAlignAngleJoystickX() {
+    Translation2d desiredSpeeds =
+        this.getLinearVelocityTranslationFromJoysticks(
+            controller.getLeftY(), 0);
+    this.state = "DRIVE_ALIGN_ANGLE_JOY";
+    this.driveFieldOrientedLockedJoystickAngle(
+        desiredSpeeds,
+        RobotStates.getInstance().getRobotPose().getRotation().getCos(),
+        RobotStates.getInstance().getRobotPose().getRotation().getSin());
+  }
+
+
   public void driveRotating(boolean rotateRight) {
     ChassisSpeeds desiredSpeeds =
         this.getLinearVelocityChassisSpeedsFromJoysticks(
