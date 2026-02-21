@@ -6,8 +6,8 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 
 public class VisionConstants {
-  public static final String frontRightArducamName = "Arducam-Front-Right";
-  public static final String frontLeftArducamName = "Arducam-Front-Left";
+  public static final String frontRightArducamName = "Arducam_Front_Right";
+  public static final String frontLeftArducamName = "Arducam_Front_Left";
 
   public static final String backRightLimelightName = "limelight-bright";
   public static final String backLeftLimelightName = "limelight-bleft";
@@ -16,8 +16,8 @@ public class VisionConstants {
 
   public static Transform3d robotToCamArducamFrontRight =
       new Transform3d(
-          new Translation3d((-0.2), (-0.60), 0.153222),
-          new Rotation3d(0, Units.degreesToRadians(24.584), Units.degreesToRadians(301)));
+          new Translation3d((-0.082), (-0.3306), 0.1764),
+          new Rotation3d(0, Units.degreesToRadians(-14.245), Units.degreesToRadians(295.41)));
 
   public static Transform3d robotToCamArducamFrontLeft =
       new Transform3d(
