@@ -54,7 +54,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
             .withIdleMode(MotorMode.BRAKE)
             .withGearing(FlyWheelsConstants.MOTOR_GEARING)
             .withTelemetry("FlyWheelLeadMotor", TelemetryVerbosity.HIGH)
-            .withSupplyCurrentLimit(Amps.of(60))
+            .withSupplyCurrentLimit(Amps.of(30))
             .withStatorCurrentLimit(Amps.of(120))
             .withClosedLoopController(
                 FlyWheelsConstants.ClosedLoopController.kP,
