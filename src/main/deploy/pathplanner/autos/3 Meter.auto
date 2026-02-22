@@ -7,13 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "New Path"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Reset Odometry Alliance"
+            "pathName": "3 Meter"
           }
         }
       ]

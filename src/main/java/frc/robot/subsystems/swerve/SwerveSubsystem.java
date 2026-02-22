@@ -85,7 +85,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     super(
         new OdometryEnabledSwerveConfig(
             0.75,
-            0.6,
+            0.65,
             new SwerveDeadbandsConfig(
                 JoystickConstants.DEADBAND_TRANSLATION, JoystickConstants.DEADBAND_ROTATION),
             pathPlannerConfig,
@@ -129,9 +129,9 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
   public void resetOdometryLimelight(Translation2d defaultPosition) {
     PoseEstimator limelightBackLeft =
-        new LimelightPoseEstimator(VisionConstants.backLeftLimelightName, false, false, 2);
+        new LimelightPoseEstimator(VisionConstants.backLeftLimelightName, false, false, 1.2);
     PoseEstimator limelightBackRight =
-        new LimelightPoseEstimator(VisionConstants.backRightLimelightName, false, false, 2);
+        new LimelightPoseEstimator(VisionConstants.backRightLimelightName, false, false, 1.2);
 
     Optional<PoseEstimation> limelightBackLeftPoseEstimation =
         limelightBackLeft.getEstimatedPose(this.getPose());
