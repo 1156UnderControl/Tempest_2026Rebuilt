@@ -83,6 +83,7 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().run();
     MatchStatusTracker.getInstance().sendHubStatusToDashboard();
     MatchStatusTracker.getInstance().sendMatchTimeToDashboard();
+    MatchStatusTracker.getInstance().sendHubTiming();
   }
 
   @Override
