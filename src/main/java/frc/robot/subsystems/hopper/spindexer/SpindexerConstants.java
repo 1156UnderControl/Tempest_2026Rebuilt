@@ -25,7 +25,7 @@ public final class SpindexerConstants {
 
   public static class setpoints {
     public static final AngularVelocity SHOOTING = RotationsPerSecond.of(5);
-    public static final AngularVelocity EXPELLING = RotationsPerSecond.of(-2.5);
+    public static final AngularVelocity EXPELLING = RotationsPerSecond.of(-0.85);
     public static final AngularVelocity STOPPED = RPM.of(0);
   }
 }
