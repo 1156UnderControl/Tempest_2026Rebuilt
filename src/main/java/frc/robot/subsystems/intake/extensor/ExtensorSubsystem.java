@@ -66,7 +66,7 @@ public class ExtensorSubsystem extends SubsystemBase {
             .withGearing(ExtensorConstants.gearing)
             .withIdleMode(MotorMode.COAST)
             .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
-            .withStatorCurrentLimit(Amps.of(30))
+            .withStatorCurrentLimit(Amps.of(60))
             .withMotorInverted(false)
             .withControlMode(ControlMode.CLOSED_LOOP);
 
