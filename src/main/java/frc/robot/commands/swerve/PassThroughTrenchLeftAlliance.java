@@ -1,7 +1,5 @@
 package frc.robot.commands.swerve;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
@@ -23,14 +21,7 @@ public class PassThroughTrenchLeftAlliance extends Command {
 
   @Override
   public void execute() {
-    if(!this.swerve.isAtTargetSafeAllianceLeftTrenchPose() && !hasAchievedPosition){
-      Logger.recordOutput("HasAchived", false);
-      this.swerve.goToTargetSafeAllianceLeftTrench();
-    } else {
-      hasAchievedPosition = true;
-      Logger.recordOutput("HasAchived", true);
-      this.swerve.driveAlignAngleJoystickX();
-    }
+    this.swerve.driveAlignAngleJoystickX(false);
   }
 
   @Override
