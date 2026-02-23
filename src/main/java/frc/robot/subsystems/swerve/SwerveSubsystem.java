@@ -11,7 +11,6 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -221,47 +220,63 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
         controller.notUsingJoystick() ? 0 : controller.getSIN_Joystick());
   }
 
-  public void driveAlignAngleJoystickX(boolean isRightSide) {
+  public void driveAlignAngleJoystickYfixedOnTrench(boolean isRightSide) {
     Translation2d desiredSpeeds =
-        this.getLinearVelocityTranslationFromJoysticks(
-            controller.getLeftY(), 0);
+        this.getLinearVelocityTranslationFromJoysticks(controller.getLeftY(), 0);
     this.state = "DRIVE_ALIGN_ANGLE_JOY";
 
-    if(DriverStation.getAlliance().isEmpty()) {
-      if(isRightSide){
-        super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE.getY(), Rotation2d.fromDegrees(0)),
-        1.0, desiredSpeeds, RobotStates.getInstance().getRobotPose().getRotation().getCos(), 
-        RobotStates.getInstance().getRobotPose().getRotation().getSin());
+    if (DriverStation.getAlliance().isEmpty()) {
+      if (isRightSide) {
+        super.driveToSpecificYinField(
+            FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE.getY(),
+            1.0,
+            desiredSpeeds,
+            RobotStates.getInstance().getRobotPose().getRotation().getCos(),
+            RobotStates.getInstance().getRobotPose().getRotation().getSin());
       } else {
-        super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY(), Rotation2d.fromDegrees(0)),
-        1.0, desiredSpeeds, RobotStates.getInstance().getRobotPose().getRotation().getCos(), 
-        RobotStates.getInstance().getRobotPose().getRotation().getSin());
+        super.driveToSpecificYinField(
+            FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY(),
+            1.0,
+            desiredSpeeds,
+            RobotStates.getInstance().getRobotPose().getRotation().getCos(),
+            RobotStates.getInstance().getRobotPose().getRotation().getSin());
       }
     } else {
-      if(DriverStation.getAlliance().get() == Alliance.Blue) {
-        if(isRightSide){
-          super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE.getY(), Rotation2d.fromDegrees(0)),
-          1.0, desiredSpeeds, RobotStates.getInstance().getRobotPose().getRotation().getCos(), 
-          RobotStates.getInstance().getRobotPose().getRotation().getSin());
+      if (DriverStation.getAlliance().get() == Alliance.Blue) {
+        if (isRightSide) {
+          super.driveToSpecificYinField(
+              FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE.getY(),
+              1.0,
+              desiredSpeeds,
+              RobotStates.getInstance().getRobotPose().getRotation().getCos(),
+              RobotStates.getInstance().getRobotPose().getRotation().getSin());
         } else {
-          super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY(), Rotation2d.fromDegrees(0)),
-          1.0, desiredSpeeds, RobotStates.getInstance().getRobotPose().getRotation().getCos(), 
-          RobotStates.getInstance().getRobotPose().getRotation().getSin());
+          super.driveToSpecificYinField(
+              FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY(),
+              1.0,
+              desiredSpeeds,
+              RobotStates.getInstance().getRobotPose().getRotation().getCos(),
+              RobotStates.getInstance().getRobotPose().getRotation().getSin());
         }
       } else {
-        if(isRightSide){
-            super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_RED.getY(), Rotation2d.fromDegrees(0)),
-            1.0, desiredSpeeds, RobotStates.getInstance().getRobotPose().getRotation().getCos(), 
-            RobotStates.getInstance().getRobotPose().getRotation().getSin());
+        if (isRightSide) {
+          super.driveToSpecificYinField(
+              FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_RED.getY(),
+              1.0,
+              desiredSpeeds,
+              RobotStates.getInstance().getRobotPose().getRotation().getCos(),
+              RobotStates.getInstance().getRobotPose().getRotation().getSin());
         } else {
-            super.driveToPose(new Pose2d(RobotStates.getInstance().getRobotPose().getX(), FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_RED.getY(), Rotation2d.fromDegrees(0)),
-            1.0, desiredSpeeds, RobotStates.getInstance().getRobotPose().getRotation().getCos(), 
-            RobotStates.getInstance().getRobotPose().getRotation().getSin());
+          super.driveToSpecificYinField(
+              FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_RED.getY(),
+              1.0,
+              desiredSpeeds,
+              RobotStates.getInstance().getRobotPose().getRotation().getCos(),
+              RobotStates.getInstance().getRobotPose().getRotation().getSin());
         }
       }
     }
   }
-
 
   public void driveRotating(boolean rotateRight) {
     ChassisSpeeds desiredSpeeds =

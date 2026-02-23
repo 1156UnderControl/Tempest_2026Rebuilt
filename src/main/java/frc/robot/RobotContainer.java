@@ -211,7 +211,8 @@ public class RobotContainer {
 
     this.driverController.a().onTrue(this.turret.resetCRT());
 
-    new Trigger(this.driverController.slowActivate()).whileTrue(new PassThroughTrenchLeftAlliance(drive));
+    new Trigger(this.driverController.slowActivate())
+        .whileTrue(new PassThroughTrenchLeftAlliance(drive));
   }
 
   public Command getAutonomousCommand() {

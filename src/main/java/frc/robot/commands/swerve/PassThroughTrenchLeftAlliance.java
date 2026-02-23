@@ -6,22 +6,19 @@ import frc.robot.subsystems.swerve.SwerveSubsystem;
 public class PassThroughTrenchLeftAlliance extends Command {
 
   SwerveSubsystem swerve;
-  boolean hasAchievedPosition;
-
+  
   public PassThroughTrenchLeftAlliance(SwerveSubsystem swerve) {
     this.swerve = swerve;
-    this.hasAchievedPosition = false;
   }
 
   @Override
   public void initialize() {
-    this.hasAchievedPosition = false;
     addRequirements(swerve);
   }
 
   @Override
   public void execute() {
-    this.swerve.driveAlignAngleJoystickX(false);
+    this.swerve.driveAlignAngleJoystickYfixedOnTrench(false);
   }
 
   @Override
