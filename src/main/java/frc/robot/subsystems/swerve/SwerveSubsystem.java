@@ -33,7 +33,11 @@ import frc.robot.constants.FieldConstants;
 import frc.robot.constants.JoystickConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.constants.VisionConstants;
+import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
+
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -229,14 +233,14 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
       if (isRightSide) {
         super.driveToSpecificYinField(
             FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE.getY(),
-            1.0,
+            controller.turboActivate().getAsBoolean() ? TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) : 2.5,
             desiredSpeeds,
             controller.getCOS_Joystick(),
             controller.getSIN_Joystick());
       } else {
         super.driveToSpecificYinField(
             FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY(),
-            1.0,
+            controller.turboActivate().getAsBoolean() ? TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) : 2.5,
             desiredSpeeds,
             controller.getCOS_Joystick(),
             controller.getSIN_Joystick());
@@ -246,14 +250,14 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
         if (isRightSide) {
           super.driveToSpecificYinField(
               FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE.getY(),
-              1.0,
+              controller.turboActivate().getAsBoolean() ? TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) : 2.5,
               desiredSpeeds,
               controller.getCOS_Joystick(),
               controller.getSIN_Joystick());
         } else {
           super.driveToSpecificYinField(
               FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY(),
-              1.0,
+              controller.turboActivate().getAsBoolean() ? TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) : 2.5,
               desiredSpeeds,
               controller.getCOS_Joystick(),
               controller.getSIN_Joystick());
@@ -262,14 +266,14 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
         if (isRightSide) {
           super.driveToSpecificYinField(
               FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_RED.getY(),
-              1.0,
+              controller.turboActivate().getAsBoolean() ? TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) : 2.5,
               desiredSpeeds,
               controller.getCOS_Joystick(),
               controller.getSIN_Joystick());
         } else {
           super.driveToSpecificYinField(
               FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_RED.getY(),
-              1.0,
+              controller.turboActivate().getAsBoolean() ? TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) : 2.5,
               desiredSpeeds,
               controller.getCOS_Joystick(),
               controller.getSIN_Joystick());
