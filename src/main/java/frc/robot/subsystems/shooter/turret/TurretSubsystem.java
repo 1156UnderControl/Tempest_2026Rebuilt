@@ -192,13 +192,7 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   private double getClosestTargetAngle(double targetAngle, double currentAngle) {
-    double delta = (targetAngle - currentAngle) % 360;
-
-    if (delta > 180) {
-      delta -= 360;
-    } else if (delta < -180) {
-      delta += 360;
-    }
+    double delta = Math.IEEEremainder(targetAngle - currentAngle, 360);
 
     double potentialTarget = currentAngle + delta;
 
