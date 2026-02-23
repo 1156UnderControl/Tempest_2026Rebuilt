@@ -1,13 +1,12 @@
 package frc.robot.commands.swerve;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.RobotStates;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 public class PassThroughTrenchLeftAlliance extends Command {
 
   SwerveSubsystem swerve;
-  
+
   public PassThroughTrenchLeftAlliance(SwerveSubsystem swerve) {
     this.swerve = swerve;
   }
