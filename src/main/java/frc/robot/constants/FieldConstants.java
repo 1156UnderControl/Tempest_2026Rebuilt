@@ -68,39 +68,49 @@ public class FieldConstants {
             8.069263 - BLUE_RIGHT_TOWER.getY(),
             Rotation2d.fromDegrees(90));
 
-    public static final Pose2d SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE =
-        new Pose2d(3.220, 7.422, Rotation2d.fromDegrees(0));
-    public static final Pose2d SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE =
-        new Pose2d(
-            3.220,
-            FieldConstants.fieldWidth - SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY(),
-            Rotation2d.fromDegrees(0));
 
-    public static final Pose2d SAFE_ALLIANCE_TRENCH_POSE_LEFT_RED =
+    
+    public static final Pose2d SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE = 
+        new Pose2d(
+          3.220,
+          7.422,
+          Rotation2d.fromDegrees(0));
+    public static final Pose2d SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE = 
+        new Pose2d(
+          3.220,
+          FieldConstants.fieldWidth - SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY(),
+          Rotation2d.fromDegrees(0));
+
+
+    public static final Pose2d SAFE_ALLIANCE_TRENCH_POSE_LEFT_RED = 
         new Pose2d(
             FieldConstants.fieldLength - SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getX(),
             SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE.getY(),
             Rotation2d.fromDegrees(180));
-    public static final Pose2d SAFE_ALLIANCE_TRENCH_POSE_RIGHT_RED =
+    public static final Pose2d SAFE_ALLIANCE_TRENCH_POSE_RIGHT_RED = 
         new Pose2d(
             FieldConstants.fieldLength - SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getX(),
             SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY(),
-            Rotation2d.fromDegrees(180));
+            Rotation2d.fromDegrees(180));        
 
-    public static final Pose2d SAFE_MIDDLE_TRENCH_POSE_LEFT_BLUE =
-        new Pose2d(5.851, 7.422, Rotation2d.fromDegrees(0));
-    public static final Pose2d SAFE_MIDDLE_TRENCH_POSE_RIGHT_BLUE =
+  public static final Pose2d SAFE_MIDDLE_TRENCH_POSE_LEFT_BLUE = 
         new Pose2d(
-            5.851,
-            FieldConstants.fieldWidth - SAFE_MIDDLE_TRENCH_POSE_LEFT_BLUE.getY(),
-            Rotation2d.fromDegrees(0));
+          5.851,
+          7.422,
+          Rotation2d.fromDegrees(0));
+    public static final Pose2d SAFE_MIDDLE_TRENCH_POSE_RIGHT_BLUE = 
+        new Pose2d(
+          5.851,
+          FieldConstants.fieldWidth - SAFE_MIDDLE_TRENCH_POSE_LEFT_BLUE.getY(),
+          Rotation2d.fromDegrees(0));
 
-    public static final Pose2d SAFE_MIDDLE_TRENCH_POSE_LEFT_RED =
+
+    public static final Pose2d SAFE_MIDDLE_TRENCH_POSE_LEFT_RED = 
         new Pose2d(
             FieldConstants.fieldLength - SAFE_MIDDLE_TRENCH_POSE_LEFT_BLUE.getX(),
             SAFE_MIDDLE_TRENCH_POSE_RIGHT_BLUE.getY(),
             Rotation2d.fromDegrees(180));
-    public static final Pose2d SAFE_MIDDLE_TRENCH_POSE_RIGHT_RED =
+    public static final Pose2d SAFE_MIDDLE_TRENCH_POSE_RIGHT_RED = 
         new Pose2d(
             FieldConstants.fieldLength - SAFE_MIDDLE_TRENCH_POSE_LEFT_BLUE.getX(),
             SAFE_MIDDLE_TRENCH_POSE_LEFT_BLUE.getY(),

@@ -198,7 +198,7 @@ public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem
     Pose2d currentPose = this.getPose();
     double targetXVelocity = speeds.getX();
     double targetYVelocity =
-        this.moveToPoseYAxisPid.calculate(currentPose.getY(), (targetPose.getY()));
+        this.moveToPoseYAxisPid.calculate(currentPose.getY(), (yAxisTarget));
     double targetTranslationVelocity =
         new Translation2d(targetXVelocity, targetYVelocity).getNorm();
     if (targetTranslationVelocity > maxSpeed) {
