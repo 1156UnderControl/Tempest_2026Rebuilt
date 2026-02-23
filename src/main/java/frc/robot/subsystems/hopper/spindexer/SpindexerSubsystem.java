@@ -24,7 +24,6 @@ import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
-import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class SpindexerSubsystem extends SubsystemBase {
@@ -66,9 +65,8 @@ public class SpindexerSubsystem extends SubsystemBase {
             .withFeedforward(new SimpleMotorFeedforward(0.11, 2.2, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0.1, 0.9, 0))
             .withMechanismCircumference(Meters.of(0.478))
-            .withStatorCurrentLimit(Amps.of(60))
-            .withMotorInverted(false)
-            .withTelemetry("SpindexerMotor", TelemetryVerbosity.HIGH);
+            .withStatorCurrentLimit(Amps.of(50))
+            .withMotorInverted(false);
 
     this.spindexerMotor =
         new SparkWrapper(spindexerFlex, DCMotor.getNeoVortex(1), smartSpindexerMotorConfig);
@@ -77,8 +75,7 @@ public class SpindexerSubsystem extends SubsystemBase {
         new FlyWheelConfig(spindexerMotor)
             .withDiameter(Inches.of(6))
             .withMass(Pounds.of(0.58))
-            .withMOI(Inches.of(6), Kilograms.of(0.58))
-            .withTelemetry("SpindexerMech", TelemetryVerbosity.HIGH);
+            .withMOI(Inches.of(6), Kilograms.of(0.58));
 
     this.spindexer = new FlyWheel(spindexerMechanismConfig);
   }

@@ -175,7 +175,8 @@ public class States {
     // this.extensor.setDefaultCommand(
     //     Commands.either(
     //         Commands.parallel(
-    //             this.collectState(), Commands.runOnce(() -> this.extensorState = "Extended State")),
+    //             this.collectState(), Commands.runOnce(() -> this.extensorState = "Extended
+    // State")),
     //         Commands.parallel(
     //             this.retractState(),
     //             Commands.runOnce(() -> this.extensorState = "Retracted State")),
@@ -186,7 +187,7 @@ public class States {
   private void setHopperDefaultStates() {
     this.kicker.setDefaultCommand(
         Commands.parallel(
-            this.kicker.expell(), Commands.runOnce(() -> this.kickerState = "Expelling State")));
+            this.kicker.stop(), Commands.runOnce(() -> this.kickerState = "Expelling State")));
 
     this.spindexer.setDefaultCommand(
         Commands.parallel(
@@ -229,8 +230,9 @@ public class States {
             Commands.runOnce(() -> this.flyWheelState = "Running Low Velocity")));
 
     new Trigger(
-        () -> RobotStates.getInstance().isOnAllianceZone()
-            && !RobotStates.getInstance().isOnNonOdometryMode())
+            () ->
+                RobotStates.getInstance().isOnAllianceZone()
+                    && !RobotStates.getInstance().isOnNonOdometryMode())
         .onTrue(Commands.parallel(this.turret.trackHub(), this.hood.trackHub()))
         .onFalse(Commands.parallel(this.turret.trackPass(), this.hood.trackPass()));
 

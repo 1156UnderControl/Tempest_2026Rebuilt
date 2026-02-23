@@ -18,7 +18,6 @@ import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
-import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class HoodSubsystem extends SubsystemBase {
@@ -41,13 +40,12 @@ public class HoodSubsystem extends SubsystemBase {
     calculator = ShooterCalculator.getInstance();
     smartHoodMotorConfig =
         new SmartMotorControllerConfig(this)
-            .withTelemetry("HoodMotor", TelemetryVerbosity.HIGH)
             .withIdleMode(MotorMode.BRAKE)
             .withGearing(HoodConstants.MOTOR_GEARING)
             .withMotorInverted(false)
             .withSoftLimit(
                 HoodConstants.Position.HOOD_MIN_ANGLE, HoodConstants.Position.HOOD_MAX_ANGLE)
-            .withStatorCurrentLimit(Amps.of(60))
+            .withStatorCurrentLimit(Amps.of(20))
             .withClosedLoopRampRate(Milliseconds.of(100))
             .withClosedLoopController(
                 HoodConstants.ClosedLoopController.kP,

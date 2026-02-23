@@ -63,7 +63,7 @@ public class TurretConstants {
 
   public static final boolean INVERTED = false;
 
-  public static final Current STATOR_CURRENT_LIMIT = Amps.of(60);
+  public static final Current STATOR_CURRENT_LIMIT = Amps.of(50);
 
   public static final AngularVelocity MAX_VELOCITY = RotationsPerSecond.of(4);
 
@@ -83,7 +83,7 @@ public class TurretConstants {
   public static final Time CLOSED_RAMP_RATE = Milliseconds.of(10);
 
   public static class FeedBackController {
-    public static final double kP = 30;
+    public static final double kP = 25;
     public static final double kI = 0;
     public static final double kD = 0;
 

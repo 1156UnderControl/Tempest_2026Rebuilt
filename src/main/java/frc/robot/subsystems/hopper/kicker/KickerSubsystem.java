@@ -11,9 +11,6 @@ import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.spark.SparkAbsoluteEncoder;
-import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -32,7 +29,6 @@ import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
-import yams.motorcontrollers.local.SparkWrapper;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class KickerSubsystem extends SubsystemBase {
@@ -68,16 +64,17 @@ public class KickerSubsystem extends SubsystemBase {
         new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.CLOSED_LOOP)
             .withClosedLoopController(0, 0, 0, RPM.of(3000), RotationsPerSecondPerSecond.of(150))
-            .withSimClosedLoopController(
-                12, 0, 0, RPM.of(0), RotationsPerSecondPerSecond.of(0))
-            .withFeedforward(new SimpleMotorFeedforward (0, 0.26))
+            .withSimClosedLoopController(12, 0, 0, RPM.of(0), RotationsPerSecondPerSecond.of(0))
+            .withFeedforward(new SimpleMotorFeedforward(0, 0.26))
             .withSimFeedforward(new SimpleMotorFeedforward(0, 0))
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(2.16)))
             .withIdleMode(MotorMode.COAST)
             .withMechanismCircumference(Inches.of(2))
             .withMotorInverted(true)
             .withStatorCurrentLimit(Amps.of(40))
-            .withTelemetry("Kicker", TelemetryVerbosity.HIGH);
+            .withTelemetry("Kicker", TelemetryVerbosity.HIGH)
+            .withSupplyCurrentLimit(Amps.of(20))
+            .withStatorCurrentLimit(Amps.of(40));
 
     kickerMotor = new TalonFXWrapper(kickerTalon, DCMotor.getKrakenX60(1), smartKickerMotorConfig);
 
@@ -86,7 +83,6 @@ public class KickerSubsystem extends SubsystemBase {
             .withDiameter(KickerConstants.WHEEL_DIAMETER)
             .withMass(KickerConstants.WHEEL_MASS)
             .withMOI(KickerConstants.WHEEL_DIAMETER, KickerConstants.WHEEL_MASS)
-            .withTelemetry("KickerMechanism", TelemetryVerbosity.HIGH)
             .withMechanismPositionConfig(
                 new MechanismPositionConfig()
                     .withMaxRobotHeight(Meters.of(1.5))

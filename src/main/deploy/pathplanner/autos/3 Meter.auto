@@ -7,19 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Go to Neutral Zone from Left Bump"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Go Score Zone Right"
+            "pathName": "3 Meter"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Match Autos",
+  "folder": "Tuning",
   "choreoAuto": false
 }

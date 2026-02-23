@@ -41,7 +41,7 @@ public class Robot extends LoggedRobot {
 
     switch (Constants.getMode()) {
       case REAL:
-        Logger.addDataReceiver(new WPILOGWriter());
+        Logger.addDataReceiver(new WPILOGWriter("/u/logs"));
         Logger.addDataReceiver(new NT4Publisher());
         break;
 

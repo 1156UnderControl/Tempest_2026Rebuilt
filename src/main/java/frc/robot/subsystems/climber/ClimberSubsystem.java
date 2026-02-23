@@ -69,8 +69,7 @@ public class ClimberSubsystem extends SubsystemBase {
                     ClimberConstants.FeedForwardController.SIM.kS,
                     ClimberConstants.FeedForwardController.SIM.kS,
                     ClimberConstants.FeedForwardController.SIM.kA))
-            .withControlMode(ClimberConstants.CONTROL_MODE)
-            .withTelemetry(ClimberConstants.CLIMBER_MECHANISM_NAME, ClimberConstants.TELEMETRY);
+            .withControlMode(ClimberConstants.CONTROL_MODE);
 
     this.climberFlex =
         new SparkFlex(ClimberConstants.CLIMBER_MOTOR_ID, ClimberConstants.MOTOR_TYPE);
@@ -83,8 +82,7 @@ public class ClimberSubsystem extends SubsystemBase {
             .withHardLimits(
                 ClimberConstants.CLIMBER_MIN_HEIGHT, ClimberConstants.CLIMBER_MAX_HEIGHT)
             .withStartingHeight(ClimberConstants.STARTING_HEIGHT)
-            .withMass(ClimberConstants.CLIMBER_MASS)
-            .withTelemetry(ClimberConstants.CLIMBER_MECHANISM_NAME, ClimberConstants.TELEMETRY);
+            .withMass(ClimberConstants.CLIMBER_MASS);
 
     this.climber = new Elevator(climberConfig);
   }

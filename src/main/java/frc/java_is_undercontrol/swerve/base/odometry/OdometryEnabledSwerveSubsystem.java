@@ -44,6 +44,10 @@ public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem
 
   @AutoLogOutput private Pose2d targetPose;
 
+  @AutoLogOutput private double targetYaxis;
+
+  @AutoLogOutput private double targetXaxis;
+
   private Pose2d targetAimPose;
 
   // Create the constraints to use while pathfinding. The constraints defined in
@@ -150,7 +154,7 @@ public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem
   }
 
   protected void driveToPose(Pose2d targetPose) {
-    this.driveToPose(targetPose, Double.POSITIVE_INFINITY);
+    this.driveToPose(targetPose, 0.5);
   }
 
   protected void driveToPoseAimingAtPosition(
@@ -189,6 +193,38 @@ public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem
     this.targetPose = targetPose;
   }
 
+  protected void driveToSpecificYinField(
+      double yAxisTarget, double maxSpeed, Translation2d speeds, double xHeading, double yHeading) {
+    Pose2d currentPose = this.getPose();
+    double targetXVelocity = speeds.getX();
+    double targetYVelocity = this.moveToPoseYAxisPid.calculate(currentPose.getY(), (yAxisTarget));
+    double targetTranslationVelocity =
+        new Translation2d(targetXVelocity, targetYVelocity).getNorm();
+    if (targetTranslationVelocity > maxSpeed) {
+      double conversionFactor = maxSpeed / targetTranslationVelocity;
+      targetYVelocity = targetYVelocity * conversionFactor;
+    }
+    ChassisSpeeds desiredSpeeds = new ChassisSpeeds(targetXVelocity, targetYVelocity, 0);
+    this.driveFieldOrientedLockedJoystickAngle(desiredSpeeds, xHeading, yHeading, false);
+    this.targetYaxis = yAxisTarget;
+  }
+
+  protected void driveToSpecificXinField(
+      double xAxisTarget, double maxSpeed, Translation2d speeds, double xHeading, double yHeading) {
+    Pose2d currentPose = this.getPose();
+    double targetXVelocity = this.moveToPoseYAxisPid.calculate(currentPose.getX(), xAxisTarget);
+    double targetYVelocity = speeds.getY();
+    double targetTranslationVelocity =
+        new Translation2d(targetXVelocity, targetYVelocity).getNorm();
+    if (targetTranslationVelocity > maxSpeed) {
+      double conversionFactor = maxSpeed / targetTranslationVelocity;
+      targetYVelocity = targetYVelocity * conversionFactor;
+    }
+    ChassisSpeeds desiredSpeeds = new ChassisSpeeds(targetXVelocity, targetYVelocity, 0);
+    this.driveFieldOrientedLockedJoystickAngle(desiredSpeeds, xHeading, yHeading, false);
+    this.targetXaxis = xAxisTarget;
+  }
+
   protected boolean isAtTargetPose(
       double xAxisToleranceMeters, double yAxisToleranceMeters, double angleToleranceDegrees) {
     double xAxisDistance = Math.abs(this.getPose().getX() - this.targetPose.getX());
@@ -216,6 +252,21 @@ public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem
     boolean isAtXAxis = xAxisDistance <= xAxisToleranceMeters;
     boolean isAtYAxis = yAxisDistance <= yAxisToleranceMeters;
     boolean isAtTargetPose = isAtXAxis && isAtYAxis;
+    return isAtTargetPose;
+  }
+
+  protected boolean isAtTargetPoseWithHeading(
+      Pose2d poseTarget,
+      double xAxisToleranceMeters,
+      double yAxisToleranceMeters,
+      double angleToleranceDegrees) {
+    double xAxisDistance = Math.abs(this.getPose().getX() - poseTarget.getX());
+    double yAxisDistance = Math.abs(this.getPose().getY() - poseTarget.getY());
+    boolean isAtXAxis = xAxisDistance <= xAxisToleranceMeters;
+    boolean isAtYAxis = yAxisDistance <= yAxisToleranceMeters;
+    boolean isAtAngle =
+        this.isAtTargetHeading(poseTarget.getRotation().getDegrees(), angleToleranceDegrees);
+    boolean isAtTargetPose = isAtXAxis && isAtYAxis && isAtAngle;
     return isAtTargetPose;
   }
 

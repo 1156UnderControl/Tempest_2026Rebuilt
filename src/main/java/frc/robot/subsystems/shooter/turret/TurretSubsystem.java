@@ -9,7 +9,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,7 +19,6 @@ import yams.mechanisms.config.PivotConfig;
 import yams.mechanisms.positional.Pivot;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
-import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class TurretSubsystem extends SubsystemBase {
@@ -44,7 +42,6 @@ public class TurretSubsystem extends SubsystemBase {
     calculator = ShooterCalculator.getInstance();
     smartTurretMotorConfig =
         new SmartMotorControllerConfig(this)
-            .withTelemetry("Motor Turret", TelemetryVerbosity.HIGH)
             .withIdleMode(TurretConstants.MOTOR_MODE)
             .withGearing(TurretConstants.GEARING)
             .withMotorInverted(TurretConstants.INVERTED)
@@ -83,8 +80,7 @@ public class TurretSubsystem extends SubsystemBase {
     turretMechanismConfig =
         new PivotConfig(turretMotor)
             .withHardLimit(TurretConstants.TURRET_MIN_ANGLE, TurretConstants.TURRET_MAX_ANGLE)
-            .withMOI(TurretConstants.TURRET_SIZE, TurretConstants.TURRET_MASS)
-            .withTelemetry(TurretConstants.TURRET_MECHANISM_NAME, TurretConstants.TELEMETRY);
+            .withMOI(TurretConstants.TURRET_SIZE, TurretConstants.TURRET_MASS);
 
     turret = new Pivot(turretMechanismConfig);
 

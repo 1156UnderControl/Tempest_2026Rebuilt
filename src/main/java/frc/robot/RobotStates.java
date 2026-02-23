@@ -24,6 +24,8 @@ public class RobotStates {
 
   private static boolean shootingMode = false;
 
+  private static boolean shouldShootAutonomous = false;
+
   public static RobotStates getInstance() {
     if (instance == null) {
       instance = new RobotStates();
@@ -61,6 +63,10 @@ public class RobotStates {
 
   public boolean isOnBlueDepotSide() {
     return (robotPose.getY() > FieldConstants.fieldWidth / 2);
+  }
+
+  public boolean isOnRedDepotSide() {
+    return (robotPose.getY() < FieldConstants.fieldWidth / 2);
   }
 
   public boolean isOnAllianceZone() {
@@ -121,5 +127,14 @@ public class RobotStates {
 
   public boolean isShootingMode() {
     return shootingMode;
+  }
+
+  public void setShouldShootAutonomous(boolean shouldShoot) {
+    Logger.recordOutput("Mode/ShouldShoot", shouldShoot);
+    shouldShootAutonomous = shouldShoot;
+  }
+
+  public boolean getShouldShootMode() {
+    return shouldShootAutonomous;
   }
 }
