@@ -25,8 +25,10 @@ public class FlyWheelsConstants {
     public static final AngularVelocity VELOCITY_ERROR_ALLOWED = RPM.of(300);
   }
 
+  public static final double FEEDFORWARD_TORQUE_CURRENT_A = 3;
+
   public static class ClosedLoopController {
-    public static final double kP = 12;
+    public static final double kP = 8;
     public static final double kI = 0;
     public static final double kD = 0;
   }

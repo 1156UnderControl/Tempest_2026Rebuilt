@@ -47,7 +47,7 @@ public class HoodSubsystem extends SubsystemBase {
             .withMotorInverted(false)
             .withSoftLimit(
                 HoodConstants.Position.HOOD_MIN_ANGLE, HoodConstants.Position.HOOD_MAX_ANGLE)
-            .withStatorCurrentLimit(Amps.of(60))
+            .withStatorCurrentLimit(Amps.of(20))
             .withClosedLoopRampRate(Milliseconds.of(100))
             .withClosedLoopController(
                 HoodConstants.ClosedLoopController.kP,
