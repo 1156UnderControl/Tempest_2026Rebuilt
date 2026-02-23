@@ -222,7 +222,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
   public void driveAlignAngleJoystickYfixedOnTrench(boolean isRightSide) {
     Translation2d desiredSpeeds =
-        this.getLinearVelocityTranslationFromJoysticks(controller.getLeftY(), 0);
+        this.getLinearVelocityTranslationFromJoysticks(-controller.getLeftY(), 0);
     this.state = "DRIVE_ALIGN_ANGLE_JOY";
 
     if (DriverStation.getAlliance().isEmpty()) {
@@ -231,15 +231,15 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
             FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE.getY(),
             1.0,
             desiredSpeeds,
-            RobotStates.getInstance().getRobotPose().getRotation().getCos(),
-            RobotStates.getInstance().getRobotPose().getRotation().getSin());
+            controller.getCOS_Joystick(),
+            controller.getSIN_Joystick());
       } else {
         super.driveToSpecificYinField(
             FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY(),
             1.0,
             desiredSpeeds,
-            RobotStates.getInstance().getRobotPose().getRotation().getCos(),
-            RobotStates.getInstance().getRobotPose().getRotation().getSin());
+            controller.getCOS_Joystick(),
+            controller.getSIN_Joystick());
       }
     } else {
       if (DriverStation.getAlliance().get() == Alliance.Blue) {
@@ -248,15 +248,15 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
               FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE.getY(),
               1.0,
               desiredSpeeds,
-              RobotStates.getInstance().getRobotPose().getRotation().getCos(),
-              RobotStates.getInstance().getRobotPose().getRotation().getSin());
+              controller.getCOS_Joystick(),
+              controller.getSIN_Joystick());
         } else {
           super.driveToSpecificYinField(
               FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY(),
               1.0,
               desiredSpeeds,
-              RobotStates.getInstance().getRobotPose().getRotation().getCos(),
-              RobotStates.getInstance().getRobotPose().getRotation().getSin());
+              controller.getCOS_Joystick(),
+              controller.getSIN_Joystick());
         }
       } else {
         if (isRightSide) {
@@ -264,15 +264,15 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
               FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_RED.getY(),
               1.0,
               desiredSpeeds,
-              RobotStates.getInstance().getRobotPose().getRotation().getCos(),
-              RobotStates.getInstance().getRobotPose().getRotation().getSin());
+              controller.getCOS_Joystick(),
+              controller.getSIN_Joystick());
         } else {
           super.driveToSpecificYinField(
               FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_RED.getY(),
               1.0,
               desiredSpeeds,
-              RobotStates.getInstance().getRobotPose().getRotation().getCos(),
-              RobotStates.getInstance().getRobotPose().getRotation().getSin());
+              controller.getCOS_Joystick(),
+              controller.getSIN_Joystick());
         }
       }
     }
