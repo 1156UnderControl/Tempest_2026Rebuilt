@@ -35,8 +35,6 @@ public class HoodSubsystem extends SubsystemBase {
 
   private static HoodSubsystem instance;
 
-  private double angleCalibration;
-
   private HoodSubsystem() {
     calculator = ShooterCalculator.getInstance();
     smartHoodMotorConfig =
@@ -77,7 +75,6 @@ public class HoodSubsystem extends SubsystemBase {
     inputs = new HoodInputsAutoLogged();
 
     SmartDashboard.putNumber("Calibration/Hood", 41);
-    angleCalibration = 41;
   }
 
   public static HoodSubsystem getInstance() {
@@ -91,7 +88,6 @@ public class HoodSubsystem extends SubsystemBase {
   public void periodic() {
     hood.updateTelemetry();
     updateInputs();
-    this.angleCalibration = SmartDashboard.getNumber("Calibration/Hood", 41);
   }
 
   @Override
@@ -137,6 +133,7 @@ public class HoodSubsystem extends SubsystemBase {
   }
 
   public Command goToTargetAngleCalibration() {
-    return hood.setAngle(() -> Degrees.of(angleCalibration));
+    return hood.setAngle(
+        () -> Degrees.of(SmartDashboard.getNumber("Calibration/Hood", 41)));
   }
 }
