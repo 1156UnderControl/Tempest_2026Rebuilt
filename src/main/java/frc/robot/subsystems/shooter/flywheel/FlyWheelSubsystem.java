@@ -53,7 +53,6 @@ public class FlyWheelSubsystem extends SubsystemBase {
             .withFollowers(Pair.of(new TalonFX(18, CANBus.roboRIO()), true))
             .withIdleMode(MotorMode.BRAKE)
             .withGearing(FlyWheelsConstants.MOTOR_GEARING)
-            .withTelemetry("FlyWheelLeadMotor", TelemetryVerbosity.HIGH)
             .withSupplyCurrentLimit(Amps.of(30))
             .withStatorCurrentLimit(Amps.of(120))
             .withClosedLoopController(

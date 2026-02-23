@@ -41,7 +41,6 @@ public class HoodSubsystem extends SubsystemBase {
     calculator = ShooterCalculator.getInstance();
     smartHoodMotorConfig =
         new SmartMotorControllerConfig(this)
-            .withTelemetry("HoodMotor", TelemetryVerbosity.HIGH)
             .withIdleMode(MotorMode.BRAKE)
             .withGearing(HoodConstants.MOTOR_GEARING)
             .withMotorInverted(false)

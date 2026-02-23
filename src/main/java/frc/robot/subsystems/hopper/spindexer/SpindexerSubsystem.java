@@ -67,8 +67,7 @@ public class SpindexerSubsystem extends SubsystemBase {
             .withSimFeedforward(new SimpleMotorFeedforward(0.1, 0.9, 0))
             .withMechanismCircumference(Meters.of(0.478))
             .withStatorCurrentLimit(Amps.of(50))
-            .withMotorInverted(false)
-            .withTelemetry("SpindexerMotor", TelemetryVerbosity.HIGH);
+            .withMotorInverted(false);
 
     this.spindexerMotor =
         new SparkWrapper(spindexerFlex, DCMotor.getNeoVortex(1), smartSpindexerMotorConfig);
@@ -77,8 +76,7 @@ public class SpindexerSubsystem extends SubsystemBase {
         new FlyWheelConfig(spindexerMotor)
             .withDiameter(Inches.of(6))
             .withMass(Pounds.of(0.58))
-            .withMOI(Inches.of(6), Kilograms.of(0.58))
-            .withTelemetry("SpindexerMech", TelemetryVerbosity.HIGH);
+            .withMOI(Inches.of(6), Kilograms.of(0.58));
 
     this.spindexer = new FlyWheel(spindexerMechanismConfig);
   }

@@ -73,7 +73,6 @@ public class RollerSubsystem extends SubsystemBase {
                 50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(2)))
             .withIdleMode(MotorMode.COAST)
-            .withTelemetry("RollerMotor", TelemetryVerbosity.HIGH)
             .withStatorCurrentLimit(Amps.of(30))
             .withMotorInverted(false)
             .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
@@ -91,8 +90,7 @@ public class RollerSubsystem extends SubsystemBase {
             .withDiameter(Inches.of(4))
             // Mass of the flywheel.
             .withMass(Pounds.of(1))
-            .withMOI(KilogramSquareMeters.of(0.003))
-            .withTelemetry("RollerMech", TelemetryVerbosity.HIGH);
+            .withMOI(KilogramSquareMeters.of(0.003));
 
     this.roller = new FlyWheel(rollerConfig);
   }

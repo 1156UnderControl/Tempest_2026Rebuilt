@@ -65,7 +65,6 @@ public class ExtensorSubsystem extends SubsystemBase {
             .withSimFeedforward(new SimpleMotorFeedforward(0.17, 0.2, 0))
             .withGearing(ExtensorConstants.gearing)
             .withIdleMode(MotorMode.COAST)
-            .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
             .withStatorCurrentLimit(Amps.of(60))
             .withMotorInverted(false)
             .withControlMode(ControlMode.CLOSED_LOOP);
@@ -81,7 +80,6 @@ public class ExtensorSubsystem extends SubsystemBase {
                 ExtensorConstants.limits.MIN_EXTENSION, ExtensorConstants.limits.MAX_EXTENSION)
             .withHardLimits(
                 ExtensorConstants.limits.MIN_EXTENSION, ExtensorConstants.limits.MAX_EXTENSION)
-            .withTelemetry("ExtensorMech", TelemetryVerbosity.HIGH)
             .withStartingHeight(Meters.of(0));
 
     this.extensor = new Elevator(extensorConfig);

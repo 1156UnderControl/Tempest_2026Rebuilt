@@ -43,7 +43,6 @@ public class TurretSubsystem extends SubsystemBase {
     calculator = ShooterCalculator.getInstance();
     smartTurretMotorConfig =
         new SmartMotorControllerConfig(this)
-            .withTelemetry("Motor Turret", TelemetryVerbosity.HIGH)
             .withIdleMode(TurretConstants.MOTOR_MODE)
             .withGearing(TurretConstants.GEARING)
             .withMotorInverted(TurretConstants.INVERTED)
@@ -82,8 +81,7 @@ public class TurretSubsystem extends SubsystemBase {
     turretMechanismConfig =
         new PivotConfig(turretMotor)
             .withHardLimit(TurretConstants.TURRET_MIN_ANGLE, TurretConstants.TURRET_MAX_ANGLE)
-            .withMOI(TurretConstants.TURRET_SIZE, TurretConstants.TURRET_MASS)
-            .withTelemetry(TurretConstants.TURRET_MECHANISM_NAME, TurretConstants.TELEMETRY);
+            .withMOI(TurretConstants.TURRET_SIZE, TurretConstants.TURRET_MASS);
 
     turret = new Pivot(turretMechanismConfig);
 
