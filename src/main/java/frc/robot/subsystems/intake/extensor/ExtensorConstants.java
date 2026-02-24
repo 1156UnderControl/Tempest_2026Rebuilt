@@ -50,7 +50,7 @@ public class ExtensorConstants {
           .withRelativePosition(new Translation3d(Meters.of(-0.25), Meters.of(0), Meters.of(0.5)))
           .withMovementPlane(Plane.XY);
 
-  public static final Distance DEADBAND_IS_AT = Meters.of(0.01);
+  public static final Distance DEADBAND_IS_AT = Meters.of(0.015);
 
   public class setpoints {
     public static final Distance INTAKE_EXTENDED_POSITION = Meters.of(0.26);
