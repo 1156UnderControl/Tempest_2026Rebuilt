@@ -119,6 +119,10 @@ public class ExtensorSubsystem extends SubsystemBase {
     return this.extensor.setHeight(ExtensorConstants.setpoints.INTAKE_HOMED_POSITION);
   }
 
+  public Command retractAuto() {
+    return this.setLength(ExtensorConstants.setpoints.INTAKE_HOMED_POSITION);
+  }
+
   public Command disableExtensor() {
     return this.runOnce(
         () -> {
