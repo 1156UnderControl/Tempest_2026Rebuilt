@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.36241890608260796,
-        "y": 4.551858488343223
+        "x": 0.35247247414462823,
+        "y": 4.818125368741187
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.35,
-        "y": 4.695
+        "x": 0.516627646228927,
+        "y": 4.657
       },
       "prevControl": {
-        "x": 0.3591781660365128,
-        "y": 5.204311224763582
+        "x": 0.4896219787992222,
+        "y": 4.9146340187032305
       },
       "nextControl": null,
       "isLocked": false,
@@ -40,6 +40,17 @@
         "type": "named",
         "data": {
           "name": "Raise Climber"
+        }
+      }
+    },
+    {
+      "name": "Retract Intake",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract Intake"
         }
       }
     },
