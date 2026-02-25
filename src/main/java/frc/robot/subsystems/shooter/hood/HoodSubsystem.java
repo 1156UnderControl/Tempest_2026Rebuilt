@@ -18,7 +18,6 @@ import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
-import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class HoodSubsystem extends SubsystemBase {
@@ -133,7 +132,6 @@ public class HoodSubsystem extends SubsystemBase {
   }
 
   public Command goToTargetAngleCalibration() {
-    return hood.setAngle(
-        () -> Degrees.of(SmartDashboard.getNumber("Calibration/Hood", 41)));
+    return hood.setAngle(() -> Degrees.of(SmartDashboard.getNumber("Calibration/Hood", 41)));
   }
 }
