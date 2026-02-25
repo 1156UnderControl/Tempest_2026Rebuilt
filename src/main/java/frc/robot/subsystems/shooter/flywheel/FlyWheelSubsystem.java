@@ -39,6 +39,8 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   private VelocityTorqueCurrentFOC torqueCurrentRequest = new VelocityTorqueCurrentFOC(RPM.of(0));
 
+  private double flyWheelRPM;
+
   private AngularVelocity setpoint = RPM.of(0);
 
   private FlyWheelSubsystem() {
@@ -77,6 +79,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
     this.inputs = new FlyWheelInputsAutoLogged();
 
     SmartDashboard.putNumber("Calibration/FlyWheelRPM", 0);
+    this.flyWheelRPM = 0;
   }
 
   public static FlyWheelSubsystem getInstance() {
@@ -90,6 +93,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
   public void periodic() {
     this.flywheelMechanism.updateTelemetry();
     this.updateInputs();
+    this.flyWheelRPM = SmartDashboard.getNumber("Calibration/FlyWheelRPM", 0);
   }
 
   @Override
@@ -133,10 +137,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   public Command runVelocityTorqueControlCalibration() {
     return this.run(
-        () ->
-            leadMotor.setControl(
-                torqueCurrentRequest.withVelocity(
-                    SmartDashboard.getNumber("Calibration/FlyWheelRPM", 0) / 60)));
+        () -> leadMotor.setControl(torqueCurrentRequest.withVelocity(this.flyWheelRPM / 60)));
   }
 
   public boolean isAtTargetVelocity() {
