@@ -118,11 +118,11 @@ public class RollerSubsystem extends SubsystemBase {
   }
 
   public Command runRoller() {
-    return this.setDutyCycle(-1);
+    return this.setDutyCycle(-0.9);
   }
 
   public Command expellRoller() {
-    return this.setDutyCycle(1);
+    return this.setDutyCycle(0.9);
   }
 
   public Command stopRoller() {
