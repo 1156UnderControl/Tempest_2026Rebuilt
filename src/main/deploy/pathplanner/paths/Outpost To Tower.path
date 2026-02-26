@@ -33,6 +33,12 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "Retract Intake",
+      "waypointRelativePos": 0.7179211689587428,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "Raise Climber",
       "waypointRelativePos": 0.7460784012770139,
       "endWaypointRelativePos": null,
