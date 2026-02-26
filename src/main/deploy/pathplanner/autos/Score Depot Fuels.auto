@@ -13,13 +13,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 4.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Retract Intake"
+            "waitTime": 4.5
           }
         },
         {

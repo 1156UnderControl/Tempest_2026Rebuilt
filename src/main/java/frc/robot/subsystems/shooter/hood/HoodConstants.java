@@ -24,7 +24,7 @@ public class HoodConstants {
   public static class Position {
     public static final Angle HOOD_MIN_ANGLE = Degrees.of(40);
     public static final Angle HOOD_MAX_ANGLE = Degrees.of(75);
-    public static final Angle ANGLE_ERROR_ALLOWED = Degrees.of(0.7);
+    public static final Angle ANGLE_ERROR_ALLOWED = Degrees.of(1.5);
   }
 
   public static class ClosedLoopController {

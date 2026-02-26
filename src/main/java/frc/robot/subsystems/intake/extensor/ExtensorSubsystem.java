@@ -123,6 +123,10 @@ public class ExtensorSubsystem extends SubsystemBase {
     return this.retracting(Amps.of(30));
   }
 
+  public Command retractAuto() {
+    return this.setLength(ExtensorConstants.setpoints.INTAKE_HOMED_POSITION);
+  }
+
   public Command disableExtensor() {
     return this.runOnce(
         () -> {

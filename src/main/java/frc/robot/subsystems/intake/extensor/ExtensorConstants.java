@@ -38,7 +38,7 @@ public class ExtensorConstants {
   public static final Mass mass = Kilograms.of(5);
   public static final Distance drumRadius = Meters.of(0.02277 / 2.0);
   public static final MechanismGearing gearing =
-      new MechanismGearing(GearBox.fromReductionStages(5.71));
+      new MechanismGearing(GearBox.fromReductionStages(5.833));
 
   public static final Distance MECHANISM_CIRCUNFERENCE =
       Meters.of(Math.PI * 2 * drumRadius.in(Meters));
@@ -50,7 +50,7 @@ public class ExtensorConstants {
           .withRelativePosition(new Translation3d(Meters.of(-0.25), Meters.of(0), Meters.of(0.5)))
           .withMovementPlane(Plane.XY);
 
-  public static final Distance DEADBAND_IS_AT = Meters.of(0.01);
+  public static final Distance DEADBAND_IS_AT = Meters.of(0.015);
 
   public class setpoints {
     public static final Distance INTAKE_EXTENDED_POSITION = Meters.of(0.26);

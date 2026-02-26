@@ -65,8 +65,7 @@ public class NamedCommandsRegistery {
     NamedCommands.registerCommand(
         "Extend Intake", this.extensor.extend().andThen(this.roller.runRoller()));
     NamedCommands.registerCommand(
-        "Retract Intake",
-        this.extensor.retract().alongWith(Commands.runOnce(() -> roller.stopRoller())));
+        "Retract Intake", this.extensor.retractAuto().alongWith(roller.stopRoller()));
   }
 
   private void registerShooterCommands() {

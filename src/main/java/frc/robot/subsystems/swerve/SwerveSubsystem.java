@@ -90,13 +90,13 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     super(
         new OdometryEnabledSwerveConfig(
             0.75,
-            0.65,
+            0.60,
             new SwerveDeadbandsConfig(
                 JoystickConstants.DEADBAND_TRANSLATION, JoystickConstants.DEADBAND_ROTATION),
             pathPlannerConfig,
             configureMulticameraPoseEstimation(),
             configureMulticameraPoseEstimation(),
-            new ProfiledPIDConfig(4.0, 0, 0, 0, 720),
+            new ProfiledPIDConfig(5.0, 0, 0, 0, 10000),
             new MoveToPosePIDConfig(
                 SwerveConstants.MOVE_TO_POSE_TRANSLATION_PID,
                 SwerveConstants.MOVE_TO_POSE_Y_CONSTRAINTS)),
