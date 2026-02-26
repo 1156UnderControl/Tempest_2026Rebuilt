@@ -135,6 +135,17 @@ public class States {
             }));
   }
 
+  public Command shakeState() {
+    return Commands.parallel(
+        this.extensor.shake(),
+        this.roller.runRoller(),
+        Commands.runOnce(
+            () -> {
+              this.extensorState = "Shake State";
+              this.rollerState = "Running State";
+            }));
+  }
+
   public Command climbState() {
     return Commands.parallel(
         this.climber.climb(),
