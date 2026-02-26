@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Seconds;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -185,7 +188,7 @@ public class RobotContainer {
                 this.states.collectState(),
                 Commands.runOnce(() -> RobotStates.getInstance().setExtendedMode(true))));
 
-    this.operatorController.square().whileTrue(this.states.retractState());
+    this.operatorController.square().whileTrue(this.states.shakeState());
 
     this.operatorController
         .triangle()
@@ -210,6 +213,8 @@ public class RobotContainer {
     this.operatorController.downArrow().onTrue(this.states.defaultClimberState());
 
     this.driverController.a().onTrue(this.turret.resetCRT());
+
+    this.operatorController.leftArrow().onTrue(this.extensor.homeByTiming(Seconds.of(1)));
 
     new Trigger(this.driverController.slowActivate())
         .whileTrue(new PassThroughTrenchLeftAlliance(drive));
