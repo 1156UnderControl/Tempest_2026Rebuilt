@@ -1,6 +1,7 @@
 package frc.robot.subsystems.intake.extensor;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.Rotations;
@@ -9,9 +10,14 @@ import static edu.wpi.first.units.Units.Volts;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.littletonrobotics.junction.Logger;
@@ -21,7 +27,6 @@ import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
-import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class ExtensorSubsystem extends SubsystemBase {
@@ -65,7 +70,6 @@ public class ExtensorSubsystem extends SubsystemBase {
             .withSimFeedforward(new SimpleMotorFeedforward(0.17, 0.2, 0))
             .withGearing(ExtensorConstants.gearing)
             .withIdleMode(MotorMode.COAST)
-            .withTelemetry("ExtensorMotor", TelemetryVerbosity.HIGH)
             .withStatorCurrentLimit(Amps.of(60))
             .withMotorInverted(false)
             .withControlMode(ControlMode.CLOSED_LOOP);
@@ -81,7 +85,6 @@ public class ExtensorSubsystem extends SubsystemBase {
                 ExtensorConstants.limits.MIN_EXTENSION, ExtensorConstants.limits.MAX_EXTENSION)
             .withHardLimits(
                 ExtensorConstants.limits.MIN_EXTENSION, ExtensorConstants.limits.MAX_EXTENSION)
-            .withTelemetry("ExtensorMech", TelemetryVerbosity.HIGH)
             .withStartingHeight(Meters.of(0));
 
     this.extensor = new Elevator(extensorConfig);
@@ -118,7 +121,15 @@ public class ExtensorSubsystem extends SubsystemBase {
   }
 
   public Command retract() {
-    return this.extensor.setHeight(ExtensorConstants.setpoints.INTAKE_HOMED_POSITION);
+    return this.setLength(ExtensorConstants.setpoints.INTAKE_HOMED_POSITION);
+  }
+
+  public Command shake() {
+    return this.setLength(ExtensorConstants.setpoints.INTAKE_SHAKE_POSITION);
+  }
+
+  public Command retractAuto() {
+    return this.setLength(ExtensorConstants.setpoints.INTAKE_HOMED_POSITION);
   }
 
   public Command disableExtensor() {
@@ -137,6 +148,89 @@ public class ExtensorSubsystem extends SubsystemBase {
         () -> {
           this.extensorMotor.startClosedLoopController();
         });
+  }
+
+  /**
+   * Reset the encoder to the lowest position when the current threshhold is reached. Should be used
+   * when the Extensor position is unreliable, like startup. Threshhold is only detected if exceeded
+   * for 0.4 seconds, and the motor moves less than 2 degrees per second.
+   *
+   * @param threshhold The current threshhold held when the Extensor is at it's hard limit.
+   * @return
+   */
+  public Command homeRetracting(Current threshhold) {
+    Debouncer currentDebouncer =
+        new Debouncer(0.3); // Current threshold is only detected if exceeded for 0.4 seconds.
+    Voltage runVolts = Volts.of(3); // Volts required to run the mechanism to the limit.
+    Distance limitHit =
+        ExtensorConstants.setpoints.INTAKE_HOME_RETRACTED_POSITION; // Limit which gets hit.
+    AngularVelocity velocityThreshold =
+        DegreesPerSecond.of(
+            2); // The maximum amount of movement for the extensor to be considered "hitting the
+    // hard limit".
+    return this.retract()
+        .andThen(
+            Commands.startRun(
+                    extensorMotor::stopClosedLoopController, // Stop the closed loop controller
+                    () -> extensorMotor.setVoltage(runVolts)) // Set the voltage of the motor
+                .until(
+                    () ->
+                        currentDebouncer.calculate(
+                            extensorMotor.getStatorCurrent().gte(threshhold)
+                                && extensorMotor.getMechanismVelocity().abs(DegreesPerSecond)
+                                    <= velocityThreshold.in(DegreesPerSecond)))
+                .finallyDo(
+                    () -> {
+                      extensorMotor.setEncoderPosition(limitHit);
+                      extensorMotor.startClosedLoopController();
+                    }));
+  }
+
+  public Command homeByTiming(Time timeOfRunningExtension) {
+    Voltage runVolts = Volts.of(3); // Volts required to run the mechanism to the limit.
+    Distance limitHit =
+        ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION; // Limit which gets hit.
+    return this.extend()
+        .andThen(
+            Commands.startRun(
+                    extensorMotor::stopClosedLoopController, // Stop the closed loop controller
+                    () -> extensorMotor.setVoltage(runVolts)) // Set the voltage of the motor
+                .withTimeout(timeOfRunningExtension)
+                .finallyDo(
+                    () -> {
+                      extensorMotor.setPosition(limitHit);
+                      extensorMotor.startClosedLoopController();
+                    }))
+        .andThen(this.extend());
+  }
+
+  public Command homeExtending(Current threshhold) {
+    Debouncer currentDebouncer =
+        new Debouncer(0.3); // Current threshold is only detected if exceeded for 0.4 seconds.
+    Voltage runVolts = Volts.of(-3); // Volts required to run the mechanism to the limit.
+    Distance limitHit =
+        ExtensorConstants.setpoints.INTAKE_HOMED_EXTENDED_POSITION; // Limit which gets hit.
+    AngularVelocity velocityThreshold =
+        DegreesPerSecond.of(
+            2); // The maximum amount of movement for the extensor to be considered "hitting the
+    // hard limit".
+    return this.extend()
+        .andThen(
+            Commands.startRun(
+                    extensorMotor::stopClosedLoopController, // Stop the closed loop controller
+                    () -> extensorMotor.setVoltage(runVolts)) // Set the voltage of the motor
+                .until(
+                    () ->
+                        currentDebouncer.calculate(
+                            extensorMotor.getStatorCurrent().gte(threshhold)
+                                && extensorMotor.getMechanismVelocity().abs(DegreesPerSecond)
+                                    <= velocityThreshold.in(DegreesPerSecond)))
+                .finallyDo(
+                    () -> {
+                      extensorMotor.setEncoderPosition(limitHit);
+                      extensorMotor.startClosedLoopController();
+                    }))
+        .andThen(this.extend());
   }
 
   private Command setLength(Distance length) {

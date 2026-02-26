@@ -65,6 +65,10 @@ public class RobotStates {
     return (robotPose.getY() > FieldConstants.fieldWidth / 2);
   }
 
+  public boolean isOnRedDepotSide() {
+    return (robotPose.getY() < FieldConstants.fieldWidth / 2);
+  }
+
   public boolean isOnAllianceZone() {
     return AllianceFlipUtil.apply(robotPose).getX()
         < FieldConstants.FieldStrategicPoses.AllianceZoneX;

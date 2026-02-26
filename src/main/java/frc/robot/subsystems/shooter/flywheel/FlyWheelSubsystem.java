@@ -21,7 +21,6 @@ import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
-import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class FlyWheelSubsystem extends SubsystemBase {
@@ -53,7 +52,6 @@ public class FlyWheelSubsystem extends SubsystemBase {
             .withFollowers(Pair.of(new TalonFX(18, CANBus.roboRIO()), true))
             .withIdleMode(MotorMode.BRAKE)
             .withGearing(FlyWheelsConstants.MOTOR_GEARING)
-            .withTelemetry("FlyWheelLeadMotor", TelemetryVerbosity.HIGH)
             .withSupplyCurrentLimit(Amps.of(30))
             .withStatorCurrentLimit(Amps.of(120))
             .withClosedLoopController(
@@ -112,7 +110,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   public Command runLowVelocity() {
-    return this.runFlywheel(() -> RPM.of(2400));
+    return this.runFlywheel(() -> RPM.of(1000));
   }
 
   public Command stoppedVelocity() {

@@ -334,7 +334,11 @@ public class BaseSwerveSubsystem extends SubsystemBase {
   }
 
   protected void driveFieldOrientedLockedJoystickAngle(
-      ChassisSpeeds speeds, double xHeading, double yHeading, double joystickAimDeadband) {
+      ChassisSpeeds speeds,
+      double xHeading,
+      double yHeading,
+      double joystickAimDeadband,
+      boolean allianceBasedVelocities) {
     if (this.lastDesiredJoystickAngleRadians == Double.NaN) {
       this.lastDesiredJoystickAngleRadians = this.getPose().getRotation().getRadians();
     }
@@ -358,19 +362,30 @@ public class BaseSwerveSubsystem extends SubsystemBase {
         angleController.calculate(drive.getRotation().getRadians(), targetHeadingRadians);
     ChassisSpeeds adjustedSpeeds =
         new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, omega);
-    driveFieldOrientedAllianceBased(adjustedSpeeds);
+    if (allianceBasedVelocities) {
+      driveFieldOrientedAllianceBased(adjustedSpeeds);
+    } else {
+      driveFieldOriented(adjustedSpeeds);
+    }
+  }
+
+  protected void driveFieldOrientedLockedJoystickAngle(
+      ChassisSpeeds speeds, double xHeading, double yHeading, boolean allianceBasedVelocities) {
+    driveFieldOrientedLockedJoystickAngle(
+        speeds, xHeading, yHeading, this.joystickAimDeadband, allianceBasedVelocities);
   }
 
   protected void driveFieldOrientedLockedJoystickAngle(
       ChassisSpeeds speeds, double xHeading, double yHeading) {
-    driveFieldOrientedLockedJoystickAngle(speeds, xHeading, yHeading, this.joystickAimDeadband);
+    driveFieldOrientedLockedJoystickAngle(
+        speeds, xHeading, yHeading, this.joystickAimDeadband, true);
   }
 
   protected void driveFieldOrientedLockedJoystickAngle(
       Translation2d speeds, double xHeading, double yHeading, double joystickAimDeadband) {
     ChassisSpeeds speedsWithTranslation = new ChassisSpeeds(speeds.getX(), speeds.getY(), 0);
     driveFieldOrientedLockedJoystickAngle(
-        speedsWithTranslation, xHeading, yHeading, joystickAimDeadband);
+        speedsWithTranslation, xHeading, yHeading, joystickAimDeadband, true);
   }
 
   protected void driveFieldOrientedLockedJoystickAngle(
@@ -417,6 +432,18 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     Rotation2d targetHeading = Rotation2d.fromDegrees(this.targetHeadingDegrees);
     Rotation2d currentHeading = this.getHeading();
     double headingDifferenceDegrees = Math.abs(targetHeading.minus(currentHeading).getDegrees());
+    boolean isAtHeading = headingDifferenceDegrees <= toleranceDegrees;
+    return isAtHeading;
+  }
+
+  protected boolean isAtTargetHeading(double targetHeading, double toleranceDegrees) {
+    if (targetHeading == Double.NaN) {
+      return false;
+    }
+    Rotation2d targetHeadingRotation = Rotation2d.fromDegrees(targetHeading);
+    Rotation2d currentHeading = this.getHeading();
+    double headingDifferenceDegrees =
+        Math.abs(targetHeadingRotation.minus(currentHeading).getDegrees());
     boolean isAtHeading = headingDifferenceDegrees <= toleranceDegrees;
     return isAtHeading;
   }
