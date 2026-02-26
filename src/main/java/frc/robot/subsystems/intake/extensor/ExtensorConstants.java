@@ -54,6 +54,9 @@ public class ExtensorConstants {
 
   public class setpoints {
     public static final Distance INTAKE_EXTENDED_POSITION = Meters.of(0.26);
+    public static final Distance INTAKE_SHAKE_POSITION = Meters.of(0.12);
     public static final Distance INTAKE_HOMED_POSITION = Meters.of(0.05);
+    public static final Distance INTAKE_HOMED_EXTENDED_POSITION = Meters.of(0.26);
+    public static final Distance INTAKE_HOME_RETRACTED_POSITION = Meters.of(0.00);
   }
 }
