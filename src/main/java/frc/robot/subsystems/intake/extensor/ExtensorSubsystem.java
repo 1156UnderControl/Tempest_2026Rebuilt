@@ -157,8 +157,7 @@ public class ExtensorSubsystem extends SubsystemBase {
     Debouncer currentDebouncer =
         new Debouncer(0.3); // Current threshold is only detected if exceeded for 0.4 seconds.
     Voltage runVolts = Volts.of(12); // Volts required to run the mechanism to the limit.
-    Distance limitHit =
-        ExtensorConstants.setpoints.INTAKE_HOMED_POSITION; // Limit which gets hit.
+    Distance limitHit = ExtensorConstants.setpoints.INTAKE_HOMED_POSITION; // Limit which gets hit.
     AngularVelocity velocityThreshold =
         DegreesPerSecond.of(
             2); // The maximum amount of movement for the extensor to be considered "hitting the
