@@ -48,15 +48,15 @@
     },
     {
       "anchor": {
-        "x": 7.650826226892606,
+        "x": 7.651,
         "y": 4.433508426863263
       },
       "prevControl": {
-        "x": 7.917792192715374,
+        "x": 7.917965965822767,
         "y": 4.7697856209656795
       },
       "nextControl": {
-        "x": 7.126585194762324,
+        "x": 7.126758967869717,
         "y": 3.7731609448356798
       },
       "isLocked": false,
@@ -68,12 +68,12 @@
         "y": 7.434846638424295
       },
       "prevControl": {
-        "x": 6.408261771022752,
-        "y": 6.874820717190949
+        "x": 6.446263316792019,
+        "y": 6.92425241729328
       },
       "nextControl": {
-        "x": 5.207826025161385,
-        "y": 7.867371625586854
+        "x": 5.331950282423708,
+        "y": 7.719644861355633
       },
       "isLocked": false,
       "linkedName": null
@@ -98,7 +98,7 @@
       "rotationDegrees": 0.0
     },
     {
-      "waypointRelativePos": 1.1,
+      "waypointRelativePos": 1.3890106823979589,
       "rotationDegrees": -90.0
     },
     {
@@ -185,7 +185,7 @@
   "eventMarkers": [
     {
       "name": "Extend Intake",
-      "waypointRelativePos": 0.432181667485265,
+      "waypointRelativePos": 1.1020766822200394,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

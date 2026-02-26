@@ -79,7 +79,7 @@
       }
     },
     {
-      "name": "",
+      "name": "Raise Climber",
       "waypointRelativePos": 1.0001534872298627,
       "endWaypointRelativePos": null,
       "command": {
