@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5597405002934273,
-        "y": 0.6351935702758214
+        "x": 0.56,
+        "y": 0.66
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.941686461758827,
-        "y": 0.6569249207257677
+        "x": 1.9419459614653998,
+        "y": 0.6817313504499464
       },
       "isLocked": false,
       "linkedName": "Outpost"
@@ -31,7 +31,19 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Raise Climber",
+      "waypointRelativePos": 0.7460784012770139,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Raise Climber"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 1.0,
     "maxAcceleration": 3.0,

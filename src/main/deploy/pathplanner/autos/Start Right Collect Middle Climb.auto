@@ -1,0 +1,67 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot Fuels"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Start Right - Go Middle"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Trench To Outpost"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Outpost To Tower"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Retract Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Go to Climb Right Pose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Default Climber"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Match Autos",
+  "choreoAuto": false
+}
