@@ -138,8 +138,23 @@ public class Robot extends LoggedRobot {
     } else {
       LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
     }
-  }
 
+      if (HubShiftUtil.getOfficialShiftInfo().remainingTime() < 15){
+      LimelightHelpers.setLEDMode_ForceBlink(VisionConstants.backRightLimelightName);
+    } else {
+      LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
+   }
+
+     if (HubShiftUtil.getOfficialShiftInfo().active()){
+      LimelightHelpers.setLEDMode_ForceOn(VisionConstants.backRightLimelightName);
+    } else {
+         LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
+       }
+      }
+      
+
+
+ 
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
