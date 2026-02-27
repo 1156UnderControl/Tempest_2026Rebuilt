@@ -10,8 +10,6 @@ package frc.robot.util;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
-import java.util.Optional;
-import java.util.function.Supplier;
 
 public class HubShiftUtil {
   public enum ShiftEnum {
@@ -34,18 +32,13 @@ public class HubShiftUtil {
   private static final double[] shiftStartTimes = {0.0, 10.0, 35.0, 60.0, 85.0, 110.0};
   private static final double[] shiftEndTimes = {10.0, 35.0, 60.0, 85.0, 110.0, 140.0};
 
-
-
   public static final double autoEndTime = 20.0;
   public static final double teleopDuration = 140.0;
   private static final boolean[] activeSchedule = {true, true, false, true, false, true};
   private static final boolean[] inactiveSchedule = {true, false, true, false, true, true};
 
-
   public static Alliance getFirstActiveAlliance() {
     var alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-
-
 
     // Return FMS value
     String message = DriverStation.getGameSpecificMessage();

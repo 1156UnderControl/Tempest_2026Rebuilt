@@ -97,18 +97,13 @@ public class ControlBoard implements IDriverController, IOperatorController {
   }
 
   @Override
-  public Trigger setHasAlgae() {
-    return mDriverController.setHasAlgae();
+  public Trigger leftStick() {
+    return mDriverController.leftStick();
   }
 
   @Override
-  public Trigger setHasCoral() {
-    return mDriverController.setHasCoral();
-  }
-
-  @Override
-  public Trigger setNoObject() {
-    return mDriverController.setNoObject();
+  public Trigger rightStick() {
+    return mDriverController.rightStick();
   }
 
   @Override

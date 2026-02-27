@@ -271,6 +271,43 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     }
   }
 
+  public void driveAlignBump() {
+    if (controller.leftBumper().getAsBoolean()) {
+      driveRotating(false);
+      return;
+    }
+    if (controller.rightBumper().getAsBoolean()) {
+      driveRotating(true);
+      return;
+    }
+    Translation2d desiredSpeeds =
+        this.getLinearVelocityTranslationFromJoysticks(
+            controller.getLeftY(), controller.getLeftX());
+    this.state = "DRIVE_ALIGN_ANGLE_JOY";
+    Rotation2d nearestAngleToLock;
+    if (getPose().getRotation().getDegrees() > 90 || getPose().getRotation().getDegrees() < -90) {
+      if(getPose().getRotation().getDegrees() < -90){
+        nearestAngleToLock = new Rotation2d(Degrees.of(45));
+      } else {
+        nearestAngleToLock = new Rotation2d(Degrees.of(135));
+      }
+    } else {
+      if(getPose().getRotation().getDegrees() < 0){
+        nearestAngleToLock = new Rotation2d(Degrees.of(-45));
+      } else {
+        nearestAngleToLock = new Rotation2d(Degrees.of(-135));
+      }
+    }
+    this.driveFieldOrientedLockedJoystickAngle(
+        desiredSpeeds,
+        !controller.notUsingJoystick()
+                  ? controller.getCOS_Joystick()
+                  : nearestAngleToLock.getCos(),
+              !controller.notUsingJoystick()
+                  ? controller.getSIN_Joystick()
+                  : nearestAngleToLock.getSin());
+  }
+
   public void driveRotating(boolean rotateRight) {
     ChassisSpeeds desiredSpeeds =
         this.getLinearVelocityChassisSpeedsFromJoysticks(
@@ -309,7 +346,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
         0,
         0,
         0);
-    //this.verifyClimbPoseEstimation();
+    // this.verifyClimbPoseEstimation();
   }
 
   public boolean isAtTargetPositionWithHeading() {
@@ -410,14 +447,11 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     }
   }
 
-  public void setPoseEstimatorToClimbOnAuto(boolean climbingOnRight){
-    if(climbingOnRight){
+  public void setPoseEstimatorToClimbOnAuto(boolean climbingOnRight) {
+    if (climbingOnRight) {
       this.overrideAutonomousPoseEstimator(poseEstimatorBackRight);
-    }else{
+    } else {
       this.overrideAutonomousPoseEstimator(poseEstimatorBackLeft);
     }
   }
-  
-
-
 }

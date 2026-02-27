@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Seconds;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,6 +15,7 @@ import frc.java_is_undercontrol.swerve.io.gyro.GyroIOPigeon2;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIO;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOSim;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
+import frc.robot.commands.swerve.PassThroughBump;
 import frc.robot.commands.swerve.PassThroughTrenchLeftAlliance;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
@@ -213,7 +212,13 @@ public class RobotContainer {
 
     this.driverController.a().onTrue(this.turret.resetCRT());
 
-    this.operatorController.leftArrow().whileTrue(this.extensor.home()).onTrue(this.roller.runRoller());
+    this.operatorController
+        .leftArrow()
+        .or(this.driverController.leftStick())
+        .whileTrue(this.extensor.home())
+        .onTrue(this.roller.runRoller());
+
+    this.driverController.rightStick().whileTrue(new PassThroughBump(drive));
 
     new Trigger(this.driverController.slowActivate())
         .whileTrue(new PassThroughTrenchLeftAlliance(drive));
