@@ -4,28 +4,28 @@
     {
       "anchor": {
         "x": 4.381054733348005,
-        "y": 0.479
+        "y": 0.83
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.607979584594093,
-        "y": 0.6357153590977375
+        "x": 4.618095979161042,
+        "y": 0.9094446208588317
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.3697212260628735,
-        "y": 0.608
+        "x": 6.39075285939928,
+        "y": 0.7605642972417832
       },
       "prevControl": {
-        "x": 6.007540727194326,
-        "y": 0.6079099392746651
+        "x": 5.948479387529742,
+        "y": 0.6494065355230225
       },
       "nextControl": {
-        "x": 6.91759978338296,
-        "y": 0.608136236877529
+        "x": 7.186190806599188,
+        "y": 0.9604838208414026
       },
       "isLocked": false,
       "linkedName": null
@@ -36,28 +36,28 @@
         "y": 1.283
       },
       "prevControl": {
-        "x": 7.6023029109357205,
-        "y": 0.4727096498357105
+        "x": 7.492546433265116,
+        "y": 1.0572486927433387
       },
       "nextControl": {
-        "x": 7.6786922967295865,
-        "y": 1.7483352113440087
+        "x": 7.794346271600545,
+        "y": 1.4876997722691263
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.650826226892606,
-        "y": 2.299512085534037
+        "x": 7.542989448884747,
+        "y": 2.3127539347709423
       },
       "prevControl": {
-        "x": 7.80656192620277,
-        "y": 1.9360225271847868
+        "x": 7.801406386594087,
+        "y": 2.2045710908995395
       },
       "nextControl": {
-        "x": 7.355107167233098,
-        "y": 2.9897249966855886
+        "x": 7.139519226137885,
+        "y": 2.481661423966865
       },
       "isLocked": false,
       "linkedName": null
@@ -68,12 +68,12 @@
         "y": 0.7605642972417832
       },
       "prevControl": {
-        "x": 6.071474516724777,
-        "y": 1.0687422067046066
+        "x": 6.013348094164706,
+        "y": 0.9367601210857455
       },
       "nextControl": {
-        "x": 5.570316253536396,
-        "y": 0.5751627673873283
+        "x": 5.552943766801723,
+        "y": 0.6183669808390585
       },
       "isLocked": false,
       "linkedName": null
@@ -84,8 +84,8 @@
         "y": 0.479
       },
       "prevControl": {
-        "x": 5.116054444215673,
-        "y": 0.4796519389882175
+        "x": 4.693980727871959,
+        "y": 0.4737038595792944
       },
       "nextControl": null,
       "isLocked": false,
@@ -117,10 +117,10 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.9774143541257359,
-      "maxWaypointRelativePos": 2.8050174975442,
+      "minWaypointRelativePos": 1.987582883104126,
+      "maxWaypointRelativePos": 3.0492540520628664,
       "constraints": {
-        "maxVelocity": 2.5,
+        "maxVelocity": 1.5,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -133,7 +133,7 @@
       "minWaypointRelativePos": 0.944829015225933,
       "maxWaypointRelativePos": 2.1240714022593328,
       "constraints": {
-        "maxVelocity": 2.0,
+        "maxVelocity": 1.8,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -143,8 +143,8 @@
     },
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 2.8837948182711175,
-      "maxWaypointRelativePos": 3.16590434675835,
+      "minWaypointRelativePos": 2.9349828094302555,
+      "maxWaypointRelativePos": 3.201666871316306,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 3.0,
@@ -184,19 +184,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Extend Intake",
-      "waypointRelativePos": 0.0428996807465619,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Extend Intake"
-        }
-      }
-    },
-    {
       "name": "Stop Shooting Fuels",
-      "waypointRelativePos": 2.470492080058939,
+      "waypointRelativePos": 0.22915643418467493,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

@@ -4,24 +4,24 @@
     {
       "anchor": {
         "x": 0.56,
-        "y": 0.66
+        "y": 0.74
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9419459614653998,
-        "y": 0.6817313504499464
+        "x": 0.5551942540060381,
+        "y": 1.507587644328991
       },
       "isLocked": false,
       "linkedName": "Outpost"
     },
     {
       "anchor": {
-        "x": 1.9811984668427227,
-        "y": 2.9155093713321594
+        "x": 1.3160259408010564,
+        "y": 2.780850434639084
       },
       "prevControl": {
-        "x": 0.8594963596684269,
-        "y": 2.302809198943662
+        "x": 0.8927467324901062,
+        "y": 1.7928848747204529
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,12 +32,6 @@
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
-    {
-      "name": "Retract Intake",
-      "waypointRelativePos": 0.7179211689587428,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
     {
       "name": "Raise Climber",
       "waypointRelativePos": 0.7460784012770139,
@@ -51,7 +45,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
+    "maxVelocity": 0.8,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
