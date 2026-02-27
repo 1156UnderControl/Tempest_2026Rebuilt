@@ -116,7 +116,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    if(RobotStates.getInstance().isShootingMode()){
+    if (RobotStates.getInstance().isShootingMode()) {
       LimelightHelpers.setLEDMode_ForceOn(VisionConstants.backRightLimelightName);
     } else {
       LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
@@ -134,7 +134,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopPeriodic() {
-    if(RobotStates.getInstance().isShootingMode()){
+    if (RobotStates.getInstance().isShootingMode()) {
       LimelightHelpers.setLEDMode_ForceOn(VisionConstants.backRightLimelightName);
     } else {
       LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);

@@ -47,8 +47,16 @@ public class NamedCommandsRegistery {
   }
 
   private void registerGoToPoseCommands() {
-    NamedCommands.registerCommand("Go To Climb Left Pose", new GoToClimbPoseLeft(drive));
-    NamedCommands.registerCommand("Go To Climb Right Pose", new GoToClimbPoseRight(drive));
+    NamedCommands.registerCommand(
+        "Go To Climb Left Pose",
+        new GoToClimbPoseLeft(drive)
+            .alongWith(Commands.runOnce(() -> drive.setClimbPoseEstimation(true)))
+            .finallyDo(() -> drive.setClimbPoseEstimation(false)));
+    NamedCommands.registerCommand(
+        "Go To Climb Right Pose",
+        new GoToClimbPoseRight(drive)
+            .alongWith(Commands.runOnce(() -> drive.setClimbPoseEstimation(true)))
+            .finallyDo(() -> drive.setClimbPoseEstimation(false)));
   }
 
   private void registerResetOdometryCommands() {
