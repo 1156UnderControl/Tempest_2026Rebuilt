@@ -15,6 +15,8 @@ import org.littletonrobotics.junction.Logger;
 public class LimelightPoseEstimator implements PoseEstimator {
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
+  int[] apriltagsIDs = new int[32];
+
   double fieldLength = Units.inchesToMeters(690.876);
 
   double fieldWidth = Units.inchesToMeters(317);
@@ -29,6 +31,8 @@ public class LimelightPoseEstimator implements PoseEstimator {
 
   private Boolean useVisionHeadingCorrection = false;
 
+  private int[] filteredApriltags = new int[0];
+
   public LimelightPoseEstimator(
       String limelightName,
       boolean only2TagsMeasurements,
@@ -38,6 +42,9 @@ public class LimelightPoseEstimator implements PoseEstimator {
     this.only2TagsMeasurements = only2TagsMeasurements;
     this.useMegaTag1 = useMegaTag1;
     this.limitAngVelForUpdating = limitAngVelForUpdating;
+    for (int i = 0; i < this.apriltagsIDs.length; i++) {
+      this.apriltagsIDs[i] = i + 1;
+    }
     Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, new Pose3d());
   }
 
@@ -50,6 +57,7 @@ public class LimelightPoseEstimator implements PoseEstimator {
   }
 
   public Optional<PoseEstimation> getEstimatedPose(Pose2d referencePose) {
+    LimelightHelpers.SetFiducialIDFiltersOverride(limelightName, filteredApriltags);
     try {
       if (!LimelightHelpers.getTV(this.limelightName)
           || Math.abs(OdometryEnabledSwerveSubsystem.robotAngularVelocity)
@@ -84,13 +92,21 @@ public class LimelightPoseEstimator implements PoseEstimator {
         Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, new Pose3d());
         return Optional.empty();
       }
-
       Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, poseEstimation.estimatedPose);
       return Optional.of(poseEstimation);
     } catch (Exception e) {
       Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, new Pose3d());
       return Optional.empty();
     }
+  }
+
+  /**
+   * Every int inside the array of the parameter will be a apriltag ID to be considered.
+   *
+   * @param aprilTagsToFilter array of the tags that you want to be seen
+   */
+  public void onlySeeApriltagsIDs(int[] aprilTagsToFilter) {
+    this.filteredApriltags = aprilTagsToFilter;
   }
 
   private boolean poseOutOfField(PoseEstimation pose2D) {

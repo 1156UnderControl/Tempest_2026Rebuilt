@@ -38,6 +38,8 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
 
   private PhotonPoseEstimatorStrategies strategy;
 
+  private int[] filteredApriltags = new int[0];
+
   public PhotonVisionPoseEstimator(PhotonCamera camera, Transform3d cameraPosition) {
     this(camera, cameraPosition, false, 1, PhotonPoseEstimatorStrategies.MULTITAG_COPROCESSOR);
   }
@@ -95,6 +97,17 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
           }
         }
 
+        for (var targets : result.getTargets()) {
+          for (int idFilter : this.filteredApriltags) {
+            if (targets.fiducialId == idFilter) {
+              state = "FILTER_ID_" + idFilter;
+              Logger.recordOutput(keyStateLog, state);
+              Logger.recordOutput(this.keyPoseEstimatedLog, new Pose3d());
+              return Optional.empty();
+            }
+          }
+        }
+
         PoseEstimation poseEstimation = convertPhotonPoseEstimation(photonPoseEstimation.get());
         if (only2TagsMeasurements && poseEstimation.numberOfTargetsUsed < 2) {
           state = "TWO_TAGS_ONLY";
@@ -129,6 +142,15 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
       Logger.recordOutput(this.keyPoseEstimatedLog, new Pose3d());
       return Optional.empty();
     }
+  }
+
+  /**
+   * Every int inside the array of the parameter will be a apriltag ID that will be IGNORED.
+   *
+   * @param aprilTagsToFilter array of the tags that you want to be IGNORED
+   */
+  public void ignoreApriltags(int[] aprilTagsToFilter) {
+    this.filteredApriltags = aprilTagsToFilter;
   }
 
   private PoseEstimation convertPhotonPoseEstimation(EstimatedRobotPose photonPoseEstimation) {
