@@ -213,7 +213,7 @@ public class RobotContainer {
 
     this.driverController.a().onTrue(this.turret.resetCRT());
 
-    this.operatorController.leftArrow().onTrue(this.extensor.homeByTiming(Seconds.of(1)));
+    this.operatorController.leftArrow().whileTrue(this.extensor.home()).onTrue(this.roller.runRoller());
 
     new Trigger(this.driverController.slowActivate())
         .whileTrue(new PassThroughTrenchLeftAlliance(drive));
