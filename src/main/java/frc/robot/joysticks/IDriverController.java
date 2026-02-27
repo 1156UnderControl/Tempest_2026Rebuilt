@@ -43,9 +43,7 @@ public interface IDriverController {
 
   Trigger downArrow();
 
-  Trigger setHasAlgae();
+  Trigger leftStick();
 
-  Trigger setHasCoral();
-
-  Trigger setNoObject();
+  Trigger rightStick();
 }
