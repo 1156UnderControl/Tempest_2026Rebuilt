@@ -3,12 +3,16 @@ package frc.robot;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers;
 import frc.robot.constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
+import frc.robot.util.HubShiftUtil;
+
 import org.littletonrobotics.junction.AutoLogOutputManager;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -87,6 +91,10 @@ public class Robot extends LoggedRobot {
     MatchStatusTracker.getInstance().sendHubStatusToDashboard();
     MatchStatusTracker.getInstance().sendMatchTimeToDashboard();
     MatchStatusTracker.getInstance().sendHubTiming();
+    SmartDashboard.putBoolean("Is Active", HubShiftUtil.getOfficialShiftInfo().active());
+    SmartDashboard.putString("Shift:", HubShiftUtil.getOfficialShiftInfo().currentShift().name());
+    SmartDashboard.putNumber("Match Time:", HubShiftUtil.getOfficialShiftInfo().elapsedTime());
+    SmartDashboard.putNumber("Time Until Next Shift:", HubShiftUtil.getOfficialShiftInfo().remainingTime());
   }
 
   @Override
@@ -117,6 +125,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
+    HubShiftUtil.initialize();
 
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
