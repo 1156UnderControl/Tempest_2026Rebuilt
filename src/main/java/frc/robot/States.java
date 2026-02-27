@@ -89,7 +89,7 @@ public class States {
     this.setIntakeDefaultStates();
     this.setHopperDefaultStates();
     this.setShooterDefaultStates();
-    this.setClimberDefaultStates();
+    //this.setClimberDefaultStates();
   }
 
   public Command shootState() {
