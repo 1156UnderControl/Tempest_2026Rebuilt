@@ -186,7 +186,7 @@ public class ExtensorSubsystem extends SubsystemBase {
                     }));
   }
 
-  public Command homeByTiming(Time timeOfRunningExtension) {
+  public Command home() {
     Voltage runVolts = Volts.of(3); // Volts required to run the mechanism to the limit.
     Distance limitHit =
         ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION; // Limit which gets hit.
@@ -195,13 +195,11 @@ public class ExtensorSubsystem extends SubsystemBase {
             Commands.startRun(
                     extensorMotor::stopClosedLoopController, // Stop the closed loop controller
                     () -> extensorMotor.setVoltage(runVolts)) // Set the voltage of the motor
-                .withTimeout(timeOfRunningExtension)
                 .finallyDo(
                     () -> {
                       extensorMotor.setEncoderPosition(limitHit);
                       extensorMotor.startClosedLoopController();
-                    }))
-        .andThen(this.extend());
+                    }));
   }
 
   public Command homeExtending(Current threshhold) {
