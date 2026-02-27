@@ -5,6 +5,8 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers;
+import frc.robot.constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import org.littletonrobotics.junction.AutoLogOutputManager;
@@ -75,6 +77,7 @@ public class Robot extends LoggedRobot {
     }
 
     robotContainer = new RobotContainer();
+    LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
   }
 
   @Override
@@ -87,7 +90,9 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -102,7 +107,13 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    if(RobotStates.getInstance().isShootingMode()){
+      LimelightHelpers.setLEDMode_ForceOn(VisionConstants.backRightLimelightName);
+    } else {
+      LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
+    }
+  }
 
   @Override
   public void teleopInit() {
@@ -113,7 +124,13 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    if(RobotStates.getInstance().isShootingMode()){
+      LimelightHelpers.setLEDMode_ForceOn(VisionConstants.backRightLimelightName);
+    } else {
+      LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
+    }
+  }
 
   @Override
   public void testInit() {
