@@ -49,7 +49,7 @@ public class FieldConstants {
     private final String layoutString;
   }
 
-  public class FieldStructurePoses {
+  public static class FieldStructurePoses {
     public static final Translation2d BLUE_HUB_POSE = new Translation2d(4.626, 4.035);
     public static final Translation2d RED_HUB_POSE = new Translation2d(11.915, 4.035);
 
@@ -108,7 +108,7 @@ public class FieldConstants {
             Rotation2d.fromDegrees(180));
   }
 
-  public class FieldStrategicPoses {
+  public static class FieldStrategicPoses {
     public static final Translation2d RIGHT_FEED_POSE =
         new Translation2d(FieldConstants.fieldLength / 8, (FieldConstants.fieldWidth / 4));
     public static final Translation2d LEFT_FEED_POSE =
@@ -122,5 +122,13 @@ public class FieldConstants {
 
     public static final double NOT_SHOOT_LEFT_Y = 4.6;
     public static final double NOT_SHOOT_RIGHT_Y = 3.45;
+  }
+
+  public static class AprilTags {
+    public static final int[] withoutTowerTags = {
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28,
+      29, 30
+    };
+    public static final int[] towerTags = {15, 16, 31, 32};
   }
 }

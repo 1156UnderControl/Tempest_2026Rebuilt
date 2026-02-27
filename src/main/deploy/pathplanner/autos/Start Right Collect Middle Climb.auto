@@ -54,15 +54,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Go To Climb Right Pose"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.3
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Go To Climb Right Pose"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.5
+                }
+              }
+            ]
           }
         },
         {
@@ -78,7 +85,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.7
+                  "waitTime": 1.5
                 }
               }
             ]
