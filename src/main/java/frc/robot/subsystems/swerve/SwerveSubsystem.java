@@ -309,7 +309,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
         0,
         0,
         0);
-    this.verifyClimbPoseEstimation();
+    //this.verifyClimbPoseEstimation();
   }
 
   public boolean isAtTargetPositionWithHeading() {
@@ -392,8 +392,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     }
   }
 
-  public void setClimbPoseEstimation(boolean isUsingTowerEstimation) {
-    this.isUsingTowerEstimation = isUsingTowerEstimation;
+  public void setAutoPoseEstimatorToDefault(boolean isUsingTowerEstimation) {
+    overrideAutonomousPoseEstimator(null);
   }
 
   private void verifyClimbPoseEstimation() {
@@ -409,4 +409,15 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
       poseEstimatorFrontLeft.considerAllTags();
     }
   }
+
+  public void setPoseEstimatorToClimbOnAuto(boolean climbingOnRight){
+    if(climbingOnRight){
+      this.overrideAutonomousPoseEstimator(poseEstimatorBackRight);
+    }else{
+      this.overrideAutonomousPoseEstimator(poseEstimatorBackLeft);
+    }
+  }
+  
+
+
 }
