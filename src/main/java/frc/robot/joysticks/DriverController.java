@@ -131,17 +131,12 @@ public class DriverController implements IDriverController {
   }
 
   @Override
-  public Trigger setHasAlgae() {
-    return driverController.leftStick().and(driverController.rightStick().negate());
+  public Trigger leftStick() {
+    return driverController.leftStick();
   }
 
   @Override
-  public Trigger setHasCoral() {
-    return driverController.rightStick().and(driverController.leftStick().negate());
-  }
-
-  @Override
-  public Trigger setNoObject() {
-    return driverController.leftStick().and(driverController.rightStick());
+  public Trigger rightStick() {
+    return driverController.rightStick();
   }
 }
