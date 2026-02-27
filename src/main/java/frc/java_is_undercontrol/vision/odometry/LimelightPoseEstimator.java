@@ -31,7 +31,7 @@ public class LimelightPoseEstimator implements PoseEstimator {
 
   private Boolean useVisionHeadingCorrection = false;
 
-  private int[] filteredApriltags = new int[0];
+  private int[] apriltagsToSee = new int[0];
 
   public LimelightPoseEstimator(
       String limelightName,
@@ -45,6 +45,7 @@ public class LimelightPoseEstimator implements PoseEstimator {
     for (int i = 0; i < this.apriltagsIDs.length; i++) {
       this.apriltagsIDs[i] = i + 1;
     }
+    this.apriltagsToSee = this.apriltagsIDs;
     Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, new Pose3d());
   }
 
@@ -57,7 +58,7 @@ public class LimelightPoseEstimator implements PoseEstimator {
   }
 
   public Optional<PoseEstimation> getEstimatedPose(Pose2d referencePose) {
-    LimelightHelpers.SetFiducialIDFiltersOverride(limelightName, filteredApriltags);
+    LimelightHelpers.SetFiducialIDFiltersOverride(limelightName, apriltagsToSee);
     try {
       if (!LimelightHelpers.getTV(this.limelightName)
           || Math.abs(OdometryEnabledSwerveSubsystem.robotAngularVelocity)
@@ -103,10 +104,14 @@ public class LimelightPoseEstimator implements PoseEstimator {
   /**
    * Every int inside the array of the parameter will be a apriltag ID to be considered.
    *
-   * @param aprilTagsToFilter array of the tags that you want to be seen
+   * @param aprilTagsToSee array of the tags that you want to be seen
    */
-  public void onlySeeApriltagsIDs(int[] aprilTagsToFilter) {
-    this.filteredApriltags = aprilTagsToFilter;
+  public void onlySeeApriltagsIDs(int[] aprilTagsToSee) {
+    this.apriltagsToSee = aprilTagsToSee;
+  }
+
+  public void considerAllTags() {
+    this.apriltagsToSee = apriltagsIDs;
   }
 
   private boolean poseOutOfField(PoseEstimation pose2D) {
