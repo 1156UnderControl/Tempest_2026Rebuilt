@@ -14,7 +14,9 @@ public class GoToClimbPoseLeft extends Command {
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {
+    this.swerve.goToClimbPoseLeft();
+  }
 
   @Override
   public void execute() {

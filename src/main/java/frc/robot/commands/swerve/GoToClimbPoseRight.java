@@ -1,5 +1,6 @@
 package frc.robot.commands.swerve;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
@@ -9,11 +10,13 @@ public class GoToClimbPoseRight extends Command {
 
   public GoToClimbPoseRight(SwerveSubsystem swerve) {
     this.swerve = swerve;
-    addRequirements(swerve);
+    this.addRequirements(swerve);
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {
+    this.swerve.goToClimbPoseRight();
+  }
 
   @Override
   public void execute() {
@@ -27,6 +30,8 @@ public class GoToClimbPoseRight extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    this.swerve.stopSwerve();
+    if (DriverStation.isAutonomous()) {
+      this.swerve.stopSwerve();
+    }
   }
 }
