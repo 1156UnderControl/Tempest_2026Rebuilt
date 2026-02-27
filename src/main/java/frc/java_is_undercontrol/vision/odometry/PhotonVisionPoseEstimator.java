@@ -153,6 +153,10 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
     this.filteredApriltags = aprilTagsToFilter;
   }
 
+  public void considerAllTags() {
+    this.filteredApriltags = new int[0];
+  }
+
   private PoseEstimation convertPhotonPoseEstimation(EstimatedRobotPose photonPoseEstimation) {
     double avgTagDist =
         photonPoseEstimation
