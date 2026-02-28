@@ -50,7 +50,7 @@ public class DriverController implements IDriverController {
 
   @Override
   public Trigger slowActivate() {
-    return driverController.leftTrigger(0.2);
+    return driverController.leftTrigger();
   }
 
   @Override
