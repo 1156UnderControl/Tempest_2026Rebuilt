@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.swerve.GoToClimbTeleop;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
 import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
@@ -90,6 +91,14 @@ public class States {
     this.setHopperDefaultStates();
     this.setShooterDefaultStates();
     // this.setClimberDefaultStates();
+  }
+
+  public Command goToClimb() {
+    return new GoToClimbTeleop(this.drive);
+  }
+
+  public Command driveSwerveSlow() {
+    return Commands.run(() -> this.drive.driveAlignAngleJoystickSuperSlow(), drive);
   }
 
   public Command shootState() {
