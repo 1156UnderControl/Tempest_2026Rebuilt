@@ -66,6 +66,18 @@ public class DriverController implements IDriverController {
   }
 
   @Override
+  public boolean notUsingTranslationJoystick() {
+    return Util.inRange(
+            getLeftX(),
+            -JoystickConstants.DEADBAND_ROTATION,
+            JoystickConstants.DEADBAND_ROTATION)
+        || Util.inRange(
+            getLeftY(),
+            -JoystickConstants.DEADBAND_ROTATION,
+            JoystickConstants.DEADBAND_ROTATION);
+  }
+
+  @Override
   public Trigger a() {
     return driverController.a();
   }
