@@ -286,13 +286,13 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     this.state = "DRIVE_ALIGN_ANGLE_JOY";
     Rotation2d nearestAngleToLock;
     if (getPose().getRotation().getDegrees() > 90 || getPose().getRotation().getDegrees() < -90) {
-      if(getPose().getRotation().getDegrees() < -90){
+      if (getPose().getRotation().getDegrees() < -90) {
         nearestAngleToLock = new Rotation2d(Degrees.of(45));
       } else {
         nearestAngleToLock = new Rotation2d(Degrees.of(135));
       }
     } else {
-      if(getPose().getRotation().getDegrees() < 0){
+      if (getPose().getRotation().getDegrees() < 0) {
         nearestAngleToLock = new Rotation2d(Degrees.of(-45));
       } else {
         nearestAngleToLock = new Rotation2d(Degrees.of(-135));
@@ -300,12 +300,10 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     }
     this.driveFieldOrientedLockedJoystickAngle(
         desiredSpeeds,
+        !controller.notUsingJoystick() ? controller.getCOS_Joystick() : nearestAngleToLock.getCos(),
         !controller.notUsingJoystick()
-                  ? controller.getCOS_Joystick()
-                  : nearestAngleToLock.getCos(),
-              !controller.notUsingJoystick()
-                  ? controller.getSIN_Joystick()
-                  : nearestAngleToLock.getSin());
+            ? controller.getSIN_Joystick()
+            : nearestAngleToLock.getSin());
   }
 
   public void driveRotating(boolean rotateRight) {
@@ -407,6 +405,17 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     return super.wheelRadiusCharacterization();
   }
 
+  public boolean isAtSafezoneForGoToClimb() {
+    return (getPose().getY() > 4.1 || getPose().getY() < 3.2);
+  }
+
+  public boolean isAtRightClimb() {
+    if (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red) {
+      return getPose().getY() > 4.3;
+    }
+    return getPose().getY() < 3.7;
+  }
+
   public void goToClimbPoseRight() {
     if (DriverStation.getAlliance() != null) {
       super.driveToPose(
@@ -429,7 +438,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     }
   }
 
-  public void setAutoPoseEstimatorToDefault(boolean isUsingTowerEstimation) {
+  public void setAutoPoseEstimatorToDefault() {
     overrideAutonomousPoseEstimator(null);
   }
 
