@@ -86,20 +86,17 @@ public class Robot extends LoggedRobot {
   public void robotPeriodic() {
     ShooterCalculator.getInstance().clearShootingParameters();
     CommandScheduler.getInstance().run();
-    MatchStatusTracker.getInstance().sendHubStatusToDashboard();
-    MatchStatusTracker.getInstance().sendMatchTimeToDashboard();
-    MatchStatusTracker.getInstance().sendHubTiming();
     SmartDashboard.putBoolean("Is Active", HubShiftUtil.getOfficialShiftInfo().active());
     SmartDashboard.putString("Shift:", HubShiftUtil.getOfficialShiftInfo().currentShift().name());
     SmartDashboard.putNumber("Match Time:", HubShiftUtil.getOfficialShiftInfo().elapsedTime());
     SmartDashboard.putNumber(
         "Time Until Next Shift:", HubShiftUtil.getOfficialShiftInfo().remainingTime());
 
-              if (HubShiftUtil.getOfficialShiftInfo().remainingTime() < 15){
+    if (HubShiftUtil.getOfficialShiftInfo().remainingTime() < 15) {
       LimelightHelpers.setLEDMode_ForceBlink(VisionConstants.backRightLimelightName);
     } else {
       LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
-   }
+    }
   }
 
   @Override
@@ -135,24 +132,18 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-
-
   }
 
   @Override
   public void teleopPeriodic() {
 
-
-     if (HubShiftUtil.getOfficialShiftInfo().active()){
+    if (HubShiftUtil.getOfficialShiftInfo().active()) {
       LimelightHelpers.setLEDMode_ForceOn(VisionConstants.backRightLimelightName);
     } else {
-         LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
-       }
-      }
-      
+      LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
+    }
+  }
 
-
- 
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
