@@ -427,7 +427,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     }
   }
 
-  public void setAutoPoseEstimatorToDefault(boolean isUsingTowerEstimation) {
+  public void setAutoPoseEstimatorToDefault() {
     overrideAutonomousPoseEstimator(null);
   }
 

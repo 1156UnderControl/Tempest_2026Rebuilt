@@ -61,7 +61,6 @@ public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem
     this.constraints = config.pathPlannerConfig.pathFinderConstraints;
     this.autonomousPoseEstimator = config.autonomousPoseEstimator;
     this.teleopPoseEstimator = config.teleoperatedPoseEstimator;
-    this.defaultAutonomousPoseEstimator = config.teleoperatedPoseEstimator;
     this.defaultAutonomousPoseEstimator = config.autonomousPoseEstimator;
     this.defaultTeleopPoseEstimator = config.teleoperatedPoseEstimator;
     this.targetPose = new Pose2d();
@@ -99,6 +98,7 @@ public abstract class OdometryEnabledSwerveSubsystem extends BaseSwerveSubsystem
       PoseEstimation estimatedPose = possibleEstimatedPose.get();
       Pose2d poseVision = estimatedPose.estimatedPose.toPose2d();
       Logger.recordOutput("Odometry/PoseVision", poseVision);
+      Logger.recordOutput("PoseEstimator/CurrentPoseEstimator", poseEstimator.getEstimatorName());
       this.addVisionMeasurement(
           poseVision, estimatedPose.timestampSeconds, estimatedPose.visionStdDev);
     }
