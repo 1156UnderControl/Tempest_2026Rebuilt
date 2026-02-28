@@ -56,7 +56,7 @@ public class FieldConstants {
     public static final Pose2d BLUE_LEFT_TOWER =
         new Pose2d(1.1, 4.598, Rotation2d.fromDegrees(90));
     public static final Pose2d BLUE_RIGHT_TOWER =
-        new Pose2d(BLUE_LEFT_TOWER.getX(), 2.873, Rotation2d.fromDegrees(-90));
+        new Pose2d(1.048, 2.881, Rotation2d.fromDegrees(-90));
 
     public static final Pose2d RED_LEFT_TOWER =
         new Pose2d(
