@@ -11,27 +11,97 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 4.5
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Climb From Depot"
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Go To Climb Left Pose"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Raise Climber"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.0
+                }
+              }
+            ]
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Default Climber"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Go To Climb Left Pose"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.5
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.5
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Retract Intake"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.7
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.5
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Default Climber"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop Shooting Fuels"
+                }
+              }
+            ]
           }
         }
       ]

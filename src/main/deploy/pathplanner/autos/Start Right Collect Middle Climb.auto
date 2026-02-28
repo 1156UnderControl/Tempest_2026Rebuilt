@@ -92,9 +92,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Default Climber"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Default Climber"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop Shooting Fuels"
+                }
+              }
+            ]
           }
         }
       ]
