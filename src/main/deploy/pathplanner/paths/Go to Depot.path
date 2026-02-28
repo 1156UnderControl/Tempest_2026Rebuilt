@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.7136707287998822,
+        "x": 2.445327492297535,
         "y": 4.977612556851525
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.650297570502871,
-        "y": 5.0452975541264165
+        "x": 1.8825263167546948,
+        "y": 4.936278013130869
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Center Depot"
     },
     {
       "anchor": {
@@ -32,15 +32,15 @@
     },
     {
       "anchor": {
-        "x": 0.37,
+        "x": 0.47,
         "y": 5.113
       },
       "prevControl": {
-        "x": 0.41311992243239415,
+        "x": 0.5131199224323941,
         "y": 4.830116253065529
       },
       "nextControl": {
-        "x": 0.3323276839178208,
+        "x": 0.4323276839178207,
         "y": 5.360145294515199
       },
       "isLocked": false,
@@ -48,32 +48,32 @@
     },
     {
       "anchor": {
-        "x": 0.37,
+        "x": 0.47,
         "y": 6.114426678565866
       },
       "prevControl": {
-        "x": 0.2965951979499036,
-        "y": 5.875446062121801
+        "x": 0.4300006976140327,
+        "y": 5.867647311906829
       },
       "nextControl": {
-        "x": 0.4459120748380565,
-        "y": 6.361570106974892
+        "x": 0.5099993023859675,
+        "y": 6.361206045224904
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.37,
-        "y": 5.113
+        "x": 0.47,
+        "y": 4.95
       },
       "prevControl": {
-        "x": 0.37,
-        "y": 4.863
+        "x": 0.47,
+        "y": 4.7
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Depot"
     }
   ],
   "rotationTargets": [
@@ -120,12 +120,23 @@
     },
     {
       "name": "Extend Intake",
-      "waypointRelativePos": 0.13555992141453757,
+      "waypointRelativePos": 0.08027382121807466,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
           "name": "Extend Intake"
+        }
+      }
+    },
+    {
+      "name": "Stop Shooting Fuels",
+      "waypointRelativePos": 0.987997298624755,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Stop Shooting Fuels"
         }
       }
     }
@@ -139,14 +150,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
+    "velocity": 0.5,
     "rotation": 90.0
   },
   "reversed": false,
   "folder": "Depot Collect - Score",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 180.0
+    "velocity": 1.0,
+    "rotation": 90.0
   },
   "useDefaultConstraints": false
 }
