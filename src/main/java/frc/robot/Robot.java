@@ -95,11 +95,7 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putNumber(
         "Time Until Next Shift:", HubShiftUtil.getOfficialShiftInfo().remainingTime());
 
-              if (HubShiftUtil.getOfficialShiftInfo().remainingTime() < 15){
-      LimelightHelpers.setLEDMode_ForceBlink(VisionConstants.backRightLimelightName);
-    } else {
-      LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
-   }
+     
   }
 
   @Override
@@ -143,11 +139,21 @@ public class Robot extends LoggedRobot {
   public void teleopPeriodic() {
 
 
-     if (HubShiftUtil.getOfficialShiftInfo().active()){
-      LimelightHelpers.setLEDMode_ForceOn(VisionConstants.backRightLimelightName);
-    } else {
-         LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
+     if (HubShiftUtil.getOfficialShiftInfo().remainingTime() < 15 && HubShiftUtil.getOfficialShiftInfo().active())
+     {
+      LimelightHelpers.setLEDMode_ForceBlink(VisionConstants.backRightLimelightName);
+     
+    } else if
+       (HubShiftUtil.getOfficialShiftInfo().active()){
+       LimelightHelpers.setLEDMode_ForceOn(VisionConstants.backRightLimelightName);
+      
        }
+      else {
+      LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
+       
+   }
+      
+
       }
       
 
