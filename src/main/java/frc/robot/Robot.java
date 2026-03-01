@@ -86,9 +86,6 @@ public class Robot extends LoggedRobot {
   public void robotPeriodic() {
     ShooterCalculator.getInstance().clearShootingParameters();
     CommandScheduler.getInstance().run();
-    MatchStatusTracker.getInstance().sendHubStatusToDashboard();
-    MatchStatusTracker.getInstance().sendMatchTimeToDashboard();
-    MatchStatusTracker.getInstance().sendHubTiming();
     SmartDashboard.putBoolean("Is Active", HubShiftUtil.getOfficialShiftInfo().active());
     SmartDashboard.putString("Shift:", HubShiftUtil.getOfficialShiftInfo().currentShift().name());
     SmartDashboard.putNumber("Match Time:", HubShiftUtil.getOfficialShiftInfo().elapsedTime());
