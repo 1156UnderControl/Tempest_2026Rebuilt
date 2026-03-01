@@ -60,7 +60,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
   private StabilizeChecker stableAtTargetPose = new StabilizeChecker(0.150);
 
-  @AutoLogOutput String state = "NULL";
+  @AutoLogOutput protected String state = "NULL";
 
   @AutoLogOutput String poseEstimator;
 
@@ -417,24 +417,32 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   }
 
   public void goToClimbPoseRight() {
-    if (DriverStation.getAlliance() != null) {
-      super.driveToPose(
-          DriverStation.getAlliance().get() == Alliance.Blue
-              ? FieldConstants.FieldStructurePoses.BLUE_RIGHT_TOWER
-              : FieldConstants.FieldStructurePoses.RED_RIGHT_TOWER);
+    this.state = "GO_TO_CLIMB_RIGHT";
+    Pose2d targetPose;
+    if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+      targetPose = FieldConstants.FieldStructurePoses.RED_RIGHT_TOWER;
     } else {
-      super.driveToPose(FieldConstants.FieldStructurePoses.BLUE_RIGHT_TOWER);
+      targetPose = FieldConstants.FieldStructurePoses.BLUE_RIGHT_TOWER;
+    }
+    if (DriverStation.isTeleop()) {
+      super.driveToPose(targetPose, 1.5);
+    } else {
+      super.driveToPose(targetPose);
     }
   }
 
   public void goToClimbPoseLeft() {
-    if (DriverStation.getAlliance() != null) {
-      super.driveToPose(
-          DriverStation.getAlliance().get() == Alliance.Blue
-              ? FieldConstants.FieldStructurePoses.BLUE_LEFT_TOWER
-              : FieldConstants.FieldStructurePoses.RED_LEFT_TOWER);
+    this.state = "GO_TO_CLIMB_LEFT";
+    Pose2d targetPose;
+    if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+      targetPose = FieldConstants.FieldStructurePoses.RED_LEFT_TOWER;
     } else {
-      super.driveToPose(FieldConstants.FieldStructurePoses.BLUE_LEFT_TOWER);
+      targetPose = FieldConstants.FieldStructurePoses.BLUE_LEFT_TOWER;
+    }
+    if (DriverStation.isTeleop()) {
+      super.driveToPose(targetPose, 1.5);
+    } else {
+      super.driveToPose(targetPose);
     }
   }
 
