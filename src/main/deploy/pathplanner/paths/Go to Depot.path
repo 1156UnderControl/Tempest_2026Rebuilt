@@ -96,7 +96,7 @@
       "minWaypointRelativePos": 1.8101362966601182,
       "maxWaypointRelativePos": 4.0,
       "constraints": {
-        "maxVelocity": 0.5,
+        "maxVelocity": 0.8,
         "maxAcceleration": 2.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -131,7 +131,7 @@
     },
     {
       "name": "Stop Shooting Fuels",
-      "waypointRelativePos": 0.987997298624755,
+      "waypointRelativePos": 1.7883718074656199,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -142,7 +142,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 2.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -156,7 +156,7 @@
   "reversed": false,
   "folder": "Depot Collect - Score",
   "idealStartingState": {
-    "velocity": 1.0,
+    "velocity": 1.5,
     "rotation": 90.0
   },
   "useDefaultConstraints": false

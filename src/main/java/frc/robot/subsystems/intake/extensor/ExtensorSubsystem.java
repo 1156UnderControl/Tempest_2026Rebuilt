@@ -201,35 +201,6 @@ public class ExtensorSubsystem extends SubsystemBase {
                     }));
   }
 
-  public Command homeExtending(Current threshhold) {
-    Debouncer currentDebouncer =
-        new Debouncer(0.3); // Current threshold is only detected if exceeded for 0.4 seconds.
-    Voltage runVolts = Volts.of(-3); // Volts required to run the mechanism to the limit.
-    Distance limitHit =
-        ExtensorConstants.setpoints.INTAKE_HOMED_EXTENDED_POSITION; // Limit which gets hit.
-    AngularVelocity velocityThreshold =
-        DegreesPerSecond.of(
-            2); // The maximum amount of movement for the extensor to be considered "hitting the
-    // hard limit".
-    return this.extend()
-        .andThen(
-            Commands.startRun(
-                    extensorMotor::stopClosedLoopController, // Stop the closed loop controller
-                    () -> extensorMotor.setVoltage(runVolts)) // Set the voltage of the motor
-                .until(
-                    () ->
-                        currentDebouncer.calculate(
-                            extensorMotor.getStatorCurrent().gte(threshhold)
-                                && extensorMotor.getMechanismVelocity().abs(DegreesPerSecond)
-                                    <= velocityThreshold.in(DegreesPerSecond)))
-                .finallyDo(
-                    () -> {
-                      extensorMotor.setEncoderPosition(limitHit);
-                      extensorMotor.startClosedLoopController();
-                    }))
-        .andThen(this.extend());
-  }
-
   private Command setLength(Distance length) {
     return this.extensor.runTo(length, ExtensorConstants.DEADBAND_IS_AT);
   }
