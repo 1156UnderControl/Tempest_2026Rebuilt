@@ -21,7 +21,7 @@ public class GoToClimbTeleop extends Command {
 
   @Override
   public void execute() {
-    if (!this.wentToClimb && this.swerve.isAtSafezoneForGoToClimb()) {
+    if (!this.wentToClimb && !this.swerve.isAtSafezoneForGoToClimb()) {
       this.swerve.driveAlignAngleJoystick();
     } else {
       this.wentToClimb = true;
