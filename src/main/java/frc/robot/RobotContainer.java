@@ -224,7 +224,7 @@ public class RobotContainer {
             Commands.parallel(
                 this.states
                     .goToClimb()
-                    .until(() -> this.driverController.notUsingTranslationJoystick())
+                    .until(() -> !this.driverController.notUsingTranslationJoystick())
                     .andThen(this.states.driveSwerveSlow().until(this.driverController.start())),
                 this.states.climbState()));
 
