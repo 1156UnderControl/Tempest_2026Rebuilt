@@ -173,7 +173,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   public void driveAlignAngleJoystickYfixedOnTrench() {
     Translation2d desiredSpeeds =
         this.getLinearVelocityTranslationFromJoysticks(-controller.getLeftY(), 0);
-    this.state = "DRIVE_ALIGN_ANGLE_JOY";
+    this.state = "DRIVE_ALIGN_TRENCH";
 
     Rotation2d nearestAngleToLock;
     if (getPose().getRotation().getDegrees() > 90 || getPose().getRotation().getDegrees() < -90) {
