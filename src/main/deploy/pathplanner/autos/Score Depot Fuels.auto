@@ -7,6 +7,12 @@
         {
           "type": "path",
           "data": {
+            "pathName": "Bump To Center Alliance"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "Go to Depot"
           }
         },
