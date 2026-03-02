@@ -193,6 +193,17 @@
           "name": "Stop Shooting Fuels"
         }
       }
+    },
+    {
+      "name": "Shoot Fuels",
+      "waypointRelativePos": 4.7722633226915505,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Shoot Fuels"
+        }
+      }
     }
   ],
   "globalConstraints": {

@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "Shoot Fuels",
-      "waypointRelativePos": 0.11483147102161106,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
