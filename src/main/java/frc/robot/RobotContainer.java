@@ -17,6 +17,7 @@ import frc.java_is_undercontrol.swerve.io.module.ModuleIOSim;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
 import frc.robot.commands.swerve.PassThroughBump;
 import frc.robot.commands.swerve.PassThroughTrenchLeftAlliance;
+import frc.robot.commands.swerve.ShootOnMoveLimit;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
@@ -232,6 +233,8 @@ public class RobotContainer {
 
     new Trigger(this.driverController.slowActivate())
         .whileTrue(new PassThroughTrenchLeftAlliance(drive));
+
+    new Trigger(this.driverController.leftBumper()).whileTrue(new ShootOnMoveLimit(drive));
   }
 
   public Command getAutonomousCommand() {

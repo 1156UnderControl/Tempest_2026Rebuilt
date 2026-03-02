@@ -152,14 +152,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   }
 
   public void driveAlignAngleJoystick() {
-    if (controller.leftBumper().getAsBoolean()) {
-      driveRotating(false);
-      return;
-    }
-    if (controller.rightBumper().getAsBoolean()) {
-      driveRotating(true);
-      return;
-    }
+
+
     Translation2d desiredSpeeds =
         this.getLinearVelocityTranslationFromJoysticks(
             controller.getLeftY(), controller.getLeftX());
@@ -370,8 +364,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     ChassisSpeeds desiredSpeeds =
         this.getLinearVelocityChassisSpeedsFromJoysticks(
                 controller.getLeftY(), controller.getLeftX())
-            .times(0.15);
-    this.state = "DRIVE_ALIGN_ANGLE_JOY_SUPER_SLOW";
+            .times(0.30);
+    this.state = "DRIVE_SUPER_SLOW";
     this.driveFieldOrientedLockedJoystickAngle(
         desiredSpeeds, controller.getCOS_Joystick(), controller.getSIN_Joystick());
   }

@@ -159,15 +159,16 @@ public class States {
             }));
   }
 
-  public Command climbState() {
+public Command climbState() {
     return Commands.parallel(
         this.climber.climb(),
-        Commands.runOnce(
-            () -> {
-              this.climberState = "Climbed State";
-              this.driveState = "At Climb Pose State Right";
-            }));
-  }
+        Commands.run(() -> this.drive.driveAlignAngleJoystickSuperSlow()),
+        Commands.runOnce(() -> {
+            this.climberState = "Climbed State";
+            this.driveState = "At Climb Pose State Right";
+        })
+    );
+}
 
   public Command defaultClimberState() {
     return this.climber
