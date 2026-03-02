@@ -406,7 +406,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   }
 
   public boolean isAtSafezoneForGoToClimb() {
-    return (getPose().getY() > 4.1 || getPose().getY() < 3.2);
+    return (getPose().getY() > 5.1 || getPose().getY() < 3) && (getPose().getX() < 2 || getPose().getX() > 14.5);
   }
 
   public boolean isAtRightClimb() {
