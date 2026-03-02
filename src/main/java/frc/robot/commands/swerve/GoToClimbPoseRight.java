@@ -1,6 +1,5 @@
 package frc.robot.commands.swerve;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
@@ -30,8 +29,6 @@ public class GoToClimbPoseRight extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    if (DriverStation.isAutonomous()) {
-      this.swerve.stopSwerve();
-    }
+    this.swerve.stopSwerve();
   }
 }

@@ -17,6 +17,8 @@ public interface IDriverController {
 
   boolean notUsingJoystick();
 
+  boolean notUsingTranslationJoystick();
+
   Trigger y();
 
   Trigger b();

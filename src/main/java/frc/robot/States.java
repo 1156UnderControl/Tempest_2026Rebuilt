@@ -1,9 +1,9 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.swerve.GoToClimbTeleop;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
 import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
@@ -92,6 +92,19 @@ public class States {
     // this.setClimberDefaultStates();
   }
 
+  public Command goToClimb() {
+    return new GoToClimbTeleop(this.drive);
+  }
+
+  public Command driveSwerveSlow() {
+    return Commands.run(() -> this.drive.driveAlignAngleJoystickSuperSlow(), this.drive);
+  }
+
+  public Command driveSwerveNormal() {
+    return Commands.run(() -> drive.driveAlignAngleJoystick(), drive)
+        .alongWith(Commands.runOnce(() -> this.driveState = "Drive Align Joystick State"));
+  }
+
   public Command shootState() {
     return Commands.parallel(this.kicker.shoot())
         .alongWith(
@@ -176,10 +189,7 @@ public class States {
   }
 
   private void setSwerveDefaultStates() {
-    this.drive.setDefaultCommand(
-        Commands.run(() -> drive.driveAlignAngleJoystick(), drive)
-            .onlyIf(() -> DriverStation.isTeleopEnabled())
-            .alongWith(Commands.runOnce(() -> this.driveState = "Drive Align Joystick State")));
+    this.drive.setDefaultCommand(this.driveSwerveNormal());
   }
 
   private void setIntakeDefaultStates() {

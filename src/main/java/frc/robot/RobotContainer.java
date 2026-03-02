@@ -218,6 +218,16 @@ public class RobotContainer {
         .whileTrue(this.extensor.home())
         .onTrue(this.roller.runRoller());
 
+    this.driverController
+        .y()
+        .onTrue(
+            this.states
+                .goToClimb()
+                .until(() -> this.driverController.b().getAsBoolean())
+                .andThen(this.states.driveSwerveSlow().until(this.driverController.b())));
+
+    this.driverController.y().onTrue(this.states.climbState());
+
     this.driverController.rightStick().whileTrue(new PassThroughBump(drive));
 
     new Trigger(this.driverController.slowActivate())

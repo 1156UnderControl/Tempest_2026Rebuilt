@@ -57,6 +57,11 @@ public class ControlBoard implements IDriverController, IOperatorController {
   }
 
   @Override
+  public boolean notUsingTranslationJoystick() {
+    return mDriverController.notUsingTranslationJoystick();
+  }
+
+  @Override
   public Trigger a() {
     return mDriverController.a();
   }

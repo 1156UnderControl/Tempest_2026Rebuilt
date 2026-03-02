@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.java_is_undercontrol.util.Util;
 import frc.robot.constants.JoystickConstants;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 public class DriverController implements IDriverController {
 
@@ -24,11 +25,13 @@ public class DriverController implements IDriverController {
   }
 
   @Override
+  @AutoLogOutput
   public double getLeftX() {
     return -driverController.getLeftX();
   }
 
   @Override
+  @AutoLogOutput
   public double getLeftY() {
     return -driverController.getLeftY();
   }
@@ -63,6 +66,15 @@ public class DriverController implements IDriverController {
             getSIN_Joystick(),
             -JoystickConstants.DEADBAND_ROTATION,
             JoystickConstants.DEADBAND_ROTATION);
+  }
+
+  @Override
+  @AutoLogOutput
+  public boolean notUsingTranslationJoystick() {
+    return Util.inRange(
+            getLeftX(), -JoystickConstants.DEADBAND_ROTATION, JoystickConstants.DEADBAND_ROTATION)
+        && Util.inRange(
+            getLeftY(), -JoystickConstants.DEADBAND_ROTATION, JoystickConstants.DEADBAND_ROTATION);
   }
 
   @Override

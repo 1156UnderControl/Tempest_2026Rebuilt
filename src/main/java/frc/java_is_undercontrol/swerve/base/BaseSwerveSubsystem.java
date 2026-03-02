@@ -61,6 +61,8 @@ public class BaseSwerveSubsystem extends SubsystemBase {
 
   @AutoLogOutput private double lastDesiredJoystickAngleRadians = Double.NaN;
 
+  @AutoLogOutput private boolean notUsingJoystickForRotation = false;
+
   @AutoLogOutput private boolean robotBoostedOnJoystickControl = false;
 
   private final double FF_START_DELAY = 2.0; // Secs
@@ -342,19 +344,21 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     if (this.lastDesiredJoystickAngleRadians == Double.NaN) {
       this.lastDesiredJoystickAngleRadians = this.getPose().getRotation().getRadians();
     }
+    this.notUsingJoystickForRotation =
+        Util.withinHypotDeadband(xHeading, yHeading, joystickAimDeadband);
     double angle =
-        Util.withinHypotDeadband(xHeading, yHeading, joystickAimDeadband)
+        this.notUsingJoystickForRotation
             ? lastDesiredJoystickAngleRadians
-            : Math.atan2(xHeading, yHeading);
+            : DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red
+                ? Math.atan2(xHeading, yHeading) + Math.PI
+                : Math.atan2(xHeading, yHeading);
     // It has to be de pre-inverted angle
     this.lastDesiredJoystickAngleRadians = angle;
     boolean isFlipped =
         DriverStation.getAlliance().isPresent()
             && DriverStation.getAlliance().get() == Alliance.Red;
     Rotation2d targetRotation =
-        isFlipped
-            ? Rotation2d.fromRadians(angle).plus(Rotation2d.kPi)
-            : Rotation2d.fromRadians(angle);
+        isFlipped ? Rotation2d.fromRadians(angle) : Rotation2d.fromRadians(angle);
     Logger.recordOutput("IsFlipped", isFlipped);
     this.targetHeadingDegrees = targetRotation.getDegrees();
     this.targetHeadingRadians = targetRotation.getRadians();

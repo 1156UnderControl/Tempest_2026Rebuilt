@@ -53,8 +53,7 @@ public class FieldConstants {
     public static final Translation2d BLUE_HUB_POSE = new Translation2d(4.626, 4.035);
     public static final Translation2d RED_HUB_POSE = new Translation2d(11.915, 4.035);
 
-    public static final Pose2d BLUE_LEFT_TOWER =
-        new Pose2d(1.1, 4.598, Rotation2d.fromDegrees(90));
+    public static final Pose2d BLUE_LEFT_TOWER = new Pose2d(1.1, 4.598, Rotation2d.fromDegrees(90));
     public static final Pose2d BLUE_RIGHT_TOWER =
         new Pose2d(1.048, 2.881, Rotation2d.fromDegrees(-90));
 
