@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -98,7 +97,12 @@ public class States {
   }
 
   public Command driveSwerveSlow() {
-    return Commands.run(() -> this.drive.driveAlignAngleJoystickSuperSlow(), drive);
+    return Commands.run(() -> this.drive.driveAlignAngleJoystickSuperSlow(), this.drive);
+  }
+
+  public Command driveSwerveNormal() {
+    return Commands.run(() -> drive.driveAlignAngleJoystick(), drive)
+        .alongWith(Commands.runOnce(() -> this.driveState = "Drive Align Joystick State"));
   }
 
   public Command shootState() {
@@ -185,10 +189,7 @@ public class States {
   }
 
   private void setSwerveDefaultStates() {
-    this.drive.setDefaultCommand(
-        Commands.run(() -> drive.driveAlignAngleJoystick(), drive)
-            .onlyIf(() -> DriverStation.isTeleopEnabled())
-            .alongWith(Commands.runOnce(() -> this.driveState = "Drive Align Joystick State")));
+    this.drive.setDefaultCommand(this.driveSwerveNormal());
   }
 
   private void setIntakeDefaultStates() {

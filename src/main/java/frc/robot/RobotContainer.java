@@ -221,12 +221,12 @@ public class RobotContainer {
     this.driverController
         .y()
         .onTrue(
-            Commands.parallel(
-                this.states
-                    .goToClimb()
-                    .until(() -> !this.driverController.notUsingTranslationJoystick())
-                    .andThen(this.states.driveSwerveSlow().until(this.driverController.start())),
-                this.states.climbState()));
+            this.states
+                .goToClimb()
+                .until(() -> this.driverController.b().getAsBoolean())
+                .andThen(this.states.driveSwerveSlow().until(this.driverController.b())));
+
+    this.driverController.y().onTrue(this.states.climbState());
 
     this.driverController.rightStick().whileTrue(new PassThroughBump(drive));
 
