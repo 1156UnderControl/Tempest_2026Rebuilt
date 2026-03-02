@@ -365,7 +365,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
         this.getLinearVelocityChassisSpeedsFromJoysticks(
                 controller.getLeftY(), controller.getLeftX())
             .times(0.30);
-    this.state = "DRIVE_ALIGN_ANGLE_JOY_SUPER_SLOW";
+    this.state = "DRIVE_SUPER_SLOW";
     this.driveFieldOrientedLockedJoystickAngle(
         desiredSpeeds, controller.getCOS_Joystick(), controller.getSIN_Joystick());
   }

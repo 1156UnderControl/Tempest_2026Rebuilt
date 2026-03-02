@@ -9,11 +9,11 @@ public class ShootOnMoveLimit extends Command {
 
   public ShootOnMoveLimit(SwerveSubsystem swerve) {
     this.swerve = swerve;
+    addRequirements(swerve);
   }
 
   @Override
   public void initialize() {
-    addRequirements(swerve);
   }
 
   @Override
