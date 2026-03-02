@@ -349,16 +349,16 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     double angle =
         this.notUsingJoystickForRotation
             ? lastDesiredJoystickAngleRadians
-            : Math.atan2(xHeading, yHeading);
+            : DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red
+                ? Math.atan2(xHeading, yHeading) + Math.PI
+                : Math.atan2(xHeading, yHeading);
     // It has to be de pre-inverted angle
     this.lastDesiredJoystickAngleRadians = angle;
     boolean isFlipped =
         DriverStation.getAlliance().isPresent()
             && DriverStation.getAlliance().get() == Alliance.Red;
     Rotation2d targetRotation =
-        isFlipped
-            ? Rotation2d.fromRadians(angle).plus(Rotation2d.kPi)
-            : Rotation2d.fromRadians(angle);
+        isFlipped ? Rotation2d.fromRadians(angle) : Rotation2d.fromRadians(angle);
     Logger.recordOutput("IsFlipped", isFlipped);
     this.targetHeadingDegrees = targetRotation.getDegrees();
     this.targetHeadingRadians = targetRotation.getRadians();
