@@ -176,10 +176,9 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
             && DriverStation.getAlliance().get() == Alliance.Red;
 
     Translation2d desiredSpeeds =
-      isRedAlliance ? 
-        this.getLinearVelocityTranslationFromJoysticks(-controller.getLeftY(), 0)
-      :
-      this.getLinearVelocityTranslationFromJoysticks(controller.getLeftY(), 0);
+        isRedAlliance
+            ? this.getLinearVelocityTranslationFromJoysticks(-controller.getLeftY(), 0)
+            : this.getLinearVelocityTranslationFromJoysticks(controller.getLeftY(), 0);
 
     this.state = "DRIVE_ALIGN_TRENCH";
 
@@ -187,7 +186,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
         isRedAlliance
             ? RobotStates.getInstance().isOnRedDepotSide()
             : RobotStates.getInstance().isOnBlueDepotSide();
-    if(isRedAlliance){
+    if (isRedAlliance) {
       if (getPose().getRotation().getDegrees() > 90 || getPose().getRotation().getDegrees() < -90) {
         nearestAngleToLock = new Rotation2d(Degrees.of(90));
       } else {
