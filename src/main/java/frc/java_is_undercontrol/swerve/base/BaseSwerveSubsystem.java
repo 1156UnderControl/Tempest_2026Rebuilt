@@ -373,35 +373,6 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     }
   }
 
-  protected void driveFieldOrientedLockedJoystickAngleBump(
-      ChassisSpeeds speeds,
-      double xHeading,
-      double yHeading,
-      double joystickAimDeadband,
-      boolean allianceBasedVelocities) {
-    double angle = Math.atan2(xHeading, yHeading);
-    this.lastDesiredJoystickAngleRadians = angle;
-    boolean isFlipped =
-        DriverStation.getAlliance().isPresent()
-            && DriverStation.getAlliance().get() == Alliance.Red;
-    Rotation2d targetRotation =
-        isFlipped
-            ? Rotation2d.fromRadians(angle).plus(Rotation2d.kPi)
-            : Rotation2d.fromRadians(angle);
-    Logger.recordOutput("IsFlipped", isFlipped);
-    this.targetHeadingDegrees = targetRotation.getDegrees();
-    this.targetHeadingRadians = targetRotation.getRadians();
-    double omega =
-        angleController.calculate(drive.getRotation().getRadians(), targetHeadingRadians);
-    ChassisSpeeds adjustedSpeeds =
-        new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, omega);
-    if (allianceBasedVelocities) {
-      driveFieldOrientedAllianceBased(adjustedSpeeds);
-    } else {
-      driveFieldOriented(adjustedSpeeds);
-    }
-  }
-
   protected void driveFieldOrientedLockedJoystickAngle(
       ChassisSpeeds speeds, double xHeading, double yHeading, boolean allianceBasedVelocities) {
     driveFieldOrientedLockedJoystickAngle(
@@ -411,12 +382,6 @@ public class BaseSwerveSubsystem extends SubsystemBase {
   protected void driveFieldOrientedLockedJoystickAngle(
       ChassisSpeeds speeds, double xHeading, double yHeading) {
     driveFieldOrientedLockedJoystickAngle(
-        speeds, xHeading, yHeading, this.joystickAimDeadband, true);
-  }
-
-  protected void driveFieldOrientedLockedJoystickBump(
-      ChassisSpeeds speeds, double xHeading, double yHeading) {
-    driveFieldOrientedLockedJoystickAngleBump(
         speeds, xHeading, yHeading, this.joystickAimDeadband, true);
   }
 
@@ -431,12 +396,6 @@ public class BaseSwerveSubsystem extends SubsystemBase {
       Translation2d speeds, double xHeading, double yHeading) {
     ChassisSpeeds speedsWithTranslation = new ChassisSpeeds(speeds.getX(), speeds.getY(), 0);
     driveFieldOrientedLockedJoystickAngle(speedsWithTranslation, xHeading, yHeading);
-  }
-
-  protected void driveFieldOrientedLockedJoystickAngleBump(
-      Translation2d speeds, double xHeading, double yHeading) {
-    ChassisSpeeds speedsWithTranslation = new ChassisSpeeds(speeds.getX(), speeds.getY(), 0);
-    driveFieldOrientedLockedJoystickBump(speedsWithTranslation, xHeading, yHeading);
   }
 
   protected void driveFieldOrientedAllianceBased(ChassisSpeeds speeds) {

@@ -40,6 +40,8 @@ import frc.robot.joysticks.DriverController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.photonvision.PhotonCamera;
 
@@ -268,7 +270,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     Rotation2d nearestAngleToLock;
     if (getPose().getRotation().getDegrees() > 90 || getPose().getRotation().getDegrees() < -90) {
       if (getPose().getRotation().getDegrees() < -90) {
-        nearestAngleToLock = new Rotation2d(Degrees.of(45));
+        nearestAngleToLock = new Rotation2d(Degrees.of(-135));
       } else {
         nearestAngleToLock = new Rotation2d(Degrees.of(135));
       }
@@ -276,19 +278,18 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
       if (getPose().getRotation().getDegrees() < 0) {
         nearestAngleToLock = new Rotation2d(Degrees.of(-45));
       } else {
-        nearestAngleToLock = new Rotation2d(Degrees.of(-135));
+        nearestAngleToLock = new Rotation2d(Degrees.of(45));
       }
     }
     return nearestAngleToLock;
   }
 
   public void driveAlignBump(Rotation2d lockedAngle) {
-    Translation2d desiredSpeeds =
-        this.getLinearVelocityTranslationFromJoysticks(
+    ChassisSpeeds desiredSpeeds = 
+      this.getLinearVelocityChassisSpeedsFromJoysticks(
             controller.getLeftY(), controller.getLeftX());
     this.state = "DRIVE_ALIGN_ANGLE_BUMP";
-    this.driveFieldOrientedLockedJoystickAngleBump(
-        desiredSpeeds, lockedAngle.getCos(), lockedAngle.getSin());
+    this.driveFieldOrientedLockedAngle(desiredSpeeds, lockedAngle, true);
   }
 
   public void driveRotating(boolean rotateRight) {
