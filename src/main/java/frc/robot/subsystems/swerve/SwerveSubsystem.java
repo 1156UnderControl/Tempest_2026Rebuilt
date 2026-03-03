@@ -164,10 +164,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   }
 
   public void driveAlignAngleJoystickYfixedOnTrench() {
-    Translation2d desiredSpeeds =
-        this.getLinearVelocityTranslationFromJoysticks(-controller.getLeftY(), 0);
-    this.state = "DRIVE_ALIGN_TRENCH";
-
     Rotation2d nearestAngleToLock;
     if (getPose().getRotation().getDegrees() > 90 || getPose().getRotation().getDegrees() < -90) {
       nearestAngleToLock = new Rotation2d(Degrees.of(90));
@@ -175,93 +171,57 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
       nearestAngleToLock = new Rotation2d(Degrees.of(-90));
     }
 
-    if (DriverStation.getAlliance().isEmpty()) {
-      if (RobotStates.getInstance().isOnBlueDepotSide()) {
-        super.driveToSpecificYinField(
-            FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY(),
-            controller.turboActivate().getAsBoolean()
-                ? TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)
-                : 2.5,
-            desiredSpeeds,
-            !controller.notUsingJoystick()
-                ? controller.getCOS_Joystick()
-                : nearestAngleToLock.getCos(),
-            !controller.notUsingJoystick()
-                ? controller.getSIN_Joystick()
-                : nearestAngleToLock.getSin());
+    boolean isRedAlliance =
+        DriverStation.getAlliance().isPresent()
+            && DriverStation.getAlliance().get() == Alliance.Red;
+
+    Translation2d desiredSpeeds =
+        isRedAlliance
+            ? this.getLinearVelocityTranslationFromJoysticks(-controller.getLeftY(), 0)
+            : this.getLinearVelocityTranslationFromJoysticks(controller.getLeftY(), 0);
+
+    this.state = "DRIVE_ALIGN_TRENCH";
+
+    boolean isOnDepotSide =
+        isRedAlliance
+            ? RobotStates.getInstance().isOnRedDepotSide()
+            : RobotStates.getInstance().isOnBlueDepotSide();
+    if (isRedAlliance) {
+      if (getPose().getRotation().getDegrees() > 90 || getPose().getRotation().getDegrees() < -90) {
+        nearestAngleToLock = new Rotation2d(Degrees.of(90));
       } else {
-        super.driveToSpecificYinField(
-            FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE.getY(),
-            controller.turboActivate().getAsBoolean()
-                ? TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)
-                : 2.5,
-            desiredSpeeds,
-            !controller.notUsingJoystick()
-                ? controller.getCOS_Joystick()
-                : nearestAngleToLock.getCos(),
-            !controller.notUsingJoystick()
-                ? controller.getSIN_Joystick()
-                : nearestAngleToLock.getSin());
+        nearestAngleToLock = new Rotation2d(Degrees.of(-90));
       }
     } else {
-      if (DriverStation.getAlliance().get() == Alliance.Blue) {
-        if (RobotStates.getInstance().isOnBlueDepotSide()) {
-          super.driveToSpecificYinField(
-              FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY(),
-              controller.turboActivate().getAsBoolean()
-                  ? TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)
-                  : 2.5,
-              desiredSpeeds,
-              !controller.notUsingJoystick()
-                  ? controller.getCOS_Joystick()
-                  : nearestAngleToLock.getCos(),
-              !controller.notUsingJoystick()
-                  ? controller.getSIN_Joystick()
-                  : nearestAngleToLock.getSin());
-        } else {
-          super.driveToSpecificYinField(
-              FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE.getY(),
-              controller.turboActivate().getAsBoolean()
-                  ? TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)
-                  : 2.5,
-              desiredSpeeds,
-              !controller.notUsingJoystick()
-                  ? controller.getCOS_Joystick()
-                  : nearestAngleToLock.getCos(),
-              !controller.notUsingJoystick()
-                  ? controller.getSIN_Joystick()
-                  : nearestAngleToLock.getSin());
-        }
+      if (getPose().getRotation().getDegrees() > 90 || getPose().getRotation().getDegrees() < -90) {
+        nearestAngleToLock = new Rotation2d(Degrees.of(-90));
       } else {
-        if (RobotStates.getInstance().isOnRedDepotSide()) {
-          super.driveToSpecificYinField(
-              FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_RED.getY(),
-              controller.turboActivate().getAsBoolean()
-                  ? TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)
-                  : 2.5,
-              desiredSpeeds,
-              !controller.notUsingJoystick()
-                  ? controller.getCOS_Joystick()
-                  : nearestAngleToLock.getCos(),
-              !controller.notUsingJoystick()
-                  ? controller.getSIN_Joystick()
-                  : nearestAngleToLock.getSin());
-        } else {
-          super.driveToSpecificYinField(
-              FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_RED.getY(),
-              controller.turboActivate().getAsBoolean()
-                  ? TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)
-                  : 2.5,
-              desiredSpeeds,
-              !controller.notUsingJoystick()
-                  ? controller.getCOS_Joystick()
-                  : nearestAngleToLock.getCos(),
-              !controller.notUsingJoystick()
-                  ? controller.getSIN_Joystick()
-                  : nearestAngleToLock.getSin());
-        }
+        nearestAngleToLock = new Rotation2d(Degrees.of(90));
       }
     }
+
+    double trenchY;
+    if (isRedAlliance) {
+      trenchY =
+          isOnDepotSide
+              ? FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_RED.getY()
+              : FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_RED.getY();
+    } else {
+      trenchY =
+          isOnDepotSide
+              ? FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_LEFT_BLUE.getY()
+              : FieldConstants.FieldStructurePoses.SAFE_ALLIANCE_TRENCH_POSE_RIGHT_BLUE.getY();
+    }
+
+    double speed =
+        controller.turboActivate().getAsBoolean()
+            ? TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)
+            : 2.5;
+    boolean usingJoystick = !controller.notUsingJoystick();
+    double cosValue = usingJoystick ? controller.getCOS_Joystick() : nearestAngleToLock.getCos();
+    double sinValue = usingJoystick ? controller.getSIN_Joystick() : nearestAngleToLock.getSin();
+
+    super.driveToSpecificYinField(trenchY, speed, desiredSpeeds, cosValue, sinValue);
   }
 
   public Rotation2d getNearestBumpAngle() {
