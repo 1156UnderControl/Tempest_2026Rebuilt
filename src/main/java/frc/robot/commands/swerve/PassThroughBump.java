@@ -9,12 +9,11 @@ public class PassThroughBump extends Command {
 
   public PassThroughBump(SwerveSubsystem swerve) {
     this.swerve = swerve;
+    addRequirements(swerve);
   }
 
   @Override
-  public void initialize() {
-    addRequirements(swerve);
-  }
+  public void initialize() {}
 
   @Override
   public void execute() {
