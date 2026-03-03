@@ -131,9 +131,8 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopPeriodic() {
 
-
-     if (HubShiftUtil.getOfficialShiftInfo().remainingTime() < 5 && HubShiftUtil.getOfficialShiftInfo().active())
-     {
+    if (HubShiftUtil.getOfficialShiftInfo().remainingTime() < 5
+        && HubShiftUtil.getOfficialShiftInfo().active()) {
       LimelightHelpers.setLEDMode_ForceBlink(VisionConstants.backRightLimelightName);
 
     } else if (HubShiftUtil.getOfficialShiftInfo().active()) {
