@@ -40,8 +40,6 @@ import frc.robot.joysticks.DriverController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.photonvision.PhotonCamera;
 
@@ -285,8 +283,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   }
 
   public void driveAlignBump(Rotation2d lockedAngle) {
-    ChassisSpeeds desiredSpeeds = 
-      this.getLinearVelocityChassisSpeedsFromJoysticks(
+    ChassisSpeeds desiredSpeeds =
+        this.getLinearVelocityChassisSpeedsFromJoysticks(
             controller.getLeftY(), controller.getLeftX());
     this.state = "DRIVE_ALIGN_ANGLE_BUMP";
     this.driveFieldOrientedLockedAngle(desiredSpeeds, lockedAngle, true);
