@@ -164,10 +164,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   }
 
   public void driveAlignAngleJoystickYfixedOnTrench() {
-    Translation2d desiredSpeeds =
-        this.getLinearVelocityTranslationFromJoysticks(-controller.getLeftY(), 0);
-    this.state = "DRIVE_ALIGN_TRENCH";
-
     Rotation2d nearestAngleToLock;
     if (getPose().getRotation().getDegrees() > 90 || getPose().getRotation().getDegrees() < -90) {
       nearestAngleToLock = new Rotation2d(Degrees.of(90));
@@ -178,10 +174,32 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     boolean isRedAlliance =
         DriverStation.getAlliance().isPresent()
             && DriverStation.getAlliance().get() == Alliance.Red;
+
+    Translation2d desiredSpeeds =
+      isRedAlliance ? 
+        this.getLinearVelocityTranslationFromJoysticks(-controller.getLeftY(), 0)
+      :
+      this.getLinearVelocityTranslationFromJoysticks(controller.getLeftY(), 0);
+
+    this.state = "DRIVE_ALIGN_TRENCH";
+
     boolean isOnDepotSide =
         isRedAlliance
             ? RobotStates.getInstance().isOnRedDepotSide()
             : RobotStates.getInstance().isOnBlueDepotSide();
+    if(isRedAlliance){
+      if (getPose().getRotation().getDegrees() > 90 || getPose().getRotation().getDegrees() < -90) {
+        nearestAngleToLock = new Rotation2d(Degrees.of(90));
+      } else {
+        nearestAngleToLock = new Rotation2d(Degrees.of(-90));
+      }
+    } else {
+      if (getPose().getRotation().getDegrees() > 90 || getPose().getRotation().getDegrees() < -90) {
+        nearestAngleToLock = new Rotation2d(Degrees.of(-90));
+      } else {
+        nearestAngleToLock = new Rotation2d(Degrees.of(90));
+      }
+    }
 
     double trenchY;
     if (isRedAlliance) {
