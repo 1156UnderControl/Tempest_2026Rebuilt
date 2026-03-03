@@ -153,7 +153,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
   public void driveAlignAngleJoystick() {
 
-
     Translation2d desiredSpeeds =
         this.getLinearVelocityTranslationFromJoysticks(
             controller.getLeftY(), controller.getLeftX());
@@ -265,11 +264,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     }
   }
 
-  public void driveAlignBump() {
-    Translation2d desiredSpeeds =
-        this.getLinearVelocityTranslationFromJoysticks(
-            controller.getLeftY(), controller.getLeftX());
-    this.state = "DRIVE_ALIGN_ANGLE_BUMP";
+  public Rotation2d getNearestBumpAngle() {
     Rotation2d nearestAngleToLock;
     if (getPose().getRotation().getDegrees() > 90 || getPose().getRotation().getDegrees() < -90) {
       if (getPose().getRotation().getDegrees() < -90) {
@@ -284,10 +279,16 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
         nearestAngleToLock = new Rotation2d(Degrees.of(-135));
       }
     }
+    return nearestAngleToLock;
+  }
+
+  public void driveAlignBump(Rotation2d lockedAngle) {
+    Translation2d desiredSpeeds =
+        this.getLinearVelocityTranslationFromJoysticks(
+            controller.getLeftY(), controller.getLeftX());
+    this.state = "DRIVE_ALIGN_ANGLE_BUMP";
     this.driveFieldOrientedLockedJoystickAngleBump(
-        desiredSpeeds,
-        nearestAngleToLock.getCos(),
-        nearestAngleToLock.getSin());
+        desiredSpeeds, lockedAngle.getCos(), lockedAngle.getSin());
   }
 
   public void driveRotating(boolean rotateRight) {
@@ -390,7 +391,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   }
 
   public boolean isAtSafezoneForGoToClimb() {
-    return (getPose().getY() > 5.1 || getPose().getY() < 3) && (getPose().getX() < 2 || getPose().getX() > 14.5);
+    return (getPose().getY() > 5.1 || getPose().getY() < 3)
+        && (getPose().getX() < 2 || getPose().getX() > 14.5);
   }
 
   public boolean isAtRightClimb() {
