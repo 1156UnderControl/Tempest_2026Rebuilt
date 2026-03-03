@@ -14,10 +14,10 @@ import edu.wpi.first.wpilibj.Timer;
 public class HubShiftUtil {
   public enum ShiftEnum {
     TRANSITION,
-    SHIFT1,
-    SHIFT2,
-    SHIFT3,
-    SHIFT4,
+    SHIFT_1,
+    SHIFT_2,
+    SHIFT_3,
+    SHIFT_4,
     ENDGAME,
     AUTO,
     DISABLED;
