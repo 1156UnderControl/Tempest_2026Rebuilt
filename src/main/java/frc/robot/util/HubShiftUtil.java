@@ -24,7 +24,7 @@ public class HubShiftUtil {
   }
 
   public record ShiftInfo(
-      ShiftEnum currentShift, double elapsedTime, double remainingTime, boolean active) {}
+      ShiftEnum currentShift, double elapsedTime, double remainingTime, boolean active, double currentTime) {}
 
   private static Timer shiftTimer = new Timer();
   private static final ShiftEnum[] shiftsEnums = ShiftEnum.values();
@@ -69,6 +69,8 @@ public class HubShiftUtil {
             : inactiveSchedule;
     return currentSchedule;
   }
+
+
 
   private static ShiftInfo getShiftInfo(
       boolean[] currentSchedule, double[] shiftStartTimes, double[] shiftEndTimes) {
@@ -117,7 +119,7 @@ public class HubShiftUtil {
       active = currentSchedule[currentShiftIndex];
       currentShift = shiftsEnums[currentShiftIndex];
     }
-    ShiftInfo shiftInfo = new ShiftInfo(currentShift, stateTimeElapsed, stateTimeRemaining, active);
+    ShiftInfo shiftInfo = new ShiftInfo(currentShift, stateTimeElapsed, stateTimeRemaining, active, currentTime);
     return shiftInfo;
   }
 

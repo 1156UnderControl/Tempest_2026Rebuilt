@@ -88,7 +88,7 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().run();
     SmartDashboard.putBoolean("Is Active", HubShiftUtil.getOfficialShiftInfo().active());
     SmartDashboard.putString("Shift:", HubShiftUtil.getOfficialShiftInfo().currentShift().name());
-    SmartDashboard.putNumber("Match Time:", HubShiftUtil.getOfficialShiftInfo().elapsedTime());
+    SmartDashboard.putNumber("Match Time:", HubShiftUtil.getOfficialShiftInfo().currentTime());
     SmartDashboard.putNumber(
         "Time Until Next Shift:", HubShiftUtil.getOfficialShiftInfo().remainingTime());
   }
