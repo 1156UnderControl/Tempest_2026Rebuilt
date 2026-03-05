@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Shoot Fuels"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Bump To Center Alliance"
