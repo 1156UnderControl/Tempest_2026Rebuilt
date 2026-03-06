@@ -124,19 +124,13 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
         new PhotonVisionPoseEstimator(
             cameraFrontRight, VisionConstants.robotToCamArducamFrontRight);
 
-    PhotonCamera cameraFrontLeft = new PhotonCamera(VisionConstants.frontLeftArducamName);
-    poseEstimatorFrontLeft =
-        new PhotonVisionPoseEstimator(cameraFrontLeft, VisionConstants.robotToCamArducamFrontLeft);
-
     PoseEstimator limelightBackLeft = poseEstimatorBackLeft;
     PoseEstimator limelightBackRight = poseEstimatorBackRight;
     PoseEstimator photonFrontRight = poseEstimatorFrontRight;
-    PoseEstimator photonFrontLeft = poseEstimatorFrontLeft;
 
     listOfEstimators.add(limelightBackLeft);
     listOfEstimators.add(limelightBackRight);
     listOfEstimators.add(photonFrontRight);
-    listOfEstimators.add(photonFrontLeft);
 
     PoseEstimator estimatorMultiCamera =
         new MultiCameraPoseEstimator(listOfEstimators, "Teleop Multi Pose Estimator");
@@ -410,12 +404,10 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
       poseEstimatorBackLeft.onlySeeApriltagsIDs(FieldConstants.AprilTags.towerTags);
       poseEstimatorBackRight.onlySeeApriltagsIDs(FieldConstants.AprilTags.towerTags);
       poseEstimatorFrontRight.ignoreApriltags(FieldConstants.AprilTags.withoutTowerTags);
-      poseEstimatorFrontLeft.ignoreApriltags(FieldConstants.AprilTags.withoutTowerTags);
     } else {
       poseEstimatorBackLeft.considerAllTags();
       poseEstimatorBackRight.considerAllTags();
       poseEstimatorFrontRight.considerAllTags();
-      poseEstimatorFrontLeft.considerAllTags();
     }
   }
 
