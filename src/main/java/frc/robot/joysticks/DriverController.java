@@ -52,7 +52,7 @@ public class DriverController implements IDriverController {
   }
 
   @Override
-  public Trigger slowActivate() {
+  public Trigger leftTrigger() {
     return driverController.leftTrigger(0.2);
   }
 

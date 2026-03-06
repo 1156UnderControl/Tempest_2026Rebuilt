@@ -13,7 +13,7 @@ public interface IDriverController {
 
   Trigger turboActivate();
 
-  Trigger slowActivate();
+  Trigger leftTrigger();
 
   boolean notUsingJoystick();
 

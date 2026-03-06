@@ -47,8 +47,8 @@ public class ControlBoard implements IDriverController, IOperatorController {
   }
 
   @Override
-  public Trigger slowActivate() {
-    return mDriverController.slowActivate();
+  public Trigger leftTrigger() {
+    return mDriverController.leftTrigger();
   }
 
   @Override
