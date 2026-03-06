@@ -4,9 +4,8 @@
   "holonomicMode": true,
   "pathFolders": [
     "Depot Collect - Score",
-    "Start Right - Collect Middle",
     "Start Left - Collect Middle",
-    "Tuning"
+    "Start Right - Collect Middle"
   ],
   "autoFolders": [
     "Match Autos",
