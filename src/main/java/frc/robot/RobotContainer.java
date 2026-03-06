@@ -231,10 +231,9 @@ public class RobotContainer {
 
     this.driverController.rightStick().whileTrue(new PassThroughBump(drive));
 
-    new Trigger(this.driverController.slowActivate())
-        .whileTrue(new PassThroughTrenchLeftAlliance(drive));
+    this.driverController.leftTrigger().whileTrue(new PassThroughTrenchLeftAlliance(drive));
 
-    new Trigger(this.driverController.leftBumper()).whileTrue(new ShootOnMoveLimit(drive));
+    this.driverController.leftBumper().whileTrue(new ShootOnMoveLimit(drive));
   }
 
   public Command getAutonomousCommand() {
