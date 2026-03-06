@@ -17,7 +17,7 @@ public class ShootOnMoveLimit extends Command {
 
   @Override
   public void execute() {
-    this.swerve.driveAlignAngleJoystickSuperSlow();
+    this.swerve.driveAlignAngleJoystickShootWhileMovingVelocity();
   }
 
   @Override
