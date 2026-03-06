@@ -14,6 +14,7 @@ import yams.mechanisms.config.ElevatorConfig;
 import yams.mechanisms.positional.Elevator;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class ClimberSubsystem extends SubsystemBase {
@@ -49,6 +50,7 @@ public class ClimberSubsystem extends SubsystemBase {
             .withClosedLoopRampRate(ClimberConstants.CLOSED_RAMP_RATE)
             .withMechanismCircumference(ClimberConstants.MECHANISM_CIRCUNFERENCE)
             .withSoftLimit(ClimberConstants.CLIMBER_MIN_HEIGHT, ClimberConstants.CLIMBER_MAX_HEIGHT)
+            .withTelemetry(TelemetryVerbosity.MID)
             .withClosedLoopController(
                 new PIDController(
                     ClimberConstants.FeedBackController.kP,

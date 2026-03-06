@@ -28,6 +28,7 @@ import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class RollerSubsystem extends SubsystemBase {
@@ -76,6 +77,7 @@ public class RollerSubsystem extends SubsystemBase {
             .withMotorInverted(false)
             .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
             .withControlMode(ControlMode.OPEN_LOOP)
+            .withTelemetry(TelemetryVerbosity.MID)
             .withClosedLoopRampRate(Seconds.of(0.25))
             .withOpenLoopRampRate(Seconds.of(0.25));
 

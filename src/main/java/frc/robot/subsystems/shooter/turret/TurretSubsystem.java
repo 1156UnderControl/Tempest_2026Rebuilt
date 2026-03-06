@@ -19,6 +19,7 @@ import yams.mechanisms.config.PivotConfig;
 import yams.mechanisms.positional.Pivot;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class TurretSubsystem extends SubsystemBase {
@@ -70,6 +71,7 @@ public class TurretSubsystem extends SubsystemBase {
                     TurretConstants.FeedForwardController.SIM.kS,
                     TurretConstants.FeedForwardController.SIM.kV,
                     TurretConstants.FeedForwardController.SIM.kA))
+            .withTelemetry(TelemetryVerbosity.MID)
             .withControlMode(TurretConstants.CONTROL_MODE)
             .withStartingPosition(TurretConstants.STARTING_ANGLE);
 

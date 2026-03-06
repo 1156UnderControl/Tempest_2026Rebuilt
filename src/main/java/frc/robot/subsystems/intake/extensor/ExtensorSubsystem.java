@@ -26,6 +26,7 @@ import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class ExtensorSubsystem extends SubsystemBase {
@@ -69,6 +70,7 @@ public class ExtensorSubsystem extends SubsystemBase {
             .withSimFeedforward(new SimpleMotorFeedforward(0.17, 0.2, 0))
             .withGearing(ExtensorConstants.gearing)
             .withIdleMode(MotorMode.COAST)
+            .withTelemetry(TelemetryVerbosity.MID)
             .withStatorCurrentLimit(Amps.of(60))
             .withMotorInverted(false)
             .withControlMode(ControlMode.CLOSED_LOOP);

@@ -18,6 +18,7 @@ import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class HoodSubsystem extends SubsystemBase {
@@ -55,6 +56,7 @@ public class HoodSubsystem extends SubsystemBase {
                 HoodConstants.ClosedLoopController.kP,
                 HoodConstants.ClosedLoopController.kI,
                 HoodConstants.ClosedLoopController.kD)
+            .withTelemetry(TelemetryVerbosity.MID)
             .withFeedforward(new SimpleMotorFeedforward(0.135, 4, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0.135, 4, 0))
             .withControlMode(ControlMode.CLOSED_LOOP);

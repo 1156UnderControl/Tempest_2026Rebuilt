@@ -28,6 +28,7 @@ import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class KickerSubsystem extends SubsystemBase {
@@ -72,6 +73,7 @@ public class KickerSubsystem extends SubsystemBase {
             .withMotorInverted(true)
             .withStatorCurrentLimit(Amps.of(40))
             .withSupplyCurrentLimit(Amps.of(20))
+            .withTelemetry(TelemetryVerbosity.MID)
             .withStatorCurrentLimit(Amps.of(40));
 
     kickerMotor = new TalonFXWrapper(kickerTalon, DCMotor.getKrakenX60(1), smartKickerMotorConfig);

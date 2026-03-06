@@ -24,6 +24,7 @@ import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class SpindexerSubsystem extends SubsystemBase {
@@ -64,6 +65,7 @@ public class SpindexerSubsystem extends SubsystemBase {
             .withIdleMode(MotorMode.BRAKE)
             .withFeedforward(new SimpleMotorFeedforward(0.11, 2.2, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0.1, 0.9, 0))
+            .withTelemetry(TelemetryVerbosity.MID)
             .withMechanismCircumference(Meters.of(0.478))
             .withStatorCurrentLimit(Amps.of(50))
             .withMotorInverted(false);

@@ -21,6 +21,7 @@ import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class FlyWheelSubsystem extends SubsystemBase {
@@ -59,6 +60,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
                 FlyWheelsConstants.ClosedLoopController.kI,
                 FlyWheelsConstants.ClosedLoopController.kD)
             .withSimClosedLoopController(4, 0, 0)
+            .withTelemetry(TelemetryVerbosity.MID)
             .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0.19, 0.11, 0))
             .withControlMode(ControlMode.CLOSED_LOOP);
