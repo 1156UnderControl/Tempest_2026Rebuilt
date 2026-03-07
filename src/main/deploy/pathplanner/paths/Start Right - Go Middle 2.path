@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.196671986784369,
-        "y": 0.5691132103995529
+        "x": 4.24181200484155,
+        "y": 0.6874817937973399
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.459864676536512,
-        "y": 0.5829624625219532
+        "x": 4.505004694593692,
+        "y": 0.7013310459197402
       },
       "isLocked": false,
       "linkedName": "Trench Right 2"
@@ -222,7 +222,7 @@
   "folder": "Start Right - No Climb",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": false
 }
