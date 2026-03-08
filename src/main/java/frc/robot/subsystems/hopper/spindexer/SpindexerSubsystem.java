@@ -67,7 +67,7 @@ public class SpindexerSubsystem extends SubsystemBase {
             .withSimFeedforward(new SimpleMotorFeedforward(0.1, 0.9, 0))
             .withTelemetry(TelemetryVerbosity.MID)
             .withMechanismCircumference(Meters.of(0.478))
-            .withStatorCurrentLimit(Amps.of(50))
+            .withStatorCurrentLimit(Amps.of(60))
             .withMotorInverted(false);
 
     this.spindexerMotor =

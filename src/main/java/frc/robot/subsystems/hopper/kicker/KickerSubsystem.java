@@ -71,11 +71,10 @@ public class KickerSubsystem extends SubsystemBase {
             .withIdleMode(MotorMode.COAST)
             .withMechanismCircumference(Inches.of(2))
             .withMotorInverted(true)
-            .withStatorCurrentLimit(Amps.of(40))
+            .withStatorCurrentLimit(Amps.of(60))
             .withSupplyCurrentLimit(Amps.of(20))
-            .withTelemetry(TelemetryVerbosity.MID)
-            .withStatorCurrentLimit(Amps.of(40));
-
+            .withTelemetry(TelemetryVerbosity.MID);
+            
     kickerMotor = new TalonFXWrapper(kickerTalon, DCMotor.getKrakenX60(1), smartKickerMotorConfig);
 
     kickerMechanismConfig =
