@@ -71,7 +71,7 @@ public class KickerSubsystem extends SubsystemBase {
             .withIdleMode(MotorMode.COAST)
             .withMechanismCircumference(Inches.of(2))
             .withMotorInverted(true)
-            .withStatorCurrentLimit(Amps.of(60))
+            .withStatorCurrentLimit(Amps.of(65))
             .withSupplyCurrentLimit(Amps.of(20))
             .withTelemetry(TelemetryVerbosity.MID);
             
