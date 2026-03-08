@@ -188,7 +188,7 @@ public class ExtensorSubsystem extends SubsystemBase {
   }
 
   public Command home() {
-    Voltage runVolts = Volts.of(5); // Volts required to run the mechanism to the limit.
+    Voltage runVolts = Volts.of(6); // Volts required to run the mechanism to the limit.
     Distance limitHit =
         ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION; // Limit which gets hit.
     return this.extend()
