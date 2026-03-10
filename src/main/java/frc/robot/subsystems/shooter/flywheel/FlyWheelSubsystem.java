@@ -150,6 +150,8 @@ public class FlyWheelSubsystem extends SubsystemBase {
         () ->
             !this.flywheelMechanism
                 .getSpeed()
-                .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED));
+                .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED)) && this.flywheelMechanism
+                .getSpeed()
+                .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED_FIRST_SHOT);
   }
 }
