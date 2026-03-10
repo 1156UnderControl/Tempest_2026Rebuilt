@@ -12,6 +12,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.java_is_undercontrol.util.StabilizeChecker;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
@@ -43,6 +44,8 @@ public class FlyWheelSubsystem extends SubsystemBase {
   private double flyWheelRPM;
 
   private AngularVelocity setpoint = RPM.of(0);
+
+  private StabilizeChecker isNotAtSetpointChecker = new StabilizeChecker(0.2);
 
   private FlyWheelSubsystem() {
     this.calculator = ShooterCalculator.getInstance();
@@ -143,8 +146,13 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   public boolean isAtTargetVelocity() {
-    return this.flywheelMechanism
-        .getSpeed()
-        .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
+    return !isNotAtSetpointChecker.isStableInCondition(
+            () ->
+                !this.flywheelMechanism
+                    .getSpeed()
+                    .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED))
+        && this.flywheelMechanism
+            .getSpeed()
+            .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED_FIRST_SHOT);
   }
 }

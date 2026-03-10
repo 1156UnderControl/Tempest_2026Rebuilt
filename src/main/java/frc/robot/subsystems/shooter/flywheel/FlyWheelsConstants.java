@@ -23,6 +23,7 @@ public class FlyWheelsConstants {
 
   public static class Velocity {
     public static final AngularVelocity VELOCITY_ERROR_ALLOWED = RPM.of(300);
+    public static final AngularVelocity VELOCITY_ERROR_ALLOWED_FIRST_SHOT = RPM.of(500);
   }
 
   public static final double FEEDFORWARD_TORQUE_CURRENT_A = 3;

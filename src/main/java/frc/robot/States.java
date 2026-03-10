@@ -209,19 +209,26 @@ public class States {
   private void setHopperDefaultStates() {
     this.kicker.setDefaultCommand(
         Commands.parallel(
-            this.kicker.stop(), Commands.runOnce(() -> this.kickerState = "Expelling State")));
+            this.kicker.stop(), Commands.runOnce(() -> this.kickerState = "Stop State")));
 
     this.spindexer.setDefaultCommand(
         Commands.parallel(
             this.spindexer.stop(), Commands.runOnce(() -> this.spindexerState = "Stopped State")));
 
-    new Trigger(() -> RobotStates.getInstance().isShootingMode()).whileTrue(this.spindexer.shoot());
+    new Trigger(() -> RobotStates.getInstance().isShootingMode())
+        .whileTrue(
+            this.spindexer
+                .shoot()
+                .alongWith(Commands.runOnce(() -> this.spindexerState = "Running State")));
 
     new Trigger(
             () ->
                 !RobotStates.getInstance().isShootingMode()
                     && RobotStates.getInstance().isExtendedMode())
-        .whileTrue(this.spindexer.expell());
+        .whileTrue(
+            this.spindexer
+                .expell()
+                .alongWith(Commands.runOnce(() -> this.spindexerState = "Expelling State")));
   }
 
   private void setClimberDefaultStates() {
