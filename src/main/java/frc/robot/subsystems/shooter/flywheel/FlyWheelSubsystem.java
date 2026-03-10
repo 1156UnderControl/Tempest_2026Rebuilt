@@ -147,11 +147,12 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   public boolean isAtTargetVelocity() {
     return !isNotAtSetpointChecker.isStableInCondition(
-        () ->
-            !this.flywheelMechanism
-                .getSpeed()
-                .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED)) && this.flywheelMechanism
-                .getSpeed()
-                .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED_FIRST_SHOT);
+            () ->
+                !this.flywheelMechanism
+                    .getSpeed()
+                    .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED))
+        && this.flywheelMechanism
+            .getSpeed()
+            .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED_FIRST_SHOT);
   }
 }
