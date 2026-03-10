@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.java_is_undercontrol.util.StabilizeChecker;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import org.littletonrobotics.junction.Logger;
 import yams.mechanisms.config.ArmConfig;
@@ -36,6 +37,8 @@ public class HoodSubsystem extends SubsystemBase {
   private static HoodSubsystem instance;
 
   private double angleCalibration;
+
+  private StabilizeChecker isNotAtSetpointChecker = new StabilizeChecker(0.2);
 
   private HoodSubsystem() {
     calculator = ShooterCalculator.getInstance();
@@ -123,10 +126,12 @@ public class HoodSubsystem extends SubsystemBase {
   }
 
   public boolean isAtTargetAngle() {
-    return hood.getAngle()
-        .isNear(
-            this.hood.getMechanismSetpoint().orElse(Degrees.of(75)),
-            HoodConstants.Position.ANGLE_ERROR_ALLOWED);
+    return !isNotAtSetpointChecker.isStableInCondition(
+        () ->
+            !hood.getAngle()
+                .isNear(
+                    this.hood.getMechanismSetpoint().orElse(Degrees.of(75)),
+                    HoodConstants.Position.ANGLE_ERROR_ALLOWED));
   }
 
   public double getMinAngleDegrees() {
