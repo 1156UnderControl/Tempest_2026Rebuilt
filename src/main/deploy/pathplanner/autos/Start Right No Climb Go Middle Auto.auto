@@ -32,37 +32,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start Right - Go Middle"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Trench To Outpost"
+            "pathName": "Start Right - Go Middle 1"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Start Outpost - Go Middle"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 3.5
+            "waitTime": 4.0
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Start Right - Go Middle Inverted"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Trench To Outpost Sideways"
           }
         }
       ]
