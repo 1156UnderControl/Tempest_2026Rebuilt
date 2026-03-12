@@ -1,0 +1,66 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.7,
+        "y": 0.6874817937973399
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.695194254006038,
+        "y": 1.455069438126331
+      },
+      "isLocked": false,
+      "linkedName": "Outpost"
+    },
+    {
+      "anchor": {
+        "x": 1.1572417840375586,
+        "y": 2.7757439297241775
+      },
+      "prevControl": {
+        "x": 0.7339625757266084,
+        "y": 1.7877783698055465
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Raise Climber",
+      "waypointRelativePos": 0.5812868369351669,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Raise Climber"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "Start Right - Collect Middle",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -179.732927652521
+  },
+  "useDefaultConstraints": false
+}
