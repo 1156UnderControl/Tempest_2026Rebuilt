@@ -86,6 +86,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
   private boolean isUsingTowerEstimation;
 
+  private static MultiCameraPoseEstimator poseEstimatorGeneral;
   private static LimelightPoseEstimator poseEstimatorBackLeft;
   private static LimelightPoseEstimator poseEstimatorBackRight;
   private static PhotonVisionPoseEstimator poseEstimatorFrontRight;
@@ -114,27 +115,32 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
   private static PoseEstimator configureMulticameraPoseEstimation() {
     List<PoseEstimator> listOfEstimators = new ArrayList<PoseEstimator>();
-    poseEstimatorBackLeft =
+    SwerveSubsystem.poseEstimatorBackLeft =
         new LimelightPoseEstimator(VisionConstants.backLeftLimelightName, false, false, 2);
-    poseEstimatorBackRight =
+
+    SwerveSubsystem.poseEstimatorBackRight =
         new LimelightPoseEstimator(VisionConstants.backRightLimelightName, false, false, 2);
 
     PhotonCamera cameraFrontRight = new PhotonCamera(VisionConstants.frontRightArducamName);
-    poseEstimatorFrontRight =
+    SwerveSubsystem.poseEstimatorFrontRight =
         new PhotonVisionPoseEstimator(
             cameraFrontRight, VisionConstants.robotToCamArducamFrontRight);
 
-    PoseEstimator limelightBackLeft = poseEstimatorBackLeft;
-    PoseEstimator limelightBackRight = poseEstimatorBackRight;
-    PoseEstimator photonFrontRight = poseEstimatorFrontRight;
+    PhotonCamera cameraFrontLeft = new PhotonCamera(VisionConstants.frontLeftArducamName);
+    SwerveSubsystem.poseEstimatorFrontLeft =
+        new PhotonVisionPoseEstimator(cameraFrontLeft, VisionConstants.robotToCamArducamFrontLeft);
 
-    listOfEstimators.add(limelightBackLeft);
-    listOfEstimators.add(limelightBackRight);
-    listOfEstimators.add(photonFrontRight);
+    listOfEstimators.add(SwerveSubsystem.poseEstimatorBackLeft);
+    listOfEstimators.add(SwerveSubsystem.poseEstimatorBackRight);
+    listOfEstimators.add(SwerveSubsystem.poseEstimatorFrontRight);
+    listOfEstimators.add(SwerveSubsystem.poseEstimatorFrontLeft);
 
-    PoseEstimator estimatorMultiCamera =
-        new MultiCameraPoseEstimator(listOfEstimators, "Teleop Multi Pose Estimator");
-    return estimatorMultiCamera;
+    if (SwerveSubsystem.poseEstimatorGeneral == null) {
+      SwerveSubsystem.poseEstimatorGeneral =
+          new MultiCameraPoseEstimator(listOfEstimators, "Teleop Multi Pose Estimator");
+    }
+
+    return SwerveSubsystem.poseEstimatorGeneral;
   }
 
   public Supplier<Pose2d> getOdometryPose() {

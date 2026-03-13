@@ -21,6 +21,6 @@ public class VisionConstants {
 
   public static Transform3d robotToCamArducamFrontLeft =
       new Transform3d(
-          new Translation3d((-0.307143), (-0.275344), 0.251786),
-          new Rotation3d(0, Units.degreesToRadians(15), Units.degreesToRadians(200)));
+          new Translation3d((-0.277360), (0.329090), 0.204750),
+          new Rotation3d(0, Units.degreesToRadians(-25), Units.degreesToRadians(45)));
 }
