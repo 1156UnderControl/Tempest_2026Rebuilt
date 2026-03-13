@@ -11,8 +11,8 @@
     "Start Right - No Climb"
   ],
   "autoFolders": [
-    "Match Autos",
-    "Tuning"
+    "Safe Autos",
+    "Sideways Autos"
   ],
   "defaultMaxVel": 4.5,
   "defaultMaxAccel": 3.0,
