@@ -133,7 +133,7 @@
   "eventMarkers": [
     {
       "name": "Home Intake",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -150,6 +150,17 @@
         "type": "named",
         "data": {
           "name": "Stop Shooting Fuels"
+        }
+      }
+    },
+    {
+      "name": "Home Intake",
+      "waypointRelativePos": 3.5506226205583786,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Home Intake"
         }
       }
     },
