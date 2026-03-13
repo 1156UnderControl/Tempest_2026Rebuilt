@@ -132,6 +132,17 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "Home Intake",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Home Intake"
+        }
+      }
+    },
+    {
       "name": "Stop Shooting Fuels",
       "waypointRelativePos": 0.4441920432220037,
       "endWaypointRelativePos": null,
