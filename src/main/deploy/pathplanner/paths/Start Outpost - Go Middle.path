@@ -56,7 +56,7 @@
   },
   "goalEndState": {
     "velocity": 1.1,
-    "rotation": 90.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Start Right - No Climb Return Middle",
