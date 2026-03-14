@@ -12,7 +12,7 @@
         "y": 0.4454085057218299
       },
       "isLocked": false,
-      "linkedName": "Trench Right SideWays"
+      "linkedName": "Trench Right Non Sideways"
     },
     {
       "anchor": {
@@ -47,7 +47,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1.0,
-      "rotationDegrees": 90.0
+      "rotationDegrees": 180.0
     },
     {
       "waypointRelativePos": 1.7465322066326525,
@@ -99,7 +99,7 @@
   "folder": "Start Right - Collect Middle",
   "idealStartingState": {
     "velocity": 2.1,
-    "rotation": 90.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": false
 }
