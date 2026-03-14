@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 4.101397712228797,
-        "y": 0.48
+        "y": 0.6
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8500988482981224,
-        "y": 0.4454085057218299
+        "x": 3.853563411518844,
+        "y": 0.6328353375436991
       },
       "isLocked": false,
       "linkedName": "Trench Right Non Sideways"
@@ -57,10 +57,10 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.9892726840101521,
-      "maxWaypointRelativePos": 1.953125000000002,
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 1.5,
+        "maxVelocity": 2.1,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,

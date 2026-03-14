@@ -68,12 +68,12 @@
         "y": 0.6
       },
       "prevControl": {
-        "x": 7.020688222309575,
-        "y": 1.0284289414327192
+        "x": 7.068369728697314,
+        "y": 0.8673004291373736
       },
       "nextControl": {
-        "x": 5.512681792751038,
-        "y": 0.4674485943113825
+        "x": 5.358806318860217,
+        "y": 0.4862939667057492
       },
       "isLocked": false,
       "linkedName": null
@@ -81,11 +81,11 @@
     {
       "anchor": {
         "x": 4.101397712228797,
-        "y": 0.48
+        "y": 0.6
       },
       "prevControl": {
         "x": 4.350236235674752,
-        "y": 0.4559294942047946
+        "y": 0.5759294942047947
       },
       "nextControl": null,
       "isLocked": false,
@@ -179,7 +179,7 @@
     },
     {
       "name": "Shoot Fuels",
-      "waypointRelativePos": 4.474152750491157,
+      "waypointRelativePos": 4.583972863457758,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
