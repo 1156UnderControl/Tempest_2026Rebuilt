@@ -91,7 +91,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   private static LimelightPoseEstimator poseEstimatorBackLeft;
   private static LimelightPoseEstimator poseEstimatorBackRight;
   private static PhotonVisionPoseEstimator poseEstimatorFrontRight;
-  private static PhotonVisionPoseEstimator poseEstimatorFrontLeft;
 
   public SwerveSubsystem(SwerveDevices swerveDevices) {
     super(
@@ -126,15 +125,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     SwerveSubsystem.poseEstimatorFrontRight =
         new PhotonVisionPoseEstimator(
             cameraFrontRight, VisionConstants.robotToCamArducamFrontRight);
-
-    PhotonCamera cameraFrontLeft = new PhotonCamera(VisionConstants.frontLeftArducamName);
-    SwerveSubsystem.poseEstimatorFrontLeft =
-        new PhotonVisionPoseEstimator(
-            cameraFrontLeft,
-            VisionConstants.robotToCamArducamFrontLeft,
-            false,
-            1,
-            PhotonPoseEstimatorStrategies.MULTITAG_COPROCESSOR);
 
     listOfEstimators.add(SwerveSubsystem.poseEstimatorBackLeft);
     listOfEstimators.add(SwerveSubsystem.poseEstimatorBackRight);
