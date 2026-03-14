@@ -52,8 +52,8 @@
         "y": 6.007196532056924
       },
       "prevControl": {
-        "x": 7.74424930581735,
-        "y": 5.775308351408968
+        "x": 7.744249305817351,
+        "y": 5.775308351408964
       },
       "nextControl": {
         "x": 7.381950649207746,
@@ -186,7 +186,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 180.0
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": "Start Right - Feed & Shoot",

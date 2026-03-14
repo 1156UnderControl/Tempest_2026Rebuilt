@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 3.3321318921321614,
-        "y": 0.5890422825612189
+        "y": 0.589042282561219
       },
       "isLocked": false,
       "linkedName": "Trench Right"
@@ -67,7 +67,7 @@
   "folder": "Start Right - Collect Middle",
   "idealStartingState": {
     "velocity": 1.5,
-    "rotation": 180.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": false
 }

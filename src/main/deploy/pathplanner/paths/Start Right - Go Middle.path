@@ -216,7 +216,7 @@
   },
   "goalEndState": {
     "velocity": 1.5,
-    "rotation": 180.0
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": "Start Right - Collect Middle",
