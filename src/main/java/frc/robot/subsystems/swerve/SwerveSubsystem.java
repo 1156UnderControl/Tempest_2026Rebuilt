@@ -133,7 +133,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
             cameraFrontLeft,
             VisionConstants.robotToCamArducamFrontLeft,
             false,
-            1,
+            1.5,
             PhotonPoseEstimatorStrategies.MULTITAG_COPROCESSOR);
 
     listOfEstimators.add(SwerveSubsystem.poseEstimatorBackLeft);
