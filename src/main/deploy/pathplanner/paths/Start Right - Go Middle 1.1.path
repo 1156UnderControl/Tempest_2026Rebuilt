@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 5.758092086098784,
-        "y": 0.48
+        "y": 0.48000000000000004
       },
       "nextControl": {
         "x": 7.244492280930743,
@@ -73,7 +73,7 @@
       },
       "nextControl": {
         "x": 5.587326328386727,
-        "y": 0.4567154058887864
+        "y": 0.45671540588878634
       },
       "isLocked": false,
       "linkedName": null
@@ -148,7 +148,7 @@
     },
     {
       "name": "Stop Shooting Fuels",
-      "waypointRelativePos": 0.20325546414538317,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -170,7 +170,7 @@
     },
     {
       "name": "Shoot Fuels",
-      "waypointRelativePos": 4.712288187622789,
+      "waypointRelativePos": 4.837418651768171,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

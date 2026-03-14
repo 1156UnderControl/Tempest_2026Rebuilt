@@ -32,15 +32,15 @@
     },
     {
       "anchor": {
-        "x": 7.130445229973592,
+        "x": 6.85,
         "y": 1.2763615023474175
       },
       "prevControl": {
-        "x": 6.9204546036170695,
+        "x": 6.640009373643477,
         "y": 0.9144641320352149
       },
       "nextControl": {
-        "x": 7.3684236788639,
+        "x": 7.087978448890308,
         "y": 1.6864930226856558
       },
       "isLocked": false,
@@ -48,15 +48,15 @@
     },
     {
       "anchor": {
-        "x": 7.624891615316901,
+        "x": 7.2,
         "y": 3.103082957379694
       },
       "prevControl": {
-        "x": 7.802092888243559,
+        "x": 7.377201272926658,
         "y": 3.2794340528488526
       },
       "nextControl": {
-        "x": 7.447690342390245,
+        "x": 7.022798727073344,
         "y": 2.9267318619105347
       },
       "isLocked": false,
@@ -157,7 +157,7 @@
     },
     {
       "name": "Stop Shooting Fuels",
-      "waypointRelativePos": 0.4441920432220037,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -179,7 +179,7 @@
     },
     {
       "name": "Shoot Fuels",
-      "waypointRelativePos": 4.583972863457758,
+      "waypointRelativePos": 4.7937899066797645,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
