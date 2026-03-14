@@ -41,7 +41,7 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
   private int[] filteredApriltags = new int[0];
 
   public PhotonVisionPoseEstimator(PhotonCamera camera, Transform3d cameraPosition) {
-    this(camera, cameraPosition, false, 1, PhotonPoseEstimatorStrategies.MULTITAG_COPROCESSOR);
+    this(camera, cameraPosition, false, 2, PhotonPoseEstimatorStrategies.MULTITAG_COPROCESSOR);
   }
 
   public PhotonVisionPoseEstimator(

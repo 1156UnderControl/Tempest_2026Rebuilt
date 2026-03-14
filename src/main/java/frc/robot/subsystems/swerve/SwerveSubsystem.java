@@ -28,6 +28,7 @@ import frc.java_is_undercontrol.util.StabilizeChecker;
 import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers;
 import frc.java_is_undercontrol.vision.odometry.LimelightPoseEstimator;
 import frc.java_is_undercontrol.vision.odometry.MultiCameraPoseEstimator;
+import frc.java_is_undercontrol.vision.odometry.PhotonPoseEstimatorStrategies;
 import frc.java_is_undercontrol.vision.odometry.PhotonVisionPoseEstimator;
 import frc.java_is_undercontrol.vision.odometry.PoseEstimator;
 import frc.robot.RobotStates;
@@ -128,7 +129,12 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
     PhotonCamera cameraFrontLeft = new PhotonCamera(VisionConstants.frontLeftArducamName);
     SwerveSubsystem.poseEstimatorFrontLeft =
-        new PhotonVisionPoseEstimator(cameraFrontLeft, VisionConstants.robotToCamArducamFrontLeft);
+        new PhotonVisionPoseEstimator(
+            cameraFrontLeft,
+            VisionConstants.robotToCamArducamFrontLeft,
+            false,
+            1,
+            PhotonPoseEstimatorStrategies.MULTITAG_COPROCESSOR);
 
     listOfEstimators.add(SwerveSubsystem.poseEstimatorBackLeft);
     listOfEstimators.add(SwerveSubsystem.poseEstimatorBackRight);
