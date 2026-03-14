@@ -68,12 +68,12 @@
         "y": 0.5907370621176518
       },
       "prevControl": {
-        "x": 6.7447487763590335,
-        "y": 0.8272733030447228
+        "x": 6.766272604596678,
+        "y": 0.7446267103319977
       },
       "nextControl": {
-        "x": 5.587326328386727,
-        "y": 0.45671540588878634
+        "x": 5.584696289687858,
+        "y": 0.5054790489647008
       },
       "isLocked": false,
       "linkedName": null
@@ -156,6 +156,12 @@
           "name": "Stop Shooting Fuels"
         }
       }
+    },
+    {
+      "name": "Home Intake",
+      "waypointRelativePos": 1.2943961812377205,
+      "endWaypointRelativePos": null,
+      "command": null
     },
     {
       "name": "Home Intake",
