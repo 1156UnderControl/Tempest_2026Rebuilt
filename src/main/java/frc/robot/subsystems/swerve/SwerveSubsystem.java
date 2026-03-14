@@ -139,7 +139,6 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     listOfEstimators.add(SwerveSubsystem.poseEstimatorBackLeft);
     listOfEstimators.add(SwerveSubsystem.poseEstimatorBackRight);
     listOfEstimators.add(SwerveSubsystem.poseEstimatorFrontRight);
-    listOfEstimators.add(SwerveSubsystem.poseEstimatorFrontLeft);
 
     if (SwerveSubsystem.poseEstimatorGeneral == null) {
       SwerveSubsystem.poseEstimatorGeneral =
