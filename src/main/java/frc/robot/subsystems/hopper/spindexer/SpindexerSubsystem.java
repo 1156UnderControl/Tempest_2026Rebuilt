@@ -7,6 +7,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
 
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -16,6 +17,8 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.shooter.flywheel.FlyWheelsConstants;
+
 import org.littletonrobotics.junction.Logger;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -53,6 +56,8 @@ public class SpindexerSubsystem extends SubsystemBase {
 
   private final FlyWheel spindexer;
 
+  private VelocityTorqueCurrentFOC torqueCurrentRequest = new VelocityTorqueCurrentFOC(RPM.of(0));
+
   private SpindexerSubsystem() {
     this.spindexerTalon= new TalonFX(SpindexerConstants.MOTOR_ID);
 
@@ -71,6 +76,9 @@ public class SpindexerSubsystem extends SubsystemBase {
             .withMechanismCircumference(Meters.of(0.478))
             .withStatorCurrentLimit(Amps.of(80))
             .withMotorInverted(false);
+
+        this.torqueCurrentRequest.withFeedForward(SpindexerConstants.FEEDFORWARD_TORQUE_CURRENT_A);
+
 
     this.spindexerMotor =
         new TalonFXWrapper(spindexerTalon, DCMotor.getKrakenX60(1), smartSpindexerMotorConfig);

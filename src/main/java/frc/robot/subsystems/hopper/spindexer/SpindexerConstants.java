@@ -28,4 +28,7 @@ public final class SpindexerConstants {
     public static final AngularVelocity EXPELLING = RotationsPerSecond.of(-1.0);
     public static final AngularVelocity STOPPED = RPM.of(0);
   }
+
+  public static final double FEEDFORWARD_TORQUE_CURRENT_A = 3;
+
 }
