@@ -69,7 +69,7 @@ public class ExtensorSubsystem extends SubsystemBase {
             .withFeedforward(new SimpleMotorFeedforward(0.17, 0.2, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0.17, 0.2, 0))
             .withGearing(ExtensorConstants.gearing)
-            .withIdleMode(MotorMode.COAST)
+            .withIdleMode(MotorMode.BRAKE)
             .withTelemetry(TelemetryVerbosity.MID)
             .withStatorCurrentLimit(Amps.of(60))
             .withMotorInverted(false)

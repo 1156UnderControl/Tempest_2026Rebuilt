@@ -7,6 +7,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -26,6 +27,7 @@ import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
+import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class SpindexerSubsystem extends SubsystemBase {
   private static SpindexerSubsystem instance;
@@ -41,7 +43,7 @@ public class SpindexerSubsystem extends SubsystemBase {
 
   private final SpindexerInputsAutoLogged spindexerInputs = new SpindexerInputsAutoLogged();
 
-  private final SparkFlex spindexerFlex;
+  private final TalonFX spindexerTalon;
 
   private final SmartMotorControllerConfig smartSpindexerMotorConfig;
 
@@ -52,7 +54,7 @@ public class SpindexerSubsystem extends SubsystemBase {
   private final FlyWheel spindexer;
 
   private SpindexerSubsystem() {
-    this.spindexerFlex = new SparkFlex(SpindexerConstants.MOTOR_ID, MotorType.kBrushless);
+    this.spindexerTalon= new TalonFX(SpindexerConstants.MOTOR_ID);
 
     this.smartSpindexerMotorConfig =
         new SmartMotorControllerConfig(this)
@@ -61,7 +63,7 @@ public class SpindexerSubsystem extends SubsystemBase {
                 0.1, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
             .withSimClosedLoopController(
                 0.03, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
-            .withGearing(new MechanismGearing(GearBox.fromReductionStages(9)))
+            .withGearing(new MechanismGearing(GearBox.fromReductionStages(5)))
             .withIdleMode(MotorMode.BRAKE)
             .withFeedforward(new SimpleMotorFeedforward(0.11, 2.2, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0.1, 0.9, 0))
@@ -71,7 +73,7 @@ public class SpindexerSubsystem extends SubsystemBase {
             .withMotorInverted(false);
 
     this.spindexerMotor =
-        new SparkWrapper(spindexerFlex, DCMotor.getNeoVortex(1), smartSpindexerMotorConfig);
+        new TalonFXWrapper(spindexerTalon, DCMotor.getKrakenX60(1), smartSpindexerMotorConfig);
 
     this.spindexerMechanismConfig =
         new FlyWheelConfig(spindexerMotor)
