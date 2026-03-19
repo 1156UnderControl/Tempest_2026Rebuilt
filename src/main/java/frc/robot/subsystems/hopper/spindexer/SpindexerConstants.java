@@ -15,16 +15,16 @@ import edu.wpi.first.units.measure.Voltage;
 
 public final class SpindexerConstants {
   public static final int MOTOR_ID = 6;
-  public static final Current STATOR_CURRENT_LIMIT = Amps.of(65);
+  public static final Current STATOR_CURRENT_LIMIT = Amps.of(70);
   public static final Time CLOSED_LOOP_RAMP = Milliseconds.of(10);
   public static final Voltage MAX_VOLTS = Volts.of(12);
-  public static final AngularVelocity MAX_VELOCITY = RotationsPerSecond.of(5.6);
+  public static final AngularVelocity MAX_VELOCITY = RotationsPerSecond.of(19.2);
   public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(60);
 
   public static final AngularVelocity DEADBAND_IS_AT = RPM.of(10);
 
   public static class setpoints {
-    public static final AngularVelocity SHOOTING = RotationsPerSecond.of(10);
+    public static final AngularVelocity SHOOTING = RotationsPerSecond.of(15);
     public static final AngularVelocity EXPELLING = RotationsPerSecond.of(-1.0);
     public static final AngularVelocity STOPPED = RPM.of(0);
   }
