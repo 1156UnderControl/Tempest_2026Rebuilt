@@ -29,12 +29,12 @@ public class FeedingMaps implements InterpolatingTreeMaps {
     shotHoodAngleMap.put(13.0, Rotation2d.fromDegrees(40.0));
 
     // TODO: Get our own distances to RPS
-    shotFlywheelSpeedMap.put(3.74, 2200.0);
-    shotFlywheelSpeedMap.put(5.74, 2900.0);
-    shotFlywheelSpeedMap.put(7.12, 3200.0);
-    shotFlywheelSpeedMap.put(8.5, 3500.0);
-    shotFlywheelSpeedMap.put(11.21, 4800.0);
-    shotFlywheelSpeedMap.put(13.0, 5300.0);
+    shotFlywheelSpeedMap.put(3.74, 2200.0+100.0);
+    shotFlywheelSpeedMap.put(5.74, 2900.0+100.0);
+    shotFlywheelSpeedMap.put(7.12, 3200.0+100.0);
+    shotFlywheelSpeedMap.put(8.5, 3500.0+100.0);
+    shotFlywheelSpeedMap.put(11.21, 4800.0+100.0);
+    shotFlywheelSpeedMap.put(13.0, 5300.0+100.0);
 
     // TODO: Get our own distances TOF
     timeOfFlightMap.put(3.74, 1.04);
