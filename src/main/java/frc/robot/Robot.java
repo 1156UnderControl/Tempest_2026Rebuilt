@@ -97,7 +97,6 @@ public class Robot extends LoggedRobot {
         DriverStation.getAlliance().orElse(Alliance.Blue) == HubShiftUtil.getFirstActiveAlliance());
     SmartDashboard.putNumber(
         "Time Until Next Shift:", HubShiftUtil.getOfficialShiftInfo().remainingTime());
-    SmartDashboard.putBoolean("Feed Deadband", FlyWheelSubsystem.getInstance().isUsingFeedDeadband);
   }
 
   @Override
