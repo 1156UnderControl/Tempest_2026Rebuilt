@@ -9,16 +9,12 @@ import static edu.wpi.first.units.Units.RPM;
 
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.shooter.flywheel.FlyWheelsConstants;
-
 import org.littletonrobotics.junction.Logger;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -29,7 +25,6 @@ import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
-import yams.motorcontrollers.local.SparkWrapper;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class SpindexerSubsystem extends SubsystemBase {
@@ -59,7 +54,7 @@ public class SpindexerSubsystem extends SubsystemBase {
   private VelocityTorqueCurrentFOC torqueCurrentRequest = new VelocityTorqueCurrentFOC(RPM.of(0));
 
   private SpindexerSubsystem() {
-    this.spindexerTalon= new TalonFX(SpindexerConstants.MOTOR_ID);
+    this.spindexerTalon = new TalonFX(SpindexerConstants.MOTOR_ID);
 
     this.smartSpindexerMotorConfig =
         new SmartMotorControllerConfig(this)
@@ -77,8 +72,7 @@ public class SpindexerSubsystem extends SubsystemBase {
             .withStatorCurrentLimit(Amps.of(80))
             .withMotorInverted(false);
 
-        this.torqueCurrentRequest.withFeedForward(SpindexerConstants.FEEDFORWARD_TORQUE_CURRENT_A);
-
+    this.torqueCurrentRequest.withFeedForward(SpindexerConstants.FEEDFORWARD_TORQUE_CURRENT_A);
 
     this.spindexerMotor =
         new TalonFXWrapper(spindexerTalon, DCMotor.getKrakenX60(1), smartSpindexerMotorConfig);
