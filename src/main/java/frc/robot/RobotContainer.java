@@ -17,7 +17,6 @@ import frc.java_is_undercontrol.swerve.io.module.ModuleIOSim;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
 import frc.robot.commands.swerve.PassThroughTower;
 import frc.robot.commands.swerve.PassThroughTrenchLeftAlliance;
-import frc.robot.commands.swerve.ShootOnMoveLimit;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;

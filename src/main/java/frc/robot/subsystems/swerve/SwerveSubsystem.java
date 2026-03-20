@@ -260,11 +260,9 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
     double towerX;
     if (isRedAlliance) {
-      towerX =
-          FieldConstants.FieldStructurePoses.TOWER_POSE_RED.getX();
+      towerX = FieldConstants.FieldStructurePoses.TOWER_POSE_RED.getX();
     } else {
-      towerX =
-          FieldConstants.FieldStructurePoses.TOWER_POSE_BLUE.getX();
+      towerX = FieldConstants.FieldStructurePoses.TOWER_POSE_BLUE.getX();
     }
 
     double speed =

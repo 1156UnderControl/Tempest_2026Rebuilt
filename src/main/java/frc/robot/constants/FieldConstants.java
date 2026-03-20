@@ -106,10 +106,10 @@ public class FieldConstants {
             SAFE_MIDDLE_TRENCH_POSE_LEFT_BLUE.getY(),
             Rotation2d.fromDegrees(180));
 
-    public static final Pose2d TOWER_POSE_BLUE = 
-      new Pose2d(0.519, 3.788, Rotation2d.fromDegrees(0));
-    public static final Pose2d TOWER_POSE_RED = 
-      new Pose2d(fieldLength-0.519, fieldWidth-3.788, Rotation2d.fromDegrees(180));
+    public static final Pose2d TOWER_POSE_BLUE =
+        new Pose2d(0.519, 3.788, Rotation2d.fromDegrees(0));
+    public static final Pose2d TOWER_POSE_RED =
+        new Pose2d(fieldLength - 0.519, fieldWidth - 3.788, Rotation2d.fromDegrees(180));
   }
 
   public static class FieldStrategicPoses {
