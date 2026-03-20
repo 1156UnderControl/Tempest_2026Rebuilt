@@ -15,7 +15,6 @@ import frc.java_is_undercontrol.swerve.io.gyro.GyroIOPigeon2;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIO;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOSim;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
-import frc.robot.commands.swerve.PassThroughBump;
 import frc.robot.commands.swerve.PassThroughTrenchLeftAlliance;
 import frc.robot.commands.swerve.ShootOnMoveLimit;
 import frc.robot.generated.TunerConstants;
@@ -219,11 +218,7 @@ public class RobotContainer {
         .whileTrue(this.extensor.home())
         .onTrue(this.roller.runRoller());
 
-
-
     this.driverController.y().onTrue(this.states.climbState());
-
-
 
     this.driverController.leftTrigger().whileTrue(new PassThroughTrenchLeftAlliance(drive));
 

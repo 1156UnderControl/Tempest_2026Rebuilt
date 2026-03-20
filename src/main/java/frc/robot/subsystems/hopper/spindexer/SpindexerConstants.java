@@ -30,5 +30,4 @@ public final class SpindexerConstants {
   }
 
   public static final double FEEDFORWARD_TORQUE_CURRENT_A = 4;
-
 }
