@@ -24,11 +24,11 @@ public final class SpindexerConstants {
   public static final AngularVelocity DEADBAND_IS_AT = RPM.of(10);
 
   public static class setpoints {
-    public static final AngularVelocity SHOOTING = RotationsPerSecond.of(15);
-    public static final AngularVelocity EXPELLING = RotationsPerSecond.of(-1.0);
+    public static final AngularVelocity SHOOTING = RotationsPerSecond.of(19);
+    public static final AngularVelocity EXPELLING = RotationsPerSecond.of(-2.0);
     public static final AngularVelocity STOPPED = RPM.of(0);
   }
 
-  public static final double FEEDFORWARD_TORQUE_CURRENT_A = 3;
+  public static final double FEEDFORWARD_TORQUE_CURRENT_A = 4;
 
 }
