@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.java_is_undercontrol.util.StabilizeChecker;
+import frc.robot.RobotStates;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
@@ -147,11 +148,18 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   public boolean isAtTargetVelocity() {
     return !isNotAtSetpointChecker.isStableInCondition(
-            () ->
-                !this.flywheelMechanism
+            () -> {
+              if (RobotStates.getInstance().isOnNotShootZone()) {
+                return flywheelMechanism
                     .getSpeed()
-                    .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED))
-        && this.flywheelMechanism
+                    .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED_FOR_FEED);
+              } else {
+                return !flywheelMechanism
+                    .getSpeed()
+                    .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
+              }
+            })
+        && flywheelMechanism
             .getSpeed()
             .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED_FIRST_SHOT);
   }
