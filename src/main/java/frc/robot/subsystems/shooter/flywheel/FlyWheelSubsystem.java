@@ -153,7 +153,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
             () -> {
               if (!RobotStates.getInstance().isOnAllianceZone()) {
                 isUsingFeedDeadband = true;
-                return flywheelMechanism
+                return !flywheelMechanism
                     .getSpeed()
                     .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED_FOR_FEED);
               } else {
