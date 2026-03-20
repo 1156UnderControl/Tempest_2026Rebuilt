@@ -133,10 +133,9 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     this.states.setDefaultStates();
-    new Trigger(() -> DriverStation.isTeleopEnabled())
-        .and(this.driverController.turboActivate())
-        .onTrue(this.drive.boostRobotJoystickControlVelocity())
-        .onFalse(this.drive.limitRobotJoystickControlVelocity());
+    this.driverController.turboActivate()
+        .onTrue(this.drive.boostRobotJoystickControlVelocity().ignoringDisable(true))
+        .onFalse(this.drive.limitRobotJoystickControlVelocity().ignoringDisable(true));
 
     this.operatorController
         .r2()
