@@ -12,6 +12,7 @@ import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers;
 import frc.robot.constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
+import frc.robot.subsystems.shooter.flywheel.FlyWheelSubsystem;
 import frc.robot.util.HubShiftUtil;
 import org.littletonrobotics.junction.AutoLogOutputManager;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -96,6 +97,7 @@ public class Robot extends LoggedRobot {
         DriverStation.getAlliance().orElse(Alliance.Blue) == HubShiftUtil.getFirstActiveAlliance());
     SmartDashboard.putNumber(
         "Time Until Next Shift:", HubShiftUtil.getOfficialShiftInfo().remainingTime());
+    SmartDashboard.putBoolean("Feed Deadband", FlyWheelSubsystem.getInstance().isUsingFeedDeadband);
   }
 
   @Override

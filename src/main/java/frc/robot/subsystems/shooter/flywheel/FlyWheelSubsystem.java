@@ -44,6 +44,8 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   private double flyWheelRPM;
 
+  public boolean isUsingFeedDeadband = false;
+
   private AngularVelocity setpoint = RPM.of(0);
 
   private StabilizeChecker isNotAtSetpointChecker = new StabilizeChecker(0.2);
@@ -149,11 +151,13 @@ public class FlyWheelSubsystem extends SubsystemBase {
   public boolean isAtTargetVelocity() {
     return !isNotAtSetpointChecker.isStableInCondition(
             () -> {
-              if (RobotStates.getInstance().isOnNotShootZone()) {
+              if (!RobotStates.getInstance().isOnAllianceZone()) {
+                isUsingFeedDeadband = true;
                 return flywheelMechanism
                     .getSpeed()
                     .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED_FOR_FEED);
               } else {
+                isUsingFeedDeadband = false;
                 return !flywheelMechanism
                     .getSpeed()
                     .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
