@@ -15,9 +15,8 @@ import frc.java_is_undercontrol.swerve.io.gyro.GyroIOPigeon2;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIO;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOSim;
 import frc.java_is_undercontrol.swerve.io.module.ModuleIOTalonFX;
-import frc.robot.commands.swerve.PassThroughBump;
+import frc.robot.commands.swerve.PassThroughTower;
 import frc.robot.commands.swerve.PassThroughTrenchLeftAlliance;
-import frc.robot.commands.swerve.ShootOnMoveLimit;
 import frc.robot.generated.TunerConstants;
 import frc.robot.joysticks.DriverController;
 import frc.robot.joysticks.IDriverController;
@@ -134,10 +133,9 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     this.states.setDefaultStates();
-    this.driverController
-        .turboActivate()
-        .onTrue(this.drive.boostRobotJoystickControlVelocity())
-        .onFalse(this.drive.limitRobotJoystickControlVelocity());
+    this.driverController.turboActivate()
+        .onTrue(this.drive.boostRobotJoystickControlVelocity().ignoringDisable(true))
+        .onFalse(this.drive.limitRobotJoystickControlVelocity().ignoringDisable(true));
 
     this.operatorController
         .r2()
@@ -219,15 +217,11 @@ public class RobotContainer {
         .whileTrue(this.extensor.home())
         .onTrue(this.roller.runRoller());
 
-
-
     this.driverController.y().onTrue(this.states.climbState());
-
-
 
     this.driverController.leftTrigger().whileTrue(new PassThroughTrenchLeftAlliance(drive));
 
-    this.driverController.leftBumper().whileTrue(new ShootOnMoveLimit(drive));
+    this.driverController.leftBumper().whileTrue(new PassThroughTower(drive));
   }
 
   public Command getAutonomousCommand() {

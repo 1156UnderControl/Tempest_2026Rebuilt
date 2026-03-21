@@ -230,6 +230,52 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     super.driveToSpecificYinField(trenchY, speed, desiredSpeeds, cosValue, sinValue);
   }
 
+  public void driveAlignAngleJoystickYfixedOnTower() {
+    Rotation2d nearestAngleToLock;
+
+    boolean isRedAlliance =
+        DriverStation.getAlliance().isPresent()
+            && DriverStation.getAlliance().get() == Alliance.Red;
+
+    Translation2d desiredSpeeds =
+        isRedAlliance
+            ? this.getLinearVelocityTranslationFromJoysticks(0, -controller.getLeftX())
+            : this.getLinearVelocityTranslationFromJoysticks(0, controller.getLeftX());
+
+    this.state = "DRIVE_ALIGN_TOWER";
+
+    if (isRedAlliance) {
+      if (getPose().getRotation().getDegrees() < 0) {
+        nearestAngleToLock = new Rotation2d(Degrees.of(0));
+      } else {
+        nearestAngleToLock = new Rotation2d(Degrees.of(180));
+      }
+    } else {
+      if (getPose().getRotation().getDegrees() < 0) {
+        nearestAngleToLock = new Rotation2d(Degrees.of(180));
+      } else {
+        nearestAngleToLock = new Rotation2d(Degrees.of(0));
+      }
+    }
+
+    double towerX;
+    if (isRedAlliance) {
+      towerX = FieldConstants.FieldStructurePoses.TOWER_POSE_RED.getX();
+    } else {
+      towerX = FieldConstants.FieldStructurePoses.TOWER_POSE_BLUE.getX();
+    }
+
+    double speed =
+        controller.turboActivate().getAsBoolean()
+            ? TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)
+            : 2.5;
+    boolean usingJoystick = !controller.notUsingJoystick();
+    double cosValue = usingJoystick ? controller.getCOS_Joystick() : nearestAngleToLock.getCos();
+    double sinValue = usingJoystick ? controller.getSIN_Joystick() : nearestAngleToLock.getSin();
+
+    super.driveToSpecificXinField(towerX, speed, desiredSpeeds, cosValue, sinValue);
+  }
+
   public Rotation2d getNearestBumpAngle() {
     Rotation2d nearestAngleToLock;
     if (getPose().getRotation().getDegrees() > 90 || getPose().getRotation().getDegrees() < -90) {

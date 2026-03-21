@@ -105,11 +105,15 @@ public class FieldConstants {
             FieldConstants.fieldLength - SAFE_MIDDLE_TRENCH_POSE_LEFT_BLUE.getX(),
             SAFE_MIDDLE_TRENCH_POSE_LEFT_BLUE.getY(),
             Rotation2d.fromDegrees(180));
+
+    public static final Pose2d TOWER_POSE_BLUE =
+        new Pose2d(0.519, 3.788, Rotation2d.fromDegrees(0));
+    public static final Pose2d TOWER_POSE_RED =
+        new Pose2d(fieldLength - 0.519, fieldWidth - 3.788, Rotation2d.fromDegrees(180));
   }
 
   public static class FieldStrategicPoses {
-    public static final Translation2d RIGHT_FEED_POSE =
-        new Translation2d(FieldConstants.fieldLength / 8, (FieldConstants.fieldWidth / 4));
+    public static final Translation2d RIGHT_FEED_POSE = new Translation2d(1.4, 0.711);
     public static final Translation2d LEFT_FEED_POSE =
         new Translation2d(
             RIGHT_FEED_POSE.getX(), FieldConstants.fieldWidth - RIGHT_FEED_POSE.getY());
