@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.101397712228797,
-        "y": 0.48
+        "x": 3.07933734939759,
+        "y": 2.4832650602409636
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.36459040198094,
-        "y": 0.4938492521224005
+        "x": 3.342530039149733,
+        "y": 2.4971143123633643
       },
       "isLocked": false,
       "linkedName": "Trench Right SideWays"
@@ -80,12 +80,12 @@
     },
     {
       "anchor": {
-        "x": 4.101397712228797,
-        "y": 0.6
+        "x": 5.865903614457832,
+        "y": 3.0733614457831333
       },
       "prevControl": {
-        "x": 4.350236235674752,
-        "y": 0.5759294942047947
+        "x": 6.114742137903788,
+        "y": 3.049290939987928
       },
       "nextControl": null,
       "isLocked": false,
@@ -202,7 +202,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Start Right - No Climb",
+  "folder": null,
   "idealStartingState": {
     "velocity": 1.1,
     "rotation": 90.0

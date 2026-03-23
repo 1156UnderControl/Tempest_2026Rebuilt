@@ -44,6 +44,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Sideways Autos",
+  "folder": null,
   "choreoAuto": false
 }
