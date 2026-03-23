@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.865903614457832,
-        "y": 3.0733614457831333
+        "x": 4.101397712228797,
+        "y": 0.6
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.618069313747879,
-        "y": 3.1061967833268325
+        "x": 3.853563411518844,
+        "y": 0.6328353375436991
       },
       "isLocked": false,
       "linkedName": "Trench Right Non Sideways"
@@ -96,7 +96,7 @@
     "rotation": -179.732927652521
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Start Right - Collect Middle",
   "idealStartingState": {
     "velocity": 2.1,
     "rotation": 180.0
