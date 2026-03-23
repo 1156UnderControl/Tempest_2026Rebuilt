@@ -38,7 +38,7 @@ public class ExtensorConstants {
   public static final Mass mass = Kilograms.of(5);
   public static final Distance drumRadius = Meters.of(0.02277 / 2.0);
   public static final MechanismGearing gearing =
-      new MechanismGearing(GearBox.fromReductionStages(5.833));
+      new MechanismGearing(GearBox.fromReductionStages(6.11));
 
   public static final Distance MECHANISM_CIRCUNFERENCE =
       Meters.of(Math.PI * 2 * drumRadius.in(Meters));
