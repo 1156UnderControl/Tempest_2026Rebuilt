@@ -72,7 +72,7 @@ public class RollerSubsystem extends SubsystemBase {
             .withSimClosedLoopController(
                 50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(2)))
-            .withIdleMode(MotorMode.COAST)
+            .withIdleMode(MotorMode.BRAKE)
             .withStatorCurrentLimit(Amps.of(50))
             .withMotorInverted(false)
             .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
