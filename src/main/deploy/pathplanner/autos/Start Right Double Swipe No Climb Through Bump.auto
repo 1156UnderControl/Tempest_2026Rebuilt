@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Start Right - Go Middle 1.1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 4.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Start Bump - Go Middle Inverted Stopped"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Sideways Autos",
+  "choreoAuto": false
+}
