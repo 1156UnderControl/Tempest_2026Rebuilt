@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -111,11 +112,11 @@ public class SpindexerSubsystem extends SubsystemBase {
   }
 
   public Command shoot() {
-    return spindexer.setSpeed(SpindexerConstants.setpoints.SHOOTING);
+    return spindexer.setVoltage(Volts.of(12));
   }
 
   public Command expell() {
-    return spindexer.setSpeed(SpindexerConstants.setpoints.EXPELLING);
+    return spindexer.setVoltage(Volts.of(-4));
   }
 
   public Command stop() {
