@@ -16,7 +16,7 @@ import yams.gearing.MechanismGearing;
 public class FlyWheelsConstants {
   public static final DCMotor FLYWHEEL_MOTOR = DCMotor.getKrakenX60Foc(2);
   public static final MechanismGearing MOTOR_GEARING =
-      new MechanismGearing(GearBox.fromReductionStages(0.714));
+      new MechanismGearing(GearBox.fromReductionStages(1));
   public static final Mass FLYWHEEL_MASS = Kilograms.of(1.8);
   public static final Distance FLYWHEEL_SIZE = Inches.of(2);
   public static final Voltage MAX_VOLTS = Volts.of(12.0);
