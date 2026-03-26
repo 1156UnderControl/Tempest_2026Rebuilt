@@ -13,7 +13,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 4.5
+            "waitTime": 5.5
           }
         },
         {
@@ -31,19 +31,45 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 4.5
+            "waitTime": 1.5
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Go To Climb Right Pose"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Go To Climb Right Pose"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Retract Intake"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Default Climber"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Default Climber"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop Shooting Fuels"
+                }
+              }
+            ]
           }
         }
       ]
