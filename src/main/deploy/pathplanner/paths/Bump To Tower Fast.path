@@ -1,0 +1,66 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.9074058740463613,
+        "y": 2.437170607288432
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.1478635288292254,
+        "y": 2.449973041373239
+      },
+      "isLocked": false,
+      "linkedName": "Bump Right Alliance Zone"
+    },
+    {
+      "anchor": {
+        "x": 1.1572417840375586,
+        "y": 2.7757439297241775
+      },
+      "prevControl": {
+        "x": 1.6057296251467137,
+        "y": 2.249733714788732
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Raise Climber",
+      "waypointRelativePos": 0.5812868369351669,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Raise Climber"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "Start Right - Collect Middle",
+  "idealStartingState": {
+    "velocity": 2.0,
+    "rotation": -143.9232673587843
+  },
+  "useDefaultConstraints": false
+}

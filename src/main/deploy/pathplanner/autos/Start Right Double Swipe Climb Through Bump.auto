@@ -13,25 +13,37 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 3.2
+            "waitTime": 4.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Start Right - Go Middle Inverted Stopped"
+            "pathName": "Start Bump - Go Middle Inverted Stopped"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bump To Tower Fast"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 3.2
+            "waitTime": 4.5
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Start Right - Go Middle Inverted Stopped 3.0"
+            "name": "Go To Climb Right Pose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Default Climber"
           }
         }
       ]

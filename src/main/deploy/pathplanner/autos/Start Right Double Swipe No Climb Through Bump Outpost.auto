@@ -7,19 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start Right - Go Middle 2056"
+            "pathName": "Start Right - Go Middle 1.1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 4.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Right Trench to Bump"
+            "pathName": "Start Bump - Go Middle Inverted Stopped"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Start Bump - Go Middle Inverted 2056"
+            "pathName": "Bump To Outpost Sideways"
           }
         }
       ]
