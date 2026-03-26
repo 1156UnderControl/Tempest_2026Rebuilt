@@ -209,11 +209,7 @@ public class States {
   private void setHopperDefaultStates() {
     this.kicker.setDefaultCommand(
         Commands.parallel(
-            this.kicker.stop(), Commands.runOnce(() -> this.kickerState = "Stop State")));
-
-    this.spindexer.setDefaultCommand(
-        Commands.parallel(
-            this.spindexer.stop(), Commands.runOnce(() -> this.spindexerState = "Stopped State")));
+            this.kicker.expell(), Commands.runOnce(() -> this.kickerState = "Stop State")));
 
     new Trigger(() -> RobotStates.getInstance().isShootingMode())
         .whileTrue(
