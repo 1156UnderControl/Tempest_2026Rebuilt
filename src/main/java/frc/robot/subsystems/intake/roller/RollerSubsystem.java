@@ -10,8 +10,13 @@ import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -47,6 +52,8 @@ public class RollerSubsystem extends SubsystemBase {
   private final SparkFlex rollerMasterFlex;
   private final SparkFlex rollerFollowerFlex;
 
+  private SparkFlexConfig followerConfig;
+
   private SmartMotorControllerConfig smartRollerMotorConfig;
 
   private final SmartMotorController rollerMotor;
@@ -63,6 +70,8 @@ public class RollerSubsystem extends SubsystemBase {
         new SparkFlex(RollerConstants.ID_intakeLeaderRollerMotor, MotorType.kBrushless);
     this.rollerFollowerFlex =
         new SparkFlex(RollerConstants.ID_intakeFollowerRollerMotor, MotorType.kBrushless);
+    followerConfig.idleMode(IdleMode.kCoast);
+    this.rollerFollowerFlex.configure(followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
     this.smartRollerMotorConfig =
         new SmartMotorControllerConfig(this)
@@ -72,7 +81,7 @@ public class RollerSubsystem extends SubsystemBase {
             .withSimClosedLoopController(
                 50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(2)))
-            .withIdleMode(MotorMode.BRAKE)
+            .withIdleMode(MotorMode.COAST)
             .withStatorCurrentLimit(Amps.of(50))
             .withMotorInverted(false)
             .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
