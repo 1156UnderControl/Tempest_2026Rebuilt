@@ -47,7 +47,6 @@ public class ClimberSubsystem extends SubsystemBase {
             .withGearing(ClimberConstants.GEARING)
             .withMotorInverted(ClimberConstants.INVERTED)
             .withStatorCurrentLimit(ClimberConstants.STATOR_CURRENT_LIMIT)
-            .withClosedLoopRampRate(ClimberConstants.CLOSED_RAMP_RATE)
             .withMechanismCircumference(ClimberConstants.MECHANISM_CIRCUNFERENCE)
             .withSoftLimit(ClimberConstants.CLIMBER_MIN_HEIGHT, ClimberConstants.CLIMBER_MAX_HEIGHT)
             .withTelemetry(TelemetryVerbosity.MID)

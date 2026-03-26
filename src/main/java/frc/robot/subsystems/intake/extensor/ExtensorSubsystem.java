@@ -61,7 +61,6 @@ public class ExtensorSubsystem extends SubsystemBase {
     this.extensorMotorConfig =
         new SmartMotorControllerConfig(this)
             .withMechanismCircumference(ExtensorConstants.MECHANISM_CIRCUNFERENCE)
-            .withClosedLoopRampRate(Milliseconds.of(10))
             .withClosedLoopController(
                 0.5, 0, 0, ExtensorConstants.maxVel, ExtensorConstants.maxAccel)
             .withSimClosedLoopController(
