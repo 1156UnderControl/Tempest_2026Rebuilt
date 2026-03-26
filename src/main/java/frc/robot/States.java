@@ -218,13 +218,6 @@ public class States {
                 .alongWith(Commands.runOnce(() -> this.spindexerState = "Running State")));
   }
 
-  private void setClimberDefaultStates() {
-    this.climber.setDefaultCommand(
-        this.climber
-            .defaultPosition()
-            .alongWith(Commands.runOnce(() -> this.climberState = "Default State")));
-  }
-
   private void setShooterDefaultStates() {
     this.turret.setDefaultCommand(
         Commands.parallel(
