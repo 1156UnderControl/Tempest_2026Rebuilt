@@ -14,9 +14,8 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
+import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -71,7 +70,8 @@ public class RollerSubsystem extends SubsystemBase {
     this.rollerFollowerFlex =
         new SparkFlex(RollerConstants.ID_intakeFollowerRollerMotor, MotorType.kBrushless);
     followerConfig.idleMode(IdleMode.kCoast);
-    this.rollerFollowerFlex.configure(followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    this.rollerFollowerFlex.configure(
+        followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
     this.smartRollerMotorConfig =
         new SmartMotorControllerConfig(this)
