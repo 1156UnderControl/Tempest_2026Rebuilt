@@ -4,10 +4,8 @@
   "holonomicMode": true,
   "pathFolders": [
     "Depot Collect - Score",
-    "Start Right - No Climb Return Middle",
     "Start Left - Collect Middle",
     "Start Right - Collect Middle",
-    "Start Right - Feed & Shoot",
     "Start Right - No Climb"
   ],
   "autoFolders": [
