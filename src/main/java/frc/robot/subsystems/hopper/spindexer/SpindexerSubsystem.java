@@ -59,7 +59,7 @@ public class SpindexerSubsystem extends SubsystemBase {
 
     this.smartSpindexerMotorConfig =
         new SmartMotorControllerConfig(this)
-            .withControlMode(ControlMode.CLOSED_LOOP)
+            .withControlMode(ControlMode.OPEN_LOOP)
             .withClosedLoopController(
                 10, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
             .withSimClosedLoopController(
@@ -120,7 +120,7 @@ public class SpindexerSubsystem extends SubsystemBase {
   }
 
   public Command stop() {
-    return spindexer.setSpeed(SpindexerConstants.setpoints.STOPPED);
+    return spindexer.setVoltage(Volts.of(0));
   }
 
   public Command setDutyCycle(double dutycycle) {
