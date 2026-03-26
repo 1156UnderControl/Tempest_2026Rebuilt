@@ -6,8 +6,11 @@ import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.Volts;
 
+import java.util.function.Supplier;
+
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -54,8 +57,13 @@ public class SpindexerSubsystem extends SubsystemBase {
 
   private VelocityTorqueCurrentFOC torqueCurrentRequest = new VelocityTorqueCurrentFOC(RPM.of(0));
 
+  private TalonFXConfiguration talonConfiguration = new TalonFXConfiguration();
+
+  private TalonFXConfigurator talonConfigurator;
+
   private SpindexerSubsystem() {
     this.spindexerTalon = new TalonFX(SpindexerConstants.MOTOR_ID);
+    this.talonConfigurator = spindexerTalon.getConfigurator();
 
     this.smartSpindexerMotorConfig =
         new SmartMotorControllerConfig(this)
@@ -66,7 +74,6 @@ public class SpindexerSubsystem extends SubsystemBase {
                 0.03, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(5)))
             .withIdleMode(MotorMode.BRAKE)
-            .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0.1, 0.9, 0))
             .withTelemetry(TelemetryVerbosity.MID)
             .withMechanismCircumference(Meters.of(0.478))
@@ -77,6 +84,9 @@ public class SpindexerSubsystem extends SubsystemBase {
 
     this.spindexerMotor =
         new TalonFXWrapper(spindexerTalon, DCMotor.getKrakenX60(1), smartSpindexerMotorConfig);
+
+    talonConfigurator.refresh(talonConfiguration.Slot0);
+    talonConfigurator.apply(talonConfiguration.Slot0.withKS(0).withKV(0).withKA(0));
 
     this.spindexerMechanismConfig =
         new FlyWheelConfig(spindexerMotor)
@@ -112,15 +122,19 @@ public class SpindexerSubsystem extends SubsystemBase {
   }
 
   public Command shoot() {
-    return spindexer.setVoltage(Volts.of(12));
+    return this.runFlywheel(() -> SpindexerConstants.MAX_VELOCITY);
   }
 
   public Command expell() {
-    return spindexer.setVoltage(Volts.of(-4));
+    return this.runFlywheel(() -> RPM.of(0));
   }
 
   public Command stop() {
-    return spindexer.setVoltage(Volts.of(0));
+    return this.runFlywheel(() -> RPM.of(0));
+  }
+
+  private Command runFlywheel(Supplier<AngularVelocity> velocity) {
+    return this.run(() -> spindexerTalon.setControl(torqueCurrentRequest.withVelocity(velocity.get())));
   }
 
   public Command setDutyCycle(double dutycycle) {
