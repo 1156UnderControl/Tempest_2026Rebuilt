@@ -82,6 +82,8 @@ public class Robot extends LoggedRobot {
 
     robotContainer = new RobotContainer();
     LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
+    LimelightHelpers.SetIMUMode(VisionConstants.backRightLimelightName, 1);
+    LimelightHelpers.SetIMUAssistAlpha(VisionConstants.backRightLimelightName, 0.001);
   }
 
   @Override
@@ -101,6 +103,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
+    LimelightHelpers.SetIMUMode(VisionConstants.backRightLimelightName, 1);
   }
 
   @Override
@@ -108,6 +111,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
+    LimelightHelpers.SetIMUMode(VisionConstants.backRightLimelightName, 4);
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     if (autonomousCommand != null) {
@@ -131,6 +135,8 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+
+    LimelightHelpers.SetIMUMode(VisionConstants.backRightLimelightName, 4);
   }
 
   @Override
