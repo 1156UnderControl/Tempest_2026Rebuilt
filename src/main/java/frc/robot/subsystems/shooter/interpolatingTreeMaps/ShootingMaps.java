@@ -33,8 +33,8 @@ public class ShootingMaps implements InterpolatingTreeMaps {
     shotHoodAngleMap.put(4.8, Rotation2d.fromDegrees(59));
     shotHoodAngleMap.put(5.1, Rotation2d.fromDegrees(58));
     shotHoodAngleMap.put(5.4, Rotation2d.fromDegrees(57));
-   // shotHoodAngleMap.put(5.8, Rotation2d.fromDegrees(51));
-   // shotHoodAngleMap.put(6.4, Rotation2d.fromDegrees(50));
+    shotHoodAngleMap.put(5.7, Rotation2d.fromDegrees(56));
+    shotHoodAngleMap.put(6.1, Rotation2d.fromDegrees(54));
    // shotHoodAngleMap.put(6.8, Rotation2d.fromDegrees(49));
    // shotHoodAngleMap.put(7.198, Rotation2d.fromDegrees(48));
     //shotHoodAngleMap.put(7.35, Rotation2d.fromDegrees(48));
@@ -52,8 +52,8 @@ public class ShootingMaps implements InterpolatingTreeMaps {
     shotFlywheelSpeedMap.put(4.8, 2725.0);
     shotFlywheelSpeedMap.put(5.1, 2750.0);
     shotFlywheelSpeedMap.put(5.4, 2800.0);
-    //shotFlywheelSpeedMap.put(5.8, 3550.0);
-    //shotFlywheelSpeedMap.put(6.4, 3700.0);
+    shotFlywheelSpeedMap.put(5.7, 2900.0);
+    shotFlywheelSpeedMap.put(6.1, 2950.0);
     //shotFlywheelSpeedMap.put(6.8, 3850.0);
     //shotFlywheelSpeedMap.put(7.198, 3950.0);
     //shotFlywheelSpeedMap.put(7.35, 4050.0);
@@ -71,10 +71,10 @@ public class ShootingMaps implements InterpolatingTreeMaps {
     timeOfFlightMap.put(4.8, 1.44);
     timeOfFlightMap.put(5.1, 1.46);
     timeOfFlightMap.put(5.4, 1.5);
-   // timeOfFlightMap.put(5.8, 1.42);
-   // timeOfFlightMap.put(6.4, 1.35);
-   // timeOfFlightMap.put(6.8, 1.42);
-   // timeOfFlightMap.put(7.198, 1.42);
+    timeOfFlightMap.put(5.7, 1.47);
+    timeOfFlightMap.put(6.1, 1.47);
+    // timeOfFlightMap.put(6.8, 1.42);
+    // timeOfFlightMap.put(7.198, 1.42);
     //timeOfFlightMap.put(7.35, 1.50);
   }
 
