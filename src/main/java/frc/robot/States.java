@@ -216,15 +216,6 @@ public class States {
             this.spindexer
                 .shoot()
                 .alongWith(Commands.runOnce(() -> this.spindexerState = "Running State")));
-
-    new Trigger(
-            () ->
-                !RobotStates.getInstance().isShootingMode()
-                    && RobotStates.getInstance().isExtendedMode())
-        .whileTrue(
-            this.spindexer
-                .expell()
-                .alongWith(Commands.runOnce(() -> this.spindexerState = "Expelling State")));
   }
 
   private void setClimberDefaultStates() {
