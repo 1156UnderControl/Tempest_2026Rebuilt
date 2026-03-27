@@ -11,9 +11,35 @@
           }
         },
         {
-          "type": "wait",
+          "type": "sequential",
           "data": {
-            "waitTime": 4.5
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 4.0
+                }
+              },
+              {
+                "type": "parallel",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Retract Intake"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.5
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
@@ -31,19 +57,45 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 4.5
+            "waitTime": 1.5
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Go To Climb Right Pose"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Go To Climb Right Pose"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Retract Intake"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Default Climber"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Default Climber"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Stop Shooting Fuels"
+                }
+              }
+            ]
           }
         }
       ]
