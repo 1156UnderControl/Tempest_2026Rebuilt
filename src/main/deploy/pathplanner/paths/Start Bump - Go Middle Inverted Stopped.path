@@ -167,6 +167,17 @@
       }
     },
     {
+      "name": "Extend Intake",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend Intake"
+        }
+      }
+    },
+    {
       "name": "Home Intake",
       "waypointRelativePos": 1.057833988212181,
       "endWaypointRelativePos": null,
