@@ -83,16 +83,17 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
     this.smartFlywheelMotor =
         new TalonFXWrapper(this.leadMotor, FlyWheelsConstants.FLYWHEEL_MOTOR, this.motorConfig);
-    this.leadMotor.getVelocity().setUpdateFrequency(250);
-
-    talonConfigurator.refresh(talonConfiguration.Slot0);
-    talonConfigurator.apply(talonConfiguration.Slot0.withKS(0).withKV(0).withKA(0));
 
     this.flyWheelConfig =
         new FlyWheelConfig(smartFlywheelMotor)
             .withMOI(FlyWheelsConstants.FLYWHEEL_SIZE, FlyWheelsConstants.FLYWHEEL_MASS);
 
     this.flywheelMechanism = new FlyWheel(flyWheelConfig);
+
+    this.leadMotor.getVelocity().setUpdateFrequency(250);
+
+    talonConfigurator.refresh(talonConfiguration.Slot0);
+    talonConfigurator.apply(talonConfiguration.Slot0.withKS(3.3).withKV(0.015));
 
     this.inputs = new FlyWheelInputsAutoLogged();
 
