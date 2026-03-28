@@ -113,7 +113,7 @@ public class FieldConstants {
   }
 
   public static class FieldStrategicPoses {
-    public static final Translation2d RIGHT_FEED_POSE = new Translation2d(1.4, 0.711);
+    public static final Translation2d RIGHT_FEED_POSE = new Translation2d(1.089, 1.011);
     public static final Translation2d LEFT_FEED_POSE =
         new Translation2d(
             RIGHT_FEED_POSE.getX(), FieldConstants.fieldWidth - RIGHT_FEED_POSE.getY());
