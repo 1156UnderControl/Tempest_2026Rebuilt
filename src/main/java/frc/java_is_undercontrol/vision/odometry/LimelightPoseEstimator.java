@@ -31,7 +31,13 @@ public class LimelightPoseEstimator implements PoseEstimator {
 
   private Boolean useVisionHeadingCorrection = false;
 
+  String state = "";
+
   private int[] apriltagsToSee = new int[0];
+
+  String stateLoggerKey;
+
+  String poseLoggerKey;
 
   public LimelightPoseEstimator(
       String limelightName,
@@ -46,7 +52,9 @@ public class LimelightPoseEstimator implements PoseEstimator {
       this.apriltagsIDs[i] = i + 1;
     }
     this.apriltagsToSee = this.apriltagsIDs;
-    Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, new Pose3d());
+    this.stateLoggerKey = "PoseEstimator/Limelight/" + limelightName + "/State";
+    this.poseLoggerKey = "PoseEstimator/Limelight/" + limelightName + "/Pose";
+    Logger.recordOutput(this.poseLoggerKey, new Pose3d());
   }
 
   public LimelightPoseEstimator(String limelightName, boolean only2TagsMeasurements) {
@@ -60,11 +68,15 @@ public class LimelightPoseEstimator implements PoseEstimator {
   public Optional<PoseEstimation> getEstimatedPose(Pose2d referencePose) {
     LimelightHelpers.SetFiducialIDFiltersOverride(limelightName, apriltagsToSee);
     try {
-      if (!LimelightHelpers.getTV(this.limelightName)
-          || Math.abs(OdometryEnabledSwerveSubsystem.robotAngularVelocity)
-              >= limitAngVelForUpdating) {
-        Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, new Pose3d());
+      if (!LimelightHelpers.getTV(this.limelightName)) {
+        Logger.recordOutput(this.poseLoggerKey, new Pose3d());
+        this.state = "NO_TARGETS";
+        Logger.recordOutput(this.stateLoggerKey, this.state);
         return Optional.empty();
+      }
+      if (Math.abs(OdometryEnabledSwerveSubsystem.robotAngularVelocity) >= limitAngVelForUpdating) {
+        this.state = "ROBOT_ANG_VEL_TOO_FAST";
+        Logger.recordOutput(this.stateLoggerKey, this.state);
       }
       PoseEstimate limelightPoseEstimate;
       if (useMegaTag1) {
@@ -74,7 +86,7 @@ public class LimelightPoseEstimator implements PoseEstimator {
             LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(this.limelightName);
       }
       if (limelightPoseEstimate == null) {
-        Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, new Pose3d());
+        Logger.recordOutput(this.poseLoggerKey, new Pose3d());
         return Optional.empty();
       }
 
@@ -86,17 +98,25 @@ public class LimelightPoseEstimator implements PoseEstimator {
 
       PoseEstimation poseEstimation = convertPoseEstimate(limelightPoseEstimate);
       if (poseOutOfField(poseEstimation)) {
-        Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, new Pose3d());
+        Logger.recordOutput(this.poseLoggerKey, new Pose3d());
+        this.state = "ESTIMATION_OUT_OF_FIELD";
+        Logger.recordOutput(this.stateLoggerKey, this.state);
         return Optional.empty();
       }
       if (only2TagsMeasurements && poseEstimation.numberOfTargetsUsed < 2) {
-        Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, new Pose3d());
+        Logger.recordOutput(this.poseLoggerKey, new Pose3d());
+        this.state = "ONLY_ONE_TAG";
+        Logger.recordOutput(this.stateLoggerKey, this.state);
         return Optional.empty();
       }
-      Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, poseEstimation.estimatedPose);
+      Logger.recordOutput(this.poseLoggerKey, poseEstimation.estimatedPose);
+      this.state = "SENDING_ESTIMATION";
+      Logger.recordOutput(this.stateLoggerKey, this.state);
       return Optional.of(poseEstimation);
     } catch (Exception e) {
-      Logger.recordOutput("PoseEstimator/Limelight/" + limelightName, new Pose3d());
+      Logger.recordOutput(this.poseLoggerKey, new Pose3d());
+      this.state = "ERROR";
+      Logger.recordOutput(this.stateLoggerKey, this.state);
       return Optional.empty();
     }
   }
