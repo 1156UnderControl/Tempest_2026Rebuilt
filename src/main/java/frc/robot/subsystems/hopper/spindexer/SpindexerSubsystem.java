@@ -65,7 +65,7 @@ public class SpindexerSubsystem extends SubsystemBase {
             .withSimClosedLoopController(
                 0.03, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(9)))
-            .withIdleMode(MotorMode.BRAKE)
+            .withIdleMode(MotorMode.COAST)
             .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0.1, 0.9, 0))
             .withTelemetry(TelemetryVerbosity.MID)
@@ -116,7 +116,7 @@ public class SpindexerSubsystem extends SubsystemBase {
   }
 
   public Command expell() {
-    return spindexer.setVoltage(Volts.of(-4));
+    return spindexer.setVoltage(Volts.of(0));
   }
 
   public Command stop() {

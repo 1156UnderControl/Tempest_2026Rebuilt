@@ -215,7 +215,11 @@ public class States {
         .whileTrue(
             this.spindexer
                 .shoot()
-                .alongWith(Commands.runOnce(() -> this.spindexerState = "Running State")));
+                .alongWith(Commands.runOnce(() -> this.spindexerState = "Running State")))
+        .whileFalse(
+            this.spindexer
+                .expell()
+                .alongWith(Commands.runOnce(() -> this.spindexerState = "Stopped State")));
   }
 
   private void setShooterDefaultStates() {
