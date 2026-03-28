@@ -128,7 +128,7 @@ public class ExtensorSubsystem extends SubsystemBase {
   }
 
   public Command retractAuto() {
-    return this.setLength(ExtensorConstants.setpoints.INTAKE_HOMED_POSITION);
+    return this.setLength(ExtensorConstants.setpoints.INTAKE_SHAKE_POSITION_AUTO);
   }
 
   public Command disableExtensor() {
