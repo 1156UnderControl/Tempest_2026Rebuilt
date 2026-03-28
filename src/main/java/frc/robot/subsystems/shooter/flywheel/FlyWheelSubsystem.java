@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.RPM;
 
 import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.Pair;
@@ -50,6 +52,10 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   private StabilizeChecker isNotAtSetpointChecker = new StabilizeChecker(0.2);
 
+  private TalonFXConfiguration talonConfiguration = new TalonFXConfiguration();
+
+  private TalonFXConfigurator talonConfigurator;
+
   private FlyWheelSubsystem() {
     this.calculator = ShooterCalculator.getInstance();
 
@@ -67,13 +73,13 @@ public class FlyWheelSubsystem extends SubsystemBase {
                 FlyWheelsConstants.ClosedLoopController.kD)
             .withSimClosedLoopController(4, 0, 0)
             .withTelemetry(TelemetryVerbosity.MID)
-            .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0.19, 0.11, 0))
             .withControlMode(ControlMode.CLOSED_LOOP);
 
     this.torqueCurrentRequest.withFeedForward(FlyWheelsConstants.FEEDFORWARD_TORQUE_CURRENT_A);
 
     this.leadMotor = new TalonFX(19);
+    this.talonConfigurator = leadMotor.getConfigurator();
 
     this.smartFlywheelMotor =
         new TalonFXWrapper(this.leadMotor, FlyWheelsConstants.FLYWHEEL_MOTOR, this.motorConfig);
@@ -83,6 +89,11 @@ public class FlyWheelSubsystem extends SubsystemBase {
             .withMOI(FlyWheelsConstants.FLYWHEEL_SIZE, FlyWheelsConstants.FLYWHEEL_MASS);
 
     this.flywheelMechanism = new FlyWheel(flyWheelConfig);
+
+    this.leadMotor.getVelocity().setUpdateFrequency(250);
+
+    talonConfigurator.refresh(talonConfiguration.Slot0);
+    talonConfigurator.apply(talonConfiguration.Slot0.withKS(3.3).withKV(0.015));
 
     this.inputs = new FlyWheelInputsAutoLogged();
 
@@ -110,7 +121,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
   }
 
   private void updateInputs() {
-    this.inputs.currentVelocity = this.smartFlywheelMotor.getRotorVelocity().in(RPM);
+    this.inputs.currentVelocity = this.smartFlywheelMotor.getMechanismVelocity().in(RPM);
     this.setpoint = torqueCurrentRequest.getVelocityMeasure();
     this.inputs.targetVelocity = setpoint.in(RPM);
     this.inputs.atTarget = isAtTargetVelocity();
