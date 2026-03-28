@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.2387255630134972,
-        "y": 2.5513391743691307
+        "x": 3.463572614069836,
+        "y": 2.538753851232394
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4791832177963613,
-        "y": 2.5641416084539377
+        "x": 2.7040302688527,
+        "y": 2.551556285317201
       },
       "isLocked": false,
       "linkedName": "Bump Right Alliance Zone"
     },
     {
       "anchor": {
-        "x": 1.1572417840375586,
-        "y": 2.7757439297241775
+        "x": 1.15,
+        "y": 2.81
       },
       "prevControl": {
-        "x": 1.6057296251467137,
-        "y": 2.249733714788732
+        "x": 1.598487841109155,
+        "y": 2.2839897850645547
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 0.59,
+    "maxVelocity": 0.653,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
