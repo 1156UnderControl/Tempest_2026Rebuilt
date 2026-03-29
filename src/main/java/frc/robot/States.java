@@ -211,6 +211,8 @@ public class States {
         Commands.parallel(
             this.kicker.stop(), Commands.runOnce(() -> this.kickerState = "Stop State")));
 
+    this.spindexer.setDefaultCommand(this.spindexer.stop());
+
     new Trigger(() -> RobotStates.getInstance().isShootingMode())
         .whileTrue(
             this.spindexer
@@ -218,7 +220,7 @@ public class States {
                 .alongWith(Commands.runOnce(() -> this.spindexerState = "Running State")))
         .whileFalse(
             this.spindexer
-                .expell()
+                .stop()
                 .alongWith(Commands.runOnce(() -> this.spindexerState = "Stopped State")));
   }
 
