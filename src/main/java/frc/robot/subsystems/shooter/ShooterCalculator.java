@@ -24,6 +24,8 @@ import org.littletonrobotics.junction.Logger;
 public class ShooterCalculator {
   private static ShooterCalculator instance;
 
+  private static final double HUB_AIM_OFFSET_METERS = 0.15;
+
   private final LinearFilter turretAngleFilter =
       LinearFilter.movingAverage((int) (0.1 / Constants.loopPeriodSecs));
   private final LinearFilter hoodAngleFilter =
@@ -121,6 +123,8 @@ public class ShooterCalculator {
       lookaheadTurretToTargetDistance = target.getDistance(lookaheadPose.getTranslation());
       distanceToTarget = lookaheadTurretToTargetDistance;
     }
+
+    if(shooting) lookaheadTurretToTargetDistance += HUB_AIM_OFFSET_METERS;
 
     // Calculate parameters accounted for imparted velocity
     turretAngle = target.minus(lookaheadPose.getTranslation()).getAngle();
