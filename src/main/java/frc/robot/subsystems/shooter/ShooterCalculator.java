@@ -24,6 +24,8 @@ import org.littletonrobotics.junction.Logger;
 public class ShooterCalculator {
   private static ShooterCalculator instance;
 
+  private static final double HUB_AIM_OFFSET_METERS = 0.15;
+
   private final LinearFilter turretAngleFilter =
       LinearFilter.movingAverage((int) (0.1 / Constants.loopPeriodSecs));
   private final LinearFilter hoodAngleFilter =
@@ -158,9 +160,18 @@ public class ShooterCalculator {
     Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
     if (shooting) {
-      return alliance == Alliance.Blue
-          ? FieldStructurePoses.BLUE_HUB_POSE
-          : FieldStructurePoses.RED_HUB_POSE;
+      Translation2d baseHubPose =
+          alliance == Alliance.Blue
+              ? FieldStructurePoses.BLUE_HUB_POSE
+              : FieldStructurePoses.RED_HUB_POSE;
+      Translation2d robotTranslation = RobotStates.getInstance().getRobotPose().getTranslation();
+      Translation2d robotToHub = baseHubPose.minus(robotTranslation);
+      if (robotToHub.getNorm() > 1e-6) {
+        Translation2d offset =
+            new Translation2d(HUB_AIM_OFFSET_METERS, robotToHub.getAngle()); // Extend past hub
+        return baseHubPose.plus(offset);
+      }
+      return baseHubPose;
     }
 
     if (RobotStates.getInstance().isOnBlueDepotSide()) {
