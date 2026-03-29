@@ -29,6 +29,8 @@ public class FeedingMaps implements InterpolatingTreeMaps {
     shotHoodAngleMap.put(9.2, Rotation2d.fromDegrees(45.0));
     shotHoodAngleMap.put(10.0, Rotation2d.fromDegrees(45.0));
     shotHoodAngleMap.put(11.0, Rotation2d.fromDegrees(45.0));
+    shotHoodAngleMap.put(12.0, Rotation2d.fromDegrees(45.0));
+    shotHoodAngleMap.put(13.0, Rotation2d.fromDegrees(45.0));
 
     shotFlywheelSpeedMap.put(4.71, 2000.00);
     shotFlywheelSpeedMap.put(5.35, 2200.00);
@@ -39,6 +41,10 @@ public class FeedingMaps implements InterpolatingTreeMaps {
     shotFlywheelSpeedMap.put(9.2, 3200.0);
     shotFlywheelSpeedMap.put(10.0, 3500.0);
     shotFlywheelSpeedMap.put(11.0, 3700.0);
+    //simulated
+    shotFlywheelSpeedMap.put(12.0, 3950.0);
+    shotFlywheelSpeedMap.put(13.0, 4100.0);
+
 
     timeOfFlightMap.put(4.71, 1.1);
     timeOfFlightMap.put(5.35, 1.18);
@@ -49,6 +55,9 @@ public class FeedingMaps implements InterpolatingTreeMaps {
     timeOfFlightMap.put(9.2, 1.55);
     timeOfFlightMap.put(10.0, 1.58);
     timeOfFlightMap.put(11.0, 1.61);
+    //simulatedq
+    timeOfFlightMap.put(12.0, 1.63);
+    timeOfFlightMap.put(13.0, 1.65);
   }
 
   public InterpolatingTreeMap<Double, Rotation2d> getHoodAngleMap() {
