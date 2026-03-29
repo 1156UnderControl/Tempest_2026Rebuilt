@@ -74,9 +74,9 @@ public class TurretConstants {
 
   public static final Angle ANGLE_ERROR_ALLOWED = Degrees.of(15);
 
-  public static final Angle TURRET_MIN_ANGLE = Degrees.of(-315);
+  public static final Angle TURRET_MIN_ANGLE = Degrees.of(-280);
 
-  public static final Angle TURRET_MAX_ANGLE = Degrees.of(160);
+  public static final Angle TURRET_MAX_ANGLE = Degrees.of(130);
 
   public static final Angle STARTING_ANGLE = Degrees.of(0);
 
