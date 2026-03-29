@@ -124,6 +124,8 @@ public class ShooterCalculator {
       distanceToTarget = lookaheadTurretToTargetDistance;
     }
 
+    if(shooting) lookaheadTurretToTargetDistance += HUB_AIM_OFFSET_METERS;
+
     // Calculate parameters accounted for imparted velocity
     turretAngle = target.minus(lookaheadPose.getTranslation()).getAngle();
     hoodAngle = maps.getHoodAngleMap().get(lookaheadTurretToTargetDistance).getDegrees();
@@ -160,18 +162,9 @@ public class ShooterCalculator {
     Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
     if (shooting) {
-      Translation2d baseHubPose =
-          alliance == Alliance.Blue
-              ? FieldStructurePoses.BLUE_HUB_POSE
-              : FieldStructurePoses.RED_HUB_POSE;
-      Translation2d robotTranslation = RobotStates.getInstance().getRobotPose().getTranslation();
-      Translation2d robotToHub = baseHubPose.minus(robotTranslation);
-      if (robotToHub.getNorm() > 1e-6) {
-        Translation2d offset =
-            new Translation2d(HUB_AIM_OFFSET_METERS, robotToHub.getAngle()); // Extend past hub
-        return baseHubPose.plus(offset);
-      }
-      return baseHubPose;
+      return alliance == Alliance.Blue
+          ? FieldStructurePoses.BLUE_HUB_POSE
+          : FieldStructurePoses.RED_HUB_POSE;
     }
 
     if (RobotStates.getInstance().isOnBlueDepotSide()) {
