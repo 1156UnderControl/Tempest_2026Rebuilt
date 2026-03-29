@@ -20,29 +20,35 @@ public class FeedingMaps implements InterpolatingTreeMaps {
     minDistance = 1.34;
     maxDistance = 5.60;
 
-    // TODO: Get our own distances to HoodAngle
-    shotHoodAngleMap.put(3.74, Rotation2d.fromDegrees(40.0));
-    shotHoodAngleMap.put(5.74, Rotation2d.fromDegrees(40.0));
-    shotHoodAngleMap.put(7.12, Rotation2d.fromDegrees(40.0));
-    shotHoodAngleMap.put(8.5, Rotation2d.fromDegrees(40.0));
-    shotHoodAngleMap.put(11.21, Rotation2d.fromDegrees(40.0));
-    shotHoodAngleMap.put(13.0, Rotation2d.fromDegrees(40.0));
+    shotHoodAngleMap.put(4.71, Rotation2d.fromDegrees(45.0));
+    shotHoodAngleMap.put(5.35, Rotation2d.fromDegrees(45.0));
+    shotHoodAngleMap.put(6.3, Rotation2d.fromDegrees(45.0));
+    shotHoodAngleMap.put(7.0, Rotation2d.fromDegrees(45.0));
+    shotHoodAngleMap.put(8.0, Rotation2d.fromDegrees(45.0));
+    shotHoodAngleMap.put(8.7, Rotation2d.fromDegrees(45.0));
+    shotHoodAngleMap.put(9.2, Rotation2d.fromDegrees(45.0));
+    shotHoodAngleMap.put(10.0, Rotation2d.fromDegrees(45.0));
+    shotHoodAngleMap.put(11.0, Rotation2d.fromDegrees(45.0));
 
-    // TODO: Get our own distances to RPS
-    shotFlywheelSpeedMap.put(3.74, 2200.0 + 100.0);
-    shotFlywheelSpeedMap.put(5.74, 2900.0 + 100.0);
-    shotFlywheelSpeedMap.put(7.12, 3200.0 + 100.0);
-    shotFlywheelSpeedMap.put(8.5, 3500.0 + 100.0);
-    shotFlywheelSpeedMap.put(11.21, 4800.0 + 100.0);
-    shotFlywheelSpeedMap.put(13.0, 5300.0 + 100.0);
+    shotFlywheelSpeedMap.put(4.71, 2000.00);
+    shotFlywheelSpeedMap.put(5.35, 2200.00);
+    shotFlywheelSpeedMap.put(6.3, 2400.00);
+    shotFlywheelSpeedMap.put(7.0, 2600.0);
+    shotFlywheelSpeedMap.put(8.0, 2800.0);
+    shotFlywheelSpeedMap.put(8.7, 3000.0);
+    shotFlywheelSpeedMap.put(9.2, 3200.0);
+    shotFlywheelSpeedMap.put(10.0, 3500.0);
+    shotFlywheelSpeedMap.put(11.0, 3700.0);
 
-    // TODO: Get our own distances TOF
-    timeOfFlightMap.put(3.74, 1.04);
-    timeOfFlightMap.put(5.74, 1.15);
-    timeOfFlightMap.put(7.12, 1.25);
-    timeOfFlightMap.put(8.5, 1.32);
-    timeOfFlightMap.put(11.21, 1.48);
-    timeOfFlightMap.put(13.0, 1.53);
+    timeOfFlightMap.put(4.71, 1.1);
+    timeOfFlightMap.put(5.35, 1.18);
+    timeOfFlightMap.put(6.3, 1.28);
+    timeOfFlightMap.put(7.0, 1.32);
+    timeOfFlightMap.put(8.0, 1.45);
+    timeOfFlightMap.put(8.7, 1.5);
+    timeOfFlightMap.put(9.2, 1.55);
+    timeOfFlightMap.put(10.0, 1.58);
+    timeOfFlightMap.put(11.0, 1.61);
   }
 
   public InterpolatingTreeMap<Double, Rotation2d> getHoodAngleMap() {
