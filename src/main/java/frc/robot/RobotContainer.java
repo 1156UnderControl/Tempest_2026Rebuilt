@@ -229,9 +229,8 @@ public class RobotContainer {
 
     this.driverController.b()
     .whileTrue(
-        this.kicker.shoot()
-        .alongWith(this.spindexer.shoot(), Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true)))
-    )
+        this.states.shootState()
+        .alongWith(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
     .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
 
   }
