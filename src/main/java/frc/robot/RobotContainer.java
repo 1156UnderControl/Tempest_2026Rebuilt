@@ -210,8 +210,6 @@ public class RobotContainer {
     this.operatorController.upArrow().onTrue(this.states.climbState());
     this.operatorController.downArrow().onTrue(this.states.defaultClimberState());
 
-    this.driverController.a().onTrue(this.turret.resetCRT());
-
     this.operatorController
         .leftArrow()
         .or(this.driverController.leftStick())
@@ -223,6 +221,19 @@ public class RobotContainer {
     this.driverController.leftTrigger().whileTrue(new PassThroughTrenchLeftAlliance(drive));
 
     this.driverController.leftBumper().whileTrue(new PassThroughTower(drive));
+
+    this.driverController.a().whileTrue(
+        this.flyWheel.runVelocityTorqueControlCalibration()
+        .alongWith(this.hood.goToTargetAngleCalibration())
+    );
+
+    this.driverController.b()
+    .whileTrue(
+        this.kicker.shoot()
+        .alongWith(this.spindexer.shoot(), Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true)))
+    )
+    .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
+
   }
 
   public Command getAutonomousCommand() {
