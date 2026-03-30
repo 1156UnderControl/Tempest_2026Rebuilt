@@ -124,9 +124,6 @@ public class ShooterCalculator {
       distanceToTarget = lookaheadTurretToTargetDistance;
     }
 
-    // Uncomment the line below to turn on the offset algorithm (andrade)
-    //if(shooting) lookaheadTurretToTargetDistance += HUB_AIM_OFFSET_METERS;
-
     // Calculate parameters accounted for imparted velocity
     turretAngle = target.minus(lookaheadPose.getTranslation()).getAngle();
     hoodAngle = maps.getHoodAngleMap().get(lookaheadTurretToTargetDistance).getDegrees();
@@ -167,8 +164,6 @@ public class ShooterCalculator {
           alliance == Alliance.Blue
               ? FieldStructurePoses.BLUE_HUB_POSE
               : FieldStructurePoses.RED_HUB_POSE;
-      // Uncomment the line below to turn off the offset algorithm (carvalho)
-      //if(true) return baseHubPose;
       Translation2d robotTranslation = RobotStates.getInstance().getRobotPose().getTranslation();
       Translation2d robotToHub = baseHubPose.minus(robotTranslation);
       if (robotToHub.getNorm() > 1e-6) {
