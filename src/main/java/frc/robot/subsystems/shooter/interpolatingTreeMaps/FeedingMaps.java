@@ -32,18 +32,19 @@ public class FeedingMaps implements InterpolatingTreeMaps {
     shotHoodAngleMap.put(12.0, Rotation2d.fromDegrees(45.0));
     shotHoodAngleMap.put(13.0, Rotation2d.fromDegrees(45.0));
 
-    shotFlywheelSpeedMap.put(4.71, 2000.00);
-    shotFlywheelSpeedMap.put(5.35, 2200.00);
-    shotFlywheelSpeedMap.put(6.3, 2400.00);
-    shotFlywheelSpeedMap.put(7.0, 2600.0);
-    shotFlywheelSpeedMap.put(8.0, 2800.0);
-    shotFlywheelSpeedMap.put(8.7, 3000.0);
-    shotFlywheelSpeedMap.put(9.2, 3200.0);
-    shotFlywheelSpeedMap.put(10.0, 3500.0);
-    shotFlywheelSpeedMap.put(11.0, 3700.0);
+    double rpmCorrection = 50.0;
+    shotFlywheelSpeedMap.put(4.71, 2000.00 + rpmCorrection);
+    shotFlywheelSpeedMap.put(5.35, 2200.00 + rpmCorrection);
+    shotFlywheelSpeedMap.put(6.3, 2400.00 + rpmCorrection);
+    shotFlywheelSpeedMap.put(7.0, 2600.0 + rpmCorrection);
+    shotFlywheelSpeedMap.put(8.0, 2800.0 + rpmCorrection);
+    shotFlywheelSpeedMap.put(8.7, 3000.0 + rpmCorrection);
+    shotFlywheelSpeedMap.put(9.2, 3200.0 + rpmCorrection);
+    shotFlywheelSpeedMap.put(10.0, 3500.0 + rpmCorrection);
+    shotFlywheelSpeedMap.put(11.0, 3700.0 + rpmCorrection);
     //simulated
-    shotFlywheelSpeedMap.put(12.0, 3950.0);
-    shotFlywheelSpeedMap.put(13.0, 4100.0);
+    shotFlywheelSpeedMap.put(12.0, 3950.0 + rpmCorrection);
+    shotFlywheelSpeedMap.put(13.0, 4100.0 + rpmCorrection);
 
 
     timeOfFlightMap.put(4.71, 1.1);
