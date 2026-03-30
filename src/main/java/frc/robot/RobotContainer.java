@@ -221,18 +221,6 @@ public class RobotContainer {
     this.driverController.leftTrigger().whileTrue(new PassThroughTrenchLeftAlliance(drive));
 
     this.driverController.leftBumper().whileTrue(new PassThroughTower(drive));
-
-    this.driverController.a().whileTrue(
-        this.flyWheel.runVelocityTorqueControlCalibration()
-        .alongWith(this.hood.goToTargetAngleCalibration())
-    );
-
-    this.driverController.b()
-    .whileTrue(
-        this.states.shootState()
-        .alongWith(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
-    .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
-
   }
 
   public Command getAutonomousCommand() {
