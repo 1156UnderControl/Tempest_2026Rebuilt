@@ -196,7 +196,7 @@
     },
     {
       "name": "Home Intake",
-      "waypointRelativePos": 1.057833988212181,
+      "waypointRelativePos": 1.7654389880952384,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -218,7 +218,7 @@
     },
     {
       "name": "Shoot Fuels",
-      "waypointRelativePos": 5.75356090373281,
+      "waypointRelativePos": 5.70424107142857,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -237,7 +237,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.565,
+    "velocity": 0.0,
     "rotation": -143.9232673587843
   },
   "reversed": false,

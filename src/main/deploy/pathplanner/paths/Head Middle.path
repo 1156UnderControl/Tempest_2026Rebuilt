@@ -1,0 +1,87 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.464,
+        "y": 2.538753851232394
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.740685625727873,
+        "y": 2.563595175417314
+      },
+      "isLocked": false,
+      "linkedName": "Bump Right Alliance Zone"
+    },
+    {
+      "anchor": {
+        "x": 2.506926709286077,
+        "y": 2.2188709178491672
+      },
+      "prevControl": {
+        "x": 2.702262756276354,
+        "y": 1.9395273980430359
+      },
+      "nextControl": {
+        "x": 2.3636617613575095,
+        "y": 2.42374930786389
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.464,
+        "y": 2.539
+      },
+      "prevControl": {
+        "x": 2.4640364090705162,
+        "y": 2.5475332769445083
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": -61.381051022402204
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Retract Intake",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract Intake"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 0.6,
+    "maxAcceleration": 7.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Start Right - No Climb",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -143.9232673587843
+  },
+  "useDefaultConstraints": false
+}
