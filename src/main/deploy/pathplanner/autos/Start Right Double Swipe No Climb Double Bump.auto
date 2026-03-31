@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Start Right - Go Middle 1.2 Return Trench"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Bump Right To Trench"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Start Bump - Go Middle Inverted Stopped - Starting From Bump"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Head Middle"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Sideways Autos",
+  "choreoAuto": false
+}

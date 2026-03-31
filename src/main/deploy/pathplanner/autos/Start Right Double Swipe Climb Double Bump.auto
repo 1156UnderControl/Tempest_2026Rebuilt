@@ -23,15 +23,21 @@
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 3.5
+            "pathName": "Bump To Tower Fast"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Head Middle"
+            "name": "Go To Climb Right Pose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Default Climber"
           }
         }
       ]

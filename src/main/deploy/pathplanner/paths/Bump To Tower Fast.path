@@ -33,8 +33,14 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "Retract Intake",
+      "waypointRelativePos": 0.5867373511904759,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "Raise Climber",
-      "waypointRelativePos": 0.7344056974459725,
+      "waypointRelativePos": 0.5895771329365079,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -45,7 +51,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 0.653,
+    "maxVelocity": 0.57,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -59,7 +65,7 @@
   "reversed": false,
   "folder": "Start Right - Collect Middle",
   "idealStartingState": {
-    "velocity": 0.5,
+    "velocity": 0.57,
     "rotation": -143.9232673587843
   },
   "useDefaultConstraints": false

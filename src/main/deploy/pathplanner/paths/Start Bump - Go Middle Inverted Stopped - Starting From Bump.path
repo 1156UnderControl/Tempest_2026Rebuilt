@@ -20,12 +20,12 @@
         "y": 0.5476078357534653
       },
       "prevControl": {
-        "x": 5.443931512250587,
-        "y": 0.3319395539906099
+        "x": 5.4233044490903755,
+        "y": 0.47669087441314456
       },
       "nextControl": {
-        "x": 6.286613404292931,
-        "y": 0.6627530823356066
+        "x": 6.305994463145705,
+        "y": 0.5865115315442121
       },
       "isLocked": false,
       "linkedName": null
@@ -237,13 +237,13 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
+    "velocity": 0.57,
     "rotation": -143.9232673587843
   },
   "reversed": false,
   "folder": "Start Right - No Climb",
   "idealStartingState": {
-    "velocity": 1.0,
+    "velocity": 0.672,
     "rotation": 90.0
   },
   "useDefaultConstraints": true
