@@ -51,7 +51,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 0.57,
+    "maxVelocity": 0.525,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
