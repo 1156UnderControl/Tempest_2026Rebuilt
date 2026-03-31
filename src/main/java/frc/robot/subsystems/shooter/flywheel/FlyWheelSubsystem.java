@@ -3,11 +3,12 @@ package frc.robot.subsystems.shooter.flywheel;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.RPM;
 
-import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -34,6 +35,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   private final SmartMotorControllerConfig motorConfig;
   private final TalonFX leadMotor;
+  private final TalonFX followerMotor;
   private final SmartMotorController smartFlywheelMotor;
   private final FlyWheelConfig flyWheelConfig;
   private final FlyWheel flywheelMechanism;
@@ -52,18 +54,24 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   private StabilizeChecker isNotAtSetpointChecker = new StabilizeChecker(0.2);
 
-  private TalonFXConfiguration talonConfiguration = new TalonFXConfiguration();
+  private TalonFXConfiguration talonConfigurationLead = new TalonFXConfiguration();
 
-  private TalonFXConfigurator talonConfigurator;
+  private TalonFXConfiguration talonConfigurationFollower = new TalonFXConfiguration();
+
+  private TalonFXConfigurator talonConfiguratorLead;
+
+  private TalonFXConfigurator talonConfiguratorFollower;
 
   private FlyWheelSubsystem() {
     this.calculator = ShooterCalculator.getInstance();
+    this.leadMotor = new TalonFX(19);
+    this.followerMotor = new TalonFX(18);
 
     this.motorConfig =
         new SmartMotorControllerConfig(this)
             .withMotorInverted(true)
-            .withFollowers(Pair.of(new TalonFX(18, CANBus.roboRIO()), true))
-            .withIdleMode(MotorMode.BRAKE)
+            .withFollowers(Pair.of(this.followerMotor, true))
+            .withIdleMode(MotorMode.COAST)
             .withGearing(FlyWheelsConstants.MOTOR_GEARING)
             .withSupplyCurrentLimit(Amps.of(30))
             .withStatorCurrentLimit(Amps.of(120))
@@ -78,8 +86,8 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
     this.torqueCurrentRequest.withFeedForward(FlyWheelsConstants.FEEDFORWARD_TORQUE_CURRENT_A);
 
-    this.leadMotor = new TalonFX(19);
-    this.talonConfigurator = leadMotor.getConfigurator();
+    this.talonConfiguratorLead = leadMotor.getConfigurator();
+    this.talonConfiguratorFollower = followerMotor.getConfigurator();
 
     this.smartFlywheelMotor =
         new TalonFXWrapper(this.leadMotor, FlyWheelsConstants.FLYWHEEL_MOTOR, this.motorConfig);
@@ -92,8 +100,11 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
     this.leadMotor.getVelocity().setUpdateFrequency(250);
 
-    talonConfigurator.refresh(talonConfiguration.Slot0);
-    talonConfigurator.apply(talonConfiguration.Slot0.withKS(3.3).withKV(0.015));
+    talonConfigurationFollower.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
+    talonConfiguratorFollower.apply(talonConfigurationFollower.MotorOutput);
+
+    talonConfiguratorLead.refresh(talonConfigurationLead.Slot0);
+    talonConfiguratorLead.apply(talonConfigurationLead.Slot0.withKS(3.3).withKV(0.015));
 
     this.inputs = new FlyWheelInputsAutoLogged();
 
