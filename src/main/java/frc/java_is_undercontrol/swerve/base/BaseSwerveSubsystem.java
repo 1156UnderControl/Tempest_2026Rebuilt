@@ -341,8 +341,8 @@ public class BaseSwerveSubsystem extends SubsystemBase {
       double yHeading,
       double joystickAimDeadband,
       boolean allianceBasedVelocities) {
-    if (this.lastDesiredJoystickAngleRadians == Double.NaN) {
-      this.lastDesiredJoystickAngleRadians = this.getPose().getRotation().getRadians();
+    if (Double.isNaN(this.lastDesiredJoystickAngleRadians)) {
+        this.lastDesiredJoystickAngleRadians = this.getPose().getRotation().getRadians();
     }
     this.notUsingJoystickForRotation =
         Util.withinHypotDeadband(xHeading, yHeading, joystickAimDeadband);

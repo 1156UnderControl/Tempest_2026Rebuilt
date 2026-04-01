@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -190,7 +191,11 @@ public class States {
   }
 
   private void setSwerveDefaultStates() {
-    this.drive.setDefaultCommand(this.driveSwerveNormal());
+    new Trigger(DriverStation::isAutonomousEnabled)
+    .onTrue(Commands.runOnce(() ->
+        drive.setDefaultCommand(Commands.run(drive::stopSwerve, drive))))
+    .onFalse(Commands.runOnce(() ->
+        drive.setDefaultCommand(Commands.run(drive::driveAlignAngleJoystick, drive))));
   }
 
   private void setIntakeDefaultStates() {
