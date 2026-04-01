@@ -42,10 +42,9 @@ public class FeedingMaps implements InterpolatingTreeMaps {
     shotFlywheelSpeedMap.put(9.2, 3200.0 + rpmCorrection);
     shotFlywheelSpeedMap.put(10.0, 3500.0 + rpmCorrection);
     shotFlywheelSpeedMap.put(11.0, 3700.0 + rpmCorrection);
-    //simulated
+    // simulated
     shotFlywheelSpeedMap.put(12.0, 3950.0 + rpmCorrection);
     shotFlywheelSpeedMap.put(13.0, 4100.0 + rpmCorrection);
-
 
     timeOfFlightMap.put(4.71, 1.1);
     timeOfFlightMap.put(5.35, 1.18);
@@ -56,7 +55,7 @@ public class FeedingMaps implements InterpolatingTreeMaps {
     timeOfFlightMap.put(9.2, 1.55);
     timeOfFlightMap.put(10.0, 1.58);
     timeOfFlightMap.put(11.0, 1.61);
-    //simulatedq
+    // simulatedq
     timeOfFlightMap.put(12.0, 1.63);
     timeOfFlightMap.put(13.0, 1.65);
   }

@@ -192,10 +192,12 @@ public class States {
 
   private void setSwerveDefaultStates() {
     new Trigger(DriverStation::isAutonomousEnabled)
-    .onTrue(Commands.runOnce(() ->
-        drive.setDefaultCommand(Commands.run(drive::stopSwerve, drive))))
-    .onFalse(Commands.runOnce(() ->
-        drive.setDefaultCommand(Commands.run(drive::driveAlignAngleJoystick, drive))));
+        .onTrue(
+            Commands.runOnce(() -> drive.setDefaultCommand(Commands.run(drive::stopSwerve, drive))))
+        .onFalse(
+            Commands.runOnce(
+                () ->
+                    drive.setDefaultCommand(Commands.run(drive::driveAlignAngleJoystick, drive))));
   }
 
   private void setIntakeDefaultStates() {
