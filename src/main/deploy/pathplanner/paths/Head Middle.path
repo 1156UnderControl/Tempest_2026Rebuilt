@@ -47,11 +47,11 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.4823915726375176,
-      "rotationDegrees": 140.7289162773479
+      "rotationDegrees": 180.0
     },
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": 0.0
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [],
@@ -59,9 +59,14 @@
   "eventMarkers": [
     {
       "name": "Retract Intake",
-      "waypointRelativePos": 0.6833457341269851,
+      "waypointRelativePos": 0.6426091269841268,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract Intake"
+        }
+      }
     },
     {
       "name": "Extend Intake",
@@ -85,7 +90,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Start Right - No Climb",
