@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.463572614069836,
-        "y": 2.538753851232394
+        "x": 3.464,
+        "y": 2.539
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7040302688527,
-        "y": 2.551556285317201
+        "x": 2.704457654782864,
+        "y": 2.551802434084806
       },
       "isLocked": false,
       "linkedName": "Bump Right Alliance Zone"

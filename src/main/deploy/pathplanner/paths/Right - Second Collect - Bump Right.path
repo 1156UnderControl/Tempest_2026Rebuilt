@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 4.535565215953765,
-        "y": 0.5406931917197026
+        "y": 0.5406931917197006
       },
       "isLocked": false,
       "linkedName": "Trench Right Head Middle"
@@ -96,12 +96,12 @@
     },
     {
       "anchor": {
-        "x": 3.463572614069836,
-        "y": 2.538753851232394
+        "x": 3.464,
+        "y": 2.539
       },
       "prevControl": {
-        "x": 3.9003195147447185,
-        "y": 2.5381105120305154
+        "x": 3.9007469006748825,
+        "y": 2.5383566607981205
       },
       "nextControl": null,
       "isLocked": false,
