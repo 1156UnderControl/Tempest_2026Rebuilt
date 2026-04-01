@@ -38,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Trench To Outpost"
+            "pathName": "Right - Outpost"
           }
         },
         {
@@ -50,7 +50,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Outpost To Tower"
+            "pathName": "Outpost - Tower"
           }
         },
         {
