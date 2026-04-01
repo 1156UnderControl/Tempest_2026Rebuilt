@@ -46,6 +46,10 @@
   ],
   "rotationTargets": [
     {
+      "waypointRelativePos": 0.4823915726375176,
+      "rotationDegrees": 140.7289162773479
+    },
+    {
       "waypointRelativePos": 1,
       "rotationDegrees": 0.0
     }
@@ -55,18 +59,13 @@
   "eventMarkers": [
     {
       "name": "Retract Intake",
-      "waypointRelativePos": 0.5434275793650798,
+      "waypointRelativePos": 0.6833457341269851,
       "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Retract Intake"
-        }
-      }
+      "command": null
     },
     {
       "name": "Extend Intake",
-      "waypointRelativePos": 1.4000620039682534,
+      "waypointRelativePos": 1.59125744047619,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -77,7 +76,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 0.6,
+    "maxVelocity": 0.4,
     "maxAcceleration": 7.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,

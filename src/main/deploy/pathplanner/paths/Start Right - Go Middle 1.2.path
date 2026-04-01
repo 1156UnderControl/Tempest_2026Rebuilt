@@ -48,48 +48,48 @@
     },
     {
       "anchor": {
-        "x": 7.533,
-        "y": 2.55
+        "x": 7.650826226892606,
+        "y": 2.7692703290052805
       },
       "prevControl": {
-        "x": 7.748890341524774,
-        "y": 2.4239390606241704
+        "x": 7.86671656841738,
+        "y": 2.6432093896294506
       },
       "nextControl": {
-        "x": 7.238022551908164,
-        "y": 2.722240841987249
+        "x": 7.35584877880077,
+        "y": 2.9415111709925297
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.191833765479324,
-        "y": 0.7096536850008874
+        "x": 6.175287558685446,
+        "y": 0.5881493911384974
       },
       "prevControl": {
-        "x": 6.584370142158725,
-        "y": 0.9607091112944661
+        "x": 7.165700695886992,
+        "y": 0.7291148877354501
       },
       "nextControl": {
-        "x": 5.750400789945346,
-        "y": 0.4273253444016666
+        "x": 5.717632133949531,
+        "y": 0.523011296948356
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.095614457831325,
-        "y": 0.4725662650602419
+        "x": 4.1,
+        "y": 0.48
       },
       "prevControl": {
-        "x": 4.51061152766963,
-        "y": 0.464230403256381
+        "x": 4.514997069838304,
+        "y": 0.47166413819613906
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Trench Right SideWays"
+      "linkedName": "Trench Right Head Middle"
     }
   ],
   "rotationTargets": [
@@ -115,7 +115,7 @@
     },
     {
       "waypointRelativePos": 4,
-      "rotationDegrees": 90.0
+      "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [
@@ -176,7 +176,7 @@
     },
     {
       "name": "Shoot Fuels",
-      "waypointRelativePos": 4.837418651768171,
+      "waypointRelativePos": 4.98,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -196,7 +196,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 90.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Start Right - No Climb",
