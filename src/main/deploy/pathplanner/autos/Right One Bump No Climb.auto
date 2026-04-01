@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start Right - Go Middle 1.15"
+            "pathName": "Right - First Collect - Return Backwards"
           }
         },
         {
@@ -64,7 +64,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start Bump - Go Middle Inverted Stopped"
+            "pathName": "Right - Second Collect - Bump Right"
           }
         },
         {
