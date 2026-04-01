@@ -128,7 +128,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
             cameraFrontRight,
             VisionConstants.robotToCamArducamFrontRight,
             false,
-            2.0,
+            2.8,
             PhotonPoseEstimatorStrategies.MULTITAG_COPROCESSOR);
 
     PhotonCamera cameraFrontLeft = new PhotonCamera(VisionConstants.frontLeftArducamName);
@@ -137,7 +137,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
             cameraFrontLeft,
             VisionConstants.robotToCamArducamFrontLeft,
             false,
-            2.0,
+            2.8,
             PhotonPoseEstimatorStrategies.MULTITAG_COPROCESSOR);
 
     listOfEstimators.add(SwerveSubsystem.poseEstimatorBackLeft);
