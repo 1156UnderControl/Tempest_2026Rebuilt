@@ -63,7 +63,7 @@
     "rotation": -90.0
   },
   "reversed": false,
-  "folder": "Start Right - Collect Middle",
+  "folder": "Bump Right",
   "idealStartingState": {
     "velocity": 0.57,
     "rotation": -143.9232673587843

@@ -222,7 +222,7 @@
     "rotation": 135.0
   },
   "reversed": false,
-  "folder": "Start Right - No Climb",
+  "folder": "Collect Middle Right",
   "idealStartingState": {
     "velocity": 1.1,
     "rotation": 90.0

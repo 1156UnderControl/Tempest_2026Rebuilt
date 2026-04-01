@@ -107,7 +107,7 @@
     },
     {
       "waypointRelativePos": 2.0,
-      "rotationDegrees": 90.0
+      "rotationDegrees": 81.47603350438193
     },
     {
       "waypointRelativePos": 3,
@@ -201,7 +201,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Start Right - No Climb",
+  "folder": "Collect Middle Right",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 90.0

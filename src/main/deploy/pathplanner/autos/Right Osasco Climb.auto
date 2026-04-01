@@ -32,25 +32,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start Left - Go Middle"
+            "pathName": "Start Right - Go Middle"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Trench To Depot"
+            "pathName": "Trench To Outpost"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Go to Depot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Climb From Depot"
+            "pathName": "Outpost To Tower"
           }
         },
         {
@@ -60,32 +60,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Raise Climber"
+                  "name": "Go To Climb Right Pose"
                 }
               },
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.0
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Go To Climb Left Pose"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 1.5
+                  "waitTime": 3.2
                 }
               }
             ]
@@ -94,7 +75,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.2
+            "waitTime": 1.5
           }
         },
         {
@@ -110,7 +91,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.7
+                  "waitTime": 1.5
                 }
               }
             ]
@@ -139,6 +120,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Safe Autos",
+  "folder": "Right Autos",
   "choreoAuto": false
 }

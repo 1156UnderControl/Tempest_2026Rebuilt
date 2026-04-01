@@ -7,43 +7,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start Right - Go Middle 1.2 Return Trench"
+            "pathName": "Start Right - Go Middle 1.1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.2
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Bump Right To Trench"
+            "pathName": "Start Right - Go Middle Inverted"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Start Bump - Go Middle Inverted Stopped - Starting From Bump"
+            "pathName": "Trench To Outpost Sideways"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 4.2
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Bump To Tower Fast"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Go To Climb Right Pose"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Default Climber"
+            "pathName": "Outpost To Middle"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Sideways Autos",
+  "folder": "Right Autos",
   "choreoAuto": false
 }

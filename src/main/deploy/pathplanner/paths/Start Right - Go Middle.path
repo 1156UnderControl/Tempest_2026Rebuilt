@@ -219,7 +219,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Start Right - Collect Middle",
+  "folder": "Collect Middle Right",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

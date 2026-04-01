@@ -75,7 +75,7 @@
     "rotation": 90.0
   },
   "reversed": false,
-  "folder": "Start Right - No Climb",
+  "folder": "Bump Right",
   "idealStartingState": {
     "velocity": 0.672,
     "rotation": 135.0

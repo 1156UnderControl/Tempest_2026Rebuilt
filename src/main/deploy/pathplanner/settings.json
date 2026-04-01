@@ -3,14 +3,15 @@
   "robotLength": 0.82,
   "holonomicMode": true,
   "pathFolders": [
-    "Depot Collect - Score",
-    "Start Left - Collect Middle",
-    "Start Right - Collect Middle",
-    "Start Right - No Climb"
+    "Bump Left",
+    "Bump Right",
+    "Collect Middle Right",
+    "Collect Middle Left",
+    "Outpost"
   ],
   "autoFolders": [
-    "Safe Autos",
-    "Sideways Autos"
+    "Right Autos",
+    "Left Autos"
   ],
   "defaultMaxVel": 4.5,
   "defaultMaxAccel": 7.5,
