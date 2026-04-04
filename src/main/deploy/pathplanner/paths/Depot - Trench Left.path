@@ -1,0 +1,264 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.2490090540175838,
+        "y": 5.51
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.2418204539738427,
+        "y": 5.550135972082495
+      },
+      "isLocked": false,
+      "linkedName": "Bump Left Alliance Zone First Collect"
+    },
+    {
+      "anchor": {
+        "x": 1.0880765735825895,
+        "y": 4.977612556851525
+      },
+      "prevControl": {
+        "x": 1.3380417501302717,
+        "y": 4.9817851475917765
+      },
+      "nextControl": {
+        "x": 0.7965458375251506,
+        "y": 4.972746125188633
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.47,
+        "y": 5.113
+      },
+      "prevControl": {
+        "x": 0.5131199224323941,
+        "y": 4.830116253065529
+      },
+      "nextControl": {
+        "x": 0.43232768391782067,
+        "y": 5.360145294515199
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.47,
+        "y": 6.114426678565866
+      },
+      "prevControl": {
+        "x": 0.4300006976140325,
+        "y": 5.867647311906827
+      },
+      "nextControl": {
+        "x": 0.5099993023859675,
+        "y": 6.361206045224904
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.0880765735825895,
+        "y": 7.202891686051
+      },
+      "prevControl": {
+        "x": 0.1933500613032898,
+        "y": 7.020539290427257
+      },
+      "nextControl": {
+        "x": 2.04989234524068,
+        "y": 7.398917407546333
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.358548242578441,
+        "y": 7.436107425802006
+      },
+      "prevControl": {
+        "x": 4.022180072621198,
+        "y": 7.442451977487117
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 2,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 3.6979597412570904,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 4.366378928402647,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.8101362966601182,
+      "maxWaypointRelativePos": 3.6812316458120464,
+      "constraints": {
+        "maxVelocity": 0.8,
+        "maxAcceleration": 2.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 2.5248779047497347,
+      "constraints": {
+        "maxVelocity": 0.35,
+        "maxAcceleration": 7.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 3.2390952183350374,
+      "maxWaypointRelativePos": 5.0,
+      "constraints": {
+        "maxVelocity": 0.8,
+        "maxAcceleration": 7.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Extend Intake",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend Intake"
+        }
+      }
+    },
+    {
+      "name": "Retract Intake",
+      "waypointRelativePos": 0.7578085099591421,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract Intake"
+        }
+      }
+    },
+    {
+      "name": "Extend Intake",
+      "waypointRelativePos": 1.3529430541368765,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend Intake"
+        }
+      }
+    },
+    {
+      "name": "Home Intake",
+      "waypointRelativePos": 1.9426311925434123,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Home Intake"
+        }
+      }
+    },
+    {
+      "name": "Stop Shooting Fuels",
+      "waypointRelativePos": 1.9634392556179816,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Stop Shooting Fuels"
+        }
+      }
+    },
+    {
+      "name": "Home Intake",
+      "waypointRelativePos": 2.7766095824821075,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Home Intake"
+        }
+      }
+    },
+    {
+      "name": "Shoot Fuels",
+      "waypointRelativePos": 3.629520716292131,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Shoot Fuels"
+        }
+      }
+    },
+    {
+      "name": "Home Intake",
+      "waypointRelativePos": 4.379329194330942,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Home Intake"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 7.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Depot",
+  "idealStartingState": {
+    "velocity": 0.5,
+    "rotation": -135.0
+  },
+  "useDefaultConstraints": true
+}

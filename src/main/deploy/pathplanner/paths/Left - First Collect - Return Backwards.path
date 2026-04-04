@@ -174,7 +174,12 @@
       "name": "Home Intake",
       "waypointRelativePos": 1.2943961812377205,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Home Intake"
+        }
+      }
     },
     {
       "name": "Home Intake",
