@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.573,
-        "y": 7.613
+        "x": 4.470755353764683,
+        "y": 7.65
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.836556813084613,
-        "y": 7.613
+        "x": 4.734312166849296,
+        "y": 7.65
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Trench Left Sideways"
     },
     {
       "anchor": {

@@ -5,8 +5,9 @@
   "pathFolders": [
     "Bump Left",
     "Bump Right",
-    "Collect Middle Right",
     "Collect Middle Left",
+    "Collect Middle Right",
+    "Depot",
     "Outpost"
   ],
   "autoFolders": [

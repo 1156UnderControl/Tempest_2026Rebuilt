@@ -3,144 +3,128 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.1,
-        "y": 7.563
+        "x": 4.470755353764683,
+        "y": 7.65
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.5355649159205,
-        "y": 7.502304655127907
+        "x": 4.734312166849296,
+        "y": 7.649999999999999
       },
       "isLocked": false,
-      "linkedName": "Trench Left Head Middle"
+      "linkedName": "Trench Left Sideways"
     },
     {
       "anchor": {
-        "x": 5.993303711866053,
-        "y": 7.495
+        "x": 6.298989576160227,
+        "y": 7.563
       },
       "prevControl": {
-        "x": 5.336715822147787,
-        "y": 7.633975279690105
+        "x": 5.758092086098784,
+        "y": 7.562999999999999
       },
       "nextControl": {
-        "x": 6.560769050095558,
-        "y": 7.374888655685189
+        "x": 7.244492280930743,
+        "y": 7.562999999999999
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.020032139451291,
-        "y": 6.808
+        "x": 7.650826226892606,
+        "y": 6.76
       },
       "prevControl": {
-        "x": 6.848758639973349,
-        "y": 6.990113668835096
+        "x": 7.619276484608649,
+        "y": 7.008001237419928
       },
       "nextControl": {
-        "x": 7.242886332302886,
-        "y": 6.57104101452242
+        "x": 7.700993362399545,
+        "y": 6.365654094681458
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.7663860310299295,
-        "y": 4.768
+        "x": 7.650826226892606,
+        "y": 5.51
       },
       "prevControl": {
-        "x": 8.318058510825637,
-        "y": 5.417750842625397
+        "x": 7.866716929599381,
+        "y": 5.63606032081815
       },
       "nextControl": {
-        "x": 7.490413226538353,
-        "y": 4.442963735137742
+        "x": 7.355848285306971,
+        "y": 5.337760003166657
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.85,
-        "y": 4.768
+        "x": 6.0398466859771,
+        "y": 5.51
       },
       "prevControl": {
-        "x": 7.053264980579056,
-        "y": 4.588248538556801
+        "x": 6.800181620437754,
+        "y": 5.356109483912831
       },
       "nextControl": {
-        "x": 6.5530264587668965,
-        "y": 5.030619895933577
+        "x": 5.618605578501156,
+        "y": 5.595258493972248
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.820384051058053,
-        "y": 5.634
+        "x": 3.2490090540175838,
+        "y": 5.51
       },
       "prevControl": {
-        "x": 6.107019077324389,
-        "y": 5.606773773890043
-      },
-      "nextControl": {
-        "x": 4.2638251779326835,
-        "y": 5.781850820554615
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.463572614069836,
-        "y": 5.504
-      },
-      "prevControl": {
-        "x": 3.900319519203834,
-        "y": 5.504640304864122
+        "x": 3.6640060831330303,
+        "y": 5.518337888926155
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Bump Left Alliance Zone"
+      "linkedName": "Bump Left Alliance Zone First Collect"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.8432650403911566,
-      "rotationDegrees": 0.0
+      "waypointRelativePos": 0.45,
+      "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 1.9364201339915372,
-      "rotationDegrees": -53.524
+      "waypointRelativePos": 1,
+      "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 2.7520385225669957,
-      "rotationDegrees": -80.079
+      "waypointRelativePos": 1.443718112244898,
+      "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 3.1718639809590936,
-      "rotationDegrees": -163.12
+      "waypointRelativePos": 2.0,
+      "rotationDegrees": -81.476
     },
     {
-      "waypointRelativePos": 4.080556441326534,
-      "rotationDegrees": 142.478
+      "waypointRelativePos": 3,
+      "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 5.020009566326531,
-      "rotationDegrees": 135.927
+      "waypointRelativePos": 4.14591204007884,
+      "rotationDegrees": -135.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 2.5634300595238093,
-      "maxWaypointRelativePos": 5.107901522593316,
+      "minWaypointRelativePos": 1.987582883104126,
+      "maxWaypointRelativePos": 3.138288123167152,
       "constraints": {
-        "maxVelocity": 3.5,
+        "maxVelocity": 1.3,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -150,8 +134,8 @@
     },
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 5.103683035714285,
-      "maxWaypointRelativePos": 6.0,
+      "minWaypointRelativePos": 4.279577529325501,
+      "maxWaypointRelativePos": 5.0,
       "constraints": {
         "maxVelocity": 2.0,
         "maxAcceleration": 7.5,
@@ -165,17 +149,6 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Stop Shooting Fuels",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Stop Shooting Fuels"
-        }
-      }
-    },
-    {
       "name": "Extend Intake",
       "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
@@ -187,8 +160,19 @@
       }
     },
     {
+      "name": "Stop Shooting Fuels",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Stop Shooting Fuels"
+        }
+      }
+    },
+    {
       "name": "Home Intake",
-      "waypointRelativePos": 1.057833988212181,
+      "waypointRelativePos": 1.2943961812377205,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -199,7 +183,7 @@
     },
     {
       "name": "Home Intake",
-      "waypointRelativePos": 4.1,
+      "waypointRelativePos": 3.5239133104125733,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -210,7 +194,7 @@
     },
     {
       "name": "Shoot Fuels",
-      "waypointRelativePos": 5.75356090373281,
+      "waypointRelativePos": 4.860073771994136,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -229,14 +213,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.5,
-    "rotation": 143.923
+    "velocity": 0.0,
+    "rotation": -135.0
   },
   "reversed": false,
   "folder": "Collect Middle Left",
   "idealStartingState": {
-    "velocity": 1.1,
-    "rotation": 0.0
+    "velocity": 0,
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }
