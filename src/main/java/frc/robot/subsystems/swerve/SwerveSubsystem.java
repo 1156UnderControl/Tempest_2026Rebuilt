@@ -150,7 +150,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
           new MultiCameraPoseEstimator(listOfEstimators, "Teleop Multi Pose Estimator");
     }
 
-    SwerveSubsystem.runVisionHdr();
+    SwerveSubsystem.stopVisionHdrDark();
     
     return SwerveSubsystem.poseEstimatorGeneral;
   }
