@@ -222,9 +222,9 @@ public class RobotContainer {
 
     this.driverController.leftBumper().whileTrue(new PassThroughTower(drive));
 
-    this.operatorController.l2().onTrue(Commands.runOnce(() -> SwerveSubsystem.runVisionHdr()));
-    this.operatorController.r3().onTrue(Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrDark()));
-    this.operatorController.l3().onTrue(Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrBright()));
+    this.operatorController.l2().onTrue(Commands.runOnce(() -> SwerveSubsystem.runVisionHdr()).ignoringDisable(true));
+    this.operatorController.r3().onTrue(Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrDark()).ignoringDisable(true));
+    this.operatorController.l3().onTrue(Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrBright()).ignoringDisable(true));
   }
 
   public Command getAutonomousCommand() {
