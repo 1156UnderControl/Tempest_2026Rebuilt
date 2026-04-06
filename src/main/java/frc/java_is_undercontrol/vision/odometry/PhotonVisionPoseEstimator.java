@@ -7,6 +7,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.VisionConstants;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -39,6 +40,16 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
   private PhotonPoseEstimatorStrategies strategy;
 
   private int[] filteredApriltags = new int[0];
+
+  boolean isRunningHdr = false;
+
+  private int[] hdrPipelines = new int[0];
+
+  double hdrTimePerPipeline = 1.0;
+
+  int indexOfCurrentItemInHdrPipelines = 0;
+
+  Timer hdrTimer = new Timer();
 
   public PhotonVisionPoseEstimator(PhotonCamera camera, Transform3d cameraPosition) {
     this(camera, cameraPosition, false, 2, PhotonPoseEstimatorStrategies.MULTITAG_COPROCESSOR);
@@ -87,6 +98,7 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
             photonPoseEstimation = photonPoseEstimator.estimateCoprocMultiTagPose(result);
             break;
         }
+        this.runHdr();
         if (photonPoseEstimation.isEmpty() || !result.hasTargets()) {
           photonPoseEstimation = photonPoseEstimator.estimateLowestAmbiguityPose(result);
           if (photonPoseEstimation.isEmpty()) {
@@ -198,5 +210,34 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
 
   public String getEstimatorName() {
     return this.camera.getName();
+  }
+
+  public void startHdr(int[] hdrPipelines, double hdrTimePerPipeline){
+    this.hdrPipelines = hdrPipelines;
+    this.hdrTimePerPipeline = hdrTimePerPipeline;
+    this.indexOfCurrentItemInHdrPipelines = 0;
+    this.isRunningHdr = true;
+    this.camera.setPipelineIndex(hdrPipelines[indexOfCurrentItemInHdrPipelines]);
+    this.hdrTimer.reset();
+    this.hdrTimer.start();
+  }
+
+  public void stopHdr(int pipelineIndexToUse){
+    this.isRunningHdr = false;
+    this.camera.setPipelineIndex(pipelineIndexToUse);
+    this.hdrTimer.stop();
+    this.hdrTimer.reset();
+  }
+
+  private void runHdr(){
+    if(!this.isRunningHdr) return;
+    if(!this.hdrTimer.hasElapsed(this.hdrTimePerPipeline)) return;
+    this.indexOfCurrentItemInHdrPipelines++;
+    if(this.indexOfCurrentItemInHdrPipelines >= this.hdrPipelines.length){
+      this.indexOfCurrentItemInHdrPipelines = 0;
+    }
+    this.camera.setPipelineIndex(hdrPipelines[indexOfCurrentItemInHdrPipelines]);
+    this.hdrTimer.reset();
+    this.hdrTimer.start();
   }
 }

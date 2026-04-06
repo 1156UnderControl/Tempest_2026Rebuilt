@@ -485,19 +485,27 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
   public static void runVisionHdr() {
     double hdrTimePerPipeline = 0.25;
-    int[] backLeftLimelightHdrPipelines = {1,2};
+    int[] backLeftLimelightHdrPipelines = {0,1};
     SwerveSubsystem.poseEstimatorBackLeft.startHdr(backLeftLimelightHdrPipelines, hdrTimePerPipeline);
-    int[] backRightLimelightHdrPipelines = {1,2};
+    int[] backRightLimelightHdrPipelines = {0,1};
     SwerveSubsystem.poseEstimatorBackRight.startHdr(backRightLimelightHdrPipelines, hdrTimePerPipeline);
+    int[] frontRightArducamHdrPipelines = {0,1};
+    SwerveSubsystem.poseEstimatorFrontRight.startHdr(frontRightArducamHdrPipelines, hdrTimePerPipeline);
+    int[] frontLeftArducamHdrPipelines = {0,1};
+    SwerveSubsystem.poseEstimatorFrontLeft.startHdr(frontLeftArducamHdrPipelines, hdrTimePerPipeline);
   }
 
   public static void stopVisionHdrDark() {
-    SwerveSubsystem.poseEstimatorBackLeft.stopHdr(1);
-    SwerveSubsystem.poseEstimatorBackRight.stopHdr(1);
+    SwerveSubsystem.poseEstimatorBackLeft.stopHdr(0);
+    SwerveSubsystem.poseEstimatorBackRight.stopHdr(0);
+    SwerveSubsystem.poseEstimatorFrontLeft.stopHdr(0);
+    SwerveSubsystem.poseEstimatorFrontRight.stopHdr(0);
   }
 
   public static void stopVisionHdrBright() {
-    SwerveSubsystem.poseEstimatorBackLeft.stopHdr(2);
-    SwerveSubsystem.poseEstimatorBackRight.stopHdr(2);
+    SwerveSubsystem.poseEstimatorBackLeft.stopHdr(1);
+    SwerveSubsystem.poseEstimatorBackRight.stopHdr(1);
+    SwerveSubsystem.poseEstimatorFrontLeft.stopHdr(1);
+    SwerveSubsystem.poseEstimatorFrontRight.stopHdr(1);
   }
 }
