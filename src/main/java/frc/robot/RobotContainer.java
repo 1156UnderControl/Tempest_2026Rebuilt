@@ -221,6 +221,10 @@ public class RobotContainer {
     this.driverController.leftTrigger().whileTrue(new PassThroughTrenchLeftAlliance(drive));
 
     this.driverController.leftBumper().whileTrue(new PassThroughTower(drive));
+
+    this.operatorController.l2().onTrue(Commands.runOnce(() -> SwerveSubsystem.runVisionHdr()));
+    this.operatorController.r3().onTrue(Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrDark()));
+    this.operatorController.l3().onTrue(Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrBright()));
   }
 
   public Command getAutonomousCommand() {
