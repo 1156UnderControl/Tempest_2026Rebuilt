@@ -50,6 +50,10 @@ public class LimelightPoseEstimator implements PoseEstimator {
 
   Timer hdrTimer = new Timer();
 
+  String hdrEnabledLoggerKey;
+
+  String requestedPipelineLoggerKey;
+
   public LimelightPoseEstimator(
       String limelightName,
       boolean only2TagsMeasurements,
@@ -66,6 +70,10 @@ public class LimelightPoseEstimator implements PoseEstimator {
     this.stateLoggerKey = "PoseEstimator/Limelight/" + limelightName + "/State";
     this.poseLoggerKey = "PoseEstimator/Limelight/" + limelightName + "/Pose";
     Logger.recordOutput(this.poseLoggerKey, new Pose3d());
+    this.hdrEnabledLoggerKey = "PoseEstimator/Limelight/" + limelightName + "/HdrEnabled";
+    this.requestedPipelineLoggerKey = "PoseEstimator/Limelight/" + limelightName + "/RequestedPipelineId";
+    Logger.recordOutput(this.hdrEnabledLoggerKey, false);
+    Logger.recordOutput(this.requestedPipelineLoggerKey, 0);
   }
 
   public LimelightPoseEstimator(String limelightName, boolean only2TagsMeasurements) {
@@ -181,14 +189,18 @@ public class LimelightPoseEstimator implements PoseEstimator {
     this.hdrTimePerPipeline = hdrTimePerPipeline;
     this.indexOfCurrentItemInHdrPipelines = 0;
     this.isRunningHdr = true;
+    Logger.recordOutput(this.hdrEnabledLoggerKey, true);
     LimelightHelpers.setPipelineIndex(this.limelightName, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
+    Logger.recordOutput(this.requestedPipelineLoggerKey, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
     this.hdrTimer.reset();
     this.hdrTimer.start();
   }
 
   public void stopHdr(int pipelineIndexToUse){
     this.isRunningHdr = false;
+    Logger.recordOutput(this.hdrEnabledLoggerKey, false);
     LimelightHelpers.setPipelineIndex(this.limelightName, pipelineIndexToUse);
+    Logger.recordOutput(this.requestedPipelineLoggerKey, pipelineIndexToUse);
     this.hdrTimer.stop();
     this.hdrTimer.reset();
   }
@@ -201,6 +213,7 @@ public class LimelightPoseEstimator implements PoseEstimator {
       this.indexOfCurrentItemInHdrPipelines = 0;
     }
     LimelightHelpers.setPipelineIndex(this.limelightName, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
+    Logger.recordOutput(this.requestedPipelineLoggerKey, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
     this.hdrTimer.reset();
     this.hdrTimer.start();
   }

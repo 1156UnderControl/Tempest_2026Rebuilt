@@ -51,6 +51,10 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
 
   Timer hdrTimer = new Timer();
 
+  String hdrEnabledLoggerKey;
+
+  String requestedPipelineLoggerKey;
+
   public PhotonVisionPoseEstimator(PhotonCamera camera, Transform3d cameraPosition) {
     this(camera, cameraPosition, false, 2, PhotonPoseEstimatorStrategies.MULTITAG_COPROCESSOR);
   }
@@ -72,6 +76,10 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
     this.keyStateLog = "PoseEstimator/PhotonVision/" + camera.getName() + "/StateMeasure";
     Logger.recordOutput(this.keyPoseEstimatedLog, new Pose3d());
     Logger.recordOutput(this.keyPoseEstimatedLog, new Pose3d());
+    this.hdrEnabledLoggerKey = "PoseEstimator/PhotonVision/" + camera.getName() + "/HdrEnabled";
+    this.requestedPipelineLoggerKey = "PoseEstimator/PhotonVision/" + camera.getName() + "/RequestedPipelineId";
+    Logger.recordOutput(this.hdrEnabledLoggerKey, false);
+    Logger.recordOutput(this.requestedPipelineLoggerKey, 0);
   }
 
   public Optional<PoseEstimation> getEstimatedPose(Pose2d referencePose) {
@@ -217,14 +225,18 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
     this.hdrTimePerPipeline = hdrTimePerPipeline;
     this.indexOfCurrentItemInHdrPipelines = 0;
     this.isRunningHdr = true;
+    Logger.recordOutput(this.hdrEnabledLoggerKey, true);
     this.camera.setPipelineIndex(hdrPipelines[indexOfCurrentItemInHdrPipelines]);
+    Logger.recordOutput(this.requestedPipelineLoggerKey, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
     this.hdrTimer.reset();
     this.hdrTimer.start();
   }
 
   public void stopHdr(int pipelineIndexToUse){
     this.isRunningHdr = false;
+    Logger.recordOutput(this.hdrEnabledLoggerKey, false);
     this.camera.setPipelineIndex(pipelineIndexToUse);
+    Logger.recordOutput(this.requestedPipelineLoggerKey, pipelineIndexToUse);
     this.hdrTimer.stop();
     this.hdrTimer.reset();
   }
@@ -237,6 +249,7 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
       this.indexOfCurrentItemInHdrPipelines = 0;
     }
     this.camera.setPipelineIndex(hdrPipelines[indexOfCurrentItemInHdrPipelines]);
+    Logger.recordOutput(this.requestedPipelineLoggerKey, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
     this.hdrTimer.reset();
     this.hdrTimer.start();
   }
