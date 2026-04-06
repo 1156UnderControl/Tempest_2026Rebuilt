@@ -41,12 +41,6 @@
                       "data": {
                         "commands": [
                           {
-                            "type": "named",
-                            "data": {
-                              "name": "Retract Intake"
-                            }
-                          },
-                          {
                             "type": "wait",
                             "data": {
                               "waitTime": 0.6
