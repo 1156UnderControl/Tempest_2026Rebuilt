@@ -91,6 +91,7 @@ public class LimelightPoseEstimator implements PoseEstimator {
         Logger.recordOutput(this.poseLoggerKey, new Pose3d());
         this.state = "NO_TARGETS";
         Logger.recordOutput(this.stateLoggerKey, this.state);
+        this.runHdr();
         return Optional.empty();
       }
       if (Math.abs(OdometryEnabledSwerveSubsystem.robotAngularVelocity) >= limitAngVelForUpdating) {
