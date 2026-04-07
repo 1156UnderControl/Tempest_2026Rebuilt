@@ -118,7 +118,8 @@ public class FieldConstants {
         new Translation2d(
             RIGHT_FEED_POSE.getX(), FieldConstants.fieldWidth - RIGHT_FEED_POSE.getY());
 
-    public static final double AllianceZoneX = 4.007866 + (TunerConstants.ROBOT_SIZE / 2);
+    public static final double AllianceZoneCorrection = 0.15;
+    public static final double AllianceZoneX = 4.007866 + (TunerConstants.ROBOT_SIZE / 2) + AllianceZoneCorrection;
     public static final double OtherAllianceZoneX =
         (fieldLength - 4.007866) + (TunerConstants.ROBOT_SIZE / 2);
     public static final double ShootZoneX = 7.669;
