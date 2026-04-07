@@ -115,6 +115,9 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   }
 
   private static PoseEstimator configureMulticameraPoseEstimation() {
+    if (SwerveSubsystem.poseEstimatorGeneral != null) {
+      return SwerveSubsystem.poseEstimatorGeneral;
+    }
     List<PoseEstimator> listOfEstimators = new ArrayList<PoseEstimator>();
     SwerveSubsystem.poseEstimatorBackLeft =
         new LimelightPoseEstimator(VisionConstants.backLeftLimelightName, false, false, 2);

@@ -74,11 +74,6 @@ public class LimelightPoseEstimator implements PoseEstimator {
     this.requestedPipelineLoggerKey = "PoseEstimator/Limelight/" + limelightName + "/RequestedPipelineId";
     Logger.recordOutput(this.hdrEnabledLoggerKey, false);
     Logger.recordOutput(this.requestedPipelineLoggerKey, 0);
-    Logger.recordOutput("PoseEstimator/Limelight/" + limelightName + "/HasExecutedPoseEstimation", false);
-    Logger.recordOutput("PoseEstimator/Limelight/" + limelightName + "/HasExecutedHdr", false);
-    Logger.recordOutput("PoseEstimator/Limelight/" + limelightName + "/HasEnteredNoTv", false);
-    Logger.recordOutput("PoseEstimator/Limelight/" + limelightName + "/HasPassedHdrOnCheck", false);
-    Logger.recordOutput("PoseEstimator/Limelight/" + limelightName + "/HasPassedElapsedTimeCheck", false);
   }
 
   public LimelightPoseEstimator(String limelightName, boolean only2TagsMeasurements) {
@@ -90,11 +85,9 @@ public class LimelightPoseEstimator implements PoseEstimator {
   }
 
   public Optional<PoseEstimation> getEstimatedPose(Pose2d referencePose) {
-    Logger.recordOutput("PoseEstimator/Limelight/" + limelightName + "/HasExecutedPoseEstimation", true);
     LimelightHelpers.SetFiducialIDFiltersOverride(limelightName, apriltagsToSee);
     try {
       if (!LimelightHelpers.getTV(this.limelightName)) {
-        Logger.recordOutput("PoseEstimator/Limelight/" + limelightName + "/HasEnteredNoTv", true);
         this.runHdr();
         Logger.recordOutput(this.poseLoggerKey, new Pose3d());
         this.state = "NO_TARGETS";
@@ -219,11 +212,8 @@ public class LimelightPoseEstimator implements PoseEstimator {
     // is take multiple pictures with different exposure levels and stitch them together to get
     // a picture that is well exposed. We are trying to do something similar here by running
     // different pipelines every 1/4 of a second, ensuring we get at least some tag in any situation
-    Logger.recordOutput("PoseEstimator/Limelight/" + limelightName + "/HasExecutedHdr", true);
     if(!this.isRunningHdr) return;
-    Logger.recordOutput("PoseEstimator/Limelight/" + limelightName + "/HasPassedHdrOnCheck", false);
     if(!this.hdrTimer.hasElapsed(this.hdrTimePerPipeline)) return;
-    Logger.recordOutput("PoseEstimator/Limelight/" + limelightName + "/HasPassedElapsedTimeCheck", false);
     this.indexOfCurrentItemInHdrPipelines++;
     if(this.indexOfCurrentItemInHdrPipelines >= this.hdrPipelines.length){
       this.indexOfCurrentItemInHdrPipelines = 0;
