@@ -192,6 +192,7 @@ public class LimelightPoseEstimator implements PoseEstimator {
     Logger.recordOutput(this.hdrEnabledLoggerKey, true);
     LimelightHelpers.setPipelineIndex(this.limelightName, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
     Logger.recordOutput(this.requestedPipelineLoggerKey, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
+    this.hdrTimer = new Timer();
     this.hdrTimer.reset();
     this.hdrTimer.start();
   }
@@ -202,7 +203,6 @@ public class LimelightPoseEstimator implements PoseEstimator {
     LimelightHelpers.setPipelineIndex(this.limelightName, pipelineIndexToUse);
     Logger.recordOutput(this.requestedPipelineLoggerKey, pipelineIndexToUse);
     this.hdrTimer.stop();
-    this.hdrTimer.reset();
   }
 
   private void runHdr(){
@@ -220,6 +220,5 @@ public class LimelightPoseEstimator implements PoseEstimator {
     LimelightHelpers.setPipelineIndex(this.limelightName, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
     Logger.recordOutput(this.requestedPipelineLoggerKey, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
     this.hdrTimer.reset();
-    this.hdrTimer.start();
   }
 }
