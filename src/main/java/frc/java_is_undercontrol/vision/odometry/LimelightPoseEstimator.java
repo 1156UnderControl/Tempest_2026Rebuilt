@@ -206,6 +206,11 @@ public class LimelightPoseEstimator implements PoseEstimator {
   }
 
   private void runHdr(){
+    // HDR (High Dynamic Range) is the term used for a trick that phones normally use when the 
+    // dynamic range (difference between bright and dark) is too much for the sensor. What they do
+    // is take multiple pictures with different exposure levels and stitch them together to get
+    // a picture that is well exposed. We are trying to do something similar here by running
+    // different pipelines every 1/4 of a second, ensuring we get at least some tag in any situation
     if(!this.isRunningHdr) return;
     if(!this.hdrTimer.hasElapsed(this.hdrTimePerPipeline)) return;
     this.indexOfCurrentItemInHdrPipelines++;
