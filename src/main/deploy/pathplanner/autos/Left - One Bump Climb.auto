@@ -70,19 +70,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Go To Climb Left Pose"
+            "name": "Go To Climb Right Pose"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Default Climber"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Swerve Idle"
           }
         }
       ]
