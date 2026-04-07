@@ -150,6 +150,8 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
           new MultiCameraPoseEstimator(listOfEstimators, "Teleop Multi Pose Estimator");
     }
 
+    SwerveSubsystem.stopVisionHdrDark();
+    
     return SwerveSubsystem.poseEstimatorGeneral;
   }
 
@@ -479,5 +481,27 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     } else {
       this.overrideAutonomousPoseEstimator(poseEstimatorBackLeft);
     }
+  }
+
+  public static void runVisionHdr() {
+    double hdrTimePerPipeline = 0.25;
+    int[] backLeftLimelightHdrPipelines = {0,1};
+    SwerveSubsystem.poseEstimatorBackLeft.startHdr(backLeftLimelightHdrPipelines, hdrTimePerPipeline);
+    int[] backRightLimelightHdrPipelines = {0,1};
+    SwerveSubsystem.poseEstimatorBackRight.startHdr(backRightLimelightHdrPipelines, hdrTimePerPipeline);
+  }
+
+  public static void stopVisionHdrDark() {
+    SwerveSubsystem.poseEstimatorBackLeft.stopHdr(0);
+    SwerveSubsystem.poseEstimatorBackRight.stopHdr(0);
+    SwerveSubsystem.poseEstimatorFrontLeft.stopHdr(0);
+    SwerveSubsystem.poseEstimatorFrontRight.stopHdr(0);
+  }
+
+  public static void stopVisionHdrBright() {
+    SwerveSubsystem.poseEstimatorBackLeft.stopHdr(1);
+    SwerveSubsystem.poseEstimatorBackRight.stopHdr(1);
+    SwerveSubsystem.poseEstimatorFrontLeft.stopHdr(1);
+    SwerveSubsystem.poseEstimatorFrontRight.stopHdr(1);
   }
 }
