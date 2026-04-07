@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import frc.java_is_undercontrol.swerve.base.odometry.OdometryEnabledSwerveSubsystem;
 import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers;
 import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers.PoseEstimate;
@@ -39,6 +40,20 @@ public class LimelightPoseEstimator implements PoseEstimator {
 
   String poseLoggerKey;
 
+  boolean isRunningHdr = false;
+
+  private int[] hdrPipelines = new int[0];
+
+  double hdrTimePerPipeline = 1.0;
+
+  int indexOfCurrentItemInHdrPipelines = 0;
+
+  Timer hdrTimer = new Timer();
+
+  String hdrEnabledLoggerKey;
+
+  String requestedPipelineLoggerKey;
+
   public LimelightPoseEstimator(
       String limelightName,
       boolean only2TagsMeasurements,
@@ -55,6 +70,10 @@ public class LimelightPoseEstimator implements PoseEstimator {
     this.stateLoggerKey = "PoseEstimator/Limelight/" + limelightName + "/State";
     this.poseLoggerKey = "PoseEstimator/Limelight/" + limelightName + "/Pose";
     Logger.recordOutput(this.poseLoggerKey, new Pose3d());
+    this.hdrEnabledLoggerKey = "PoseEstimator/Limelight/" + limelightName + "/HdrEnabled";
+    this.requestedPipelineLoggerKey = "PoseEstimator/Limelight/" + limelightName + "/RequestedPipelineId";
+    Logger.recordOutput(this.hdrEnabledLoggerKey, false);
+    Logger.recordOutput(this.requestedPipelineLoggerKey, 0);
   }
 
   public LimelightPoseEstimator(String limelightName, boolean only2TagsMeasurements) {
@@ -72,6 +91,7 @@ public class LimelightPoseEstimator implements PoseEstimator {
         Logger.recordOutput(this.poseLoggerKey, new Pose3d());
         this.state = "NO_TARGETS";
         Logger.recordOutput(this.stateLoggerKey, this.state);
+        this.runHdr();
         return Optional.empty();
       }
       if (Math.abs(OdometryEnabledSwerveSubsystem.robotAngularVelocity) >= limitAngVelForUpdating) {
@@ -85,6 +105,7 @@ public class LimelightPoseEstimator implements PoseEstimator {
         limelightPoseEstimate =
             LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(this.limelightName);
       }
+      this.runHdr();
       if (limelightPoseEstimate == null) {
         Logger.recordOutput(this.poseLoggerKey, new Pose3d());
         return Optional.empty();
@@ -162,5 +183,43 @@ public class LimelightPoseEstimator implements PoseEstimator {
 
   public String getEstimatorName() {
     return this.limelightName;
+  }
+
+  public void startHdr(int[] hdrPipelines, double hdrTimePerPipeline){
+    this.hdrPipelines = hdrPipelines;
+    this.hdrTimePerPipeline = hdrTimePerPipeline;
+    this.indexOfCurrentItemInHdrPipelines = 0;
+    this.isRunningHdr = true;
+    Logger.recordOutput(this.hdrEnabledLoggerKey, true);
+    LimelightHelpers.setPipelineIndex(this.limelightName, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
+    Logger.recordOutput(this.requestedPipelineLoggerKey, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
+    this.hdrTimer = new Timer();
+    this.hdrTimer.reset();
+    this.hdrTimer.start();
+  }
+
+  public void stopHdr(int pipelineIndexToUse){
+    this.isRunningHdr = false;
+    Logger.recordOutput(this.hdrEnabledLoggerKey, false);
+    LimelightHelpers.setPipelineIndex(this.limelightName, pipelineIndexToUse);
+    Logger.recordOutput(this.requestedPipelineLoggerKey, pipelineIndexToUse);
+    this.hdrTimer.stop();
+  }
+
+  private void runHdr(){
+    // HDR (High Dynamic Range) is the term used for a trick that phones normally use when the 
+    // dynamic range (difference between bright and dark) is too much for the sensor. What they do
+    // is take multiple pictures with different exposure levels and stitch them together to get
+    // a picture that is well exposed. We are trying to do something similar here by running
+    // different pipelines every 1/4 of a second, ensuring we get at least some tag in any situation
+    if(!this.isRunningHdr) return;
+    if(!this.hdrTimer.hasElapsed(this.hdrTimePerPipeline)) return;
+    this.indexOfCurrentItemInHdrPipelines++;
+    if(this.indexOfCurrentItemInHdrPipelines >= this.hdrPipelines.length){
+      this.indexOfCurrentItemInHdrPipelines = 0;
+    }
+    LimelightHelpers.setPipelineIndex(this.limelightName, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
+    Logger.recordOutput(this.requestedPipelineLoggerKey, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
+    this.hdrTimer.reset();
   }
 }
