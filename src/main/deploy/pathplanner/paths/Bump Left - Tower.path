@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 0.9765967299513687,
-        "y": 4.680403858214825
+        "x": 0.9498453088321597,
+        "y": 4.7091390661678405
       },
       "prevControl": {
-        "x": 0.9907875877863861,
-        "y": 5.466069635985277
+        "x": 0.9640361666671771,
+        "y": 5.494804843938293
       },
       "nextControl": null,
       "isLocked": false,
@@ -36,7 +36,12 @@
       "name": "Retract Intake",
       "waypointRelativePos": 0.5867373511904759,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract Intake"
+        }
+      }
     },
     {
       "name": "Raise Climber",
