@@ -57,6 +57,10 @@ public class NamedCommandsRegistery {
         new GoToClimbPoseRight(drive)
             .alongWith(Commands.runOnce(() -> drive.setPoseEstimatorToClimbOnAuto(true)))
             .finallyDo(() -> drive.setAutoPoseEstimatorToDefault()));
+
+    // Idle — holds swerve in place during auto
+    NamedCommands.registerCommand(
+        "Swerve Idle", drive.idle());
   }
 
   private void registerResetOdometryCommands() {
