@@ -41,16 +41,6 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
 
   private int[] filteredApriltags = new int[0];
 
-  boolean isRunningHdr = false;
-
-  private int[] hdrPipelines = new int[0];
-
-  double hdrTimePerPipeline = 1.0;
-
-  int indexOfCurrentItemInHdrPipelines = 0;
-
-  Timer hdrTimer = new Timer();
-
   String hdrEnabledLoggerKey;
 
   String requestedPipelineLoggerKey;
@@ -106,7 +96,6 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
             photonPoseEstimation = photonPoseEstimator.estimateCoprocMultiTagPose(result);
             break;
         }
-        this.runHdr();
         if (photonPoseEstimation.isEmpty() || !result.hasTargets()) {
           photonPoseEstimation = photonPoseEstimator.estimateLowestAmbiguityPose(result);
           if (photonPoseEstimation.isEmpty()) {
@@ -221,36 +210,14 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
   }
 
   public void startHdr(int[] hdrPipelines, double hdrTimePerPipeline){
-    this.hdrPipelines = hdrPipelines;
-    this.hdrTimePerPipeline = hdrTimePerPipeline;
-    this.indexOfCurrentItemInHdrPipelines = 0;
-    this.isRunningHdr = true;
-    Logger.recordOutput(this.hdrEnabledLoggerKey, true);
-    this.camera.setPipelineIndex(hdrPipelines[indexOfCurrentItemInHdrPipelines]);
-    Logger.recordOutput(this.requestedPipelineLoggerKey, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
-    this.hdrTimer.reset();
-    this.hdrTimer.start();
+    // Keeping this method here but with no implementation to make it clear that photonvision is 
+    // not capable of HDR. The camera takes very long to change pipelines and just wouldn't work.
   }
 
   public void stopHdr(int pipelineIndexToUse){
-    this.isRunningHdr = false;
     Logger.recordOutput(this.hdrEnabledLoggerKey, false);
     this.camera.setPipelineIndex(pipelineIndexToUse);
     Logger.recordOutput(this.requestedPipelineLoggerKey, pipelineIndexToUse);
-    this.hdrTimer.stop();
-    this.hdrTimer.reset();
   }
 
-  private void runHdr(){
-    if(!this.isRunningHdr) return;
-    if(!this.hdrTimer.hasElapsed(this.hdrTimePerPipeline)) return;
-    this.indexOfCurrentItemInHdrPipelines++;
-    if(this.indexOfCurrentItemInHdrPipelines >= this.hdrPipelines.length){
-      this.indexOfCurrentItemInHdrPipelines = 0;
-    }
-    this.camera.setPipelineIndex(hdrPipelines[indexOfCurrentItemInHdrPipelines]);
-    Logger.recordOutput(this.requestedPipelineLoggerKey, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
-    this.hdrTimer.reset();
-    this.hdrTimer.start();
-  }
 }
