@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers;
+import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers.IMUData;
 import frc.robot.constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
@@ -24,6 +25,20 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
+  private IMUData imu = LimelightHelpers.getIMUData("limelight-bright");
+
+  double[] imuData = new double[] {
+    imu.Pitch,
+    imu.Roll,
+    imu.Yaw,
+    imu.accelX,
+    imu.accelY,
+    imu.accelZ,
+    imu.gyroX,
+    imu.gyroY,
+    imu.gyroZ,
+    imu.robotYaw
+};
 
   public Robot() {
     AutoLogOutputManager.addPackage("frc.java_is_undercontrol");
@@ -97,8 +112,9 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putBoolean(
         "Won Auto",
         DriverStation.getAlliance().orElse(Alliance.Blue) == HubShiftUtil.getFirstActiveAlliance());
-    SmartDashboard.putNumber(
-        "Time Until Next Shift:", HubShiftUtil.getOfficialShiftInfo().remainingTime());
+      SmartDashboard.putNumber(
+          "Time Until Next Shift:", HubShiftUtil.getOfficialShiftInfo().remainingTime());
+          Logger.recordOutput("IMU", imuData);
   }
 
   @Override
