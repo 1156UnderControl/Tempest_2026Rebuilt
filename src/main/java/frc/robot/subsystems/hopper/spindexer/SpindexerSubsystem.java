@@ -71,7 +71,7 @@ public class SpindexerSubsystem extends SubsystemBase {
             .withTelemetry(TelemetryVerbosity.MID)
             .withMechanismCircumference(Meters.of(0.478))
             .withStatorCurrentLimit(Amps.of(80))
-            .withMotorInverted(false);
+            .withMotorInverted(true);
 
     this.torqueCurrentRequest.withFeedForward(SpindexerConstants.FEEDFORWARD_TORQUE_CURRENT_A);
 
