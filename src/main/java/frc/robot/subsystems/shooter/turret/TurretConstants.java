@@ -57,7 +57,7 @@ public class TurretConstants {
   public static final ControlMode CONTROL_MODE = ControlMode.CLOSED_LOOP;
 
   public static final MechanismGearing GEARING =
-      new MechanismGearing(GearBox.fromReductionStages(52.8));
+      new MechanismGearing(GearBox.fromReductionStages(42.24));
 
   public static final double PHASE_DELAY = 0.03;
 
