@@ -123,7 +123,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
         new LimelightPoseEstimator(VisionConstants.backLeftLimelightName, false, false, 2);
 
     SwerveSubsystem.poseEstimatorBackRight =
-        new LimelightPoseEstimator(VisionConstants.backRightLimelightName, false, true, 2);
+        new LimelightPoseEstimator(VisionConstants.backRightLimelightName, false, false, 2);
 
     PhotonCamera cameraFrontRight = new PhotonCamera(VisionConstants.frontRightArducamName);
     SwerveSubsystem.poseEstimatorFrontRight =
