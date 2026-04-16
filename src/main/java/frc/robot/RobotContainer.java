@@ -259,5 +259,10 @@ public class RobotContainer {
                     && !RobotStates.getInstance().isOnAllianceZone()
                     && !RobotStates.getInstance().isOnNotShootZone())
         .whileTrue(this.flyWheel.shootPass());
+
+    new Trigger(() -> DriverStation.isTeleopEnabled())
+        .onTrue(Commands.runOnce(
+            () -> this.drive.configureDriveMode(true)
+        ));
   }
 }
