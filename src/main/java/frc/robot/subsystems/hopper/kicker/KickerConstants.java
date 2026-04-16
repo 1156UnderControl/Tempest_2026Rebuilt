@@ -14,8 +14,8 @@ public final class KickerConstants {
   public static final Mass WHEEL_MASS = Kilograms.of(1.5);
 
   public static class setpoints {
-    public static final AngularVelocity SHOOTING = RPM.of(2000);
+    public static final AngularVelocity SHOOTING = RPM.of(-2000);
     public static final AngularVelocity STOPPED = RPM.of(0);
-    public static final AngularVelocity EXPEL = RPM.of(-150);
+    public static final AngularVelocity EXPEL = RPM.of(150);
   }
 }
