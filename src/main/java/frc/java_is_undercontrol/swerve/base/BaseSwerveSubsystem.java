@@ -241,6 +241,14 @@ public class BaseSwerveSubsystem extends SubsystemBase {
     return drive.getRotation();
   }
 
+  public void configureDriveMode(boolean isBrake) {
+    if (isBrake) {
+      drive.setBrakeToModules();
+    } else {
+      drive.setCoastToModules();
+    }
+  }
+
   public void lock() {
     drive.stopWithX();
   }
