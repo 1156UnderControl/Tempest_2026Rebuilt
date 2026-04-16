@@ -1,0 +1,2306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tempest Log Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.1.0/dist/chartjs-plugin-annotation.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.min.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getStorage, ref, uploadBytes, getBytes, listAll } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-storage.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyA_qgdzWfPxX4yn4FkwQGhekkIzgNQRwPU",
+      authDomain: "tempest-dashboard-45a1e.firebaseapp.com",
+      projectId: "tempest-dashboard-45a1e",
+      storageBucket: "tempest-dashboard-45a1e.firebasestorage.app",
+      messagingSenderId: "52754907843",
+      appId: "1:52754907843:web:8997cefa7d39fd7c54d876",
+      measurementId: "G-MT140L7WSE"
+    };
+    const app = initializeApp(firebaseConfig);
+    const storage = getStorage(app);
+    window.cloudSDK = { storage, ref, uploadBytes, getBytes, listAll };
+    window.dispatchEvent(new Event('firebaseReady'));
+  </script>
+  <style>
+    :root {
+      --bg: #0f1117; --surface: #1a1d27; --surface2: #242736; --border: #2e3247;
+      --text: #e4e4e7; --text-muted: #9ca3af; --accent: #3b82f6;
+      --red: #ef4444; --orange: #f97316; --yellow: #eab308; --green: #22c55e;
+      --cyan: #06b6d4; --purple: #a78bfa; --pink: #f472b6;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace; background: var(--bg); color: var(--text); min-height: 100vh; }
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 16px; }
+    header h1 { font-size: 18px; font-weight: 600; }
+    header .subtitle { color: var(--text-muted); font-size: 12px; }
+    .upload-zone { max-width: 600px; margin: 80px auto; border: 2px dashed var(--border); border-radius: 12px; padding: 60px 40px; text-align: center; cursor: pointer; transition: border-color 0.2s; }
+    .upload-zone:hover, .upload-zone.dragover { border-color: var(--accent); }
+    .upload-zone h2 { margin-bottom: 8px; font-size: 18px; }
+    .upload-zone p { color: var(--text-muted); font-size: 14px; }
+    .upload-zone input { display: none; }
+    .loading { text-align: center; padding: 80px; color: var(--text-muted); font-size: 16px; }
+    .tab-bar { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; gap: 0; overflow-x: auto; padding: 0 16px; }
+    .tab-btn { padding: 10px 18px; font-size: 13px; font-weight: 500; color: var(--text-muted); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+    .tab-btn:hover { color: var(--text); background: var(--surface2); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-content { display: none; padding: 24px; }
+    .tab-content.active { display: block; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+    .stat-card .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .stat-card .value { font-size: 24px; font-weight: 700; }
+    .stat-card .unit { font-size: 13px; color: var(--text-muted); font-weight: 400; }
+    .stat-card.danger .value { color: var(--red); }
+    .stat-card.warning .value { color: var(--orange); }
+    .stat-card.ok .value { color: var(--green); }
+    .chart-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    .chart-box h3 { font-size: 13px; margin-bottom: 10px; color: var(--text-muted); }
+    .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    @media (max-width: 900px) { .chart-row { grid-template-columns: 1fr; } }
+    .section-title { font-size: 15px; font-weight: 600; margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+    .src-tag { display:inline-block; font-size:9px; font-weight:700; padding:2px 7px; border-radius:3px; margin-left:8px; letter-spacing:0.5px; vertical-align:middle; }
+    .src-tag.supply { background:rgba(34,197,94,0.18); color:#4ade80; border:1px solid rgba(34,197,94,0.4); }
+    .src-tag.stator { background:rgba(249,115,22,0.18); color:#fb923c; border:1px solid rgba(249,115,22,0.4); }
+    .banner { border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; }
+    .banner.danger { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); }
+    .banner.danger strong { color: var(--red); }
+    .banner.ok { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); }
+    .banner.ok strong { color: var(--green); }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .data-table th, .data-table td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); }
+    .data-table th { color: var(--text-muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .data-table tr:hover { background: var(--surface2); }
+    .bar { height: 5px; border-radius: 3px; background: var(--accent); min-width: 2px; }
+    .bar.hot { background: var(--orange); }
+    .bar.danger { background: var(--red); }
+    .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+    .legend span { display: flex; align-items: center; gap: 4px; }
+    .legend .dot { width: 10px; height: 3px; border-radius: 2px; }
+
+    /* Discrete / Gantt timeline */
+    .discrete-timeline { display: flex; flex-direction: column; gap: 4px; margin: 8px 0; }
+    .disc-row { display: flex; align-items: center; gap: 8px; font-size: 12px; height: 22px; }
+    .disc-label { width: 180px; text-align: right; color: var(--text-muted); flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .disc-track { flex: 1; height: 18px; background: var(--surface2); border-radius: 3px; position: relative; overflow: hidden; }
+    .disc-seg { position: absolute; height: 100%; border-radius: 2px; opacity: 0.9; display: flex; align-items: center; padding: 0 4px; font-size: 9px; color: #fff; overflow: hidden; white-space: nowrap; }
+    .disc-axis { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); margin-top: 4px; padding-left: 188px; }
+
+    /* Alert table */
+    .alert-row-error { border-left: 3px solid var(--red) !important; }
+    .alert-row-warning { border-left: 3px solid var(--orange) !important; }
+    .alert-row-info { border-left: 3px solid var(--accent) !important; }
+    .alert-type { font-weight: 600; font-size: 11px; padding: 2px 6px; border-radius: 4px; }
+    .alert-type.error { background: rgba(239,68,68,0.15); color: var(--red); }
+    .alert-type.warning { background: rgba(249,115,22,0.15); color: var(--orange); }
+    .alert-type.info { background: rgba(59,130,246,0.15); color: var(--accent); }
+    .zoom-hint { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+    .reset-zoom-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); padding: 3px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; margin-left: 8px; }
+    .reset-zoom-btn:hover { color: var(--text); border-color: var(--accent); }
+    .imbalance-banner { background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.3); border-radius: 8px; padding: 12px 16px; margin-bottom: 12px; font-size: 13px; }
+    .imbalance-banner strong { color: var(--orange); }
+    .imbalance-ok { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 8px; padding: 10px 16px; margin-bottom: 12px; font-size: 13px; }
+    .sub-tab-bar { display: flex; gap: 0; overflow-x: auto; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .sub-tab-btn { padding: 8px 14px; font-size: 12px; font-weight: 500; color: var(--text-muted); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; }
+    .sub-tab-btn:hover { color: var(--text); }
+    .sub-tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .sub-tab-panel { display: none; }
+    .sub-tab-panel.active { display: block; }
+
+    /* ===== Landing / Hero ===== */
+    .hero {
+      max-width: 1100px; margin: 32px auto 20px; padding: 28px 36px;
+      background: linear-gradient(135deg, rgba(59,130,246,0.10) 0%, rgba(167,139,250,0.06) 50%, rgba(6,182,212,0.10) 100%);
+      border: 1px solid var(--border); border-radius: 16px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content:''; position:absolute; inset:0; pointer-events:none;
+      background: radial-gradient(circle at 85% 50%, rgba(59,130,246,0.10), transparent 60%);
+    }
+    .hero-inner { position: relative; z-index: 1; }
+    .hero-brand { display:flex; align-items:center; gap:16px; margin-bottom:12px; }
+    .hero-img {
+      width: 96px; height: 96px; border-radius: 14px; flex-shrink:0;
+      background: #0a0c12; object-fit: cover; object-position: center;
+      box-shadow: 0 6px 22px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05);
+    }
+    .hero-team { font-size: 32px; font-weight: 800; letter-spacing: 2px; background: linear-gradient(90deg,#60a5fa,#a78bfa,#06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip:text; }
+    .hero-team-sub { font-size: 11px; color: var(--text-muted); letter-spacing: 3px; text-transform: uppercase; }
+    .hero-title { font-size: 20px; font-weight: 600; margin-top:6px; }
+    .hero-sub { color: var(--text-muted); font-size: 13px; margin-top:4px; max-width: 720px; }
+    @media (max-width: 600px) { .hero-brand { flex-direction: column; align-items: flex-start; } .hero-img { width: 80px; height: 80px; } }
+
+    /* ===== Header logo ===== */
+    .header-logo {
+      width: 36px; height: 36px; border-radius: 8px; object-fit: cover;
+      background: #0a0c12; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+    }
+
+    .upload-zone { max-width: 1100px; margin: 0 auto 16px; border: 2px dashed var(--border); border-radius: 12px; padding: 36px 40px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--surface); }
+    .upload-zone:hover, .upload-zone.dragover { border-color: var(--accent); background: var(--surface2); transform: translateY(-1px); }
+
+    /* ===== Match grid cards ===== */
+    .match-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; margin-top: 14px; }
+    .match-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px;
+      cursor: pointer; transition: all 0.15s; position: relative; overflow: hidden; min-height: 120px;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .match-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.25); }
+    .match-card.disabled { cursor: default; opacity: 0.45; }
+    .match-card.disabled:hover { border-color: var(--border); transform: none; box-shadow: none; }
+    .match-card .mc-top { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
+    .match-card .mc-badge {
+      display:inline-flex; align-items:center; justify-content:center;
+      height: 22px; padding: 0 9px; border-radius: 4px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap;
+    }
+    .match-card .mc-badge.q { background: rgba(59,130,246,0.18); color: #60a5fa; border: 1px solid rgba(59,130,246,0.4); }
+    .match-card .mc-badge.e { background: rgba(239,68,68,0.18); color: #f87171; border: 1px solid rgba(239,68,68,0.4); }
+    .match-card .mc-badge.p { background: rgba(249,115,22,0.18); color: #fb923c; border: 1px solid rgba(249,115,22,0.4); }
+    .match-card .mc-badge.unk { background: rgba(156,163,175,0.15); color: var(--text-muted); border: 1px solid var(--border); }
+    .match-card .mc-alert {
+      display:inline-flex; align-items:center; gap:4px;
+      background: rgba(239,68,68,0.18); color: #f87171; border: 1px solid rgba(239,68,68,0.5);
+      border-radius: 4px; padding: 2px 7px; font-size: 10px; font-weight: 700; letter-spacing: 0.3px;
+      margin-top: 6px; align-self: flex-start;
+    }
+    .match-card .mc-alert::before { content: '⚠'; font-size: 11px; }
+    .match-card.has-error { border-color: rgba(239,68,68,0.45); box-shadow: inset 3px 0 0 var(--red); }
+    .match-card.has-error:hover { border-color: var(--red); }
+    .match-card .mc-source { font-size: 10px; color: var(--text-muted); }
+    .match-card .mc-source.session { color: var(--green); }
+    .match-card .mc-source.cloud { color: var(--cyan); }
+    .match-card .mc-num { font-size: 32px; font-weight: 800; letter-spacing: -1px; color: var(--text); line-height: 1; margin: 4px 0; }
+    .match-card .mc-event { font-size: 12px; color: var(--text); font-weight: 600; }
+    .match-card .mc-date { font-size: 11px; color: var(--text-muted); }
+    .match-card .mc-stats { margin-top: auto; padding-top: 8px; border-top: 1px dashed var(--border); font-size: 10px; color: var(--text-muted); display:flex; gap:10px; flex-wrap:wrap; }
+    .match-card .mc-stats b { color: var(--text); font-weight: 600; }
+    .match-card .mc-lab-date { font-size: 20px; font-weight: 700; color: var(--text); margin: 4px 0 0; }
+
+    /* Event group sections */
+    .event-group { margin-top: 20px; }
+    .event-group:first-child { margin-top: 10px; }
+    .event-group-header {
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+      padding: 8px 2px; margin-bottom: 4px; border-bottom: 1px solid var(--border);
+    }
+    .event-group-icon { font-size: 16px; }
+    .event-group-title { font-size: 14px; font-weight: 600; color: var(--text); margin: 0; }
+    .event-group-code {
+      font-size: 10px; font-weight: 700; letter-spacing: 1px;
+      background: rgba(59,130,246,0.15); color: #60a5fa;
+      border: 1px solid rgba(59,130,246,0.35); border-radius: 3px;
+      padding: 2px 7px;
+    }
+    .event-group-count { font-size: 11px; color: var(--text-muted); margin-left: auto; }
+    .event-group-errors { font-size: 11px; color: var(--red); font-weight: 600; }
+
+    /* ===== Inline match badge in header (replaces the floating corner that overlapped buttons) ===== */
+    .match-inline {
+      display:inline-flex; align-items:center; gap:8px;
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+      padding: 4px 10px;
+    }
+    .match-inline .mcb-type {
+      font-size: 9px; font-weight: 800; letter-spacing: 0.5px;
+      padding: 2px 6px; border-radius: 3px;
+    }
+    .match-inline .mcb-type.q { background: rgba(59,130,246,0.25); color: #60a5fa; }
+    .match-inline .mcb-type.e { background: rgba(239,68,68,0.25); color: #f87171; }
+    .match-inline .mcb-type.p { background: rgba(249,115,22,0.25); color: #fb923c; }
+    .match-inline .mcb-type.unk { background: rgba(156,163,175,0.2); color: var(--text-muted); }
+    .match-inline .mcb-num { font-size: 20px; font-weight: 900; line-height: 1; letter-spacing: -0.5px; color: var(--text); }
+    .match-inline .mcb-meta { font-size: 10px; color: var(--text-muted); line-height: 1.2; }
+    .match-inline .mcb-meta b { color: var(--text); font-weight:600; font-size: 10px; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="robot.avif" alt="Tempest" class="header-logo" onerror="this.style.display='none'" />
+    <div><h1>Tempest Log Dashboard</h1><div class="subtitle">AdvantageKit .wpilog analyzer</div></div>
+    <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+      <span id="headerMatchName" style="display:none"></span>
+      <button id="uploadAnotherBtn" class="reset-zoom-btn" style="display:none;padding:6px 14px;font-size:12px" onclick="document.getElementById('fileInput2').click()">+ Upload Log</button>
+      <button id="backToUploadBtn" class="reset-zoom-btn" style="display:none;padding:6px 14px;font-size:12px" onclick="backToUpload()">Back</button>
+      <input type="file" id="fileInput2" accept=".wpilog" multiple style="display:none" />
+    </div>
+  </header>
+  <div id="upload-section">
+    <div class="hero">
+      <div class="hero-inner">
+        <div class="hero-brand">
+          <img src="robot.avif" alt="Tempest Robot" class="hero-img" onerror="this.style.display='none'" />
+          <div>
+            <div class="hero-team">TEMPEST</div>
+            <div class="hero-team-sub">2026 Season</div>
+          </div>
+        </div>
+        <div class="hero-title">Log Dashboard</div>
+        <div class="hero-sub">Upload an AdvantageKit .wpilog to analyze power, performance, and match behavior. Team logs are automatically shared via the cloud.</div>
+      </div>
+    </div>
+    <div class="upload-zone" id="dropZone" style="max-width:1100px">
+      <h2 style="font-size:16px;margin-bottom:4px">Drop .wpilog file(s) here</h2>
+      <p style="font-size:13px">or click to browse &mdash; single file opens it, multiple build history</p>
+      <p style="font-size:11px;margin-top:6px;color:var(--cyan)">&#9729; All uploads are shared with your team via the cloud</p>
+      <input type="file" id="fileInput" accept=".wpilog" multiple />
+    </div>
+    <div id="historyPreview" style="max-width:1100px;margin:16px auto;display:none"></div>
+  </div>
+  <div id="loading" class="loading" style="display:none">Parsing log file...</div>
+  <div id="app" style="display:none"><div class="tab-bar" id="tabBar"></div><div id="tabPanels"></div></div>
+<script>
+// ============== WPILOG PARSER ==============
+class WPILOGParser {
+  constructor(buffer) {
+    this.data = new DataView(buffer); this.bytes = new Uint8Array(buffer); this.pos = 0;
+    this.entries = new Map(); this.records = new Map();
+  }
+  parse() {
+    if (String.fromCharCode(...this.bytes.slice(0,6)) !== 'WPILOG') throw new Error('Not a valid .wpilog file');
+    this.pos = 8;
+    const extraLen = this.data.getUint32(this.pos, true); this.pos += 4 + extraLen;
+    while (this.pos < this.bytes.length) { try { this._readRecord(); } catch { break; } }
+  }
+  _readRecord() {
+    const bf = this.bytes[this.pos++];
+    const idLen=(bf&0x03)+1, sizeLen=((bf>>2)&0x03)+1, tsLen=((bf>>4)&0x07)+1;
+    const entryId=this._readUint(idLen), payloadSize=this._readUint(sizeLen), timestamp=this._readUint(tsLen);
+    const ps=this.pos; this.pos+=payloadSize;
+    if(entryId===0) this._ctrl(ps); else this._dataRec(entryId,ps,payloadSize,timestamp);
+  }
+  _readUint(len) { let v=0; for(let i=0;i<len;i++) v|=this.bytes[this.pos++]<<(i*8); return v>>>0; }
+  _ctrl(o) {
+    if(this.bytes[o]!==0) return;
+    const dv=this.data, eid=dv.getUint32(o+1,true), nL=dv.getUint32(o+5,true);
+    const name=new TextDecoder().decode(this.bytes.slice(o+9,o+9+nL));
+    const tL=dv.getUint32(o+9+nL,true);
+    const type=new TextDecoder().decode(this.bytes.slice(o+13+nL,o+13+nL+tL));
+    this.entries.set(eid,{name,type}); if(!this.records.has(eid)) this.records.set(eid,[]);
+  }
+  _dataRec(id,o,s,ts) {
+    const e=this.entries.get(id); if(!e) return; let v;
+    try { switch(e.type) {
+      case 'double': v=this.data.getFloat64(o,true); break;
+      case 'float': v=this.data.getFloat32(o,true); break;
+      case 'int64': v=Number(this.data.getBigInt64(o,true)); break;
+      case 'boolean': v=this.bytes[o]!==0; break;
+      case 'string': case 'json': v=new TextDecoder().decode(this.bytes.slice(o,o+s)); break;
+      case 'double[]': v=[]; for(let i=0;i<s/8;i++) v.push(this.data.getFloat64(o+i*8,true)); break;
+      case 'float[]': v=[]; for(let i=0;i<s/4;i++) v.push(this.data.getFloat32(o+i*4,true)); break;
+      case 'string[]': {
+        v=[]; if(s>=4){ let cnt=this.data.getUint32(o,true),off=o+4;
+        for(let i=0;i<cnt&&off+4<=o+s;i++){const sL=this.data.getUint32(off,true);off+=4;v.push(new TextDecoder().decode(this.bytes.slice(off,off+sL)));off+=sL;}}
+        break; }
+      default: return;
+    }} catch { return; }
+    this.records.get(id)?.push({timestamp:ts,value:v});
+  }
+  get(name) { for(const[id,e]of this.entries) if(e.name===name) return{id,...e,data:this.records.get(id)||[]}; return null; }
+  match(re) { const r=[]; for(const[id,e]of this.entries) if(re.test(e.name)) r.push({id,...e,data:this.records.get(id)||[]}); return r; }
+}
+
+// ============== CB285 BREAKER ==============
+const CB285_RATED=120;
+// CB285-120 trip curve read from datasheet: Time vs % of Rated Current
+// lower = left curve (minimum time to trip), upper = right curve (maximum time to trip)
+const CB285_TRIP=[
+  {pct:125,lower:200,upper:500},
+  {pct:135,lower:100,upper:400},
+  {pct:150,lower:40,upper:200},
+  {pct:175,lower:18,upper:80},
+  {pct:200,lower:10,upper:50},
+  {pct:225,lower:7,upper:35},
+  {pct:250,lower:5,upper:25},
+  {pct:300,lower:3.5,upper:15},
+  {pct:350,lower:2.5,upper:10},
+  {pct:400,lower:2,upper:7},
+  {pct:450,lower:1.3,upper:5},
+  {pct:500,lower:1,upper:3.5},
+  {pct:550,lower:0.7,upper:2.5},
+  {pct:600,lower:0.5,upper:2},
+];
+function getTripTime(a,b){const p=(a/CB285_RATED)*100,c=CB285_TRIP;if(p<=c[0].pct)return Infinity;if(p>=c[c.length-1].pct)return c[c.length-1][b];for(let i=0;i<c.length-1;i++){if(p>=c[i].pct&&p<=c[i+1].pct){const t=(p-c[i].pct)/(c[i+1].pct-c[i].pct);return Math.exp(Math.log(c[i][b])+t*(Math.log(c[i+1][b])-Math.log(c[i][b])));}}return c[c.length-1][b];}
+
+// ============== PDH CHANNEL MAP ==============
+// Maps each PDH channel (0-19) to the motor/load name and subsystem it powers.
+const PDH_CHANNELS=[
+  {ch:0, name:'Flywheel 2',        subsystem:'Shooter'},
+  {ch:1, name:'Flywheel 1',        subsystem:'Shooter'},
+  {ch:2, name:'Steer Back Right',  subsystem:'Drivetrain'},
+  {ch:3, name:'Drive Back Right',  subsystem:'Drivetrain'},
+  {ch:4, name:'Steer Front Right', subsystem:'Drivetrain'},
+  {ch:5, name:'Drive Front Right', subsystem:'Drivetrain'},
+  {ch:6, name:'Climber',           subsystem:'Climber'},
+  {ch:7, name:'Mini Power Module', subsystem:'MPM'},
+  {ch:8, name:'Turret',            subsystem:'Turret'},
+  {ch:9, name:'Spindexer',         subsystem:'Spindexer'},
+  {ch:10,name:'Drive Forward Left',subsystem:'Drivetrain'},
+  {ch:11,name:'Turn Forward Left', subsystem:'Drivetrain'},
+  {ch:12,name:'Drive Back Left',   subsystem:'Drivetrain'},
+  {ch:13,name:'Turn Back Left',    subsystem:'Drivetrain'},
+  {ch:14,name:'Pivot Intake',      subsystem:'Intake Extensor'},
+  {ch:15,name:'Right Roller',      subsystem:'Intake Roller'},
+  {ch:16,name:'Left Roller',       subsystem:'Intake Roller'},
+  {ch:17,name:'VRM',               subsystem:'VRM'},
+  {ch:18,name:'Hood',              subsystem:'Shooter'},
+  {ch:19,name:'Kicker',            subsystem:'Kicker'},
+];
+const PDH_CH_MAP=new Map(PDH_CHANNELS.map(c=>[c.ch,c]));
+const SUBSYSTEM_GROUPS=(()=>{const m=new Map();PDH_CHANNELS.forEach(c=>{if(!m.has(c.subsystem))m.set(c.subsystem,[]);m.get(c.subsystem).push(c.ch);});return m;})();
+const SUBSYSTEM_COLORS={'Drivetrain':'#3b82f6','Shooter':'#ef4444','Turret':'#a78bfa','Intake Roller':'#f97316','Intake Extensor':'#fbbf24','Spindexer':'#10b981','Kicker':'#eab308','Climber':'#f43f5e','MPM':'#06b6d4','VRM':'#64748b'};
+
+// ============== HELPERS ==============
+function dsMax(t,v,n){if(t.length<=n)return{times:t,values:v};const s=t.length/n,rt=[],rv=[];for(let i=0;i<n;i++){const a=Math.floor(i*s),b=Math.min(Math.floor((i+1)*s),t.length);let mx=-Infinity,mi=a;for(let j=a;j<b;j++)if(v[j]>mx){mx=v[j];mi=j;}rt.push(t[mi]);rv.push(mx);}return{times:rt,values:rv};}
+function ds(t,v,n){if(t.length<=n)return{times:t,values:v};const s=t.length/n,rt=[],rv=[];for(let i=0;i<n;i++){const idx=Math.floor(i*s);rt.push(t[idx]);rv.push(v[idx]);}return{times:rt,values:rv};}
+
+// Resample a time series onto a uniform time grid using sample-and-hold
+function resampleOnGrid(times, values, grid) {
+  const out = new Array(grid.length);
+  let j = 0;
+  for (let i = 0; i < grid.length; i++) {
+    while (j < times.length - 1 && times[j + 1] <= grid[i]) j++;
+    out[i] = (j < times.length && times[j] <= grid[i]) ? values[j] : null;
+  }
+  return out;
+}
+
+// Build a shared uniform time grid from multiple series, then downsample
+function alignSeries(seriesList, maxPts) {
+  let minT = Infinity, maxT = -Infinity;
+  for (const s of seriesList) {
+    if (!s || !s.times.length) continue;
+    if (s.times[0] < minT) minT = s.times[0];
+    if (s.times[s.times.length - 1] > maxT) maxT = s.times[s.times.length - 1];
+  }
+  if (minT >= maxT) return { grid: [], resampled: seriesList.map(() => []) };
+  // Use the max sample count across series, capped at maxPts
+  const totalSamples = Math.min(Math.max(...seriesList.map(s => s ? s.times.length : 0)), maxPts);
+  const step = (maxT - minT) / (totalSamples - 1);
+  const grid = [];
+  for (let i = 0; i < totalSamples; i++) grid.push(minT + i * step);
+  const resampled = seriesList.map(s => {
+    if (!s || !s.times.length) return new Array(grid.length).fill(null);
+    return resampleOnGrid(s.times, s.values, grid);
+  });
+  return { grid, resampled };
+}
+const COLORS=['#3b82f6','#22c55e','#f97316','#ef4444','#a78bfa','#f472b6','#eab308','#06b6d4','#10b981','#f43f5e'];
+const MAX_PTS=2000; let allCharts=[];
+function destroyAll(){allCharts.forEach(c=>c.destroy());allCharts=[];}
+function mkChart(el,cfg){
+  if(!el)return null;
+  cfg.options=cfg.options||{};
+  cfg.options.animation=false;
+  cfg.options.responsive=true;
+  // Inject zoom on x-axis for all charts
+  cfg.options.plugins=cfg.options.plugins||{};
+  if(!cfg.options.plugins.zoom){
+    cfg.options.plugins.zoom={
+      pan:{enabled:true,mode:'x',modifierKey:null},
+      zoom:{wheel:{enabled:true,modifierKey:'ctrl'},pinch:{enabled:true},drag:{enabled:true,backgroundColor:'rgba(59,130,246,0.1)',borderColor:'rgba(59,130,246,0.4)',borderWidth:1},mode:'x'}
+    };
+  }
+  const c=new Chart(el,cfg);
+  allCharts.push(c);
+  // Add reset zoom button after canvas
+  const btn=document.createElement('button');
+  btn.className='reset-zoom-btn';
+  btn.textContent='Reset Zoom';
+  btn.onclick=()=>c.resetZoom();
+  const hint=document.createElement('div');
+  hint.className='zoom-hint';
+  hint.innerHTML='Drag to zoom X axis &bull; Ctrl+Scroll to zoom &bull; ';
+  hint.appendChild(btn);
+  el.parentNode.appendChild(hint);
+  return c;
+}
+function ts2(data,toSec){const t=[],v=[];for(const r of data){t.push(toSec(r.timestamp));v.push(r.value);}return{times:t,values:v};}
+// Find every excursion above rated current — returns [{duration, peakCurrent, avgCurrent, startTime}]
+// Merges gaps shorter than mergeGap (default 0.5s) so brief dips in noisy data don't split one long excursion into many short ones
+function findExcursions(t, v, threshold) {
+  threshold = threshold || CB285_RATED;
+  const MERGE_GAP = 0.5; // seconds — dips below threshold shorter than this get merged
+  // First pass: find raw segments above threshold
+  const raw = [];
+  let start = null, peak = 0, sum = 0, count = 0;
+  for (let i = 0; i < v.length; i++) {
+    if (v[i] >= threshold) {
+      if (start === null) { start = i; peak = 0; sum = 0; count = 0; }
+      if (v[i] > peak) peak = v[i];
+      sum += v[i]; count++;
+    } else {
+      if (start !== null) {
+        raw.push({ startIdx: start, endIdx: i, peak, sum, count });
+        start = null;
+      }
+    }
+  }
+  if (start !== null) raw.push({ startIdx: start, endIdx: v.length - 1, peak, sum, count });
+
+  // Second pass: merge segments separated by gaps shorter than MERGE_GAP
+  const merged = [];
+  for (const seg of raw) {
+    if (merged.length && t[seg.startIdx] - t[merged[merged.length-1].endIdx] < MERGE_GAP) {
+      const prev = merged[merged.length-1];
+      // Include the gap samples in the merged excursion
+      for (let j = prev.endIdx; j < seg.startIdx; j++) { prev.sum += v[j]; prev.count++; }
+      prev.endIdx = seg.endIdx;
+      prev.peak = Math.max(prev.peak, seg.peak);
+      prev.sum += seg.sum;
+      prev.count += seg.count;
+    } else {
+      merged.push({ ...seg });
+    }
+  }
+
+  // Convert to output format
+  return merged.filter(s => {
+    const dur = t[s.endIdx] - t[s.startIdx];
+    return dur > 0.1;
+  }).map(s => ({
+    duration: t[s.endIdx] - t[s.startIdx],
+    peakCurrent: s.peak,
+    avgCurrent: s.sum / s.count,
+    startTime: t[s.startIdx],
+  }));
+}
+
+// State color palette for discrete charts
+const STATE_COLORS = {
+  '': '#555', 'NULL': '#555', 'IDLE': '#555', 'NO_TARGET': '#666',
+  // Generic positive states
+  'Tracking Hub': '#22c55e', 'Running State': '#3b82f6', 'Running Low Velocity': '#06b6d4',
+  'Extended State': '#22c55e', 'Shake State': '#f97316', 'Stop State': '#ef4444', 'Stopped State': '#ef4444',
+  'Drive Align Joystick State': '#a78bfa',
+};
+function stateColor(s) { return STATE_COLORS[s] || COLORS[Math.abs(hashStr(s)) % COLORS.length]; }
+function hashStr(s) { let h=0; for(let i=0;i<s.length;i++) h=((h<<5)-h)+s.charCodeAt(i); return h; }
+
+// Build discrete timeline segments from string entry data
+function buildSegments(entry, toSec) {
+  if (!entry || !entry.data.length) return [];
+  const segs = [];
+  let curVal = entry.data[0].value, curStart = toSec(entry.data[0].timestamp);
+  for (let i = 1; i < entry.data.length; i++) {
+    const t = toSec(entry.data[i].timestamp), v = entry.data[i].value;
+    if (v !== curVal) {
+      segs.push({ start: curStart, end: t, value: curVal });
+      curVal = v; curStart = t;
+    }
+  }
+  segs.push({ start: curStart, end: toSec(entry.data[entry.data.length-1].timestamp), value: curVal });
+  return segs;
+}
+
+// Build boolean discrete segments
+function buildBoolSegments(entry, toSec) {
+  if (!entry || !entry.data.length) return [];
+  const segs = [];
+  let curVal = entry.data[0].value, curStart = toSec(entry.data[0].timestamp);
+  for (let i = 1; i < entry.data.length; i++) {
+    const t = toSec(entry.data[i].timestamp), v = entry.data[i].value;
+    if (v !== curVal) {
+      segs.push({ start: curStart, end: t, value: curVal });
+      curVal = v; curStart = t;
+    }
+  }
+  segs.push({ start: curStart, end: toSec(entry.data[entry.data.length-1].timestamp), value: curVal });
+  return segs;
+}
+
+// Render a discrete Gantt-style timeline into a container
+function renderDiscreteTimeline(container, rows, minT, maxT) {
+  const span = maxT - minT || 1;
+  let html = '<div class="discrete-timeline">';
+  for (const row of rows) {
+    html += `<div class="disc-row"><div class="disc-label">${row.label}</div><div class="disc-track">`;
+    for (const seg of row.segments) {
+      const left = ((seg.start - minT) / span * 100);
+      const width = Math.max(((seg.end - seg.start) / span * 100), 0.2);
+      const color = row.colorFn ? row.colorFn(seg.value) : (seg.value ? '#22c55e' : '#ef4444');
+      const label = typeof seg.value === 'boolean' ? (seg.value ? 'TRUE' : 'FALSE') : seg.value;
+      html += `<div class="disc-seg" style="left:${left}%;width:${width}%;background:${color}" title="${row.label}: ${label} (${seg.start.toFixed(1)}s - ${seg.end.toFixed(1)}s)">${width>3?label:''}</div>`;
+    }
+    html += '</div></div>';
+  }
+  html += '</div>';
+  html += `<div class="disc-axis"><span>${minT.toFixed(1)}s</span><span>${((minT+maxT)/2).toFixed(1)}s</span><span>${maxT.toFixed(1)}s</span></div>`;
+  container.innerHTML = html;
+}
+
+// ============== TAB SYSTEM ==============
+const TABS=[];
+function addTab(id,label,renderFn){TABS.push({id,label,renderFn});}
+function initTabs(){
+  const bar=document.getElementById('tabBar'),panels=document.getElementById('tabPanels');
+  bar.innerHTML='';panels.innerHTML='';
+  TABS.forEach((tab,i)=>{
+    const btn=document.createElement('button');btn.className='tab-btn'+(i===0?' active':'');btn.textContent=tab.label;
+    btn.onclick=()=>{bar.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));panels.querySelectorAll('.tab-content').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById('tab-'+tab.id).classList.add('active');};
+    bar.appendChild(btn);
+    const panel=document.createElement('div');panel.id='tab-'+tab.id;panel.className='tab-content'+(i===0?' active':'');panels.appendChild(panel);
+  });
+}
+
+// ============== POWER TAB ==============
+function renderPower(panel, P, toSec, fileName) {
+  const chE=P.get('/PowerDistribution/ChannelCurrent'), totE=P.get('/PowerDistribution/TotalCurrent');
+  const voltE=P.get('/SystemStats/BatteryVoltage')||P.get('/PowerDistribution/Voltage');
+  const battE=P.get('/SystemStats/BatteryCurrent');
+  let cT=[],cV=[];
+  if(chE&&chE.data.length) for(const r of chE.data){if(Array.isArray(r.value)){cT.push(toSec(r.timestamp));cV.push(r.value.reduce((a,b)=>a+b,0));}}
+  let tT=[],tV=[];
+  if(totE&&totE.data.length) for(const r of totE.data){tT.push(toSec(r.timestamp));tV.push(r.value);}
+  if(tT.length>cT.length){cT=tT;cV=tV;}
+  const chStats=[];
+  if(chE&&chE.data.length){const nc=chE.data[0].value.length;for(let ch=0;ch<nc;ch++){let s=0,mx=0,ct=0;for(const r of chE.data){if(r.value&&r.value.length>ch){const v=r.value[ch];s+=v;if(v>mx)mx=v;ct++;}}chStats.push({channel:ch,avg:ct?s/ct:0,max:mx});}}
+  const vd=voltE?ts2(voltE.data,toSec):{times:[],values:[]};
+  const bd=battE?ts2(battE.data,toSec):{times:[],values:[]};
+  const peak=cV.length?Math.max(...cV):0, avg=cV.length?cV.reduce((a,b)=>a+b,0)/cV.length:0;
+  const dur=cT.length?cT[cT.length-1]-cT[0]:0;
+  const minV=vd.values.length?Math.min(...vd.values):0, avgV=vd.values.length?vd.values.reduce((a,b)=>a+b,0)/vd.values.length:0;
+  let t120=0,t240=0,t360=0;
+  for(let i=1;i<cV.length;i++){const dt=cT[i]-cT[i-1];if(dt>0&&dt<1){if(cV[i]>120)t120+=dt;if(cV[i]>240)t240+=dt;if(cV[i]>360)t360+=dt;}}
+  const pCls=peak>360?'danger':peak>240?'warning':'ok', vCls=minV<7?'danger':minV<9?'warning':'ok';
+
+  // Total energy (Wh) via trapezoidal integration: ∫ V(t)·I(t) dt / 3600
+  let pwTotalWh=0;
+  if(cT.length>1&&vd.times.length>1){
+    let vi2=0;
+    for(let i=1;i<cT.length;i++){
+      const dt=cT[i]-cT[i-1];if(dt<=0||dt>2)continue;
+      while(vi2<vd.times.length-2&&vd.times[vi2+1]<cT[i])vi2++;
+      let v;
+      if(vi2>=vd.times.length-1)v=vd.values[vd.values.length-1];
+      else{const t0=vd.times[vi2],t1=vd.times[vi2+1];const frac=t1>t0?(cT[i]-t0)/(t1-t0):0;v=vd.values[vi2]+frac*(vd.values[vi2+1]-vd.values[vi2]);}
+      pwTotalWh+=((cV[i-1]+cV[i])/2)*v*dt/3600;
+    }
+  }
+
+  panel.innerHTML=`
+    <div id="pw-banner"></div>
+    <div class="info-banner" style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.3);border-radius:6px;padding:10px 14px;margin:10px 0;font-size:12px;color:#cbd5e1;line-height:1.5">
+      <strong style="color:#60a5fa">About the data on this page:</strong>
+      Sections tagged <span style="display:inline-block;background:rgba(34,197,94,0.18);color:#4ade80;border:1px solid rgba(34,197,94,0.4);border-radius:3px;padding:1px 6px;font-size:10px;font-weight:600">SUPPLY</span> use the <strong>PDH channel currents</strong> — the current drawn from the battery (what the breaker sees).
+      Sections tagged <span style="display:inline-block;background:rgba(249,115,22,0.18);color:#fb923c;border:1px solid rgba(249,115,22,0.4);border-radius:3px;padding:1px 6px;font-size:10px;font-weight:600">STATOR</span> use the <strong>motor stator currents</strong> reported by the motor controllers over CAN — the current flowing through the motor windings.
+      Stator current is typically <em>higher</em> than supply current (motor controllers transform voltage/current), so the two will not match and should not be compared directly.
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card ${pCls}"><div class="label">Peak Total Current</div><div class="value">${peak.toFixed(1)} <span class="unit">A</span></div></div>
+      <div class="stat-card"><div class="label">Avg Total Current</div><div class="value">${avg.toFixed(1)} <span class="unit">A</span></div></div>
+      <div class="stat-card"><div class="label">Match Duration</div><div class="value">${dur.toFixed(1)} <span class="unit">s</span></div></div>
+      <div class="stat-card ${vCls}"><div class="label">Min Battery Voltage</div><div class="value">${minV.toFixed(2)} <span class="unit">V</span></div></div>
+      <div class="stat-card"><div class="label">Avg Battery Voltage</div><div class="value">${avgV.toFixed(2)} <span class="unit">V</span></div></div>
+      <div class="stat-card ${t120>10?'warning':'ok'}"><div class="label">Time &gt;120A</div><div class="value">${t120.toFixed(1)} <span class="unit">s</span></div></div>
+      <div class="stat-card ${t240>2?'danger':t240>0?'warning':'ok'}"><div class="label">Time &gt;240A (200%)</div><div class="value">${t240.toFixed(1)} <span class="unit">s</span></div></div>
+      <div class="stat-card ${t360>0.5?'danger':'ok'}"><div class="label">Time &gt;360A (300%)</div><div class="value">${t360.toFixed(1)} <span class="unit">s</span></div></div>
+      <div class="stat-card" style="border-color:rgba(168,85,247,0.4)"><div class="label">Total Energy Used</div><div class="value">${pwTotalWh.toFixed(1)} <span class="unit">Wh</span></div></div>
+    </div>
+    <div class="section-title">Total Current vs CB285 Trip Limits <span class="src-tag supply">SUPPLY</span></div>
+    <div class="chart-box"><h3>Total Supply Current (sum of all PDH channels)</h3><canvas id="pwCurrent"></canvas>
+      <div class="legend"><span><div class="dot" style="background:#3b82f6"></div>Total Current</span><span><div class="dot" style="background:#22c55e"></div>120A Rated</span><span><div class="dot" style="background:#f97316"></div>162A (135%)</span><span><div class="dot" style="background:#ef4444"></div>240A / 360A</span></div></div>
+    <div class="section-title">Breaker Thermal Analysis <span class="src-tag supply">SUPPLY</span></div>
+    <div class="chart-box"><h3>Current Excursions vs CB285 Trip Curve (spec sheet axes: Time on X, Current on Y)</h3><canvas id="pwTrip"></canvas>
+      <div class="legend" style="margin-top:8px"><span><div class="dot" style="background:#ef4444"></div>Trip Upper (will trip)</span><span><div class="dot" style="background:#f97316"></div>Trip Lower (may trip)</span><span style="font-size:10px;color:var(--text-muted)">Points in the shaded zone = risk of tripping</span></div></div>
+    <div class="chart-box"><h3>Excursion Detail (every period above 120A)</h3><table class="data-table"><thead><tr><th>#</th><th>Start (s)</th><th>Duration (s)</th><th>Peak (A)</th><th>Avg (A)</th><th>Risk</th></tr></thead><tbody id="pwExcTable"></tbody></table></div>
+    <div class="section-title">Battery <span class="src-tag supply">SUPPLY</span></div>
+    <div class="chart-row">
+      <div class="chart-box"><h3>Battery Voltage</h3><canvas id="pwVolt"></canvas></div>
+      <div class="chart-box"><h3>Battery Current</h3><canvas id="pwBattCurr"></canvas></div>
+    </div>
+    <div class="section-title">Per-Subsystem Power Draw (from PDH mapping) <span class="src-tag supply">SUPPLY</span></div>
+    <div class="chart-box"><h3>Estimated power &amp; energy per subsystem — using PDH supply current × battery voltage</h3>
+      <table class="data-table"><thead><tr><th>Subsystem</th><th>Channels</th><th>Peak (A)</th><th>Avg (A)</th><th>Avg (mA)</th><th>Peak (W)</th><th>Avg (W)</th><th>Energy (Wh)</th><th>Charge (mAh)</th><th>% of Total</th></tr></thead><tbody id="pwSubsystemTable"></tbody></table>
+    </div>
+    <div class="chart-row">
+      <div class="chart-box"><h3>Subsystem Power Over Time (W)</h3><canvas id="pwSubPower"></canvas></div>
+      <div class="chart-box"><h3>Cumulative Energy Consumption (Wh)</h3><canvas id="pwSubEnergy"></canvas></div>
+    </div>
+    <div class="section-title">Per-Channel PDH Currents <span class="src-tag supply">SUPPLY</span></div>
+    <div class="chart-box"><table class="data-table"><thead><tr><th>Ch</th><th>Name</th><th>Subsystem</th><th>Avg (A)</th><th>Max (A)</th><th>Avg (W)</th><th>mAh</th><th>% Total</th><th></th></tr></thead><tbody id="pwChTable"></tbody></table></div>
+    <div class="section-title">Subsystem Currents (aggregated from CAN motor data) <span class="src-tag stator">STATOR</span></div>
+    <div class="chart-box"><canvas id="pwSub"></canvas></div>
+    <div class="section-title">Motor Current Imbalance Check <span class="src-tag stator">STATOR</span></div>
+    <div id="pwImbalance"></div>
+    <div class="section-title">Per-Subsystem Power Breakdown <span class="src-tag stator">STATOR</span></div>
+    <div class="sub-tab-bar" id="pwSubBar"></div>
+    <div id="pwSubPanels"></div>`;
+
+  const bannerEl=panel.querySelector('#pw-banner');
+  if(peak>CB285_RATED*1.35){const lo=getTripTime(peak,'lower'),hi=getTripTime(peak,'upper');bannerEl.innerHTML=`<div class="banner danger"><strong>Breaker Trip Risk</strong> &mdash; Peak ${peak.toFixed(1)}A (${((peak/CB285_RATED)*100).toFixed(0)}%). CB285 trips between <strong>${lo.toFixed(1)}s</strong> and <strong>${hi.toFixed(1)}s</strong>. Time above 120A: ${t120.toFixed(1)}s.</div>`;}
+  else bannerEl.innerHTML=`<div class="banner ok"><strong>Breaker OK</strong> &mdash; Peak ${peak.toFixed(1)}A (${((peak/CB285_RATED)*100).toFixed(0)}% of rated).</div>`;
+
+  const cd=dsMax(cT,cV,MAX_PTS);
+  mkChart(panel.querySelector('#pwCurrent'),{type:'line',data:{labels:cd.times.map(t=>t.toFixed(1)),datasets:[{data:cd.values,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.08)',fill:true,borderWidth:1.5,pointRadius:0,tension:0.1}]},options:{scales:{x:{title:{display:true,text:'Time (s)',color:'#9ca3af'},ticks:{color:'#9ca3af',maxTicksLimit:20},grid:{color:'rgba(255,255,255,0.05)'}},y:{title:{display:true,text:'Current (A)',color:'#9ca3af'},ticks:{color:'#9ca3af'},grid:{color:'rgba(255,255,255,0.05)'},min:0}},plugins:{legend:{display:false},annotation:{annotations:{r:{type:'line',yMin:120,yMax:120,borderColor:'#22c55e',borderWidth:2,borderDash:[6,4],label:{display:true,content:'120A',position:'start',backgroundColor:'rgba(34,197,94,0.8)',font:{size:10}}},l:{type:'line',yMin:162,yMax:162,borderColor:'#f97316',borderWidth:1.5,borderDash:[4,4],label:{display:true,content:'162A (135%)',position:'start',backgroundColor:'rgba(249,115,22,0.8)',font:{size:10}}},u2:{type:'line',yMin:240,yMax:240,borderColor:'#ef4444',borderWidth:1.5,borderDash:[4,4],label:{display:true,content:'240A (200%)',position:'start',backgroundColor:'rgba(239,68,68,0.8)',font:{size:10}}},u3:{type:'line',yMin:360,yMax:360,borderColor:'#ef4444',borderWidth:1,borderDash:[2,4],label:{display:true,content:'360A (300%)',position:'end',backgroundColor:'rgba(239,68,68,0.6)',font:{size:10}}}}}}}});
+
+  // Excursion-based trip curve (X=Time log, Y=Current in Amps)
+  const excursions=findExcursions(cT,cV);
+  // Sort by duration so the connected line makes sense (short→long)
+  excursions.sort((a,b)=>a.duration-b.duration);
+  const excPeakPts=excursions.map(e=>({x:e.duration,y:e.peakCurrent}));
+  const excAvgPts=excursions.map(e=>({x:e.duration,y:e.avgCurrent}));
+  // Trip curve data: X=time(s), Y=current(A)
+  const tripLower=CB285_TRIP.map(p=>({x:p.lower,y:p.pct/100*CB285_RATED}));
+  const tripUpper=CB285_TRIP.map(p=>({x:p.upper,y:p.pct/100*CB285_RATED}));
+  mkChart(panel.querySelector('#pwTrip'),{type:'scatter',data:{datasets:[
+    {label:'Trip Upper (will trip)',data:tripUpper,borderColor:'#ef4444',showLine:true,borderWidth:2,borderDash:[4,4],pointRadius:2,fill:false,order:2,tension:0.3},
+    {label:'Trip Lower (may trip)',data:tripLower,borderColor:'#f97316',backgroundColor:'rgba(239,68,68,0.10)',showLine:true,borderWidth:2,borderDash:[6,3],pointRadius:2,fill:'-1',order:3,tension:0.3},
+    {label:'Excursion Peak',data:excPeakPts,borderColor:'#e4e4e7',backgroundColor:'rgba(255,255,255,0.9)',pointRadius:5,pointStyle:'circle',showLine:true,borderWidth:1.5,order:1,tension:0.2},
+    {label:'Excursion Avg',data:excAvgPts,borderColor:'#e4e4e7',backgroundColor:'rgba(255,255,255,0.5)',pointRadius:4,pointStyle:'circle',showLine:true,borderWidth:1,borderDash:[3,3],order:1,tension:0.2},
+  ]},options:{scales:{
+    x:{type:'logarithmic',title:{display:true,text:'Time in Seconds',color:'#9ca3af'},ticks:{color:'#9ca3af',callback:v=>v+'s'},grid:{color:'rgba(255,255,255,0.05)'},min:0.5,max:200},
+    y:{title:{display:true,text:'Current (A)',color:'#9ca3af'},ticks:{color:'#9ca3af',callback:v=>v+'A',stepSize:120},grid:{color:'rgba(255,255,255,0.05)'},min:0,max:720}
+  },plugins:{legend:{labels:{color:'#e4e4e7'}},tooltip:{callbacks:{label:ctx=>{const d=ctx.raw;return `${ctx.dataset.label}: ${d.y.toFixed(1)}A for ${d.x.toFixed(2)}s`;}}}}}});
+
+  // Excursion detail table
+  const excTb=panel.querySelector('#pwExcTable');
+  excursions.sort((a,b)=>b.peakCurrent-a.peakCurrent);
+  excursions.forEach((e,i)=>{
+    const tripLo=getTripTime(e.peakCurrent,'lower'),tripHi=getTripTime(e.peakCurrent,'upper');
+    let risk='OK';let riskCls='ok';
+    if(e.duration>=tripHi){risk='TRIPPED';riskCls='danger';}
+    else if(e.duration>=tripLo){risk='IN TRIP BAND';riskCls='warning';}
+    else if(e.peakCurrent>CB285_RATED*1.35){risk='Below band';riskCls='';}
+    const tr=document.createElement('tr');
+    if(riskCls==='danger')tr.classList.add('alert-row-error');
+    else if(riskCls==='warning')tr.classList.add('alert-row-warning');
+    tr.innerHTML=`<td>${i+1}</td><td>${e.startTime.toFixed(2)}</td><td>${e.duration.toFixed(2)}</td><td>${e.peakCurrent.toFixed(1)}</td><td>${e.avgCurrent.toFixed(1)}</td><td><span class="alert-type ${riskCls==='danger'?'error':riskCls}">${risk}</span></td>`;
+    excTb.appendChild(tr);
+  });
+
+  if(vd.times.length){const v=dsMax(vd.times,vd.values,MAX_PTS);mkChart(panel.querySelector('#pwVolt'),{type:'line',data:{labels:v.times.map(t=>t.toFixed(1)),datasets:[{data:v.values,borderColor:'#a78bfa',backgroundColor:'rgba(167,139,250,0.08)',fill:true,borderWidth:1.5,pointRadius:0,tension:0.1}]},options:{scales:{x:{ticks:{color:'#9ca3af',maxTicksLimit:10},grid:{color:'rgba(255,255,255,0.05)'}},y:{ticks:{color:'#9ca3af'},grid:{color:'rgba(255,255,255,0.05)'},suggestedMin:6,suggestedMax:14}},plugins:{legend:{display:false}}}});}
+  if(bd.times.length){const b=dsMax(bd.times,bd.values,MAX_PTS);mkChart(panel.querySelector('#pwBattCurr'),{type:'line',data:{labels:b.times.map(t=>t.toFixed(1)),datasets:[{data:b.values,borderColor:'#f472b6',backgroundColor:'rgba(244,114,182,0.08)',fill:true,borderWidth:1.5,pointRadius:0,tension:0.1}]},options:{scales:{x:{ticks:{color:'#9ca3af',maxTicksLimit:10},grid:{color:'rgba(255,255,255,0.05)'}},y:{ticks:{color:'#9ca3af'},grid:{color:'rgba(255,255,255,0.05)'},min:0}},plugins:{legend:{display:false}}}});}
+
+  // ---- Per-subsystem power draw (from PDH channel mapping) ----
+  const avgVolts = vd.values.length ? vd.values.reduce((a,b)=>a+b,0)/vd.values.length : 12.0;
+  // Build per-channel time-series of current from PDH ChannelCurrent records
+  const chTimes = [];
+  const chSeries = [];
+  if (chE && chE.data.length) {
+    const nc = chE.data[0].value.length;
+    for (let c=0;c<nc;c++) chSeries.push([]);
+    for (const r of chE.data) {
+      if (!Array.isArray(r.value)) continue;
+      chTimes.push(toSec(r.timestamp));
+      for (let c=0;c<Math.min(nc,chSeries.length);c++) chSeries[c].push(r.value[c] ?? 0);
+    }
+  }
+  // Per-channel charge (mAh) computed via trapezoidal integration
+  const chChargeMAh = chSeries.map(series => {
+    let chargeAs = 0;
+    for (let i=1;i<series.length;i++){
+      const dt = chTimes[i]-chTimes[i-1];
+      if (dt>0 && dt<1) chargeAs += ((series[i-1]+series[i])/2) * dt;
+    }
+    return chargeAs * 1000/3600;
+  });
+  // Per-subsystem time-series and aggregated stats
+  const subsystemStats = [];
+  const subsystemSeries = new Map();
+  SUBSYSTEM_GROUPS.forEach((channels, subsystem) => {
+    const series = new Array(chTimes.length).fill(0);
+    for (const c of channels) {
+      if (c < chSeries.length) {
+        const s = chSeries[c];
+        for (let i=0;i<series.length;i++) series[i] += s[i] || 0;
+      }
+    }
+    subsystemSeries.set(subsystem, series);
+    let peakA=0, sumA=0, chargeAs=0;
+    for (let i=0;i<series.length;i++){
+      const v=series[i]; if(v>peakA)peakA=v; sumA+=v;
+      if(i>0){const dt=chTimes[i]-chTimes[i-1]; if(dt>0&&dt<1) chargeAs += ((series[i-1]+v)/2)*dt;}
+    }
+    const avgA = series.length ? sumA/series.length : 0;
+    const chargeMAh = chargeAs*1000/3600;
+    const avgW = avgA * avgVolts;
+    const peakW = peakA * avgVolts;
+    const energyWh = chargeAs * avgVolts / 3600;
+    subsystemStats.push({subsystem,channels:channels.slice().sort((a,b)=>a-b),peakA,avgA,chargeMAh,avgW,peakW,energyWh});
+  });
+  const totalSubEnergyWh = subsystemStats.reduce((s,x)=>s+x.energyWh,0);
+  subsystemStats.sort((a,b)=>b.energyWh-a.energyWh);
+  const subTbody = panel.querySelector('#pwSubsystemTable');
+  subTbody.innerHTML = '';
+  for (const s of subsystemStats){
+    const pct = totalSubEnergyWh>0 ? (s.energyWh/totalSubEnergyWh*100) : 0;
+    const cls = s.peakA>40?'danger':s.peakA>20?'hot':'';
+    const color = SUBSYSTEM_COLORS[s.subsystem]||'#9ca3af';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><span style="display:inline-block;width:10px;height:10px;background:${color};border-radius:2px;margin-right:6px"></span><strong>${s.subsystem}</strong></td><td style="font-size:10px;color:var(--text-muted)">${s.channels.map(c=>'Ch'+c).join(', ')}</td><td>${s.peakA.toFixed(1)}</td><td>${s.avgA.toFixed(2)}</td><td>${(s.avgA*1000).toFixed(0)}</td><td>${s.peakW.toFixed(0)}</td><td>${s.avgW.toFixed(1)}</td><td>${s.energyWh.toFixed(2)}</td><td>${s.chargeMAh.toFixed(0)}</td><td>${pct.toFixed(1)}%</td>`;
+    subTbody.appendChild(tr);
+  }
+  // Subsystem power-over-time chart (stacked-ish via multi-line)
+  const subPowerDS = subsystemStats.filter(s=>s.avgA>0.05).map(s => {
+    const series = subsystemSeries.get(s.subsystem).map(a => a*avgVolts);
+    const d = dsMax(chTimes, series, MAX_PTS);
+    return {label:s.subsystem, data:d.values, _times:d.times, borderColor:SUBSYSTEM_COLORS[s.subsystem]||'#9ca3af', backgroundColor:(SUBSYSTEM_COLORS[s.subsystem]||'#9ca3af')+'22', borderWidth:1.2, pointRadius:0, tension:0.1, fill:false};
+  });
+  const subPowerLabels = subPowerDS.length ? subPowerDS[0]._times.map(t=>t.toFixed(1)) : [];
+  mkChart(panel.querySelector('#pwSubPower'),{type:'line',data:{labels:subPowerLabels,datasets:subPowerDS},options:{scales:{x:{title:{display:true,text:'Time (s)',color:'#9ca3af'},ticks:{color:'#9ca3af',maxTicksLimit:15},grid:{color:'rgba(255,255,255,0.05)'}},y:{title:{display:true,text:'Power (W)',color:'#9ca3af'},ticks:{color:'#9ca3af'},grid:{color:'rgba(255,255,255,0.05)'},min:0}},plugins:{legend:{labels:{color:'#e4e4e7',boxWidth:10,font:{size:10}}}}}});
+  // Cumulative energy chart (Wh over time per subsystem)
+  const subEnergyDS = subsystemStats.filter(s=>s.energyWh>0.01).map(s => {
+    const series = subsystemSeries.get(s.subsystem);
+    const cum = new Array(series.length).fill(0);
+    let acc=0;
+    for (let i=1;i<series.length;i++){
+      const dt = chTimes[i]-chTimes[i-1];
+      if (dt>0 && dt<1) acc += ((series[i-1]+series[i])/2) * dt * avgVolts / 3600;
+      cum[i] = acc;
+    }
+    const d = ds(chTimes, cum, MAX_PTS);
+    return {label:s.subsystem, data:d.values, _times:d.times, borderColor:SUBSYSTEM_COLORS[s.subsystem]||'#9ca3af', backgroundColor:(SUBSYSTEM_COLORS[s.subsystem]||'#9ca3af')+'22', borderWidth:1.5, pointRadius:0, tension:0.2, fill:false};
+  });
+  const subEnergyLabels = subEnergyDS.length ? subEnergyDS[0]._times.map(t=>t.toFixed(1)) : [];
+  mkChart(panel.querySelector('#pwSubEnergy'),{type:'line',data:{labels:subEnergyLabels,datasets:subEnergyDS},options:{scales:{x:{title:{display:true,text:'Time (s)',color:'#9ca3af'},ticks:{color:'#9ca3af',maxTicksLimit:15},grid:{color:'rgba(255,255,255,0.05)'}},y:{title:{display:true,text:'Cumulative Energy (Wh)',color:'#9ca3af'},ticks:{color:'#9ca3af'},grid:{color:'rgba(255,255,255,0.05)'},min:0}},plugins:{legend:{labels:{color:'#e4e4e7',boxWidth:10,font:{size:10}}}}}});
+
+  const tbody=panel.querySelector('#pwChTable');const totalAvg=chStats.reduce((s,c)=>s+c.avg,0);const sorted=[...chStats].sort((a,b)=>b.avg-a.avg);const maxAvg=sorted.length?sorted[0].avg:1;
+  for(const ch of sorted){if(ch.avg<0.01&&ch.max<0.1)continue;const pct=totalAvg>0?(ch.avg/totalAvg*100):0;const cls=ch.max>40?'danger':ch.max>20?'hot':'';const info=PDH_CH_MAP.get(ch.channel);const nameStr=info?info.name:'—';const subStr=info?info.subsystem:'—';const color=info?(SUBSYSTEM_COLORS[info.subsystem]||'#9ca3af'):'#9ca3af';const avgW=ch.avg*avgVolts;const mAh=chChargeMAh[ch.channel]||0;const tr=document.createElement('tr');tr.innerHTML=`<td>Ch ${ch.channel}</td><td>${nameStr}</td><td><span style="display:inline-block;width:8px;height:8px;background:${color};border-radius:2px;margin-right:5px"></span>${subStr}</td><td>${ch.avg.toFixed(2)}</td><td>${ch.max.toFixed(1)}</td><td>${avgW.toFixed(1)}</td><td>${mAh.toFixed(0)}</td><td>${pct.toFixed(1)}%</td><td><div class="bar ${cls}" style="width:${(ch.avg/maxAvg*100).toFixed(0)}%"></div></td>`;tbody.appendChild(tr);}
+
+  const subDefs=[{name:'Drive (all)',entries:[/\/Drive\/Module\d+\/DriveCurrentAmps/]},{name:'Turn (all)',entries:[/\/Drive\/Module\d+\/TurnCurrentAmps/]},{name:'Extensor',entries:[/\/Subsystems\/Extensor\/ExtensorCurrent$/]},{name:'Spindexer',entries:[/\/Subsystems\/Spindexer\/SpindexerCurrent$/]},{name:'Roller',entries:[/\/Subsystems\/Roller\/RollerCurrent$/]},{name:'Kicker',entries:[/\/Subsystems\/Kicker\/KickerCurrent$/]},{name:'Climber',entries:[/\/Subsystems\/Climber\/ClimberCurrent$/]},{name:'Turret',entries:[/\/Subsystems\/Shooter\/Turret\/\/Current$/]}];
+  const subDS=[],subLR={len:0,arr:[]};
+  subDefs.forEach((sd,si)=>{let ae=[];sd.entries.forEach(re=>{ae=ae.concat(P.match(re));});if(!ae.length)return;const bk=new Map();for(const e of ae)for(const r of e.data){if(typeof r.value!=='number')continue;const t=Math.round(toSec(r.timestamp)/0.02)*0.02;bk.set(t,(bk.get(t)||0)+r.value);}const s=[...bk.entries()].sort((a,b)=>a[0]-b[0]);const t=s.map(x=>x[0]),v=s.map(x=>x[1]);const d=dsMax(t,v,MAX_PTS);subDS.push({label:sd.name,data:d.values,borderColor:COLORS[si%COLORS.length],borderWidth:1.5,pointRadius:0,tension:0.1,fill:false});if(d.times.length>subLR.len){subLR.len=d.times.length;subLR.arr=d.times;}});
+  mkChart(panel.querySelector('#pwSub'),{type:'line',data:{labels:subLR.arr.map(t=>t.toFixed(1)),datasets:subDS},options:{scales:{x:{title:{display:true,text:'Time (s)',color:'#9ca3af'},ticks:{color:'#9ca3af',maxTicksLimit:20},grid:{color:'rgba(255,255,255,0.05)'}},y:{title:{display:true,text:'Current (A)',color:'#9ca3af'},ticks:{color:'#9ca3af'},grid:{color:'rgba(255,255,255,0.05)'},min:0}},plugins:{legend:{labels:{color:'#e4e4e7'}}}}});
+
+  // ---- Motor current imbalance check ----
+  const motorGroups = [
+    {name: 'Drive Motors', motors: [
+      {label:'M0',path:'/Drive/Module0/DriveCurrentAmps'},{label:'M1',path:'/Drive/Module1/DriveCurrentAmps'},
+      {label:'M2',path:'/Drive/Module2/DriveCurrentAmps'},{label:'M3',path:'/Drive/Module3/DriveCurrentAmps'}]},
+    {name: 'Steer Motors', motors: [
+      {label:'M0',path:'/Drive/Module0/TurnCurrentAmps'},{label:'M1',path:'/Drive/Module1/TurnCurrentAmps'},
+      {label:'M2',path:'/Drive/Module2/TurnCurrentAmps'},{label:'M3',path:'/Drive/Module3/TurnCurrentAmps'}]},
+  ];
+  // Also check roller current if there are logged entries (single motor, just show stats)
+  const singleMotors = [
+    {name:'Flywheel', path:'/Subsystems/Shooter/FlyWheels//CurrentVelocity', note:'(velocity, not current)'},
+    {name:'Turret', path:'/Subsystems/Shooter/Turret//Current'},
+    {name:'Roller', path:'/Subsystems/Roller/RollerCurrent'},
+    {name:'Kicker', path:'/Subsystems/Kicker/KickerCurrent'},
+    {name:'Extensor', path:'/Subsystems/Extensor/ExtensorCurrent'},
+    {name:'Spindexer', path:'/Subsystems/Spindexer/SpindexerCurrent'},
+    {name:'Climber', path:'/Subsystems/Climber/ClimberCurrent'},
+  ];
+
+  function computeMotorStats(entry) {
+    if (!entry || !entry.data.length) return null;
+    let sum=0,max=0,count=0;
+    for (const r of entry.data) { const v=Math.abs(r.value); sum+=v; if(v>max)max=v; count++; }
+    return {avg:count?sum/count:0, max, count};
+  }
+
+  const imbalanceEl = panel.querySelector('#pwImbalance');
+  let imbalanceHTML = '';
+
+  for (const grp of motorGroups) {
+    const stats = grp.motors.map(m => ({...m, stats: computeMotorStats(P.get(m.path))})).filter(m=>m.stats&&m.stats.count>10);
+    if (stats.length < 2) continue;
+    const avgs = stats.map(s=>s.stats.avg);
+    const mean = avgs.reduce((a,b)=>a+b,0)/avgs.length;
+    const maxDev = Math.max(...avgs.map(a=>Math.abs(a-mean)));
+    const pctDev = mean>0?(maxDev/mean*100):0;
+    const isImbalanced = pctDev > 25;
+
+    if (isImbalanced) {
+      const worst = stats.reduce((a,b)=>Math.abs(a.stats.avg-mean)>Math.abs(b.stats.avg-mean)?a:b);
+      imbalanceHTML += `<div class="imbalance-banner"><strong>${grp.name} Imbalance (${pctDev.toFixed(0)}% deviation)</strong> &mdash;
+        ${stats.map(s=>`${s.label}: ${s.stats.avg.toFixed(2)}A avg`).join(', ')}.
+        <strong>${worst.label}</strong> deviates most from the group mean (${mean.toFixed(2)}A).
+        Check for mechanical binding, encoder issues, or wiring problems on that module.</div>`;
+    } else {
+      imbalanceHTML += `<div class="imbalance-ok"><strong>${grp.name} OK</strong> &mdash; ${pctDev.toFixed(0)}% max deviation.
+        ${stats.map(s=>`${s.label}: ${s.stats.avg.toFixed(2)}A`).join(', ')}.</div>`;
+    }
+  }
+  imbalanceEl.innerHTML = imbalanceHTML;
+
+  // ---- Per-subsystem power sub-tabs ----
+  const pwSubBar = panel.querySelector('#pwSubBar');
+  const pwSubPanels = panel.querySelector('#pwSubPanels');
+
+  const powerSubTabs = [
+    {id:'pw-drive', label:'Drive', motors:[
+      {label:'M0 Drive',path:'/Drive/Module0/DriveCurrentAmps',color:'#3b82f6'},
+      {label:'M1 Drive',path:'/Drive/Module1/DriveCurrentAmps',color:'#22c55e'},
+      {label:'M2 Drive',path:'/Drive/Module2/DriveCurrentAmps',color:'#f97316'},
+      {label:'M3 Drive',path:'/Drive/Module3/DriveCurrentAmps',color:'#ef4444'}]},
+    {id:'pw-steer', label:'Steer', motors:[
+      {label:'M0 Turn',path:'/Drive/Module0/TurnCurrentAmps',color:'#3b82f6'},
+      {label:'M1 Turn',path:'/Drive/Module1/TurnCurrentAmps',color:'#22c55e'},
+      {label:'M2 Turn',path:'/Drive/Module2/TurnCurrentAmps',color:'#f97316'},
+      {label:'M3 Turn',path:'/Drive/Module3/TurnCurrentAmps',color:'#ef4444'}]},
+    {id:'pw-turret', label:'Turret', motors:[
+      {label:'Turret Current',path:'/Subsystems/Shooter/Turret//Current',color:'#a78bfa'}]},
+    {id:'pw-roller', label:'Roller', motors:[
+      {label:'Roller Current',path:'/Subsystems/Roller/RollerCurrent',color:'#f472b6'}]},
+    {id:'pw-kicker', label:'Kicker', motors:[
+      {label:'Kicker Current',path:'/Subsystems/Kicker/KickerCurrent',color:'#eab308'}]},
+    {id:'pw-extensor', label:'Extensor', motors:[
+      {label:'Extensor Current',path:'/Subsystems/Extensor/ExtensorCurrent',color:'#06b6d4'}]},
+    {id:'pw-spindexer', label:'Spindexer', motors:[
+      {label:'Spindexer Current',path:'/Subsystems/Spindexer/SpindexerCurrent',color:'#10b981'}]},
+    {id:'pw-climber', label:'Climber', motors:[
+      {label:'Climber Current',path:'/Subsystems/Climber/ClimberCurrent',color:'#f43f5e'}]},
+  ];
+
+  const pwSubRendered = new Set();
+  powerSubTabs.forEach((tab,ti) => {
+    const btn = document.createElement('button');
+    btn.className = 'sub-tab-btn' + (ti===0?' active':'');
+    btn.textContent = tab.label;
+    const pnl = document.createElement('div');
+    pnl.id = tab.id;
+    pnl.className = 'sub-tab-panel' + (ti===0?' active':'');
+
+    btn.onclick = () => {
+      pwSubBar.querySelectorAll('.sub-tab-btn').forEach(b=>b.classList.remove('active'));
+      pwSubPanels.querySelectorAll('.sub-tab-panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active'); pnl.classList.add('active');
+      if (!pwSubRendered.has(tab.id)) { pwSubRendered.add(tab.id); renderPowerSubTab(pnl, tab); }
+    };
+    pwSubBar.appendChild(btn);
+    pwSubPanels.appendChild(pnl);
+    if (ti===0) { pwSubRendered.add(tab.id); renderPowerSubTab(pnl, tab); }
+  });
+
+  function renderPowerSubTab(pnl, tab) {
+    // Stats cards
+    const motorStats = tab.motors.map(m => {
+      const entry = P.get(m.path);
+      const st = computeMotorStats(entry);
+      return {...m, entry, stats: st};
+    }).filter(m => m.stats && m.stats.count > 0);
+
+    if (!motorStats.length) { pnl.innerHTML = '<div style="padding:20px;color:var(--text-muted)">No data for this subsystem.</div>'; return; }
+
+    let statsHTML = '<div class="stats-grid">';
+    for (const m of motorStats) {
+      statsHTML += `<div class="stat-card"><div class="label">${m.label}</div>
+        <div class="value">${m.stats.avg.toFixed(2)} <span class="unit">A avg</span></div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Peak: ${m.stats.max.toFixed(1)}A &bull; ${m.stats.count} samples</div></div>`;
+    }
+    statsHTML += '</div>';
+
+    // Imbalance for groups of 4
+    if (motorStats.length >= 2) {
+      const avgs = motorStats.map(m=>m.stats.avg);
+      const mean = avgs.reduce((a,b)=>a+b,0)/avgs.length;
+      const maxDev = Math.max(...avgs.map(a=>Math.abs(a-mean)));
+      const pctDev = mean>0?(maxDev/mean*100):0;
+      if (pctDev > 25) {
+        const worst = motorStats.reduce((a,b)=>Math.abs(a.stats.avg-mean)>Math.abs(b.stats.avg-mean)?a:b);
+        statsHTML += `<div class="imbalance-banner"><strong>Imbalance: ${pctDev.toFixed(0)}% deviation</strong> &mdash; <strong>${worst.label}</strong> deviates most from mean ${mean.toFixed(2)}A.</div>`;
+      }
+    }
+
+    pnl.innerHTML = statsHTML + '<div class="chart-box"><h3>Current Over Time (A)</h3><canvas id="'+tab.id+'-chart"></canvas></div>';
+
+    // Chart with all motors overlaid
+    const datasets2 = [];
+    let labelsRef = {len:0, arr:[]};
+    motorStats.forEach(m => {
+      if (!m.entry) return;
+      const d = ts2(m.entry.data, toSec);
+      const dd = dsMax(d.times, d.values.map(Math.abs), MAX_PTS);
+      datasets2.push({label:m.label, data:dd.values, borderColor:m.color, borderWidth:1.5, pointRadius:0, tension:0.1, fill:false});
+      if (dd.times.length > labelsRef.len) { labelsRef.len = dd.times.length; labelsRef.arr = dd.times; }
+    });
+    mkChart(pnl.querySelector('#'+tab.id+'-chart'), {
+      type:'line', data:{labels:labelsRef.arr.map(t=>t.toFixed(1)), datasets:datasets2},
+      options:{scales:{
+        x:{title:{display:true,text:'Time (s)',color:'#9ca3af'},ticks:{color:'#9ca3af',maxTicksLimit:20},grid:{color:'rgba(255,255,255,0.05)'}},
+        y:{title:{display:true,text:'Current (A)',color:'#9ca3af'},ticks:{color:'#9ca3af'},grid:{color:'rgba(255,255,255,0.05)'},min:0}
+      },plugins:{legend:{labels:{color:'#e4e4e7'}}}}
+    });
+  }
+}
+
+// ============== POSE ESTIMATION TAB ==============
+function renderPose(panel, P, toSec) {
+  const curEst=P.get('/RealOutputs/PoseEstimator/CurrentPoseEstimator');
+  const cameras=[
+    {key:'AFL',label:'Arducam Front Left',color:'#3b82f6',state:P.get('/RealOutputs/PoseEstimator/PhotonVision/Arducam_Front_Left/StateMeasure')},
+    {key:'AFR',label:'Arducam Front Right',color:'#22c55e',state:P.get('/RealOutputs/PoseEstimator/PhotonVision/Arducam_Front_Right/StateMeasure')},
+    {key:'LBL',label:'Limelight Back-Left',color:'#f97316',state:P.get('/RealOutputs/PoseEstimator/Limelight/limelight-bleft/State')},
+    {key:'LBR',label:'Limelight Back-Right',color:'#ef4444',state:P.get('/RealOutputs/PoseEstimator/Limelight/limelight-bright/State')},
+  ];
+  const stdX=P.get('/RealOutputs/Vision/VisionStandardDeviationX'),stdY=P.get('/RealOutputs/Vision/VisionStandardDeviationY');
+
+  let minT=Infinity,maxT=0;
+  cameras.forEach(c=>{if(c.state&&c.state.data.length){const a=toSec(c.state.data[0].timestamp),b=toSec(c.state.data[c.state.data.length-1].timestamp);if(a<minT)minT=a;if(b>maxT)maxT=b;}});
+  if(curEst&&curEst.data.length){const a=toSec(curEst.data[0].timestamp),b=toSec(curEst.data[curEst.data.length-1].timestamp);if(a<minT)minT=a;if(b>maxT)maxT=b;}
+
+  let estStats={};
+  if(curEst&&curEst.data.length)for(let i=1;i<curEst.data.length;i++){const dt=toSec(curEst.data[i].timestamp)-toSec(curEst.data[i-1].timestamp),v=curEst.data[i-1].value;if(dt>0&&dt<1&&v)estStats[v]=(estStats[v]||0)+dt;}
+  const camStats=cameras.map(c=>{let active=0,total=0;if(c.state&&c.state.data.length)for(let i=1;i<c.state.data.length;i++){const dt=toSec(c.state.data[i].timestamp)-toSec(c.state.data[i-1].timestamp),v=c.state.data[i-1].value;if(dt>0&&dt<1){total+=dt;if(v&&v!=='NULL'&&v!=='IDLE'&&v!=='NO_TARGET'&&v!=='')active+=dt;}}return{...c,activeTime:active,totalTime:total};});
+
+  const totalEst=Object.values(estStats).reduce((a,b)=>a+b,0);
+  panel.innerHTML=`
+    <div class="section-title">Active Pose Estimator</div>
+    <div class="stats-grid">${Object.entries(estStats).sort((a,b)=>b[1]-a[1]).map(([n,t])=>`<div class="stat-card"><div class="label">${n}</div><div class="value">${t.toFixed(1)} <span class="unit">s (${(t/totalEst*100).toFixed(0)}%)</span></div></div>`).join('')}</div>
+    <div class="section-title">Camera Activity Timeline</div>
+    <div class="chart-box"><h3>Camera state over time (colored segments = actively providing estimates)</h3><div id="camTimeline"></div></div>
+    <div class="section-title">Camera Usage Summary</div>
+    <div class="stats-grid">${camStats.map(c=>`<div class="stat-card"><div class="label" style="color:${c.color}">${c.label}</div><div class="value">${c.activeTime.toFixed(1)} <span class="unit">s active</span></div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">${c.totalTime>0?((c.activeTime/c.totalTime*100).toFixed(0)):0}% of tracked time</div></div>`).join('')}</div>
+    <div class="section-title">Vision Standard Deviations</div>
+    <div class="chart-box"><canvas id="poseStdDev"></canvas></div>
+    <div class="section-title">Current Estimator Over Time</div>
+    <div class="chart-box"><div id="estTimeline"></div></div>`;
+
+  // Camera discrete timeline
+  const camRows = cameras.filter(c=>c.state&&c.state.data.length).map(cam => ({
+    label: cam.label,
+    segments: buildSegments(cam.state, toSec),
+    colorFn: v => (v&&v!=='NULL'&&v!=='IDLE'&&v!=='NO_TARGET'&&v!=='') ? cam.color : '#333'
+  }));
+  renderDiscreteTimeline(panel.querySelector('#camTimeline'), camRows, minT, maxT);
+
+  // Estimator discrete timeline
+  if(curEst&&curEst.data.length){
+    const estSegs = buildSegments(curEst, toSec);
+    renderDiscreteTimeline(panel.querySelector('#estTimeline'), [{label:'Active Estimator', segments:estSegs, colorFn:stateColor}], minT, maxT);
+  }
+
+  if(stdX&&stdX.data.length){
+    const sx=ts2(stdX.data,toSec),sy=ts2(stdY.data,toSec);const dsx=ds(sx.times,sx.values,MAX_PTS),dsy=ds(sy.times,sy.values,MAX_PTS);
+    mkChart(panel.querySelector('#poseStdDev'),{type:'line',data:{labels:dsx.times.map(t=>t.toFixed(1)),datasets:[{label:'Std Dev X',data:dsx.values,borderColor:'#3b82f6',borderWidth:1.5,pointRadius:0,tension:0.1,fill:false},{label:'Std Dev Y',data:dsy.values,borderColor:'#22c55e',borderWidth:1.5,pointRadius:0,tension:0.1,fill:false}]},options:{scales:{x:{ticks:{color:'#9ca3af',maxTicksLimit:20},grid:{color:'rgba(255,255,255,0.05)'}},y:{ticks:{color:'#9ca3af'},grid:{color:'rgba(255,255,255,0.05)'},min:0}},plugins:{legend:{labels:{color:'#e4e4e7'}}}}});
+  }
+}
+
+// ============== MECHANISM TAB ==============
+function renderMechanism(panel, P, toSec, config) {
+  const sp=config.setpoint?P.get(config.setpoint):null;
+  const cur=config.current?P.get(config.current):null;
+  const at=config.atTarget?P.get(config.atTarget):null;
+  const err=config.error?P.get(config.error):null;
+  const motorCur=config.motorCurrent?P.get(config.motorCurrent):null;
+  const vel=config.velocity?P.get(config.velocity):null;
+  const volt=config.voltage?P.get(config.voltage):null;
+  const state=config.state?P.get(config.state):null;
+
+  // Compute at-target stats
+  let atTargetPct=0,atTargetTime=0,totalTime=0;
+  if(at&&at.data.length){for(let i=1;i<at.data.length;i++){const dt=toSec(at.data[i].timestamp)-toSec(at.data[i-1].timestamp);if(dt>0&&dt<1){totalTime+=dt;if(at.data[i-1].value)atTargetTime+=dt;}}atTargetPct=totalTime>0?(atTargetTime/totalTime*100):0;}
+
+  // Error
+  let maxErr=0,avgErr=0;
+  if(err&&err.data.length){let s=0;for(const r of err.data){const e=Math.abs(r.value);s+=e;if(e>maxErr)maxErr=e;}avgErr=s/err.data.length;}
+  else if(sp&&cur&&sp.data.length&&cur.data.length){let si2=0,s=0,count=0;for(const r of cur.data){while(si2<sp.data.length-1&&sp.data[si2+1].timestamp<=r.timestamp)si2++;const e=Math.abs(sp.data[si2].value-r.value);s+=e;if(e>maxErr)maxErr=e;count++;}avgErr=count>0?s/count:0;}
+
+  const atCls=atTargetPct>90?'ok':atTargetPct>70?'warning':'danger';
+
+  // Get timeline extents
+  let minT=Infinity,maxT=0;
+  [sp,cur,at,state].forEach(e=>{if(e&&e.data.length){const a=toSec(e.data[0].timestamp),b=toSec(e.data[e.data.length-1].timestamp);if(a<minT)minT=a;if(b>maxT)maxT=b;}});
+
+  panel.innerHTML=`
+    <div class="section-title">${config.title}</div>
+    <div class="stats-grid">
+      ${at?`<div class="stat-card ${atCls}"><div class="label">At Target</div><div class="value">${atTargetPct.toFixed(1)} <span class="unit">%</span></div></div>`:''}
+      ${at?`<div class="stat-card"><div class="label">Time at Target</div><div class="value">${atTargetTime.toFixed(1)} <span class="unit">s / ${totalTime.toFixed(1)}s</span></div></div>`:''}
+      <div class="stat-card ${maxErr>5?'danger':maxErr>2?'warning':'ok'}"><div class="label">Max Error</div><div class="value">${maxErr.toFixed(2)} <span class="unit">${config.unit||''}</span></div></div>
+      <div class="stat-card"><div class="label">Avg Error</div><div class="value">${avgErr.toFixed(3)} <span class="unit">${config.unit||''}</span></div></div>
+    </div>
+    <div class="chart-box"><h3>${config.spLabel||'Setpoint'} vs ${config.curLabel||'Actual'} ${config.unit?'('+config.unit+')':''}</h3><canvas id="mechMain"></canvas>
+      <div class="legend"><span><div class="dot" style="background:#f97316"></div>${config.spLabel||'Setpoint'}</span><span><div class="dot" style="background:#3b82f6"></div>${config.curLabel||'Actual'}</span></div></div>
+    ${err?'<div class="chart-box"><h3>Error Over Time</h3><canvas id="mechErr"></canvas></div>':''}
+    <div class="chart-row">
+      ${motorCur?'<div class="chart-box"><h3>Motor Current (A)</h3><canvas id="mechCurr"></canvas></div>':''}
+      ${vel?'<div class="chart-box"><h3>Velocity</h3><canvas id="mechVel"></canvas></div>':''}
+    </div>
+    ${volt?'<div class="chart-box"><h3>Applied Voltage</h3><canvas id="mechVolt"></canvas></div>':''}
+    ${state?'<div class="section-title">State Timeline</div><div class="chart-box"><div id="mechStateTimeline"></div></div>':''}
+    ${at?'<div class="section-title">At Target Timeline</div><div class="chart-box"><div id="mechAtTargetTimeline"></div></div>':''}`;
+
+  // Main setpoint vs actual chart — resample both onto shared time grid
+  const datasets=[];let labels=[];
+  const spTS = sp&&sp.data.length ? ts2(sp.data,toSec) : null;
+  const curTS = cur&&cur.data.length ? ts2(cur.data,toSec) : null;
+  const {grid, resampled} = alignSeries([spTS, curTS], MAX_PTS);
+  labels = grid;
+  if(spTS){datasets.push({label:config.spLabel||'Setpoint',data:resampled[0],borderColor:'#f97316',borderWidth:2,pointRadius:0,tension:0.1,fill:false,stepped:config.stepped||false,spanGaps:true});}
+  if(curTS){datasets.push({label:config.curLabel||'Actual',data:resampled[1],borderColor:'#3b82f6',borderWidth:1.5,pointRadius:0,tension:0.1,fill:false,spanGaps:true});}
+
+  // At-target shading removed from main chart — a dedicated "At Target Timeline" below shows this info
+  mkChart(panel.querySelector('#mechMain'),{type:'line',data:{labels:labels.map(t=>t.toFixed(1)),datasets},options:{scales:{x:{title:{display:true,text:'Time (s)',color:'#9ca3af'},ticks:{color:'#9ca3af',maxTicksLimit:20},grid:{color:'rgba(255,255,255,0.05)'}},y:{title:{display:true,text:config.unit||'',color:'#9ca3af'},ticks:{color:'#9ca3af'},grid:{color:'rgba(255,255,255,0.05)'}}},plugins:{legend:{labels:{color:'#e4e4e7'}}}}});
+
+  if(err&&err.data.length&&panel.querySelector('#mechErr')){const d=ts2(err.data,toSec),dd=ds(d.times,d.values,MAX_PTS);mkChart(panel.querySelector('#mechErr'),{type:'line',data:{labels:dd.times.map(t=>t.toFixed(1)),datasets:[{data:dd.values,borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,0.08)',fill:true,borderWidth:1.5,pointRadius:0,tension:0.1}]},options:{scales:{x:{ticks:{color:'#9ca3af',maxTicksLimit:20},grid:{color:'rgba(255,255,255,0.05)'}},y:{ticks:{color:'#9ca3af'},grid:{color:'rgba(255,255,255,0.05)'}}},plugins:{legend:{display:false}}}});}
+  if(motorCur&&motorCur.data.length&&panel.querySelector('#mechCurr')){const d=ts2(motorCur.data,toSec),dd=dsMax(d.times,d.values,MAX_PTS);mkChart(panel.querySelector('#mechCurr'),{type:'line',data:{labels:dd.times.map(t=>t.toFixed(1)),datasets:[{data:dd.values,borderColor:'#f472b6',backgroundColor:'rgba(244,114,182,0.08)',fill:true,borderWidth:1.5,pointRadius:0,tension:0.1}]},options:{scales:{x:{ticks:{color:'#9ca3af',maxTicksLimit:10},grid:{color:'rgba(255,255,255,0.05)'}},y:{ticks:{color:'#9ca3af'},grid:{color:'rgba(255,255,255,0.05)'},min:0}},plugins:{legend:{display:false}}}});}
+  if(vel&&vel.data.length&&panel.querySelector('#mechVel')){const d=ts2(vel.data,toSec),dd=ds(d.times,d.values,MAX_PTS);mkChart(panel.querySelector('#mechVel'),{type:'line',data:{labels:dd.times.map(t=>t.toFixed(1)),datasets:[{data:dd.values,borderColor:'#06b6d4',borderWidth:1.5,pointRadius:0,tension:0.1,fill:false}]},options:{scales:{x:{ticks:{color:'#9ca3af',maxTicksLimit:10},grid:{color:'rgba(255,255,255,0.05)'}},y:{ticks:{color:'#9ca3af'},grid:{color:'rgba(255,255,255,0.05)'}}},plugins:{legend:{display:false}}}});}
+  if(volt&&volt.data.length&&panel.querySelector('#mechVolt')){const d=ts2(volt.data,toSec),dd=ds(d.times,d.values,MAX_PTS);mkChart(panel.querySelector('#mechVolt'),{type:'line',data:{labels:dd.times.map(t=>t.toFixed(1)),datasets:[{data:dd.values,borderColor:'#eab308',borderWidth:1.5,pointRadius:0,tension:0.1,fill:false}]},options:{scales:{x:{ticks:{color:'#9ca3af',maxTicksLimit:20},grid:{color:'rgba(255,255,255,0.05)'}},y:{ticks:{color:'#9ca3af'},grid:{color:'rgba(255,255,255,0.05)'}}},plugins:{legend:{display:false}}}});}
+
+  // Discrete state timeline
+  if(state&&state.data.length&&panel.querySelector('#mechStateTimeline')){
+    const segs=buildSegments(state,toSec);
+    renderDiscreteTimeline(panel.querySelector('#mechStateTimeline'),[{label:config.title+' State',segments:segs,colorFn:stateColor}],minT,maxT);
+  }
+  // Discrete at-target timeline
+  if(at&&at.data.length&&panel.querySelector('#mechAtTargetTimeline')){
+    const segs=buildBoolSegments(at,toSec);
+    renderDiscreteTimeline(panel.querySelector('#mechAtTargetTimeline'),[{label:'At Target',segments:segs,colorFn:v=>v?'#22c55e':'#ef4444'}],minT,maxT);
+  }
+}
+
+// ============== SHOOTER READY TAB ==============
+function renderShooterReady(panel, P, toSec) {
+  const fwAt=P.get('/Subsystems/Shooter/FlyWheels//AtTarget');
+  const turAt=P.get('/Subsystems/Shooter/Turret//AtTarget');
+  const hoodAt=P.get('/Subsystems/Shooter/Hood//AtTarget');
+
+  // Compute "all ready" boolean series by merging the three at-target booleans
+  // For each timestamp, all must be true
+  const allEntries = [fwAt, turAt, hoodAt].filter(Boolean);
+
+  // Find timeline extents
+  let minT=Infinity, maxT=0;
+  allEntries.forEach(e=>{if(e.data.length){const a=toSec(e.data[0].timestamp),b=toSec(e.data[e.data.length-1].timestamp);if(a<minT)minT=a;if(b>maxT)maxT=b;}});
+
+  // Build merged timeline: sample at ~20ms intervals
+  const step=0.02;
+  const nSteps=Math.ceil((maxT-minT)/step);
+
+  // For each entry, build a lookup: sorted array of {time, value}
+  function buildLookup(entry) {
+    if(!entry||!entry.data.length) return ()=>false;
+    const d=entry.data.map(r=>({t:toSec(r.timestamp),v:r.value}));
+    return (t)=>{
+      // Binary search
+      let lo=0,hi=d.length-1;
+      while(lo<hi){const m=(lo+hi+1)>>1;if(d[m].t<=t)lo=m;else hi=m-1;}
+      return d[lo].v;
+    };
+  }
+  const fwLookup=buildLookup(fwAt), turLookup=buildLookup(turAt), hoodLookup=buildLookup(hoodAt);
+
+  // Build boolean segments for each + "all ready"
+  const fwSegs=fwAt?buildBoolSegments(fwAt,toSec):[];
+  const turSegs=turAt?buildBoolSegments(turAt,toSec):[];
+  const hoodSegs=hoodAt?buildBoolSegments(hoodAt,toSec):[];
+
+  // Build "all ready" segments
+  const allReadyData=[];
+  for(let i=0;i<nSteps;i++){
+    const t=minT+i*step;
+    const fw=fwLookup(t),tur=turLookup(t),hood=hoodLookup(t);
+    allReadyData.push({t,v:fw&&tur&&hood});
+  }
+  // Convert to segments
+  const allSegs=[];
+  if(allReadyData.length){
+    let cv=allReadyData[0].v, cs=allReadyData[0].t;
+    for(let i=1;i<allReadyData.length;i++){
+      if(allReadyData[i].v!==cv){allSegs.push({start:cs,end:allReadyData[i].t,value:cv});cv=allReadyData[i].v;cs=allReadyData[i].t;}
+    }
+    allSegs.push({start:cs,end:allReadyData[allReadyData.length-1].t,value:cv});
+  }
+
+  // Stats
+  let readyTime=0,totalTime2=maxT-minT;
+  allSegs.forEach(s=>{if(s.value)readyTime+=s.end-s.start;});
+  const readyPct=totalTime2>0?(readyTime/totalTime2*100):0;
+
+  let fwReady=0;fwSegs.forEach(s=>{if(s.value)fwReady+=s.end-s.start;});
+  let turReady=0;turSegs.forEach(s=>{if(s.value)turReady+=s.end-s.start;});
+  let hoodReady=0;hoodSegs.forEach(s=>{if(s.value)hoodReady+=s.end-s.start;});
+
+  const rCls=readyPct>80?'ok':readyPct>50?'warning':'danger';
+
+  panel.innerHTML=`
+    <div class="section-title">Shooter Readiness</div>
+    <div class="stats-grid">
+      <div class="stat-card ${rCls}"><div class="label">All Systems Ready</div><div class="value">${readyPct.toFixed(1)} <span class="unit">%</span></div></div>
+      <div class="stat-card"><div class="label">Ready Time</div><div class="value">${readyTime.toFixed(1)} <span class="unit">s / ${totalTime2.toFixed(1)}s</span></div></div>
+      <div class="stat-card ${fwAt?'':''}"><div class="label">Flywheel At Target</div><div class="value">${fwReady.toFixed(1)} <span class="unit">s</span></div></div>
+      <div class="stat-card"><div class="label">Turret At Target</div><div class="value">${turReady.toFixed(1)} <span class="unit">s</span></div></div>
+      <div class="stat-card"><div class="label">Hood At Target</div><div class="value">${hoodReady.toFixed(1)} <span class="unit">s</span></div></div>
+    </div>
+    <div class="section-title">Discrete Timeline</div>
+    <div class="chart-box"><h3>Green = at target / ready, Red = not ready</h3><div id="shooterReadyTimeline"></div></div>`;
+
+  const rows = [
+    {label:'Flywheel At Target', segments:fwSegs, colorFn:v=>v?'#22c55e':'#ef4444'},
+    {label:'Turret At Target', segments:turSegs, colorFn:v=>v?'#22c55e':'#ef4444'},
+    {label:'Hood At Target', segments:hoodSegs, colorFn:v=>v?'#22c55e':'#ef4444'},
+    {label:'ALL READY', segments:allSegs, colorFn:v=>v?'#22c55e':'#ef4444'},
+  ];
+  renderDiscreteTimeline(panel.querySelector('#shooterReadyTimeline'), rows, minT, maxT);
+}
+
+// ============== ALERTS / CONSOLE TAB ==============
+function renderAlerts(panel, P, toSec) {
+  const alertErrors = P.get('/RealOutputs/Alerts/errors');
+  const alertWarnings = P.get('/RealOutputs/Alerts/warnings');
+  const alertInfos = P.get('/RealOutputs/Alerts/infos');
+  const photonErrors = P.get('/RealOutputs/PhotonAlerts/errors');
+  const photonWarnings = P.get('/RealOutputs/PhotonAlerts/warnings');
+  const photonInfos = P.get('/RealOutputs/PhotonAlerts/infos');
+  const pathErrors = P.get('/RealOutputs/PathPlanner/errors');
+  const pathWarnings = P.get('/RealOutputs/PathPlanner/warnings');
+  const pathInfos = P.get('/RealOutputs/PathPlanner/infos');
+  const consoleEntry = P.get('/RealOutputs/Console');
+
+  // Collect all alerts with first-seen / last-seen timestamps
+  const alertMap = new Map(); // message -> {type, source, firstTs, lastTs, count}
+
+  function processAlertEntry(entry, type, source) {
+    if (!entry || !entry.data.length) return;
+    // Track which messages are present in each record
+    let prevMessages = new Set();
+    for (const r of entry.data) {
+      const msgs = Array.isArray(r.value) ? r.value : [];
+      const t = toSec(r.timestamp);
+      for (const m of msgs) {
+        if (!m) continue;
+        const key = type + '|' + source + '|' + m;
+        if (!alertMap.has(key)) {
+          alertMap.set(key, {type, source, message: m, firstTs: t, lastTs: t, count: 1});
+        } else {
+          const a = alertMap.get(key);
+          a.lastTs = t;
+          if (!prevMessages.has(m)) a.count++;
+        }
+      }
+      prevMessages = new Set(msgs);
+    }
+  }
+
+  processAlertEntry(alertErrors, 'error', 'Alerts');
+  processAlertEntry(alertWarnings, 'warning', 'Alerts');
+  processAlertEntry(alertInfos, 'info', 'Alerts');
+  processAlertEntry(photonErrors, 'error', 'PhotonAlerts');
+  processAlertEntry(photonWarnings, 'warning', 'PhotonAlerts');
+  processAlertEntry(photonInfos, 'info', 'PhotonAlerts');
+  processAlertEntry(pathErrors, 'error', 'PathPlanner');
+  processAlertEntry(pathWarnings, 'warning', 'PathPlanner');
+  processAlertEntry(pathInfos, 'info', 'PathPlanner');
+
+  // Console messages
+  const consoleMessages = [];
+  if (consoleEntry && consoleEntry.data.length) {
+    let prevVal = '';
+    for (const r of consoleEntry.data) {
+      if (r.value && r.value !== prevVal) {
+        consoleMessages.push({ts: toSec(r.timestamp), text: r.value});
+        prevVal = r.value;
+      }
+    }
+  }
+
+  // Parse console for specific patterns
+  const loopOverruns = [];
+  const warnings = [];
+  for (const cm of consoleMessages) {
+    const lines = cm.text.split('\n');
+    for (const line of lines) {
+      if (line.includes('loop overrun') || line.includes('Loop time of')) {
+        loopOverruns.push(cm.ts);
+      }
+      if (line.includes('Warning at')) {
+        // Extract subsystem timing
+        const matches = [...cm.text.matchAll(/\t(\w+(?:\.\w+)*(?:\(\))?): ([\d.]+)s/g)];
+        for (const m of matches) {
+          if (parseFloat(m[2]) > 0.005) {
+            warnings.push({ts: cm.ts, subsystem: m[1], time: parseFloat(m[2])});
+          }
+        }
+      }
+    }
+  }
+
+  // Sort alerts
+  const allAlerts = [...alertMap.values()].sort((a,b) => {
+    const typeOrder = {error:0, warning:1, info:2};
+    if (typeOrder[a.type] !== typeOrder[b.type]) return typeOrder[a.type] - typeOrder[b.type];
+    return a.firstTs - b.firstTs;
+  });
+
+  const errorCount = allAlerts.filter(a=>a.type==='error').length;
+  const warnCount = allAlerts.filter(a=>a.type==='warning').length;
+  const infoCount = allAlerts.filter(a=>a.type==='info').length;
+
+  panel.innerHTML = `
+    <div class="section-title">Alert Summary</div>
+    <div class="stats-grid">
+      <div class="stat-card ${errorCount>0?'danger':'ok'}"><div class="label">Errors</div><div class="value">${errorCount}</div></div>
+      <div class="stat-card ${warnCount>0?'warning':'ok'}"><div class="label">Warnings</div><div class="value">${warnCount}</div></div>
+      <div class="stat-card"><div class="label">Info</div><div class="value">${infoCount}</div></div>
+      <div class="stat-card ${loopOverruns.length>10?'warning':'ok'}"><div class="label">Loop Overruns</div><div class="value">${loopOverruns.length}</div></div>
+    </div>
+
+    <div class="section-title">All Alerts</div>
+    <div class="chart-box" style="overflow-x:auto">
+      <table class="data-table" id="alertTable">
+        <thead><tr><th>Type</th><th>Source</th><th>Message</th><th>First Seen</th><th>Last Seen</th><th>Duration</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="section-title">Alert Timeline</div>
+    <div class="chart-box"><div id="alertTimeline"></div></div>
+
+    ${warnings.length ? `
+    <div class="section-title">Slow Subsystem Periodic Calls (&gt;5ms)</div>
+    <div class="chart-box" style="overflow-x:auto">
+      <table class="data-table" id="slowTable">
+        <thead><tr><th>Timestamp</th><th>Subsystem</th><th>Time (ms)</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>` : ''}
+
+    <div class="section-title">Console Log</div>
+    <div class="chart-box" style="max-height:400px;overflow-y:auto">
+      <table class="data-table" id="consoleTable">
+        <thead><tr><th style="width:80px">Time (s)</th><th>Message</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>`;
+
+  // Fill alert table
+  const alertTbody = panel.querySelector('#alertTable tbody');
+  for (const a of allAlerts) {
+    const dur = a.lastTs - a.firstTs;
+    const tr = document.createElement('tr');
+    tr.className = 'alert-row-' + a.type;
+    tr.innerHTML = `<td><span class="alert-type ${a.type}">${a.type.toUpperCase()}</span></td><td>${a.source}</td><td style="max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${a.message.replace(/"/g,'&quot;')}">${a.message}</td><td>${a.firstTs.toFixed(1)}s</td><td>${a.lastTs.toFixed(1)}s</td><td>${dur.toFixed(1)}s</td>`;
+    alertTbody.appendChild(tr);
+  }
+
+  // Alert timeline
+  let aMinT=Infinity,aMaxT=0;
+  allAlerts.forEach(a=>{if(a.firstTs<aMinT)aMinT=a.firstTs;if(a.lastTs>aMaxT)aMaxT=a.lastTs;});
+  if(allAlerts.length){
+    const typeColors = {error:'#ef4444',warning:'#f97316',info:'#22c55e'};
+    const rows = allAlerts.map(a=>({
+      label: a.type.charAt(0).toUpperCase()+a.type.slice(1)+': '+a.message.slice(0,40),
+      segments:[{start:a.firstTs,end:Math.max(a.lastTs,a.firstTs+0.5),value:a.type}],
+      colorFn: v=>typeColors[v]||'#666'
+    }));
+    renderDiscreteTimeline(panel.querySelector('#alertTimeline'),rows,aMinT,aMaxT);
+  }
+
+  // Slow subsystem table
+  if (warnings.length) {
+    const slowTbody = panel.querySelector('#slowTable tbody');
+    for (const w of warnings.sort((a,b)=>b.time-a.time).slice(0,50)) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${w.ts.toFixed(1)}s</td><td>${w.subsystem}</td><td style="color:${w.time>20?'var(--red)':w.time>10?'var(--orange)':'var(--text)'}">${(w.time*1000).toFixed(1)}</td>`;
+      slowTbody.appendChild(tr);
+    }
+  }
+
+  // Console table
+  const conTbody = panel.querySelector('#consoleTable tbody');
+  for (const cm of consoleMessages) {
+    const tr = document.createElement('tr');
+    const escaped = cm.text.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const colored = escaped.includes('overrun') || escaped.includes('Warning') ? 'color:var(--orange)' : escaped.includes('Error') ? 'color:var(--red)' : '';
+    tr.innerHTML = `<td>${cm.ts.toFixed(1)}s</td><td style="white-space:pre-wrap;font-size:11px;${colored}">${escaped}</td>`;
+    conTbody.appendChild(tr);
+  }
+}
+
+// ============== MECHANISM CONFIGS ==============
+const MECHANISMS = [
+  {id:'shooter', label:'Shooter', tabs:[
+    {id:'ready', title:'Ready Status', custom:'shooterReady'},
+    {id:'hood', title:'Hood', setpoint:'/Subsystems/Shooter/Hood//TargetAngle', current:'/Subsystems/Shooter/Hood//CurrentAngle', atTarget:'/Subsystems/Shooter/Hood//AtTarget', error:'/Subsystems/Shooter/Hood//AngleError', unit:'deg', state:'/RealOutputs/States/HoodState'},
+    {id:'turret', title:'Turret', setpoint:'/Subsystems/Shooter/Turret//TargetAngle', current:'/Subsystems/Shooter/Turret//CurrentAngle', atTarget:'/Subsystems/Shooter/Turret//AtTarget', motorCurrent:'/Subsystems/Shooter/Turret//Current', voltage:'/Subsystems/Shooter/Turret//Voltage', unit:'deg', state:'/RealOutputs/States/TurretState'},
+    {id:'flywheels', title:'Flywheels', setpoint:'/Subsystems/Shooter/FlyWheels//TargetVelocity', current:'/Subsystems/Shooter/FlyWheels//CurrentVelocity', atTarget:'/Subsystems/Shooter/FlyWheels//AtTarget', unit:'RPM', state:'/RealOutputs/States/FlyWheelState'},
+  ]},
+  {id:'extensor', label:'Extensor', tabs:[
+    {id:'ext', title:'Extensor', setpoint:'/Subsystems/Extensor/ExtensorSetpoint', current:'/Subsystems/Extensor/ExtensorPosition', motorCurrent:'/Subsystems/Extensor/ExtensorCurrent', velocity:'/Subsystems/Extensor/ExtensorVelocity', voltage:'/Subsystems/Extensor/ExtensorVoltage', unit:'rotations', state:'/RealOutputs/States/ExtensorState'}
+  ]},
+  {id:'climber', label:'Climber', tabs:[
+    {id:'clmb', title:'Climber', setpoint:'/Subsystems/Climber/ClimberSetpoint', current:'/Subsystems/Climber/ClimberPosition', motorCurrent:'/Subsystems/Climber/ClimberCurrent', velocity:'/Subsystems/Climber/ClimberVelocity', unit:'rotations', state:'/RealOutputs/States/ClimberState'}
+  ]},
+  {id:'kicker', label:'Kicker', tabs:[
+    {id:'kick', title:'Kicker', setpoint:'/Subsystems/Kicker/KickerSetpoint', current:'/Subsystems/Kicker/KickerVelocity', motorCurrent:'/Subsystems/Kicker/KickerCurrent', velocity:'/Subsystems/Kicker/KickerVelocity', unit:'rad/s', state:'/RealOutputs/States/KickersState'}
+  ]},
+  {id:'roller', label:'Roller', tabs:[
+    {id:'roll', title:'Roller', setpoint:'/Subsystems/Roller/RollerVoltage', current:'/Subsystems/Roller/RollerVelocity', motorCurrent:'/Subsystems/Roller/RollerCurrent', unit:'V / rad/s', state:'/RealOutputs/States/RollerState', spLabel:'Voltage (V)', curLabel:'Velocity (rad/s)'}
+  ]},
+  {id:'spindexer', label:'Spindexer', tabs:[
+    {id:'spin', title:'Spindexer', setpoint:'/Subsystems/Spindexer/SpindexerAppliedVolts', current:'/Subsystems/Spindexer/SpindexerVelocity', motorCurrent:'/Subsystems/Spindexer/SpindexerCurrent', unit:'V / rad/s', state:'/RealOutputs/States/SpindexerState', spLabel:'Voltage (V)', curLabel:'Velocity (rad/s)'}
+  ]},
+];
+
+// ============== MATCH PROFILE / HISTORY ==============
+const HISTORY_KEY = 'tempest_match_history';
+
+// ============== CLOUD STORAGE (Firebase) ==============
+// Uses modular Firebase SDK via window.cloudSDK — uploadBytes/getBytes work without CORS config
+// because they go through Firebase's authenticated endpoint instead of direct GCS URLs
+
+async function waitForFirebase() {
+  if (window.cloudSDK) return true;
+  return new Promise(resolve => {
+    window.addEventListener('firebaseReady', () => resolve(true), {once: true});
+    setTimeout(() => resolve(!!window.cloudSDK), 3000);
+  });
+}
+
+async function uploadToCloud(file, profile) {
+  await waitForFirebase();
+  if (!window.cloudSDK) return false;
+  try {
+    const { storage, ref, uploadBytes } = window.cloudSDK;
+    const logRef = ref(storage, 'logs/' + file.name);
+    const profRef = ref(storage, 'profiles/' + file.name + '.json');
+    await uploadBytes(logRef, file, {contentType: 'application/octet-stream'});
+    const profileBlob = new Blob([JSON.stringify(profile)], {type: 'application/json'});
+    await uploadBytes(profRef, profileBlob, {contentType: 'application/json'});
+    return true;
+  } catch (err) {
+    console.warn('Cloud upload failed:', err);
+    return false;
+  }
+}
+
+async function listCloudLogs() {
+  await waitForFirebase();
+  if (!window.cloudSDK) return [];
+  try {
+    const { storage, ref, listAll, getBytes } = window.cloudSDK;
+    const profRef = ref(storage, 'profiles');
+    const result = await listAll(profRef);
+    const profiles = await Promise.all(result.items.map(async item => {
+      try {
+        const bytes = await getBytes(item);
+        const text = new TextDecoder().decode(bytes);
+        const profile = JSON.parse(text);
+        profile.cloudFilename = item.name.replace(/\.json$/, '');
+        return profile;
+      } catch (err) { console.warn('Failed to fetch profile', item.name, err); return null; }
+    }));
+    return profiles.filter(p => p !== null);
+  } catch (err) {
+    console.warn('Cloud list failed:', err);
+    return [];
+  }
+}
+
+async function downloadCloudLog(filename) {
+  await waitForFirebase();
+  if (!window.cloudSDK) return null;
+  try {
+    const { storage, ref, getBytes } = window.cloudSDK;
+    const logRef = ref(storage, 'logs/' + filename);
+    return await getBytes(logRef);
+  } catch (err) {
+    console.warn('Cloud download failed:', err);
+    return null;
+  }
+}
+
+// Merge cloud profiles into local history (cloud wins on conflict)
+async function syncCloudToHistory() {
+  const cloudProfiles = await listCloudLogs();
+  if (!cloudProfiles.length) return 0;
+  const local = loadHistory();
+  const localMap = new Map(local.map(p => [p.filename, p]));
+  for (const cp of cloudProfiles) {
+    cp.fromCloud = true;
+    localMap.set(cp.filename, cp);
+  }
+  saveHistory(Array.from(localMap.values()));
+  return cloudProfiles.length;
+}
+
+async function loadCloudLog(filename) {
+  const statusEl = document.getElementById('cloudStatus');
+  if (statusEl) { statusEl.style.display='block'; statusEl.textContent='Downloading ' + filename + '...'; }
+  const buf = await downloadCloudLog(filename);
+  if (!buf) { if(statusEl) statusEl.textContent='Download failed'; return; }
+  if (statusEl) statusEl.textContent='Parsing...';
+  try {
+    const P = new WPILOGParser(buf); P.parse();
+    sessionLogs.set(filename, {parser: P, fileName: filename});
+    if (statusEl) statusEl.style.display='none';
+    buildDashboard(P, filename);
+  } catch (err) {
+    if (statusEl) statusEl.textContent='Error: ' + err.message;
+  }
+}
+
+function extractProfile(P, toSec, filename) {
+  const chE=P.get('/PowerDistribution/ChannelCurrent'), totE=P.get('/PowerDistribution/TotalCurrent');
+  const voltE=P.get('/SystemStats/BatteryVoltage')||P.get('/PowerDistribution/Voltage');
+  let cT=[],cV=[];
+  if(chE&&chE.data.length) for(const r of chE.data){if(Array.isArray(r.value)){cT.push(toSec(r.timestamp));cV.push(r.value.reduce((a,b)=>a+b,0));}}
+  let tT=[],tV=[];
+  if(totE&&totE.data.length) for(const r of totE.data){tT.push(toSec(r.timestamp));tV.push(r.value);}
+  if(tT.length>cT.length){cT=tT;cV=tV;}
+  const vd=voltE?ts2(voltE.data,toSec):{times:[],values:[]};
+
+  const peakCurrent=cV.length?Math.max(...cV):0;
+  const avgCurrent=cV.length?cV.reduce((a,b)=>a+b,0)/cV.length:0;
+  const duration=cT.length?cT[cT.length-1]-cT[0]:0;
+  const minVoltage=vd.values.length?Math.min(...vd.values):0;
+  const avgVoltage=vd.values.length?vd.values.reduce((a,b)=>a+b,0)/vd.values.length:0;
+  let t120=0;for(let i=1;i<cV.length;i++){const dt=cT[i]-cT[i-1];if(dt>0&&dt<1&&cV[i]>120)t120+=dt;}
+
+  // Total energy (Wh) via trapezoidal integration: ∫ V(t)·I(t) dt / 3600
+  let totalWh = 0;
+  if (cT.length > 1 && vd.times.length > 1) {
+    // Interpolate voltage at current timestamps
+    let vi = 0;
+    for (let i = 1; i < cT.length; i++) {
+      const dt = cT[i] - cT[i-1];
+      if (dt <= 0 || dt > 2) continue;
+      // Find voltage at this time via linear interp
+      while (vi < vd.times.length - 2 && vd.times[vi+1] < cT[i]) vi++;
+      let v;
+      if (vi >= vd.times.length - 1) v = vd.values[vd.values.length-1];
+      else {
+        const t0 = vd.times[vi], t1 = vd.times[vi+1];
+        const frac = t1 > t0 ? (cT[i] - t0) / (t1 - t0) : 0;
+        v = vd.values[vi] + frac * (vd.values[vi+1] - vd.values[vi]);
+      }
+      const pAvg = ((cV[i-1] + cV[i]) / 2) * v;
+      totalWh += pAvg * dt / 3600;
+    }
+  }
+
+  // Per-motor stats
+  const motorPaths = [
+    'Drive/Module0/DriveCurrentAmps','Drive/Module1/DriveCurrentAmps','Drive/Module2/DriveCurrentAmps','Drive/Module3/DriveCurrentAmps',
+    'Drive/Module0/TurnCurrentAmps','Drive/Module1/TurnCurrentAmps','Drive/Module2/TurnCurrentAmps','Drive/Module3/TurnCurrentAmps',
+    'Subsystems/Shooter/Turret//Current','Subsystems/Roller/RollerCurrent','Subsystems/Kicker/KickerCurrent',
+    'Subsystems/Extensor/ExtensorCurrent','Subsystems/Spindexer/SpindexerCurrent','Subsystems/Climber/ClimberCurrent',
+  ];
+  const motors = {};
+  for (const mp of motorPaths) {
+    const e = P.get('/'+mp);
+    if (e && e.data.length > 10) {
+      let sum=0,max=0,count=0;
+      for(const r of e.data){const v=Math.abs(r.value);sum+=v;if(v>max)max=v;count++;}
+      motors[mp] = {avg:sum/count, max, count};
+    }
+  }
+
+  // Breaker trip-margin analysis: classify each excursion vs CB285 trip band
+  const excs = findExcursions(cT, cV);
+  let worstRisk = 'safe'; // safe < below_band < in_band < tripped
+  let worstExc = null;
+  const rankOf = {safe:0, below_band:1, in_band:2, tripped:3};
+  for (const e of excs) {
+    const lo = getTripTime(e.peakCurrent, 'lower');
+    const hi = getTripTime(e.peakCurrent, 'upper');
+    let risk = 'safe';
+    if (e.peakCurrent <= CB285_RATED) risk = 'safe';
+    else if (e.duration >= hi) risk = 'tripped';
+    else if (e.duration >= lo) risk = 'in_band';
+    else risk = 'below_band';
+    if (rankOf[risk] > rankOf[worstRisk]) { worstRisk = risk; worstExc = e; }
+  }
+  const excursionCount = excs.length;
+
+  // ---- Error / warning counts from Alerts & Console ----
+  const alertSources = [
+    ['/RealOutputs/Alerts/errors','error'],
+    ['/RealOutputs/Alerts/warnings','warning'],
+    ['/RealOutputs/PhotonAlerts/errors','error'],
+    ['/RealOutputs/PhotonAlerts/warnings','warning'],
+    ['/RealOutputs/PathPlanner/errors','error'],
+    ['/RealOutputs/PathPlanner/warnings','warning'],
+  ];
+  const seenErr = new Set(), seenWarn = new Set();
+  for (const [path,kind] of alertSources) {
+    const e = P.get(path);
+    if (!e || !e.data.length) continue;
+    for (const r of e.data) {
+      const msgs = Array.isArray(r.value) ? r.value : [];
+      for (const m of msgs) {
+        if (!m) continue;
+        const key = path + '|' + m;
+        if (kind==='error') seenErr.add(key); else seenWarn.add(key);
+      }
+    }
+  }
+  // Track loop overruns from console (informational only, not counted as errors)
+  const consoleEntry = P.get('/RealOutputs/Console');
+  let loopOverruns = 0;
+  if (consoleEntry && consoleEntry.data.length) {
+    let prevVal = '';
+    for (const r of consoleEntry.data) {
+      if (r.value && r.value !== prevVal) {
+        if (/loop overrun|Loop time of/i.test(r.value)) loopOverruns++;
+        prevVal = r.value;
+      }
+    }
+  }
+  // errorCount = only explicit errors from AdvantageKit Alert system (NOT console warnings/alerts)
+  const errorCount = seenErr.size;
+  const warningCount = seenWarn.size;
+
+  return {
+    filename: filename || 'unknown',
+    date: new Date().toISOString(),
+    _v: 2, // schema version: bump when extractProfile output changes. UI only trusts error counts at v>=2
+    peakCurrent, avgCurrent, duration, minVoltage, avgVoltage, timeAbove120: t120, totalWh,
+    breakerRisk: worstRisk,
+    worstExcursion: worstExc ? {duration: worstExc.duration, peakCurrent: worstExc.peakCurrent, avgCurrent: worstExc.avgCurrent, startTime: worstExc.startTime} : null,
+    excursionCount,
+    errorCount, warningCount, loopOverruns,
+    motors
+  };
+}
+
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch { return []; }
+}
+function saveHistory(h) { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); }
+function addToHistory(profile) {
+  const h = loadHistory();
+  // Deduplicate by filename
+  const idx = h.findIndex(p => p.filename === profile.filename);
+  if (idx >= 0) h[idx] = profile; else h.push(profile);
+  saveHistory(h);
+}
+function clearHistory() { localStorage.removeItem(HISTORY_KEY); }
+
+function computeBaseline(history) {
+  if (!history.length) return null;
+  const n = history.length;
+  const avg = (arr) => arr.reduce((a,b)=>a+b,0)/arr.length;
+  const max = (arr) => Math.max(...arr);
+  const min = (arr) => Math.min(...arr);
+
+  const bl = {
+    matchCount: n,
+    peakCurrent: {avg: avg(history.map(h=>h.peakCurrent)), max: max(history.map(h=>h.peakCurrent)), min: min(history.map(h=>h.peakCurrent))},
+    avgCurrent: {avg: avg(history.map(h=>h.avgCurrent)), max: max(history.map(h=>h.avgCurrent)), min: min(history.map(h=>h.avgCurrent))},
+    duration: {avg: avg(history.map(h=>h.duration)), max: max(history.map(h=>h.duration)), min: min(history.map(h=>h.duration))},
+    minVoltage: {avg: avg(history.map(h=>h.minVoltage)), max: max(history.map(h=>h.minVoltage)), min: min(history.map(h=>h.minVoltage))},
+    avgVoltage: {avg: avg(history.map(h=>h.avgVoltage))},
+    timeAbove120: {avg: avg(history.map(h=>h.timeAbove120)), max: max(history.map(h=>h.timeAbove120))},
+    motors: {},
+  };
+
+  // Aggregate motor stats
+  const allMotorKeys = new Set();
+  history.forEach(h => { if(h.motors) Object.keys(h.motors).forEach(k => allMotorKeys.add(k)); });
+  for (const k of allMotorKeys) {
+    const vals = history.filter(h=>h.motors&&h.motors[k]).map(h=>h.motors[k]);
+    if (vals.length) {
+      bl.motors[k] = {
+        avg: avg(vals.map(v=>v.avg)),
+        max: max(vals.map(v=>v.max)),
+        avgMax: avg(vals.map(v=>v.max)),
+        samples: vals.length,
+      };
+    }
+  }
+  return bl;
+}
+
+// ============== EVENT NAMES / TBA CONFIG ==============
+// Hardcoded TBA read-only key (safe to be public per TBA policy).
+const TBA_API_KEY = '72DB6h7LR6Blr7ikUCVFm5Bp1Mv9zEl5Xv9fU9UzSF4ioqX8drX3SPCB5u8XSzbJ';
+function getTBAKey() { return TBA_API_KEY; }
+
+// Map short event codes (from filenames) to human names + candidate TBA event keys.
+// Multiple tbaKeys are tried in order (useful when FMS code differs from TBA code).
+const EVENT_INFO = {
+  'NYN2': {name: 'Gotham Regional', tbaKeys: ['nyn2','nyny','nynyc','gotham']},
+  // Add more: 'XXXX': {name: 'Event Name', tbaKeys: ['tbacode']}
+};
+function getEventInfo(code) {
+  if (!code) return null;
+  const up = code.toUpperCase();
+  if (EVENT_INFO[up]) return EVENT_INFO[up];
+  return { name: up + ' Regional', tbaKeys: [up.toLowerCase()] };
+}
+
+async function fetchTBAMatchVideo(pr) {
+  if (!pr || !pr.event || pr.matchNum==null) return { error: 'no_event' };
+  const year = pr.date ? pr.date.getFullYear() : new Date().getFullYear();
+  const ev = getEventInfo(pr.event);
+  const eventKeys = [...(ev.tbaKeys||[pr.event.toLowerCase()])];
+
+  const typePrefixes = pr.matchType==='Q' ? ['qm']
+    : pr.matchType==='E' ? ['sf','f','ef','qf']
+    : [];
+  if (!typePrefixes.length) return { error: 'not_official' };
+
+  let matchedUrl = null;
+  for (const ek of eventKeys) {
+    for (const tp of typePrefixes) {
+      const mk = `${year}${ek}_${tp}${pr.matchNum}`;
+      try {
+        const res = await fetch(`https://www.thebluealliance.com/api/v3/match/${mk}`, { headers: { 'X-TBA-Auth-Key': TBA_API_KEY } });
+        if (!res.ok) continue;
+        const data = await res.json();
+        if (data && data.key) {
+          matchedUrl = `https://www.thebluealliance.com/match/${mk}`;
+          if (Array.isArray(data.videos) && data.videos.length) {
+            const yt = data.videos.find(v => v.type === 'youtube');
+            if (yt) return { matchKey: mk, ytId: yt.key, matchUrl: matchedUrl };
+          }
+        }
+      } catch (e) { /* try next */ }
+    }
+  }
+  if (matchedUrl) return { ytId: null, matchUrl: matchedUrl, error: 'no_video' };
+  return { error: 'not_found' };
+}
+
+// ============== LOG FILENAME PARSER ==============
+// Extracts event/match info from filenames like:
+//   FRC_20260315_143025_NYN2_Q15.wpilog
+//   FRC_20260315_143025_NYN2_E3.wpilog
+//   akit_20240322_142310.wpilog (no match info = lab log)
+//   Log_24-03-22_14-23-10.wpilog
+// Works by extracting date, match ident, and event token independently so failure
+// in one doesn't break the others.
+function parseLogName(filename) {
+  const base = (filename||'').replace(/\.wpilog$/i,'');
+  const out = { filename, base, displayName: base, shortLabel: base, event:null, matchType:null, matchNum:null, date:null, dateStr:'', timeStr:'' };
+
+  // 1. Date + time (YYYYMMDD + HHMMSS with optional separators)
+  const dtm = base.match(/(\d{4})[-_]?(\d{2})[-_]?(\d{2})[_-](\d{2})[-_]?(\d{2})[-_]?(\d{2})/);
+  if (dtm) {
+    const d = new Date(+dtm[1], +dtm[2]-1, +dtm[3], +dtm[4], +dtm[5], +dtm[6]);
+    if (!isNaN(d.getTime())) out.date = d;
+  }
+
+  // 2. Match ident: Q15, E3, QM7, SF2, F1, EF3, etc. (with optional separator between letter and number)
+  const mm = base.match(/(?:^|[_-])(QM|QF|SF|EF|[QEPF])[_-]?(\d+)(?:[_\-R]|\.|$)/i);
+  if (mm) {
+    const t = mm[1].toUpperCase();
+    out.matchType = (t==='Q'||t==='QM') ? 'Q'
+      : (t==='QF'||t==='SF'||t==='F'||t==='EF'||t==='E') ? 'E'
+      : (t==='P') ? 'P' : null;
+    out.matchNum = +mm[2];
+  }
+
+  // 3. Event code: token that is alphanumeric, 3–10 chars, contains at least one letter,
+  // is not FRC/TBD/AKIT/LOG, and is not a match ident or pure date/time.
+  const tokens = base.split(/[_-]/).filter(t=>t.length);
+  const EXCLUDE = new Set(['FRC','TBD','AKIT','LOG','WPILOG','EVENT','RECORDING','MATCH']);
+  for (const tok of tokens) {
+    const up = tok.toUpperCase();
+    if (up.length < 3 || up.length > 10) continue;
+    if (EXCLUDE.has(up)) continue;
+    if (/^\d+$/.test(up)) continue;                       // all digits
+    if (/^(QM|QF|SF|EF|[QEPF])\d+$/.test(up)) continue;   // match ident like Q15
+    if (!/[A-Z]/.test(up)) continue;                      // must contain at least one letter
+    // require majority letters so things like "42abc" don't count, but accept NYN2 (3 letters + 1 digit)
+    const letters = (up.match(/[A-Z]/g)||[]).length;
+    if (letters < 2) continue;
+    out.event = up;
+    break;
+  }
+
+  // 4. Build display strings
+  if (out.date) {
+    out.dateStr = out.date.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    out.timeStr = out.date.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+  }
+  const parts = [];
+  if (out.matchType && out.matchNum!=null) parts.push(`${out.matchType}${out.matchNum}`);
+  if (out.event) parts.push(out.event);
+  if (out.dateStr) parts.push(`${out.dateStr}${out.timeStr?' '+out.timeStr:''}`);
+  out.displayName = parts.length ? parts.join(' · ') : base;
+  out.shortLabel = (out.matchType && out.matchNum!=null) ? `${out.matchType}${out.matchNum}` : base.slice(0,14);
+  return out;
+}
+
+function showHistoryPreview() {
+  const el = document.getElementById('historyPreview');
+  const h = loadHistory();
+  const cached = typeof sessionLogs !== 'undefined' ? sessionLogs : new Map();
+  if (!h.length && !cached.size) { el.style.display='none'; return; }
+  el.style.display='block';
+
+  // Merge: include session-only logs that aren't in history yet
+  const allMap = new Map();
+  for (const p of h) allMap.set(p.filename, p);
+  for (const [fn] of cached) if (!allMap.has(fn)) allMap.set(fn, { filename: fn, fromSession: true });
+  const all = [...allMap.values()];
+
+  // Parse and group by event code (null event = Lab Practice)
+  all.forEach(p => { p._parsed = parseLogName(p.filename); });
+  const groups = new Map(); // eventKey -> {event, name, tbaKey, entries[]}
+  for (const p of all) {
+    const ev = p._parsed.event || null;
+    const gk = ev || '__LAB__';
+    if (!groups.has(gk)) {
+      const info = ev ? getEventInfo(ev) : {name:'Lab Practice', tbaKey:null};
+      groups.set(gk, {event: ev, name: info.name, tbaKey: info.tbaKey, isLab: !ev, entries:[]});
+    }
+    groups.get(gk).entries.push(p);
+  }
+  // Sort entries within each group: by match number (for events) or by date desc (for lab)
+  for (const grp of groups.values()) {
+    if (grp.isLab) {
+      grp.entries.sort((a,b) => (b._parsed.date?b._parsed.date.getTime():0) - (a._parsed.date?a._parsed.date.getTime():0));
+    } else {
+      // Quals before Elims, then by match number ascending
+      grp.entries.sort((a,b) => {
+        const pa=a._parsed, pb=b._parsed;
+        const typeOrder = {Q:0,E:1,P:2};
+        const ta = typeOrder[pa.matchType]!=null?typeOrder[pa.matchType]:9;
+        const tb = typeOrder[pb.matchType]!=null?typeOrder[pb.matchType]:9;
+        if (ta!==tb) return ta-tb;
+        return (pa.matchNum||0) - (pb.matchNum||0);
+      });
+    }
+  }
+  // Order groups: events first (alphabetical by event code), Lab Practice last
+  const groupList = [...groups.values()].sort((a,b) => {
+    if (a.isLab && !b.isLab) return 1;
+    if (!a.isLab && b.isLab) return -1;
+    return (a.event||'').localeCompare(b.event||'');
+  });
+
+  const bl = h.length ? computeBaseline(h) : null;
+
+  const TYPE_FULL = {'Q':'Qualification','E':'Elimination','P':'Practice'};
+  function renderCard(p) {
+    const pr = p._parsed;
+    const isSession = cached.has(p.filename);
+    const isCloud = p.fromCloud || p.cloudFilename;
+    const clickable = isSession || isCloud;
+    const typeCls = pr.matchType==='Q' ? 'q' : pr.matchType==='E' ? 'e' : pr.matchType==='P' ? 'p' : 'unk';
+    const typeLabel = TYPE_FULL[pr.matchType] || 'Lab Log';
+    const numLabel = pr.matchNum!=null ? pr.matchNum : '—';
+    const srcCls = isSession ? 'session' : (isCloud ? 'cloud' : '');
+    const srcLabel = isSession ? '● loaded' : (isCloud ? '☁ cloud' : 'not loaded');
+
+    let statsHTML = '';
+    if (p.peakCurrent != null) {
+      const peak = p.peakCurrent, dur = p.duration, minV = p.minVoltage;
+      const wh = p.totalWh;
+      statsHTML = `<div class="mc-stats">${peak?`<span><b>${peak.toFixed(0)}A</b> peak</span>`:''}${dur?`<span><b>${dur.toFixed(0)}s</b></span>`:''}${minV?`<span><b>${minV.toFixed(1)}V</b></span>`:''}${wh?`<span><b>${wh.toFixed(1)}Wh</b></span>`:''}</div>`;
+    }
+
+    // Only trust error counts from profiles extracted under current schema (v2+).
+    // Older cached profiles scanned console text for "Error"/"Exception" strings and are unreliable.
+    const countsReliable = (p._v || 0) >= 2;
+    const errCount = countsReliable ? (p.errorCount || 0) : 0;
+    const warnCount = countsReliable ? (p.warningCount || 0) : 0;
+    const hasError = errCount > 0;
+    const alertHTML = hasError
+      ? `<div class="mc-alert" title="${errCount} Alert error${errCount>1?'s':''}${warnCount?' · '+warnCount+' warning'+(warnCount>1?'s':''):''}">${errCount} error${errCount>1?'s':''}</div>`
+      : '';
+
+    const escFn = p.filename.replace(/'/g,"\\'");
+    const onclick = clickable ? `onclick="switchToLog('${escFn}')"` : '';
+    const disabledCls = clickable ? '' : 'disabled';
+    const errCls = hasError ? 'has-error' : '';
+
+    // For lab logs (no match info): show date+time prominently instead of a match number
+    const isLab = !pr.event && pr.matchNum == null;
+    const dateLine = pr.dateStr ? `${pr.dateStr}${pr.timeStr?' · '+pr.timeStr:''}` : pr.base.slice(0,28);
+
+    if (isLab) {
+      return `
+        <div class="match-card ${disabledCls} ${errCls}" ${onclick} title="${p.filename}">
+          <div class="mc-top">
+            <div class="mc-badge unk">Lab Practice</div>
+            <div class="mc-source ${srcCls}">${srcLabel}</div>
+          </div>
+          <div class="mc-lab-date">${pr.dateStr || '—'}</div>
+          <div class="mc-date">${pr.timeStr || pr.base.slice(0,28)}</div>
+          ${alertHTML}
+          ${statsHTML}
+        </div>`;
+    }
+
+    return `
+      <div class="match-card ${disabledCls} ${errCls}" ${onclick} title="${p.filename}">
+        <div class="mc-top">
+          <div class="mc-badge ${typeCls}">${typeLabel}</div>
+          <div class="mc-source ${srcCls}">${srcLabel}</div>
+        </div>
+        <div class="mc-num">${numLabel}</div>
+        ${pr.dateStr?`<div class="mc-date">${dateLine}</div>`:''}
+        ${alertHTML}
+        ${statsHTML}
+      </div>`;
+  }
+
+  const groupsHTML = groupList.map(grp => {
+    const cardHTML = grp.entries.map(renderCard).join('');
+    const errTotal = grp.entries.reduce((s,p)=>s+(((p._v||0)>=2?(p.errorCount||0):0)),0);
+    const headerColor = grp.isLab ? 'var(--text-muted)' : '#60a5fa';
+    const headerIcon = grp.isLab ? '🔧' : '🏆';
+    return `
+      <div class="event-group">
+        <div class="event-group-header">
+          <span class="event-group-icon" style="color:${headerColor}">${headerIcon}</span>
+          <h4 class="event-group-title">${grp.name}</h4>
+          ${grp.event ? `<span class="event-group-code">${grp.event}</span>` : ''}
+          <span class="event-group-count">${grp.entries.length} log${grp.entries.length!==1?'s':''}</span>
+          ${errTotal>0 ? `<span class="event-group-errors">⚠ ${errTotal} error${errTotal!==1?'s':''}</span>` : ''}
+        </div>
+        <div class="match-grid">${cardHTML}</div>
+      </div>`;
+  }).join('');
+
+  const summaryHTML = bl ? `
+    <div style="display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--text-muted);margin-bottom:12px">
+      <span>Avg peak: <b style="color:var(--text)">${bl.peakCurrent.avg.toFixed(1)}A</b></span>
+      <span>Avg current: <b style="color:var(--text)">${bl.avgCurrent.avg.toFixed(1)}A</b></span>
+      <span>Avg min V: <b style="color:var(--text)">${bl.minVoltage.avg.toFixed(2)}V</b></span>
+      <span>Avg duration: <b style="color:var(--text)">${bl.duration.avg.toFixed(0)}s</b></span>
+    </div>` : '';
+
+  el.innerHTML = `
+    <div class="chart-box" style="margin:0;padding:20px 24px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px">
+        <h3 style="font-size:14px;color:var(--text);margin:0">Match History <span style="color:var(--text-muted);font-weight:400">&middot; ${all.length} log${all.length!==1?'s':''} across ${groupList.length} event${groupList.length!==1?'s':''}</span></h3>
+        <div style="display:flex;gap:10px;align-items:center;font-size:10px;color:var(--text-muted);flex-wrap:wrap">
+          <span><span style="display:inline-block;width:10px;height:10px;background:rgba(59,130,246,0.4);border-radius:2px;vertical-align:middle"></span> Qualification</span>
+          <span><span style="display:inline-block;width:10px;height:10px;background:rgba(239,68,68,0.4);border-radius:2px;vertical-align:middle"></span> Elimination</span>
+          <span><span style="display:inline-block;width:10px;height:10px;background:rgba(156,163,175,0.4);border-radius:2px;vertical-align:middle"></span> Lab</span>
+          <span><span style="display:inline-block;width:10px;height:10px;background:rgba(239,68,68,0.6);border-radius:2px;vertical-align:middle;border:1px solid var(--red)"></span> Has errors</span>
+          <button class="reset-zoom-btn" onclick="clearHistory();showHistoryPreview();" style="margin-left:8px">Clear</button>
+        </div>
+      </div>
+      ${summaryHTML}
+      ${groupsHTML}
+    </div>`;
+}
+
+function updateMatchCorner(filename) {
+  // Renders the match badge inline inside the header (#headerMatchName) so it never overlaps buttons.
+  const el = document.getElementById('headerMatchName');
+  if (!el) return;
+  if (!filename) { el.style.display = 'none'; el.innerHTML=''; return; }
+  const pr = parseLogName(filename);
+  const typeCls = pr.matchType==='Q' ? 'q' : pr.matchType==='E' ? 'e' : pr.matchType==='P' ? 'p' : 'unk';
+  const typeLabel = pr.matchType || '—';
+  const numLabel = pr.matchNum!=null ? pr.matchNum : (pr.dateStr ? 'LAB' : '—');
+  const metaParts = [];
+  if (pr.event) metaParts.push(`<b>${pr.event}</b>`);
+  if (pr.dateStr) metaParts.push(pr.dateStr + (pr.timeStr?' · '+pr.timeStr:''));
+  el.innerHTML = `
+    <span class="match-inline">
+      <span class="mcb-type ${typeCls}">${typeLabel}</span>
+      <span class="mcb-num">${numLabel}</span>
+      ${metaParts.length?`<span class="mcb-meta">${metaParts.join(' · ')}</span>`:''}
+    </span>`;
+  el.style.display = 'inline-flex';
+}
+
+function renderHistory(panel, currentProfile) {
+  const history = loadHistory();
+  const bl = computeBaseline(history.filter(h=>h.filename!==currentProfile?.filename));
+  const allBl = computeBaseline(history);
+
+  if (!history.length) {
+    panel.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text-muted)"><h3>No history yet</h3><p>Upload multiple logs or analyze matches to build a profile. Stats are saved automatically.</p></div>';
+    return;
+  }
+
+  // Comparison helper
+  function cmp(val, ref, unit, lowerBetter) {
+    if (!ref || !isFinite(ref.avg)) return `<span>${val.toFixed(2)}${unit}</span>`;
+    const diff = val - ref.avg;
+    const pct = ref.avg !== 0 ? (diff/ref.avg*100) : 0;
+    const color = (lowerBetter ? diff > 0 : diff < 0) ? 'var(--red)' : (Math.abs(pct)<10?'var(--text)':'var(--green)');
+    const arrow = diff>0?'&#9650;':'&#9660;';
+    return `<span>${val.toFixed(2)}${unit}</span> <span style="font-size:10px;color:${color}">${arrow} ${Math.abs(pct).toFixed(0)}%</span>`;
+  }
+
+  // Current match comparison
+  let compHTML = '';
+  if (currentProfile && bl && bl.matchCount > 0) {
+    compHTML = `
+      <div class="section-title">Current Match vs Historical Baseline (${bl.matchCount} matches)</div>
+      <div class="chart-box">
+        <table class="data-table">
+          <thead><tr><th>Metric</th><th>This Match</th><th>Baseline Avg</th><th>Baseline Range</th><th>Delta</th></tr></thead>
+          <tbody>
+            <tr><td>Peak Current</td><td>${currentProfile.peakCurrent.toFixed(1)}A</td><td>${bl.peakCurrent.avg.toFixed(1)}A</td><td>${bl.peakCurrent.min.toFixed(1)} - ${bl.peakCurrent.max.toFixed(1)}A</td><td>${cmp(currentProfile.peakCurrent, bl.peakCurrent, 'A', true)}</td></tr>
+            <tr><td>Avg Current</td><td>${currentProfile.avgCurrent.toFixed(1)}A</td><td>${bl.avgCurrent.avg.toFixed(1)}A</td><td>${bl.avgCurrent.min.toFixed(1)} - ${bl.avgCurrent.max.toFixed(1)}A</td><td>${cmp(currentProfile.avgCurrent, bl.avgCurrent, 'A', true)}</td></tr>
+            <tr><td>Min Voltage</td><td>${currentProfile.minVoltage.toFixed(2)}V</td><td>${bl.minVoltage.avg.toFixed(2)}V</td><td>${bl.minVoltage.min.toFixed(2)} - ${bl.minVoltage.max.toFixed(2)}V</td><td>${cmp(currentProfile.minVoltage, bl.minVoltage, 'V', false)}</td></tr>
+            <tr><td>Time &gt;120A</td><td>${currentProfile.timeAbove120.toFixed(1)}s</td><td>${bl.timeAbove120.avg.toFixed(1)}s</td><td>0 - ${bl.timeAbove120.max.toFixed(1)}s</td><td>${cmp(currentProfile.timeAbove120, bl.timeAbove120, 's', true)}</td></tr>
+            <tr><td>Duration</td><td>${currentProfile.duration.toFixed(0)}s</td><td>${bl.duration.avg.toFixed(0)}s</td><td>${bl.duration.min.toFixed(0)} - ${bl.duration.max.toFixed(0)}s</td><td>${cmp(currentProfile.duration, bl.duration, 's', false)}</td></tr>
+          </tbody>
+        </table>
+      </div>`;
+
+    // Per-motor comparison
+    if (currentProfile.motors && Object.keys(bl.motors).length) {
+      compHTML += `<div class="section-title">Per-Motor Current: This Match vs Baseline</div><div class="chart-box"><table class="data-table">
+        <thead><tr><th>Motor</th><th>This Avg</th><th>Baseline Avg</th><th>This Peak</th><th>Baseline Peak Avg</th><th>Delta Avg</th></tr></thead><tbody>`;
+      for (const [k,v] of Object.entries(currentProfile.motors)) {
+        const b = bl.motors[k];
+        const label = k.replace('Drive/','').replace('Subsystems/','').replace('//','/');
+        compHTML += `<tr><td>${label}</td><td>${v.avg.toFixed(2)}A</td><td>${b?b.avg.toFixed(2):'—'}A</td><td>${v.max.toFixed(1)}A</td><td>${b?b.avgMax.toFixed(1):'—'}A</td><td>${b?cmp(v.avg,b,'A',true):'—'}</td></tr>`;
+      }
+      compHTML += '</tbody></table></div>';
+    }
+  }
+
+  // All matches table
+  const cachedNames = typeof sessionLogs!=='undefined' ? sessionLogs : new Map();
+  // Breaker risk label/color map
+  const riskMeta = {
+    safe:        {label:'Safe',         color:'var(--green)',  bg:'rgba(34,197,94,0.15)',   title:'No excursions exceeded breaker margin'},
+    below_band:  {label:'Below Band',   color:'var(--yellow)', bg:'rgba(234,179,8,0.15)',   title:'Excursion exceeded 135% but duration was below the trip band'},
+    in_band:     {label:'In Trip Band', color:'var(--orange)', bg:'rgba(249,115,22,0.18)',  title:'An excursion fell within the CB285 trip band — breaker may trip'},
+    tripped:     {label:'Would Trip',   color:'var(--red)',    bg:'rgba(239,68,68,0.20)',   title:'An excursion exceeded the upper trip curve — breaker expected to trip'},
+  };
+  function riskCell(m) {
+    const risk = m.breakerRisk || 'safe';
+    const meta = riskMeta[risk] || riskMeta.safe;
+    let detail = '';
+    if (m.worstExcursion) {
+      const w = m.worstExcursion;
+      detail = `<div style="font-size:9px;color:var(--text-muted);margin-top:2px">${w.peakCurrent.toFixed(0)}A for ${w.duration.toFixed(1)}s</div>`;
+    }
+    return `<span class="alert-type" style="background:${meta.bg};color:${meta.color}" title="${meta.title}">${meta.label}</span>${detail}`;
+  }
+
+  let matchesHTML = `<div class="section-title">All Stored Matches (${history.length})</div>
+    <div class="chart-box"><table class="data-table">
+      <thead><tr><th>File</th><th>Date</th><th>Duration</th><th>Peak I</th><th>Avg I</th><th>Min V</th><th>Time &gt;120A</th><th>Breaker Margin</th><th></th></tr></thead><tbody>`;
+  for (const m of history) {
+    const isCurrent = currentProfile && m.filename === currentProfile.filename;
+    const isCached = cachedNames.has(m.filename);
+    const inCloud = m.fromCloud || m.cloudFilename;
+    const canSwitch = isCached || inCloud;
+    const rowStyle = isCurrent ? 'background:rgba(59,130,246,0.1)' : (canSwitch ? 'cursor:pointer' : '');
+    const clickAttr = (!isCurrent && canSwitch) ? ` onclick="switchToLog('${m.filename.replace(/'/g,"\\'")}')"` : '';
+    let badge = '';
+    if (isCached && !isCurrent) badge = '<span style="color:var(--green);font-size:9px;margin-left:4px">&#9679; loaded</span>';
+    else if (inCloud && !isCurrent) badge = '<span style="color:var(--cyan);font-size:9px;margin-left:4px">&#9729; cloud</span>';
+    let actionCell;
+    if (isCurrent) actionCell = '<span style="color:var(--accent);font-size:10px">&#9654; VIEWING</span>';
+    else if (isCached) actionCell = '<span style="color:var(--text-muted);font-size:10px">switch &#8594;</span>';
+    else if (inCloud) actionCell = '<span style="color:var(--cyan);font-size:10px">download &#8595;</span>';
+    else actionCell = '<span style="color:var(--text-muted);font-size:9px;opacity:0.5">not loaded</span>';
+    matchesHTML += `<tr style="${rowStyle}"${clickAttr}>
+      <td>${m.filename.replace('.wpilog','')} ${badge}</td>
+      <td>${m.date?new Date(m.date).toLocaleDateString():'-'}</td>
+      <td>${m.duration.toFixed(0)}s</td>
+      <td>${m.peakCurrent.toFixed(1)}A</td>
+      <td>${m.avgCurrent.toFixed(1)}A</td>
+      <td>${m.minVoltage.toFixed(2)}V</td>
+      <td>${m.timeAbove120.toFixed(1)}s</td>
+      <td>${riskCell(m)}</td>
+      <td>${actionCell}</td></tr>`;
+  }
+  matchesHTML += '</tbody></table>';
+  matchesHTML += `<div style="margin-top:8px;font-size:11px;color:var(--text-muted)">Click any <span style="color:var(--green)">&#9679; loaded</span> or <span style="color:var(--cyan)">&#9729; cloud</span> match to open it. Cloud logs are shared with the whole team. Upload more with the <strong>+ Upload Log</strong> button.</div>`;
+  matchesHTML += '</div>';
+
+  // Aggregate baseline
+  let blHTML = '';
+  if (allBl) {
+    blHTML = `<div class="section-title">Aggregate Profile (all ${allBl.matchCount} matches)</div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="label">Avg Peak Current</div><div class="value">${allBl.peakCurrent.avg.toFixed(1)} <span class="unit">A</span></div></div>
+      <div class="stat-card"><div class="label">Max Peak Current</div><div class="value">${allBl.peakCurrent.max.toFixed(1)} <span class="unit">A</span></div></div>
+      <div class="stat-card"><div class="label">Avg Current</div><div class="value">${allBl.avgCurrent.avg.toFixed(1)} <span class="unit">A</span></div></div>
+      <div class="stat-card"><div class="label">Avg Min Voltage</div><div class="value">${allBl.minVoltage.avg.toFixed(2)} <span class="unit">V</span></div></div>
+      <div class="stat-card"><div class="label">Worst Min Voltage</div><div class="value">${allBl.minVoltage.min.toFixed(2)} <span class="unit">V</span></div></div>
+      <div class="stat-card"><div class="label">Avg Time &gt;120A</div><div class="value">${allBl.timeAbove120.avg.toFixed(1)} <span class="unit">s</span></div></div>
+    </div>`;
+
+    // Motor baseline chart
+    if (Object.keys(allBl.motors).length) {
+      blHTML += `<div class="section-title">Motor Baseline Averages</div><div class="chart-box"><canvas id="histMotorChart"></canvas></div>`;
+    }
+  }
+
+  // Trend chart (peak current across matches)
+  let trendHTML = '';
+  if (history.length >= 2) {
+    trendHTML = `<div class="section-title">Trends Across Matches</div>
+      <div class="chart-row">
+        <div class="chart-box"><h3>Peak Current per Match</h3><canvas id="histTrendPeak"></canvas></div>
+        <div class="chart-box"><h3>Min Voltage per Match</h3><canvas id="histTrendVolt"></canvas></div>
+      </div>`;
+  }
+
+  panel.innerHTML = compHTML + matchesHTML + blHTML + trendHTML +
+    `<div style="margin-top:16px"><button class="reset-zoom-btn" onclick="clearHistory();location.reload();">Clear All History</button></div>`;
+
+  // Render charts
+  if (allBl && Object.keys(allBl.motors).length) {
+    const labels = Object.keys(allBl.motors).map(k=>k.replace('Drive/','').replace('Subsystems/','').replace('//','/'));
+    const avgs = Object.values(allBl.motors).map(m=>m.avg);
+    const maxes = Object.values(allBl.motors).map(m=>m.avgMax);
+    const curAvgs = currentProfile ? Object.keys(allBl.motors).map(k=>currentProfile.motors[k]?.avg||0) : null;
+
+    const ds2 = [{label:'Baseline Avg',data:avgs,backgroundColor:'rgba(59,130,246,0.6)',borderRadius:4},
+                 {label:'Baseline Avg Peak',data:maxes,backgroundColor:'rgba(239,68,68,0.4)',borderRadius:4}];
+    if (curAvgs) ds2.push({label:'This Match Avg',data:curAvgs,backgroundColor:'rgba(34,197,94,0.6)',borderRadius:4});
+
+    mkChart(panel.querySelector('#histMotorChart'),{type:'bar',data:{labels,datasets:ds2},options:{
+      indexAxis:'y',
+      scales:{x:{ticks:{color:'#9ca3af'},grid:{color:'rgba(255,255,255,0.05)'},title:{display:true,text:'Current (A)',color:'#9ca3af'}},y:{ticks:{color:'#9ca3af',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'}}},
+      plugins:{legend:{labels:{color:'#e4e4e7'}}}
+    }});
+  }
+
+  if (history.length >= 2) {
+    const labels = history.map(h=>h.filename.replace('.wpilog','').replace(/^akit_/,''));
+    mkChart(panel.querySelector('#histTrendPeak'),{type:'line',data:{labels,datasets:[{data:history.map(h=>h.peakCurrent),borderColor:'#ef4444',borderWidth:2,pointRadius:4,tension:0.2,fill:false}]},options:{scales:{x:{ticks:{color:'#9ca3af',maxRotation:45},grid:{color:'rgba(255,255,255,0.05)'}},y:{ticks:{color:'#9ca3af'},grid:{color:'rgba(255,255,255,0.05)'},title:{display:true,text:'Peak Current (A)',color:'#9ca3af'}}},plugins:{legend:{display:false}}}});
+    mkChart(panel.querySelector('#histTrendVolt'),{type:'line',data:{labels,datasets:[{data:history.map(h=>h.minVoltage),borderColor:'#a78bfa',borderWidth:2,pointRadius:4,tension:0.2,fill:false}]},options:{scales:{x:{ticks:{color:'#9ca3af',maxRotation:45},grid:{color:'rgba(255,255,255,0.05)'}},y:{ticks:{color:'#9ca3af'},grid:{color:'rgba(255,255,255,0.05)'},title:{display:true,text:'Min Voltage (V)',color:'#9ca3af'}}},plugins:{legend:{display:false}}}});
+  }
+}
+
+// ============== FILE HANDLING ==============
+const dropZone=document.getElementById('dropZone'),fileInput=document.getElementById('fileInput');
+const uploadSection=document.getElementById('upload-section'),loadingDiv=document.getElementById('loading'),app=document.getElementById('app');
+const fileInput2=document.getElementById('fileInput2');
+const uploadAnotherBtn=document.getElementById('uploadAnotherBtn');
+const backToUploadBtn=document.getElementById('backToUploadBtn');
+const headerMatchName=document.getElementById('headerMatchName');
+
+// Session cache: keep parsed logs in memory so user can switch between them
+const sessionLogs = new Map(); // filename -> {parser, fileName}
+
+function showHeaderControls(fileName) {
+  uploadAnotherBtn.style.display='inline-block';
+  backToUploadBtn.style.display='inline-block';
+  headerMatchName.style.display='inline-block';
+  const pr = fileName ? parseLogName(fileName) : null;
+  headerMatchName.textContent = pr ? pr.displayName : '';
+  updateMatchCorner(fileName);
+}
+function hideHeaderControls() {
+  uploadAnotherBtn.style.display='none';
+  backToUploadBtn.style.display='none';
+  headerMatchName.style.display='none';
+  updateMatchCorner(null);
+}
+function backToUpload() {
+  app.style.display='none';
+  uploadSection.style.display='block';
+  hideHeaderControls();
+  showHistoryPreview();
+}
+
+// Switch to a cached log by filename
+function switchToLog(filename) {
+  const cached = sessionLogs.get(filename);
+  if (cached) {
+    buildDashboard(cached.parser, cached.fileName);
+    return;
+  }
+  // Not cached locally — try to download from cloud
+  showCloudToast('Downloading ' + filename + ' from cloud...');
+  loadCloudLog(filename);
+}
+
+function handleFiles(files) {
+  const wpiFiles = Array.from(files).filter(f=>f.name.endsWith('.wpilog'));
+  if(wpiFiles.length===1) loadFile(wpiFiles[0]);
+  else if(wpiFiles.length>1) loadFilesForHistory(wpiFiles);
+}
+
+dropZone.addEventListener('click',()=>fileInput.click());
+dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('dragover');});
+dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('dragover');handleFiles(e.dataTransfer.files);});
+fileInput.addEventListener('change',()=>{handleFiles(fileInput.files);fileInput.value='';});
+fileInput2.addEventListener('change',()=>{handleFiles(fileInput2.files);fileInput2.value='';});
+
+// Toast for cloud status messages
+function showCloudToast(msg, isError) {
+  let toast = document.getElementById('cloudToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'cloudToast';
+    toast.style.cssText = 'position:fixed;bottom:20px;right:20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:12px;z-index:1000;max-width:400px;box-shadow:0 4px 12px rgba(0,0,0,0.3);transition:opacity 0.3s';
+    document.body.appendChild(toast);
+  }
+  toast.style.borderColor = isError ? 'var(--red)' : 'var(--green)';
+  toast.style.color = isError ? 'var(--red)' : 'var(--green)';
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>{toast.style.opacity='0';}, 4000);
+}
+
+// Sync cloud logs on page load, then show history preview
+(async function initCloudSync() {
+  showHistoryPreview();
+  try {
+    const statusEl = document.createElement('div');
+    statusEl.id = 'cloudStatus';
+    statusEl.style.cssText = 'max-width:700px;margin:8px auto;text-align:center;font-size:11px;color:var(--text-muted)';
+    statusEl.textContent = 'Syncing team logs from cloud...';
+    document.getElementById('upload-section').appendChild(statusEl);
+    const count = await syncCloudToHistory();
+    statusEl.textContent = count ? `✓ Synced ${count} team log${count>1?'s':''} from cloud` : 'No team logs in cloud yet';
+    setTimeout(()=>{statusEl.style.opacity='0.5';}, 2000);
+    showHistoryPreview();
+  } catch (err) {
+    console.warn('Cloud sync failed:', err);
+  }
+})();
+
+function loadFile(file){
+  uploadSection.style.display='none';loadingDiv.style.display='block';app.style.display='none';
+  hideHeaderControls();
+  const reader=new FileReader();
+  reader.onload=e=>{try{
+    const P=new WPILOGParser(e.target.result);P.parse();
+    sessionLogs.set(file.name,{parser:P,fileName:file.name});
+    loadingDiv.style.display='none';app.style.display='block';
+    buildDashboard(P,file.name);
+    // Upload to cloud in background (non-blocking)
+    let minTs=Infinity;for(const[,recs]of P.records)if(recs.length&&recs[0].timestamp<minTs)minTs=recs[0].timestamp;
+    const toSec=ts=>(ts-minTs)/1e6;
+    const profile=extractProfile(P,toSec,file.name);
+    uploadToCloud(file, profile).then(ok=>{
+      if(ok) showCloudToast('Uploaded to team cloud: ' + file.name);
+    });
+  }catch(err){loadingDiv.textContent='Error: '+err.message;console.error(err);}};
+  reader.readAsArrayBuffer(file);
+}
+
+function loadFilesForHistory(files){
+  uploadSection.style.display='none';loadingDiv.style.display='block';app.style.display='none';
+  let processed=0;const total=files.length;
+  loadingDiv.textContent=`Processing log 1 of ${total}...`;
+  let lastP=null, lastFn='';
+  function processNext(i){
+    if(i>=total){
+      loadingDiv.style.display='none';
+      if(lastP){app.style.display='block';buildDashboard(lastP,lastFn);}
+      else{uploadSection.style.display='block';showHistoryPreview();}
+      return;
+    }
+    const reader=new FileReader();
+    reader.onload=e=>{
+      try{
+        const P=new WPILOGParser(e.target.result);P.parse();
+        let minTs=Infinity;for(const[,recs]of P.records)if(recs.length&&recs[0].timestamp<minTs)minTs=recs[0].timestamp;
+        const toSec=ts=>(ts-minTs)/1e6;
+        const profile=extractProfile(P,toSec,files[i].name);
+        addToHistory(profile);
+        sessionLogs.set(files[i].name,{parser:P,fileName:files[i].name});
+        lastP=P;lastFn=files[i].name;
+        // Upload each to cloud in background
+        uploadToCloud(files[i], profile).catch(()=>{});
+      }catch(err){console.warn('Skipping '+files[i].name+': '+err.message);}
+      processed++;
+      loadingDiv.textContent=`Processing log ${Math.min(processed+1,total)} of ${total}...`;
+      processNext(i+1);
+    };
+    reader.readAsArrayBuffer(files[i]);
+  }
+  processNext(0);
+}
+
+function renderMatchVideo(panel, P, toSec, fileName){
+  const pr = fileName ? parseLogName(fileName) : null;
+  if (!pr || !pr.event || pr.matchNum==null || pr.matchType==='P') {
+    panel.innerHTML = `<div class="chart-box" style="padding:24px;text-align:center;color:var(--text-muted);font-size:13px">No match info available for this log.</div>`;
+    return;
+  }
+  const ev = getEventInfo(pr.event);
+  const year = pr.date ? pr.date.getFullYear() : new Date().getFullYear();
+  const typeLabel = pr.matchType==='Q' ? 'Qualification' : 'Elimination';
+  panel.innerHTML = `
+    <div class="chart-box" style="margin:10px 0;padding:16px 18px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+        <span style="font-size:18px">📺</span>
+        <strong style="font-size:14px">Match Video</strong>
+        <span style="font-size:12px;color:var(--text-muted)">${ev.name} · ${typeLabel} ${pr.matchNum}</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)" id="tba-status">Fetching from The Blue Alliance…</span>
+      </div>
+      <div id="tba-video-slot"></div>
+    </div>`;
+  fetchTBAMatchVideo(pr).then(result => {
+    const slot = panel.querySelector('#tba-video-slot');
+    const status = panel.querySelector('#tba-status');
+    if (!slot) return;
+    if (result && result.ytId) {
+      slot.innerHTML = `
+        <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:6px;background:#000">
+          <iframe src="https://www.youtube.com/embed/${result.ytId}" frameborder="0" allowfullscreen
+            style="position:absolute;top:0;left:0;width:100%;height:100%" loading="lazy" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        </div>
+        <div style="margin-top:8px;font-size:12px;color:var(--text-muted)"><a href="${result.matchUrl}" target="_blank" style="color:var(--cyan)">Open on The Blue Alliance ↗</a></div>`;
+      if (status) status.textContent = '';
+    } else if (result && result.error === 'no_video') {
+      slot.innerHTML = `<div style="padding:24px;text-align:center;color:var(--text-muted);font-size:13px">Match found on TBA but no video is posted yet. <a href="${result.matchUrl}" target="_blank" style="color:var(--cyan)">Open on The Blue Alliance ↗</a></div>`;
+      if (status) status.textContent = '';
+    } else {
+      const tried = (ev.tbaKeys||[pr.event.toLowerCase()]).map(k=>`${year}${k}`).join(', ');
+      slot.innerHTML = `<div style="padding:24px;text-align:center;color:var(--text-muted);font-size:13px">Couldn't find this match on The Blue Alliance. Tried event keys: <code>${tried}</code>. If none are right, edit <code>EVENT_INFO['${pr.event}'].tbaKeys</code> in the source.</div>`;
+      if (status) status.textContent = '';
+    }
+  }).catch(err => {
+    const slot = panel.querySelector('#tba-video-slot');
+    if (slot) slot.innerHTML = `<div style="padding:20px;color:var(--red);font-size:12px">TBA request failed: ${err.message||err}</div>`;
+  });
+}
+
+function buildDashboard(P,fileName){
+  destroyAll();TABS.length=0;
+  uploadSection.style.display='none';loadingDiv.style.display='none';app.style.display='block';
+  let minTs=Infinity;for(const[,recs]of P.records)if(recs.length&&recs[0].timestamp<minTs)minTs=recs[0].timestamp;
+  const toSec=ts=>(ts-minTs)/1e6;
+
+  // Extract profile and add to history
+  const currentProfile=extractProfile(P,toSec,fileName||'unknown');
+  addToHistory(currentProfile);
+  showHeaderControls(fileName);
+
+  addTab('power','Power',panel=>renderPower(panel,P,toSec,fileName));
+  const _prLog = fileName ? parseLogName(fileName) : null;
+  if (_prLog && _prLog.event && _prLog.matchNum != null && _prLog.matchType !== 'P') {
+    addTab('video','Match Video',panel=>renderMatchVideo(panel,P,toSec,fileName));
+  }
+  addTab('pose','Pose Estimation',panel=>renderPose(panel,P,toSec));
+
+  for(const mech of MECHANISMS){
+    addTab(mech.id,mech.label,panel=>{
+      if(mech.tabs.length===1&&!mech.tabs[0].custom){
+        renderMechanism(panel,P,toSec,mech.tabs[0]);
+      } else {
+        panel.innerHTML='<div class="tab-bar" id="sub-'+mech.id+'-bar"></div><div id="sub-'+mech.id+'-panels"></div>';
+        const subBar=panel.querySelector('#sub-'+mech.id+'-bar');
+        const subPanels=panel.querySelector('#sub-'+mech.id+'-panels');
+        const subRendered=new Set();
+        mech.tabs.forEach((st,si)=>{
+          const btn=document.createElement('button');btn.className='tab-btn'+(si===0?' active':'');btn.textContent=st.title;
+          const sp2=document.createElement('div');sp2.id='subtab-'+st.id;sp2.className='tab-content'+(si===0?' active':'');
+          btn.onclick=()=>{
+            subBar.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+            subPanels.querySelectorAll('.tab-content').forEach(p=>p.classList.remove('active'));
+            btn.classList.add('active');sp2.classList.add('active');
+            if(!subRendered.has(st.id)){subRendered.add(st.id);renderSubTab(st);}
+          };
+          subBar.appendChild(btn);subPanels.appendChild(sp2);
+          function renderSubTab(st2){
+            if(st2.custom==='shooterReady') renderShooterReady(sp2,P,toSec);
+            else renderMechanism(sp2,P,toSec,st2);
+          }
+          if(si===0){subRendered.add(st.id);renderSubTab(st);}
+        });
+      }
+    });
+  }
+
+  addTab('alerts','Alerts / Console',panel=>renderAlerts(panel,P,toSec));
+  addTab('history','History',panel=>renderHistory(panel,currentProfile));
+
+  initTabs();
+  TABS[0].renderFn(document.getElementById('tab-'+TABS[0].id));
+  const rendered=new Set([TABS[0].id]);
+  document.querySelectorAll('#tabBar .tab-btn').forEach((btn,i)=>{
+    const orig=btn.onclick;
+    btn.onclick=()=>{orig();if(!rendered.has(TABS[i].id)){rendered.add(TABS[i].id);TABS[i].renderFn(document.getElementById('tab-'+TABS[i].id));}};
+  });
+}
+</script>
+</body>
+</html>
