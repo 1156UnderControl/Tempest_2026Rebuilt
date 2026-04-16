@@ -154,7 +154,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     }
 
     SwerveSubsystem.stopVisionHdrDark();
-    
+
     return SwerveSubsystem.poseEstimatorGeneral;
   }
 
@@ -488,10 +488,12 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
   public static void runVisionHdr() {
     double hdrTimePerPipeline = 0.25;
-    int[] backLeftLimelightHdrPipelines = {0,1};
-    SwerveSubsystem.poseEstimatorBackLeft.startHdr(backLeftLimelightHdrPipelines, hdrTimePerPipeline);
-    int[] backRightLimelightHdrPipelines = {0,1};
-    SwerveSubsystem.poseEstimatorBackRight.startHdr(backRightLimelightHdrPipelines, hdrTimePerPipeline);
+    int[] backLeftLimelightHdrPipelines = {0, 1};
+    SwerveSubsystem.poseEstimatorBackLeft.startHdr(
+        backLeftLimelightHdrPipelines, hdrTimePerPipeline);
+    int[] backRightLimelightHdrPipelines = {0, 1};
+    SwerveSubsystem.poseEstimatorBackRight.startHdr(
+        backRightLimelightHdrPipelines, hdrTimePerPipeline);
   }
 
   public static void stopVisionHdrDark() {

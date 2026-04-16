@@ -28,18 +28,19 @@ public class Robot extends LoggedRobot {
   private RobotContainer robotContainer;
   private IMUData imu = LimelightHelpers.getIMUData("limelight-bright");
 
-  double[] imuData = new double[] {
-    imu.Pitch,
-    imu.Roll,
-    imu.Yaw,
-    imu.accelX,
-    imu.accelY,
-    imu.accelZ,
-    imu.gyroX,
-    imu.gyroY,
-    imu.gyroZ,
-    imu.robotYaw
-};
+  double[] imuData =
+      new double[] {
+        imu.Pitch,
+        imu.Roll,
+        imu.Yaw,
+        imu.accelX,
+        imu.accelY,
+        imu.accelZ,
+        imu.gyroX,
+        imu.gyroY,
+        imu.gyroZ,
+        imu.robotYaw
+      };
 
   public Robot() {
     AutoLogOutputManager.addPackage("frc.java_is_undercontrol");
@@ -115,9 +116,9 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putBoolean(
         "Won Auto",
         DriverStation.getAlliance().orElse(Alliance.Blue) == HubShiftUtil.getFirstActiveAlliance());
-      SmartDashboard.putNumber(
-          "Time Until Next Shift:", HubShiftUtil.getOfficialShiftInfo().remainingTime());
-          Logger.recordOutput("IMU", imuData);
+    SmartDashboard.putNumber(
+        "Time Until Next Shift:", HubShiftUtil.getOfficialShiftInfo().remainingTime());
+    Logger.recordOutput("IMU", imuData);
   }
 
   @Override

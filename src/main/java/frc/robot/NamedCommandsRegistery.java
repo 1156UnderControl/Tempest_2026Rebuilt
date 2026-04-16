@@ -57,10 +57,10 @@ public class NamedCommandsRegistery {
         new GoToClimbPoseRight(drive)
             .alongWith(Commands.runOnce(() -> drive.setPoseEstimatorToClimbOnAuto(true)))
             .finallyDo(() -> drive.setAutoPoseEstimatorToDefault()));
-    NamedCommands.registerCommand("Set Drive Modules Coast", 
-        Commands.runOnce(() -> drive.configureDriveMode(false)));
-    NamedCommands.registerCommand("Set Drive Modules Brake", 
-        Commands.runOnce(() -> drive.configureDriveMode(true)));
+    NamedCommands.registerCommand(
+        "Set Drive Modules Coast", Commands.runOnce(() -> drive.configureDriveMode(false)));
+    NamedCommands.registerCommand(
+        "Set Drive Modules Brake", Commands.runOnce(() -> drive.configureDriveMode(true)));
   }
 
   private void registerResetOdometryCommands() {

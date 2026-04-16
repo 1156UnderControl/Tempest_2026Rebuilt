@@ -7,7 +7,6 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.VisionConstants;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -67,7 +66,8 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
     Logger.recordOutput(this.keyPoseEstimatedLog, new Pose3d());
     Logger.recordOutput(this.keyPoseEstimatedLog, new Pose3d());
     this.hdrEnabledLoggerKey = "PoseEstimator/PhotonVision/" + camera.getName() + "/HdrEnabled";
-    this.requestedPipelineLoggerKey = "PoseEstimator/PhotonVision/" + camera.getName() + "/RequestedPipelineId";
+    this.requestedPipelineLoggerKey =
+        "PoseEstimator/PhotonVision/" + camera.getName() + "/RequestedPipelineId";
     Logger.recordOutput(this.hdrEnabledLoggerKey, false);
     Logger.recordOutput(this.requestedPipelineLoggerKey, 0);
   }
@@ -209,15 +209,14 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
     return this.camera.getName();
   }
 
-  public void startHdr(int[] hdrPipelines, double hdrTimePerPipeline){
-    // Keeping this method here but with no implementation to make it clear that photonvision is 
+  public void startHdr(int[] hdrPipelines, double hdrTimePerPipeline) {
+    // Keeping this method here but with no implementation to make it clear that photonvision is
     // not capable of HDR. The camera takes very long to change pipelines and just wouldn't work.
   }
 
-  public void stopHdr(int pipelineIndexToUse){
+  public void stopHdr(int pipelineIndexToUse) {
     Logger.recordOutput(this.hdrEnabledLoggerKey, false);
     this.camera.setPipelineIndex(pipelineIndexToUse);
     Logger.recordOutput(this.requestedPipelineLoggerKey, pipelineIndexToUse);
   }
-
 }
