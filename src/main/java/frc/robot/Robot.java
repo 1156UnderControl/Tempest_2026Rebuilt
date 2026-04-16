@@ -5,6 +5,7 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -100,6 +101,8 @@ public class Robot extends LoggedRobot {
     LimelightHelpers.SetIMUMode(VisionConstants.backRightLimelightName, 0);
     LimelightHelpers.SetIMUAssistAlpha(VisionConstants.backRightLimelightName, 0.001);
     LimelightHelpers.SetThrottle(VisionConstants.backRightLimelightName, 200);
+
+    RobotController.setBrownoutVoltage(5.9);
   }
 
   @Override
