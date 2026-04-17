@@ -107,7 +107,7 @@ public class SpindexerSubsystem extends SubsystemBase {
     spindexerInputs.spindexerAppliedVolts = spindexerMotor.getVoltage();
     spindexerInputs.spindexerCurrent = spindexerMotor.getStatorCurrent();
     spindexerInputs.spindexerPosition = spindexerMotor.getMechanismPosition();
-    spindexerInputs.spindexerVelocity = spindexerMotor.getMechanismVelocity();
+    spindexerInputs.spindexerVelocity = spindexerMotor.getMechanismVelocity().in(RPM);
     spindexerInputs.spindexerSetpoint = this.setpoint;
   }
 
