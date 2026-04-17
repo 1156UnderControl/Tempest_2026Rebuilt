@@ -499,10 +499,14 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
   public static void stopVisionHdrDark() {
     SwerveSubsystem.poseEstimatorBackLeft.stopHdr(0);
     SwerveSubsystem.poseEstimatorBackRight.stopHdr(0);
+    SwerveSubsystem.poseEstimatorFrontLeft.stopHdr(0);
+    SwerveSubsystem.poseEstimatorFrontRight.stopHdr(0);
   }
 
   public static void stopVisionHdrBright() {
     SwerveSubsystem.poseEstimatorBackLeft.stopHdr(1);
     SwerveSubsystem.poseEstimatorBackRight.stopHdr(1);
+    SwerveSubsystem.poseEstimatorFrontLeft.stopHdr(1);
+    SwerveSubsystem.poseEstimatorFrontRight.stopHdr(1);
   }
 }
