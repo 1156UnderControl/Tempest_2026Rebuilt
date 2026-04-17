@@ -68,24 +68,24 @@
         "y": 7.202891686051
       },
       "prevControl": {
-        "x": 0.1933500613032898,
-        "y": 7.020539290427257
+        "x": 0.3854577950727157,
+        "y": 6.989139344276336
       },
       "nextControl": {
-        "x": 2.04989234524068,
-        "y": 7.398917407546333
+        "x": 2.0271693101469648,
+        "y": 7.488584693018351
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.358548242578441,
-        "y": 7.436107425802006
+        "x": 2.8298432915199534,
+        "y": 7.4241913328931926
       },
       "prevControl": {
-        "x": 4.022180072621198,
-        "y": 7.442451977487117
+        "x": 2.4934751215627102,
+        "y": 7.430535884578304
       },
       "nextControl": null,
       "isLocked": false,
@@ -140,7 +140,7 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 3.2390952183350374,
-      "maxWaypointRelativePos": 4.7336309523809526,
+      "maxWaypointRelativePos": 5.0,
       "constraints": {
         "maxVelocity": 0.77,
         "maxAcceleration": 7.5,
@@ -229,17 +229,6 @@
           "name": "Home Intake"
         }
       }
-    },
-    {
-      "name": "Set Drive Modules Coast",
-      "waypointRelativePos": 4.79036458333333,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Set Drive Modules Coast"
-        }
-      }
     }
   ],
   "globalConstraints": {
@@ -251,7 +240,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 7.5,
+    "velocity": 0.0,
     "rotation": 0.0
   },
   "reversed": false,
