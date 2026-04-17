@@ -1,0 +1,255 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.463572614069836,
+        "y": 5.504
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.9644819277108434,
+        "y": 5.532096385542169
+      },
+      "isLocked": false,
+      "linkedName": "Bump Left Alliance Zone"
+    },
+    {
+      "anchor": {
+        "x": 5.811265060240963,
+        "y": 5.619518072289156
+      },
+      "prevControl": {
+        "x": 4.228381354629423,
+        "y": 5.547568812943173
+      },
+      "nextControl": {
+        "x": 6.061007195293538,
+        "y": 5.630869987518819
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.882180722891565,
+        "y": 4.843650602409639
+      },
+      "prevControl": {
+        "x": 6.445072289156626,
+        "y": 5.1168433734939756
+      },
+      "nextControl": {
+        "x": 7.232480848261788,
+        "y": 4.62471302405325
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.9530963855421675,
+        "y": 4.712518072289157
+      },
+      "prevControl": {
+        "x": 7.526915662650602,
+        "y": 4.209843373493976
+      },
+      "nextControl": {
+        "x": 8.388091574632028,
+        "y": 5.22558932095925
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.428566265060241,
+        "y": 7.204036144578313
+      },
+      "prevControl": {
+        "x": 7.712686746987953,
+        "y": 6.876204819277108
+      },
+      "nextControl": {
+        "x": 7.215776581570698,
+        "y": 7.449562702450862
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.570855421686747,
+        "y": 7.65
+      },
+      "prevControl": {
+        "x": 6.259301204819276,
+        "y": 7.673927710843374
+      },
+      "nextControl": {
+        "x": 5.091001073826779,
+        "y": 7.63332212010903
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.535,
+        "y": 7.65
+      },
+      "prevControl": {
+        "x": 3.0964217281558932,
+        "y": 7.648643702989626
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Trench Left Behind Robot"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9211618257261274,
+      "rotationDegrees": 135.93
+    },
+    {
+      "waypointRelativePos": 1.807468879668011,
+      "rotationDegrees": 142.48
+    },
+    {
+      "waypointRelativePos": 2.992531120331906,
+      "rotationDegrees": -163.12
+    },
+    {
+      "waypointRelativePos": 3.4804979253112163,
+      "rotationDegrees": -80.08000000000001
+    },
+    {
+      "waypointRelativePos": 3.91867219917014,
+      "rotationDegrees": -53.52
+    },
+    {
+      "waypointRelativePos": 4.864730290456399,
+      "rotationDegrees": -90.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.7,
+      "maxWaypointRelativePos": 2.0,
+      "constraints": {
+        "maxVelocity": 3.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 2.0,
+      "maxWaypointRelativePos": 2.0,
+      "constraints": {
+        "maxVelocity": 2.2,
+        "maxAcceleration": 7.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 2.0,
+      "maxWaypointRelativePos": 2.0,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 7.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Stop Shooting Fuels",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Stop Shooting Fuels"
+        }
+      }
+    },
+    {
+      "name": "Extend Intake",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Extend Intake"
+        }
+      }
+    },
+    {
+      "name": "Home Intake",
+      "waypointRelativePos": 1.1,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Home Intake"
+        }
+      }
+    },
+    {
+      "name": "Home Intake",
+      "waypointRelativePos": 1.9,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Home Intake"
+        }
+      }
+    },
+    {
+      "name": "Shoot Fuels",
+      "waypointRelativePos": 2.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Shoot Fuels"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 7.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.5,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "Collect Middle Left",
+  "idealStartingState": {
+    "velocity": 1.1,
+    "rotation": 135.0
+  },
+  "useDefaultConstraints": true
+}
