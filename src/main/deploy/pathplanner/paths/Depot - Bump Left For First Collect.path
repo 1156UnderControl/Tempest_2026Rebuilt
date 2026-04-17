@@ -116,7 +116,7 @@
       "minWaypointRelativePos": 1.8101362966601182,
       "maxWaypointRelativePos": 3.6812316458120464,
       "constraints": {
-        "maxVelocity": 0.5,
+        "maxVelocity": 0.8,
         "maxAcceleration": 2.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -129,7 +129,7 @@
       "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 2.5248779047497347,
       "constraints": {
-        "maxVelocity": 0.35,
+        "maxVelocity": 0.38,
         "maxAcceleration": 7.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -140,9 +140,9 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 3.2390952183350374,
-      "maxWaypointRelativePos": 5.0,
+      "maxWaypointRelativePos": 4.7336309523809526,
       "constraints": {
-        "maxVelocity": 0.8,
+        "maxVelocity": 0.7,
         "maxAcceleration": 7.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -229,6 +229,17 @@
           "name": "Home Intake"
         }
       }
+    },
+    {
+      "name": "Set Drive Modules Coast",
+      "waypointRelativePos": 4.79036458333333,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Set Drive Modules Coast"
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -240,7 +251,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
+    "velocity": 7.5,
     "rotation": 0.0
   },
   "reversed": false,

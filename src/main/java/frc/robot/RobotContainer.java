@@ -222,9 +222,16 @@ public class RobotContainer {
 
     this.driverController.leftBumper().whileTrue(new PassThroughTower(drive));
 
-    this.operatorController.l2().onTrue(Commands.runOnce(() -> SwerveSubsystem.runVisionHdr()).ignoringDisable(true));
-    this.operatorController.r3().onTrue(Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrDark()).ignoringDisable(true));
-    this.operatorController.l3().onTrue(Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrBright()).ignoringDisable(true));
+    this.operatorController
+        .l2()
+        .onTrue(Commands.runOnce(() -> SwerveSubsystem.runVisionHdr()).ignoringDisable(true));
+    this.operatorController
+        .r3()
+        .onTrue(Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrDark()).ignoringDisable(true));
+    this.operatorController
+        .l3()
+        .onTrue(
+            Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrBright()).ignoringDisable(true));
   }
 
   public Command getAutonomousCommand() {
@@ -261,8 +268,6 @@ public class RobotContainer {
         .whileTrue(this.flyWheel.shootPass());
 
     new Trigger(() -> DriverStation.isTeleopEnabled())
-        .onTrue(Commands.runOnce(
-            () -> this.drive.configureDriveMode(true)
-        ));
+        .onTrue(Commands.runOnce(() -> this.drive.configureDriveMode(true)));
   }
 }

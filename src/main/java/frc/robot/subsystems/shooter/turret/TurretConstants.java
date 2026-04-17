@@ -83,7 +83,7 @@ public class TurretConstants {
   public static final Time CLOSED_RAMP_RATE = Milliseconds.of(10);
 
   public static class FeedBackController {
-    public static final double kP = 30;
+    public static final double kP = 35;
     public static final double kI = 0;
     public static final double kD = 0;
 
@@ -97,7 +97,7 @@ public class TurretConstants {
   public static class FeedForwardController {
     public static final double kV = 5.8;
     public static final double kS = 0.105;
-    public static final double kA = 0.003;
+    public static final double kA = 0.006;
 
     public static class SIM {
       public static final double kV = 6.15;

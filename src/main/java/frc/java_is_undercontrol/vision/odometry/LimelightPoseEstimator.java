@@ -71,7 +71,8 @@ public class LimelightPoseEstimator implements PoseEstimator {
     this.poseLoggerKey = "PoseEstimator/Limelight/" + limelightName + "/Pose";
     Logger.recordOutput(this.poseLoggerKey, new Pose3d());
     this.hdrEnabledLoggerKey = "PoseEstimator/Limelight/" + limelightName + "/HdrEnabled";
-    this.requestedPipelineLoggerKey = "PoseEstimator/Limelight/" + limelightName + "/RequestedPipelineId";
+    this.requestedPipelineLoggerKey =
+        "PoseEstimator/Limelight/" + limelightName + "/RequestedPipelineId";
     Logger.recordOutput(this.hdrEnabledLoggerKey, false);
     Logger.recordOutput(this.requestedPipelineLoggerKey, 0);
   }
@@ -185,20 +186,22 @@ public class LimelightPoseEstimator implements PoseEstimator {
     return this.limelightName;
   }
 
-  public void startHdr(int[] hdrPipelines, double hdrTimePerPipeline){
+  public void startHdr(int[] hdrPipelines, double hdrTimePerPipeline) {
     this.hdrPipelines = hdrPipelines;
     this.hdrTimePerPipeline = hdrTimePerPipeline;
     this.indexOfCurrentItemInHdrPipelines = 0;
     this.isRunningHdr = true;
     Logger.recordOutput(this.hdrEnabledLoggerKey, true);
-    LimelightHelpers.setPipelineIndex(this.limelightName, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
-    Logger.recordOutput(this.requestedPipelineLoggerKey, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
+    LimelightHelpers.setPipelineIndex(
+        this.limelightName, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
+    Logger.recordOutput(
+        this.requestedPipelineLoggerKey, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
     this.hdrTimer = new Timer();
     this.hdrTimer.reset();
     this.hdrTimer.start();
   }
 
-  public void stopHdr(int pipelineIndexToUse){
+  public void stopHdr(int pipelineIndexToUse) {
     this.isRunningHdr = false;
     Logger.recordOutput(this.hdrEnabledLoggerKey, false);
     LimelightHelpers.setPipelineIndex(this.limelightName, pipelineIndexToUse);
@@ -206,20 +209,22 @@ public class LimelightPoseEstimator implements PoseEstimator {
     this.hdrTimer.stop();
   }
 
-  private void runHdr(){
-    // HDR (High Dynamic Range) is the term used for a trick that phones normally use when the 
+  private void runHdr() {
+    // HDR (High Dynamic Range) is the term used for a trick that phones normally use when the
     // dynamic range (difference between bright and dark) is too much for the sensor. What they do
     // is take multiple pictures with different exposure levels and stitch them together to get
     // a picture that is well exposed. We are trying to do something similar here by running
     // different pipelines every 1/4 of a second, ensuring we get at least some tag in any situation
-    if(!this.isRunningHdr) return;
-    if(!this.hdrTimer.hasElapsed(this.hdrTimePerPipeline)) return;
+    if (!this.isRunningHdr) return;
+    if (!this.hdrTimer.hasElapsed(this.hdrTimePerPipeline)) return;
     this.indexOfCurrentItemInHdrPipelines++;
-    if(this.indexOfCurrentItemInHdrPipelines >= this.hdrPipelines.length){
+    if (this.indexOfCurrentItemInHdrPipelines >= this.hdrPipelines.length) {
       this.indexOfCurrentItemInHdrPipelines = 0;
     }
-    LimelightHelpers.setPipelineIndex(this.limelightName, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
-    Logger.recordOutput(this.requestedPipelineLoggerKey, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
+    LimelightHelpers.setPipelineIndex(
+        this.limelightName, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
+    Logger.recordOutput(
+        this.requestedPipelineLoggerKey, hdrPipelines[indexOfCurrentItemInHdrPipelines]);
     this.hdrTimer.reset();
   }
 }

@@ -5,11 +5,11 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers;
-import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers.IMUData;
 import frc.robot.constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.shooter.ShooterCalculator;
@@ -25,20 +25,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
-  private IMUData imu = LimelightHelpers.getIMUData("limelight-bright");
-
-  double[] imuData = new double[] {
-    imu.Pitch,
-    imu.Roll,
-    imu.Yaw,
-    imu.accelX,
-    imu.accelY,
-    imu.accelZ,
-    imu.gyroX,
-    imu.gyroY,
-    imu.gyroZ,
-    imu.robotYaw
-};
 
   public Robot() {
     AutoLogOutputManager.addPackage("frc.java_is_undercontrol");
@@ -100,6 +86,8 @@ public class Robot extends LoggedRobot {
     LimelightHelpers.SetIMUMode(VisionConstants.backRightLimelightName, 0);
     LimelightHelpers.SetIMUAssistAlpha(VisionConstants.backRightLimelightName, 0.001);
     LimelightHelpers.SetThrottle(VisionConstants.backRightLimelightName, 200);
+
+    RobotController.setBrownoutVoltage(5.9);
   }
 
   @Override
@@ -112,9 +100,8 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putBoolean(
         "Won Auto",
         DriverStation.getAlliance().orElse(Alliance.Blue) == HubShiftUtil.getFirstActiveAlliance());
-      SmartDashboard.putNumber(
-          "Time Until Next Shift:", HubShiftUtil.getOfficialShiftInfo().remainingTime());
-          Logger.recordOutput("IMU", imuData);
+    SmartDashboard.putNumber(
+        "Time Until Next Shift:", HubShiftUtil.getOfficialShiftInfo().remainingTime());
   }
 
   @Override
