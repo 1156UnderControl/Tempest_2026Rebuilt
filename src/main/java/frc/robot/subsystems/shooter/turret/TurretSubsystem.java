@@ -2,15 +2,13 @@ package frc.robot.subsystems.shooter.turret;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
-import com.revrobotics.spark.SparkFlex;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotStates;
 import frc.robot.subsystems.shooter.ShooterCalculator;
@@ -20,7 +18,7 @@ import yams.mechanisms.positional.Pivot;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
-import yams.motorcontrollers.local.SparkWrapper;
+import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class TurretSubsystem extends SubsystemBase {
 
@@ -28,14 +26,11 @@ public class TurretSubsystem extends SubsystemBase {
   private final TurretInputsAutoLogged inputs;
   private static TurretSubsystem instance;
 
-  private final SparkFlex turretFlex;
+  private final TalonFX turretTalon;
   private final SmartMotorControllerConfig smartTurretMotorConfig;
   private final SmartMotorController turretMotor;
   private final PivotConfig turretMechanismConfig;
   private final Pivot turret;
-
-  private final SparkAbsoluteEncoder encoder1;
-  private final SparkAbsoluteEncoder encoder2;
 
   private double absoluteAngle;
 
@@ -74,9 +69,9 @@ public class TurretSubsystem extends SubsystemBase {
             .withControlMode(TurretConstants.CONTROL_MODE)
             .withStartingPosition(TurretConstants.STARTING_ANGLE);
 
-    turretFlex = new SparkFlex(TurretConstants.TURRET_MOTOR_ID, TurretConstants.MOTOR_TYPE);
+    turretTalon = new TalonFX(TurretConstants.TURRET_MOTOR_ID);
 
-    turretMotor = new SparkWrapper(turretFlex, TurretConstants.DC_MOTOR, smartTurretMotorConfig);
+    turretMotor = new TalonFXWrapper(turretTalon, TurretConstants.DC_MOTOR, smartTurretMotorConfig);
 
     turretMechanismConfig =
         new PivotConfig(turretMotor)
@@ -84,18 +79,6 @@ public class TurretSubsystem extends SubsystemBase {
             .withMOI(TurretConstants.TURRET_SIZE, TurretConstants.TURRET_MASS);
 
     turret = new Pivot(turretMechanismConfig);
-
-    this.encoder1 = this.turretFlex.getAbsoluteEncoder();
-    this.encoder2 = climberEncoder;
-
-    Logger.recordOutput("EncodersCRT/encoder1", this.encoder1.getPosition());
-    Logger.recordOutput("EncodersCRT/encoder2", this.encoder2.getPosition());
-    Logger.recordOutput(
-        "EncodersCRT/absoluteResult",
-        determineTurretAngleDegrees(
-            Units.rotationsToDegrees(this.encoder1.getPosition()),
-            Units.rotationsToDegrees(this.encoder2.getPosition())));
-
     // this.absoluteAngle =
     // determineTurretAngleDegrees(
     // Units.rotationsToDegrees(this.encoder1.getPosition()),
@@ -142,9 +125,6 @@ public class TurretSubsystem extends SubsystemBase {
                 new Transform2d(
                     Translation2d.kZero, Rotation2d.fromDegrees(turret.getAngle().in(Degrees))));
     inputs.absoluteAngle = this.absoluteAngle;
-    inputs.encoder1 = this.encoder1.getPosition();
-    inputs.encoder2 = this.encoder2.getPosition();
-
     Logger.processInputs("Subsystems/Shooter/Turret/", inputs);
   }
 
@@ -178,19 +158,6 @@ public class TurretSubsystem extends SubsystemBase {
             TurretConstants.ANGLE_ERROR_ALLOWED);
   }
 
-  public Command resetCRT() {
-    return Commands.runOnce(
-        () -> {
-          Logger.recordOutput("EncodersCRT/encoder1", this.encoder1.getPosition());
-          Logger.recordOutput("EncodersCRT/encoder2", this.encoder2.getPosition());
-          Logger.recordOutput(
-              "EncodersCRT/absoluteResult",
-              determineTurretAngleDegrees(
-                  Units.rotationsToDegrees(this.encoder1.getPosition()),
-                  Units.rotationsToDegrees(this.encoder2.getPosition())));
-        });
-  }
-
   private double getClosestTargetAngle(double targetAngle, double currentAngle) {
     double delta = (targetAngle - currentAngle) % 360;
 
@@ -209,32 +176,5 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     return potentialTarget;
-  }
-
-  private double determineTurretAngleDegrees(double e1, double e2) {
-    double difference = e2 - e1;
-    if (difference > 250) {
-      difference -= 360;
-    }
-    if (difference < -250) {
-      difference += 360;
-    }
-    difference *= TurretConstants.SLOPE;
-
-    double e1Rotations =
-        (difference * TurretConstants.GEAR_0_TOOTH_COUNT / TurretConstants.GEAR_1_TOOTH_COUNT)
-            / 360.0;
-    double e1RotationsFloored = Math.floor(e1Rotations);
-    double turretAngle =
-        (e1RotationsFloored * 360.0 + e1)
-            * (TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT);
-    if (turretAngle - difference < -100) {
-      turretAngle +=
-          TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
-    } else if (turretAngle - difference > 100) {
-      turretAngle -=
-          TurretConstants.GEAR_1_TOOTH_COUNT / TurretConstants.GEAR_0_TOOTH_COUNT * 360.0;
-    }
-    return -turretAngle + 180;
   }
 }
