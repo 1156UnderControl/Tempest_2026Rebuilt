@@ -9,10 +9,12 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotStates;
 import frc.robot.subsystems.shooter.ShooterCalculator;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 import yams.mechanisms.config.PivotConfig;
 import yams.mechanisms.positional.Pivot;
@@ -37,6 +39,8 @@ public class TurretSubsystem extends SubsystemBase {
       new PositionTorqueCurrentFOC(Degrees.of(0));
 
   private double absoluteAngle;
+
+  private Angle setpoint = Degrees.of(0);
 
   private TurretSubsystem(SparkAbsoluteEncoder climberEncoder) {
     calculator = ShooterCalculator.getInstance();
@@ -102,6 +106,14 @@ public class TurretSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if (TurretConstants.USE_TORQUE_CURRENT) {
+      this.setpoint = this.torqueCurrentControl.getPositionMeasure();
+    } else {
+      this.setpoint =
+          turret.getMechanismSetpoint().isEmpty()
+              ? Degrees.of(0)
+              : turret.getMechanismSetpoint().get();
+    }
     turret.updateTelemetry();
     updateInputs();
   }
@@ -113,14 +125,7 @@ public class TurretSubsystem extends SubsystemBase {
 
   private void updateInputs() {
     inputs.currentAngle = turret.getAngle().in(Degrees);
-    if (TurretConstants.USE_TORQUE_CURRENT) {
-      inputs.targetAngle =
-          inputs.targetAngle =
-              turret.getMechanismSetpoint().isEmpty()
-                  ? 0
-                  : turret.getMechanismSetpoint().get().in(Degrees);
-    } else {
-    }
+    inputs.targetAngle = this.setpoint.in(Degrees);
     inputs.atTarget = isAtTargetAngle();
     inputs.current = turretMotor.getStatorCurrent();
     inputs.voltage = turretMotor.getVoltage();
@@ -136,53 +141,33 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public Command trackHub() {
-    if (TurretConstants.USE_TORQUE_CURRENT) {
-      return this.run(
-          () ->
-              turretTalon.setControl(
-                  torqueCurrentControl.withPosition(
-                      Degrees.of(
-                          getClosestTargetAngle(
-                              calculator.getParameters(true).turretAngle().getDegrees(),
-                              turret.getAngle().in(Degrees))))));
-    }
-    return turret.setAngle(
-        () ->
-            Degrees.of(
-                getClosestTargetAngle(
-                    calculator.getParameters(true).turretAngle().getDegrees(),
-                    turret.getAngle().in(Degrees))));
+    return this.setTurretToDegrees(() -> calculator.getParameters(true).turretAngle().getDegrees());
   }
 
   public Command trackPass() {
+    return this.setTurretToDegrees(
+        () -> calculator.getParameters(false).turretAngle().getDegrees());
+  }
+
+  public Command trackNonOdometry() {
+    return this.setTurretToDegrees(() -> 180.0);
+  }
+
+  public boolean isAtTargetAngle() {
+    return turret.getAngle().isNear(setpoint, TurretConstants.ANGLE_ERROR_ALLOWED);
+  }
+
+  private Command setTurretToDegrees(Supplier<Double> setpoint) {
     if (TurretConstants.USE_TORQUE_CURRENT) {
       return this.run(
           () ->
               turretTalon.setControl(
                   torqueCurrentControl.withPosition(
                       Degrees.of(
-                          getClosestTargetAngle(
-                              calculator.getParameters(false).turretAngle().getDegrees(),
-                              turret.getAngle().in(Degrees))))));
+                          getClosestTargetAngle(setpoint.get(), turret.getAngle().in(Degrees))))));
     }
     return turret.setAngle(
-        () ->
-            Degrees.of(
-                getClosestTargetAngle(
-                    calculator.getParameters(false).turretAngle().getDegrees(),
-                    turret.getAngle().in(Degrees))));
-  }
-
-  public Command trackNonOdometry() {
-    return turret.setAngle(Degrees.of(getClosestTargetAngle(180, turret.getAngle().in(Degrees))));
-  }
-
-  public boolean isAtTargetAngle() {
-    return turret
-        .getAngle()
-        .isNear(
-            this.turret.getMechanismSetpoint().orElse(Degrees.of(0)),
-            TurretConstants.ANGLE_ERROR_ALLOWED);
+        Degrees.of(getClosestTargetAngle(setpoint.get(), turret.getAngle().in(Degrees))));
   }
 
   private double getClosestTargetAngle(double targetAngle, double currentAngle) {
