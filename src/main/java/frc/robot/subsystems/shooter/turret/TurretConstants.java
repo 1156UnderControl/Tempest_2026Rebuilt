@@ -30,6 +30,8 @@ import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 public class TurretConstants {
   public static final int TURRET_MOTOR_ID = 7;
 
+  public static final boolean USE_TORQUE_CURRENT = true;
+
   public static final MotorType MOTOR_TYPE = MotorType.kBrushless;
 
   public static final MotorMode MOTOR_MODE = MotorMode.BRAKE;
@@ -63,7 +65,7 @@ public class TurretConstants {
 
   public static final boolean INVERTED = false;
 
-  public static final Current STATOR_CURRENT_LIMIT = Amps.of(50);
+  public static final Current STATOR_CURRENT_LIMIT = Amps.of(80);
 
   public static final AngularVelocity MAX_VELOCITY = RotationsPerSecond.of(4);
 
@@ -83,9 +85,9 @@ public class TurretConstants {
   public static final Time CLOSED_RAMP_RATE = Milliseconds.of(10);
 
   public static class FeedBackController {
-    public static final double kP = 35;
+    public static final double kP = 5000;
     public static final double kI = 0;
-    public static final double kD = 0;
+    public static final double kD = 120;
 
     public static class SIM {
       public static final double kP = 60;
@@ -95,9 +97,9 @@ public class TurretConstants {
   }
 
   public static class FeedForwardController {
-    public static final double kV = 5.8;
-    public static final double kS = 0.105;
-    public static final double kA = 0.006;
+    public static final double kV = 0.0;
+    public static final double kS = 0.0;
+    public static final double kA = 0.0;
 
     public static class SIM {
       public static final double kV = 6.15;

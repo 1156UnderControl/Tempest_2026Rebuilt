@@ -71,7 +71,7 @@ public class RollerSubsystem extends SubsystemBase {
         new SparkFlex(RollerConstants.ID_intakeFollowerRollerMotor, MotorType.kBrushless);
 
     this.followerConfig = new SparkFlexConfig();
-    this.followerConfig.idleMode(IdleMode.kCoast);
+    this.followerConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(75);
     this.rollerFollowerFlex.configure(
         followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
