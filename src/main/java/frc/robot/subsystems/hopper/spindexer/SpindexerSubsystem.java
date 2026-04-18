@@ -9,8 +9,12 @@ import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -48,6 +52,8 @@ public class SpindexerSubsystem extends SubsystemBase {
 
   private final SparkFlex followSparkFlex;
 
+  private SparkFlexConfig followerConfig;
+
   private final SmartMotorControllerConfig smartSpindexerMotorConfig;
 
   private final SmartMotorController spindexerMotor;
@@ -61,6 +67,11 @@ public class SpindexerSubsystem extends SubsystemBase {
   private SpindexerSubsystem() {
     this.leadSparkFlex = new SparkFlex(SpindexerConstants.LEADER_MOTOR_ID, MotorType.kBrushless);
     this.followSparkFlex = new SparkFlex(SpindexerConstants.FOLLOW_MOTOR_ID, MotorType.kBrushless);
+
+    this.followerConfig = new SparkFlexConfig();
+    this.followerConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(40);
+    this.followSparkFlex.configure(
+        followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
     this.smartSpindexerMotorConfig =
         new SmartMotorControllerConfig(this)
@@ -76,7 +87,7 @@ public class SpindexerSubsystem extends SubsystemBase {
             .withSimFeedforward(new SimpleMotorFeedforward(0.1, 0.9, 0))
             .withTelemetry(TelemetryVerbosity.MID)
             .withMechanismCircumference(Meters.of(0.478))
-            .withStatorCurrentLimit(Amps.of(80))
+            .withStatorCurrentLimit(Amps.of(40))
             .withMotorInverted(true);
 
     this.torqueCurrentRequest.withFeedForward(SpindexerConstants.FEEDFORWARD_TORQUE_CURRENT_A);
