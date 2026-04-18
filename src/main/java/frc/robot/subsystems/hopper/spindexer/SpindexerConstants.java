@@ -15,7 +15,7 @@ import edu.wpi.first.units.measure.Voltage;
 
 public final class SpindexerConstants {
   public static final int LEADER_MOTOR_ID = 6;
-  public static final int FOLLOW_MOTOR_ID = 8;
+  public static final int FOLLOW_MOTOR_ID = 9;
   public static final Current STATOR_CURRENT_LIMIT = Amps.of(70);
   public static final Time CLOSED_LOOP_RAMP = Milliseconds.of(10);
   public static final Voltage MAX_VOLTS = Volts.of(12);
