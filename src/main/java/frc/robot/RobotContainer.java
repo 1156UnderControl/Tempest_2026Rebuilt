@@ -139,47 +139,6 @@ public class RobotContainer {
         .onFalse(this.drive.limitRobotJoystickControlVelocity().ignoringDisable(true));
 
     this.operatorController
-        .r2()
-        .and(
-            () ->
-                !RobotStates.getInstance().isOnNonOdometryMode()
-                    // && !RobotStates.getInstance().isOnNotShootZone()
-                    && this.hood.isAtTargetAngle()
-                    && this.turret.isAtTargetAngle()
-                    && this.flyWheel.isAtTargetVelocity())
-        .whileTrue(
-            Commands.parallel(
-                this.states.shootState(),
-                Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
-        .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
-
-    this.operatorController
-        .r2()
-        .and(() -> RobotStates.getInstance().isOnNonOdometryMode())
-        .whileTrue(
-            Commands.parallel(
-                this.flyWheel.shootNonOdometry(),
-                this.states.shootState(),
-                Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
-        .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
-
-    this.operatorController
-        .r2()
-        .and(
-            () ->
-                RobotStates.getInstance().isOnAllianceZone()
-                    && !RobotStates.getInstance().isOnNonOdometryMode())
-        .whileTrue(this.flyWheel.shootHub());
-
-    this.operatorController
-        .r2()
-        .and(
-            () ->
-                !RobotStates.getInstance().isOnAllianceZone()
-                    && !RobotStates.getInstance().isOnNonOdometryMode())
-        .whileTrue(this.flyWheel.shootPass());
-
-    this.operatorController
         .cross()
         .onTrue(
             Commands.parallel(
@@ -232,6 +191,9 @@ public class RobotContainer {
         .l3()
         .onTrue(
             Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrBright()).ignoringDisable(true));
+            
+    this.driverController.a().whileTrue(this.flyWheel.runVelocityTorqueControlCalibration().alongWith(this.hood.goToTargetAngleCalibration()));
+    this.driverController.b().whileTrue(this.kicker.shoot().alongWith(this.spindexer.shoot()));
   }
 
   public Command getAutonomousCommand() {
