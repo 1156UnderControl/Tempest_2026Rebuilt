@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter.turret;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -31,6 +32,9 @@ public class TurretSubsystem extends SubsystemBase {
   private final SmartMotorController turretMotor;
   private final PivotConfig turretMechanismConfig;
   private final Pivot turret;
+
+  private PositionTorqueCurrentFOC torqueCurrentControl =
+      new PositionTorqueCurrentFOC(Degrees.of(0));
 
   private double absoluteAngle;
 
@@ -109,11 +113,14 @@ public class TurretSubsystem extends SubsystemBase {
 
   private void updateInputs() {
     inputs.currentAngle = turret.getAngle().in(Degrees);
-    inputs.targetAngle =
-        inputs.targetAngle =
-            turret.getMechanismSetpoint().isEmpty()
-                ? 0
-                : turret.getMechanismSetpoint().get().in(Degrees);
+    if (TurretConstants.USE_TORQUE_CURRENT) {
+      inputs.targetAngle =
+          inputs.targetAngle =
+              turret.getMechanismSetpoint().isEmpty()
+                  ? 0
+                  : turret.getMechanismSetpoint().get().in(Degrees);
+    } else {
+    }
     inputs.atTarget = isAtTargetAngle();
     inputs.current = turretMotor.getStatorCurrent();
     inputs.voltage = turretMotor.getVoltage();
@@ -129,6 +136,16 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public Command trackHub() {
+    if (TurretConstants.USE_TORQUE_CURRENT) {
+      return this.run(
+          () ->
+              turretTalon.setControl(
+                  torqueCurrentControl.withPosition(
+                      Degrees.of(
+                          getClosestTargetAngle(
+                              calculator.getParameters(true).turretAngle().getDegrees(),
+                              turret.getAngle().in(Degrees))))));
+    }
     return turret.setAngle(
         () ->
             Degrees.of(
@@ -138,6 +155,16 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public Command trackPass() {
+    if (TurretConstants.USE_TORQUE_CURRENT) {
+      return this.run(
+          () ->
+              turretTalon.setControl(
+                  torqueCurrentControl.withPosition(
+                      Degrees.of(
+                          getClosestTargetAngle(
+                              calculator.getParameters(false).turretAngle().getDegrees(),
+                              turret.getAngle().in(Degrees))))));
+    }
     return turret.setAngle(
         () ->
             Degrees.of(
