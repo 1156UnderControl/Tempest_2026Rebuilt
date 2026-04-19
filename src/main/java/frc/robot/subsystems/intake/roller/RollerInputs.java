@@ -14,7 +14,8 @@ import org.littletonrobotics.junction.AutoLog;
 @AutoLog
 public class RollerInputs {
   Voltage rollerVoltage = Volts.of(0);
-  Current rollerCurrent = Amps.of(0);
+  Current rollerLeadCurrent = Amps.of(0);
+  Current rollerFollowerCurrent = Amps.of(0);
   Angle rollerPosition = Degrees.of(0);
   AngularVelocity rollerVelocity = RPM.of(0);
   AngularVelocity rollerSetpoint = RPM.of(0);

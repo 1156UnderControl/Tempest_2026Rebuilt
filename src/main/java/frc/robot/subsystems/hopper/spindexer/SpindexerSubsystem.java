@@ -81,7 +81,7 @@ public class SpindexerSubsystem extends SubsystemBase {
                 10, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
             .withSimClosedLoopController(
                 0.03, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
-            .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
+            .withGearing(new MechanismGearing(GearBox.fromReductionStages(3)))
             .withIdleMode(MotorMode.COAST)
             .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0.1, 0.9, 0))
@@ -122,7 +122,8 @@ public class SpindexerSubsystem extends SubsystemBase {
 
   public void updateInputs() {
     spindexerInputs.spindexerAppliedVolts = spindexerMotor.getVoltage();
-    spindexerInputs.spindexerCurrent = spindexerMotor.getStatorCurrent();
+    spindexerInputs.spindexerLeadCurrent = spindexerMotor.getStatorCurrent();
+    spindexerInputs.spindexerFollowerCurrent = Amps.of(followSparkFlex.getOutputCurrent());
     spindexerInputs.spindexerPosition = spindexerMotor.getMechanismPosition();
     spindexerInputs.spindexerVelocity = spindexerMotor.getMechanismVelocity().in(RPM);
     spindexerInputs.spindexerSetpoint = this.setpoint;

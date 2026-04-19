@@ -125,7 +125,8 @@ public class RollerSubsystem extends SubsystemBase {
 
   public void updateInputs() {
     rollerInputs.rollerVoltage = rollerMotor.getVoltage();
-    rollerInputs.rollerCurrent = rollerMotor.getStatorCurrent();
+    rollerInputs.rollerLeadCurrent = rollerMotor.getStatorCurrent();
+    rollerInputs.rollerFollowerCurrent = Amps.of(rollerFollowerFlex.getOutputCurrent());
     rollerInputs.rollerPosition = rollerMotor.getMechanismPosition();
     rollerInputs.rollerVelocity = rollerMotor.getMechanismVelocity();
   }
