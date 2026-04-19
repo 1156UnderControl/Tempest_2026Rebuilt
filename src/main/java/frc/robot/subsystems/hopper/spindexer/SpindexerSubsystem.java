@@ -122,7 +122,8 @@ public class SpindexerSubsystem extends SubsystemBase {
 
   public void updateInputs() {
     spindexerInputs.spindexerAppliedVolts = spindexerMotor.getVoltage();
-    spindexerInputs.spindexerCurrent = spindexerMotor.getStatorCurrent();
+    spindexerInputs.spindexerLeadCurrent = spindexerMotor.getStatorCurrent();
+    spindexerInputs.spindexerFollowerCurrent = Amps.of(followSparkFlex.getOutputCurrent());
     spindexerInputs.spindexerPosition = spindexerMotor.getMechanismPosition();
     spindexerInputs.spindexerVelocity = spindexerMotor.getMechanismVelocity().in(RPM);
     spindexerInputs.spindexerSetpoint = this.setpoint;
