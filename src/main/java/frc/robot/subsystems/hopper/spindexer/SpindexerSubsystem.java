@@ -69,7 +69,7 @@ public class SpindexerSubsystem extends SubsystemBase {
     this.followSparkFlex = new SparkFlex(SpindexerConstants.FOLLOW_MOTOR_ID, MotorType.kBrushless);
 
     this.followerConfig = new SparkFlexConfig();
-    this.followerConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(50);
+    this.followerConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(60);
     this.followSparkFlex.configure(
         followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -87,7 +87,7 @@ public class SpindexerSubsystem extends SubsystemBase {
             .withSimFeedforward(new SimpleMotorFeedforward(0.1, 0.9, 0))
             .withTelemetry(TelemetryVerbosity.MID)
             .withMechanismCircumference(Meters.of(0.478))
-            .withStatorCurrentLimit(Amps.of(50))
+            .withStatorCurrentLimit(Amps.of(60))
             .withMotorInverted(true);
 
     this.torqueCurrentRequest.withFeedForward(SpindexerConstants.FEEDFORWARD_TORQUE_CURRENT_A);
