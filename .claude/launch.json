@@ -6,6 +6,12 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "8080", "-d", "dashboard"],
       "port": 8080
+    },
+    {
+      "name": "root",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["serve_cors.py", "8081"],
+      "port": 8081
     }
   ]
 }
