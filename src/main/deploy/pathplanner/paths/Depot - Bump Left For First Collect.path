@@ -240,6 +240,17 @@
           "name": "Set Drive Modules Coast"
         }
       }
+    },
+    {
+      "name": "Stop Shooting Fuels",
+      "waypointRelativePos": 4.99,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Stop Shooting Fuels"
+        }
+      }
     }
   ],
   "globalConstraints": {
