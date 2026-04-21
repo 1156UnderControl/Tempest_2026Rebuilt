@@ -43,18 +43,12 @@ public class RollerSubsystem extends SubsystemBase {
         new SparkFlex(RollerConstants.ID_intakeFollowerRollerMotor, MotorType.kBrushless);
 
     this.leadConfig = new SparkFlexConfig();
-    this.leadConfig
-    .idleMode(IdleMode.kCoast)
-    .inverted(true)
-    .smartCurrentLimit(70);
+    this.leadConfig.idleMode(IdleMode.kCoast).inverted(true).smartCurrentLimit(70);
     this.leadSparkFlex.configure(
         leadConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
     this.followerConfig = new SparkFlexConfig();
-    this.followerConfig
-    .idleMode(IdleMode.kCoast)
-    .inverted(false)
-    .smartCurrentLimit(70);
+    this.followerConfig.idleMode(IdleMode.kCoast).inverted(false).smartCurrentLimit(70);
     this.followerSparkFlex.configure(
         followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
   }
@@ -66,12 +60,14 @@ public class RollerSubsystem extends SubsystemBase {
   }
 
   public void updateInputs() {
-    rollerInputs.rollerLeadAppliedVolts = Volts.of(leadSparkFlex.getAppliedOutput()*12);
-    rollerInputs.rollerFollowerAppliedVolts = Volts.of(followerSparkFlex.getAppliedOutput()*12);
+    rollerInputs.rollerLeadAppliedVolts = Volts.of(leadSparkFlex.getAppliedOutput() * 12);
+    rollerInputs.rollerFollowerAppliedVolts = Volts.of(followerSparkFlex.getAppliedOutput() * 12);
     rollerInputs.rollerLeadCurrent = Amps.of(leadSparkFlex.getOutputCurrent());
     rollerInputs.rollerFollowerCurrent = Amps.of(followerSparkFlex.getOutputCurrent());
-    rollerInputs.rollerLeadVelocity = RPM.of(leadSparkFlex.getAbsoluteEncoder().getVelocity()/RollerConstants.GEARING);
-    rollerInputs.rollerFollowerVelocity = RPM.of(followerSparkFlex.getAbsoluteEncoder().getVelocity()/RollerConstants.GEARING);
+    rollerInputs.rollerLeadVelocity =
+        RPM.of(leadSparkFlex.getAbsoluteEncoder().getVelocity() / RollerConstants.GEARING);
+    rollerInputs.rollerFollowerVelocity =
+        RPM.of(followerSparkFlex.getAbsoluteEncoder().getVelocity() / RollerConstants.GEARING);
   }
 
   public Command runRoller() {
@@ -87,9 +83,10 @@ public class RollerSubsystem extends SubsystemBase {
   }
 
   private Command setVoltage(Voltage voltage) {
-    return this.run(() -> {
-      this.leadSparkFlex.setVoltage(voltage);
-      this.followerSparkFlex.setVoltage(voltage);
-    });
+    return this.run(
+        () -> {
+          this.leadSparkFlex.setVoltage(voltage);
+          this.followerSparkFlex.setVoltage(voltage);
+        });
   }
 }
