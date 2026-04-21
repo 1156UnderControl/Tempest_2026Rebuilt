@@ -55,9 +55,9 @@ public class RollerSubsystem extends SubsystemBase {
 
     this.followerConfig = new SparkFlexConfig();
     this.followerConfig.idleMode(IdleMode.kCoast).inverted(false).smartCurrentLimit(70);
+    this.followerConfig.openLoopRampRate(0.01);
     this.followerSparkFlex.configure(
         followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    followerConfig.openLoopRampRate(0.01);
   }
 
   @Override
