@@ -7,6 +7,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers;
 import frc.robot.constants.VisionConstants;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -44,6 +45,8 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
 
   String requestedPipelineLoggerKey;
 
+  double requestedPipelineId;
+
   public PhotonVisionPoseEstimator(PhotonCamera camera, Transform3d cameraPosition) {
     this(camera, cameraPosition, false, 2, PhotonPoseEstimatorStrategies.MULTITAG_COPROCESSOR);
   }
@@ -70,6 +73,7 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
         "PoseEstimator/PhotonVision/" + camera.getName() + "/RequestedPipelineId";
     Logger.recordOutput(this.hdrEnabledLoggerKey, false);
     Logger.recordOutput(this.requestedPipelineLoggerKey, 0);
+    this.requestedPipelineId = 0;
   }
 
   public Optional<PoseEstimation> getEstimatedPose(Pose2d referencePose) {
@@ -215,8 +219,17 @@ public class PhotonVisionPoseEstimator implements PoseEstimator {
   }
 
   public void stopHdr(int pipelineIndexToUse) {
+    this.requestedPipelineId = pipelineIndexToUse;
     Logger.recordOutput(this.hdrEnabledLoggerKey, false);
     this.camera.setPipelineIndex(pipelineIndexToUse);
     Logger.recordOutput(this.requestedPipelineLoggerKey, pipelineIndexToUse);
+  }
+
+  public double getRequestedPipelineId() {
+    return this.requestedPipelineId;
+  }
+
+  public double getCurrentPipelineId() {
+    return this.camera.getPipelineIndex();
   }
 }

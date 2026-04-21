@@ -7,6 +7,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.photonvision.PhotonCamera;
+import org.littletonrobotics.junction.Logger;
 
 public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
@@ -349,6 +351,19 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
         0,
         0,
         0);
+    String baseTestKey = "TestPipelineChangeResponse/";
+    String LL1Path = baseTestKey + "Limelight/" + SwerveSubsystem.poseEstimatorBackLeft.getEstimatorName() + "/";
+    String LL2Path = baseTestKey + "Limelight/" + SwerveSubsystem.poseEstimatorBackRight.getEstimatorName() + "/";
+    String AC1Path = baseTestKey + "Photonvision/" + SwerveSubsystem.poseEstimatorFrontLeft.getEstimatorName() + "/";
+    String AC2Path = baseTestKey + "Photonvision/" + SwerveSubsystem.poseEstimatorFrontRight.getEstimatorName() + "/";
+    Logger.recordOutput(LL1Path + "RequestedPipelineId", SwerveSubsystem.poseEstimatorBackLeft.getRequestedPipelineId());
+    Logger.recordOutput(LL1Path + "CurrentPipelineId", SwerveSubsystem.poseEstimatorBackLeft.getCurrentPipelineId());
+    Logger.recordOutput(LL2Path + "RequestedPipelineId", SwerveSubsystem.poseEstimatorBackRight.getRequestedPipelineId());
+    Logger.recordOutput(LL2Path + "CurrentPipelineId", SwerveSubsystem.poseEstimatorBackRight.getCurrentPipelineId());
+    Logger.recordOutput(AC1Path + "RequestedPipelineId", SwerveSubsystem.poseEstimatorFrontLeft.getRequestedPipelineId());
+    Logger.recordOutput(AC1Path + "CurrentPipelineId", SwerveSubsystem.poseEstimatorFrontLeft.getCurrentPipelineId());
+    Logger.recordOutput(AC2Path + "RequestedPipelineId", SwerveSubsystem.poseEstimatorFrontRight.getRequestedPipelineId());
+    Logger.recordOutput(AC2Path + "CurrentPipelineId", SwerveSubsystem.poseEstimatorFrontRight.getCurrentPipelineId());
     // this.verifyClimbPoseEstimation();
   }
 
