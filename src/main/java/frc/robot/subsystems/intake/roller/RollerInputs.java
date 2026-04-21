@@ -11,10 +11,10 @@ import org.littletonrobotics.junction.AutoLog;
 
 @AutoLog
 public class RollerInputs {
-  public Voltage rollerLeadAppliedVolts = Volts.of(0);
-  public Voltage rollerFollowerAppliedVolts = Volts.of(0);
-  public Current rollerLeadCurrent = Amps.of(0);
-  public Current rollerFollowerCurrent = Amps.of(0);
-  public AngularVelocity rollerLeadVelocity = RPM.of(0);
-  public AngularVelocity rollerFollowerVelocity = RPM.of(0);
+  public Voltage rollerRightAppliedVolts = Volts.of(0);
+  public Voltage rollerLeftAppliedVolts = Volts.of(0);
+  public Current rollerRightCurrent = Amps.of(0);
+  public Current rollerLeftCurrent = Amps.of(0);
+  public AngularVelocity rollerRightVelocity = RPM.of(0);
+  public AngularVelocity rollerLeftVelocity = RPM.of(0);
 }
