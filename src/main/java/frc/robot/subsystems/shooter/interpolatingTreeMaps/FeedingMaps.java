@@ -20,44 +20,49 @@ public class FeedingMaps implements InterpolatingTreeMaps {
     minDistance = 1.34;
     maxDistance = 5.60;
 
-    shotHoodAngleMap.put(4.71, Rotation2d.fromDegrees(45.0));
-    shotHoodAngleMap.put(5.35, Rotation2d.fromDegrees(45.0));
-    shotHoodAngleMap.put(6.3, Rotation2d.fromDegrees(45.0));
-    shotHoodAngleMap.put(7.0, Rotation2d.fromDegrees(45.0));
-    shotHoodAngleMap.put(8.0, Rotation2d.fromDegrees(45.0));
-    shotHoodAngleMap.put(8.7, Rotation2d.fromDegrees(45.0));
-    shotHoodAngleMap.put(9.2, Rotation2d.fromDegrees(45.0));
-    shotHoodAngleMap.put(10.0, Rotation2d.fromDegrees(45.0));
-    shotHoodAngleMap.put(11.0, Rotation2d.fromDegrees(45.0));
-    shotHoodAngleMap.put(12.0, Rotation2d.fromDegrees(45.0));
-    shotHoodAngleMap.put(13.0, Rotation2d.fromDegrees(45.0));
+    shotHoodAngleMap.put(4.8, Rotation2d.fromDegrees(44.0));
+    shotHoodAngleMap.put(5.4, Rotation2d.fromDegrees(44.0));
+    shotHoodAngleMap.put(6.3, Rotation2d.fromDegrees(44.0));
+    shotHoodAngleMap.put(7.0, Rotation2d.fromDegrees(44.0));
+    shotHoodAngleMap.put(8.0, Rotation2d.fromDegrees(44.0));
+    shotHoodAngleMap.put(8.7, Rotation2d.fromDegrees(44.0));
+    shotHoodAngleMap.put(9.2, Rotation2d.fromDegrees(44.0));
+    shotHoodAngleMap.put(10.0, Rotation2d.fromDegrees(44.0));
+    shotHoodAngleMap.put(11.0, Rotation2d.fromDegrees(44.0));
+    shotHoodAngleMap.put(12.0, Rotation2d.fromDegrees(47.0));
+    shotHoodAngleMap.put(13.0, Rotation2d.fromDegrees(47.0));
+    shotHoodAngleMap.put(14.0, Rotation2d.fromDegrees(49.0));
+    shotHoodAngleMap.put(15.0, Rotation2d.fromDegrees(50.0));
 
-    double rpmCorrection = 50.0;
-    shotFlywheelSpeedMap.put(4.71, 2000.00 + rpmCorrection);
-    shotFlywheelSpeedMap.put(5.35, 2200.00 + rpmCorrection);
-    shotFlywheelSpeedMap.put(6.3, 2400.00 + rpmCorrection);
-    shotFlywheelSpeedMap.put(7.0, 2600.0 + rpmCorrection);
-    shotFlywheelSpeedMap.put(8.0, 2800.0 + rpmCorrection);
-    shotFlywheelSpeedMap.put(8.7, 3000.0 + rpmCorrection);
-    shotFlywheelSpeedMap.put(9.2, 3300.0 + rpmCorrection);
-    shotFlywheelSpeedMap.put(10.0, 4200.0 + rpmCorrection);
-    shotFlywheelSpeedMap.put(11.0, 4400.0 + rpmCorrection);
-    // simulated
-    shotFlywheelSpeedMap.put(12.0, 4800.0 + rpmCorrection);
-    shotFlywheelSpeedMap.put(13.0, 5000.0 + rpmCorrection);
+    double rpmCorrection = 0.0;
+    shotFlywheelSpeedMap.put(4.8, 1900.00 + rpmCorrection);
 
-    timeOfFlightMap.put(4.71, 1.1);
-    timeOfFlightMap.put(5.35, 1.18);
-    timeOfFlightMap.put(6.3, 1.28);
+    shotFlywheelSpeedMap.put(5.4, 2000.0 + rpmCorrection);
+    shotFlywheelSpeedMap.put(6.3, 2250.0 + rpmCorrection);
+    shotFlywheelSpeedMap.put(7.0, 2400.0 + rpmCorrection);
+    shotFlywheelSpeedMap.put(8.0, 2650.0 + rpmCorrection);
+    shotFlywheelSpeedMap.put(8.7, 2925.0 + rpmCorrection);
+    shotFlywheelSpeedMap.put(9.2, 3150.0 + rpmCorrection);
+    shotFlywheelSpeedMap.put(10.0, 3500.0 + rpmCorrection);
+    shotFlywheelSpeedMap.put(11.0, 3900.0 + rpmCorrection);
+    shotFlywheelSpeedMap.put(12.0, 4600.0 + rpmCorrection);
+    shotFlywheelSpeedMap.put(13.0, 5100.0 + rpmCorrection);
+    shotFlywheelSpeedMap.put(14.0, 5400.0 + rpmCorrection);
+    shotFlywheelSpeedMap.put(15.0, 5600.0 + rpmCorrection);
+
+    timeOfFlightMap.put(4.8, 1.1);
+    timeOfFlightMap.put(5.4, 1.18);
+    timeOfFlightMap.put(6.3, 1.31);
     timeOfFlightMap.put(7.0, 1.32);
-    timeOfFlightMap.put(8.0, 1.45);
-    timeOfFlightMap.put(8.7, 1.5);
-    timeOfFlightMap.put(9.2, 1.55);
-    timeOfFlightMap.put(10.0, 1.58);
-    timeOfFlightMap.put(11.0, 1.61);
-    // simulatedq
-    timeOfFlightMap.put(12.0, 1.63);
-    timeOfFlightMap.put(13.0, 1.65);
+    timeOfFlightMap.put(8.0, 1.43);
+    timeOfFlightMap.put(8.7, 1.52);
+    timeOfFlightMap.put(9.2, 1.54);
+    timeOfFlightMap.put(10.0, 1.62);
+    timeOfFlightMap.put(11.0, 1.72);
+    timeOfFlightMap.put(12.0, 1.86);
+    timeOfFlightMap.put(13.0, 1.94);
+    timeOfFlightMap.put(14.0, 2.07);
+    timeOfFlightMap.put(14.0, 2.15);
   }
 
   public InterpolatingTreeMap<Double, Rotation2d> getHoodAngleMap() {
