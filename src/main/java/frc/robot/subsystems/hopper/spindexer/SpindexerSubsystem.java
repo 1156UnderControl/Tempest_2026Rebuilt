@@ -9,7 +9,13 @@ import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
-import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -26,7 +32,7 @@ import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
-import yams.motorcontrollers.remote.TalonFXWrapper;
+import yams.motorcontrollers.local.SparkWrapper;
 
 public class SpindexerSubsystem extends SubsystemBase {
   private static SpindexerSubsystem instance;
@@ -42,7 +48,11 @@ public class SpindexerSubsystem extends SubsystemBase {
 
   private final SpindexerInputsAutoLogged spindexerInputs = new SpindexerInputsAutoLogged();
 
-  private final TalonFX spindexerTalon;
+  private final SparkFlex leadSparkFlex;
+
+  private final SparkFlex followSparkFlex;
+
+  private SparkFlexConfig followerConfig;
 
   private final SmartMotorControllerConfig smartSpindexerMotorConfig;
 
@@ -55,28 +65,35 @@ public class SpindexerSubsystem extends SubsystemBase {
   private VelocityTorqueCurrentFOC torqueCurrentRequest = new VelocityTorqueCurrentFOC(RPM.of(0));
 
   private SpindexerSubsystem() {
-    this.spindexerTalon = new TalonFX(SpindexerConstants.MOTOR_ID);
+    this.leadSparkFlex = new SparkFlex(SpindexerConstants.LEADER_MOTOR_ID, MotorType.kBrushless);
+    this.followSparkFlex = new SparkFlex(SpindexerConstants.FOLLOW_MOTOR_ID, MotorType.kBrushless);
+
+    this.followerConfig = new SparkFlexConfig();
+    this.followerConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(60);
+    this.followSparkFlex.configure(
+        followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
     this.smartSpindexerMotorConfig =
         new SmartMotorControllerConfig(this)
             .withControlMode(ControlMode.OPEN_LOOP)
+            .withFollowers(Pair.of(followSparkFlex, true))
             .withClosedLoopController(
                 10, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
             .withSimClosedLoopController(
                 0.03, 0, 0, SpindexerConstants.MAX_VELOCITY, SpindexerConstants.MAX_ACCELERATION)
-            .withGearing(new MechanismGearing(GearBox.fromReductionStages(4)))
+            .withGearing(new MechanismGearing(GearBox.fromReductionStages(3)))
             .withIdleMode(MotorMode.COAST)
             .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
             .withSimFeedforward(new SimpleMotorFeedforward(0.1, 0.9, 0))
             .withTelemetry(TelemetryVerbosity.MID)
             .withMechanismCircumference(Meters.of(0.478))
-            .withStatorCurrentLimit(Amps.of(80))
+            .withStatorCurrentLimit(Amps.of(60))
             .withMotorInverted(true);
 
     this.torqueCurrentRequest.withFeedForward(SpindexerConstants.FEEDFORWARD_TORQUE_CURRENT_A);
 
     this.spindexerMotor =
-        new TalonFXWrapper(spindexerTalon, DCMotor.getKrakenX60(1), smartSpindexerMotorConfig);
+        new SparkWrapper(leadSparkFlex, DCMotor.getNeoVortex(2), smartSpindexerMotorConfig);
 
     this.spindexerMechanismConfig =
         new FlyWheelConfig(spindexerMotor)
@@ -105,7 +122,8 @@ public class SpindexerSubsystem extends SubsystemBase {
 
   public void updateInputs() {
     spindexerInputs.spindexerAppliedVolts = spindexerMotor.getVoltage();
-    spindexerInputs.spindexerCurrent = spindexerMotor.getStatorCurrent();
+    spindexerInputs.spindexerLeadCurrent = spindexerMotor.getStatorCurrent();
+    spindexerInputs.spindexerFollowerCurrent = Amps.of(followSparkFlex.getOutputCurrent());
     spindexerInputs.spindexerPosition = spindexerMotor.getMechanismPosition();
     spindexerInputs.spindexerVelocity = spindexerMotor.getMechanismVelocity().in(RPM);
     spindexerInputs.spindexerSetpoint = this.setpoint;

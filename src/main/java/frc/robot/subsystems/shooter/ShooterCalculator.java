@@ -24,7 +24,7 @@ import org.littletonrobotics.junction.Logger;
 public class ShooterCalculator {
   private static ShooterCalculator instance;
 
-  private static final double HUB_AIM_OFFSET_METERS = 0.10;
+  private static final double HUB_AIM_OFFSET_METERS = 0.12;
 
   private final LinearFilter turretAngleFilter =
       LinearFilter.movingAverage((int) (0.1 / Constants.loopPeriodSecs));

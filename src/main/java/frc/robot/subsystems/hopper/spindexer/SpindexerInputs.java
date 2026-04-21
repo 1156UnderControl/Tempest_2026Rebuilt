@@ -16,6 +16,7 @@ public class SpindexerInputs {
   public Angle spindexerPosition = Degrees.of(0);
   public double spindexerVelocity = 0;
   public Voltage spindexerAppliedVolts = Volts.of(0);
-  public Current spindexerCurrent = Amps.of(0);
+  public Current spindexerLeadCurrent = Amps.of(0);
+  public Current spindexerFollowerCurrent = Amps.of(0);
   public AngularVelocity spindexerSetpoint = RPM.of(0);
 }

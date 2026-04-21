@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.463572614069836,
+        "x": 3.464,
         "y": 5.504
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6906005630134975,
-        "y": 5.523782680457746
+        "x": 2.6910279489436615,
+        "y": 5.484217319542254
       },
       "isLocked": false,
       "linkedName": "Bump Left Alliance Zone"
@@ -17,15 +17,15 @@
     {
       "anchor": {
         "x": 3.463572614069836,
-        "y": 7.471
+        "y": 7.471054715008803
       },
       "prevControl": {
-        "x": 2.943606616666349,
-        "y": 7.443231007040573
+        "x": 2.943606791203383,
+        "y": 7.443282454089026
       },
       "nextControl": {
-        "x": 3.7782460068148267,
-        "y": 7.487805258942488
+        "x": 3.77824590118838,
+        "y": 7.487861951657863
       },
       "isLocked": false,
       "linkedName": null
@@ -33,11 +33,11 @@
     {
       "anchor": {
         "x": 4.104418876540493,
-        "y": 7.471
+        "y": 7.471054715008803
       },
       "prevControl": {
-        "x": 3.6988738234179497,
-        "y": 7.48667870997247
+        "x": 3.69887392715669,
+        "y": 7.486736108054577
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,11 +47,11 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.4823915726375176,
-      "rotationDegrees": 180.0
+      "rotationDegrees": -180.0
     },
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": 180.0
+      "rotationDegrees": -180.0
     }
   ],
   "constraintZones": [
@@ -84,7 +84,7 @@
     },
     {
       "name": "Stop Shooting Fuels",
-      "waypointRelativePos": 0.97,
+      "waypointRelativePos": 0.9739785206718347,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -95,7 +95,7 @@
     },
     {
       "name": "Set Drive Modules Coast",
-      "waypointRelativePos": 1.17,
+      "waypointRelativePos": 1.1744186046511615,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -126,7 +126,7 @@
   },
   "goalEndState": {
     "velocity": 7.5,
-    "rotation": 180.0
+    "rotation": -180.0
   },
   "reversed": false,
   "folder": "Bump Left",

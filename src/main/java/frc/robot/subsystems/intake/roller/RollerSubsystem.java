@@ -71,7 +71,7 @@ public class RollerSubsystem extends SubsystemBase {
         new SparkFlex(RollerConstants.ID_intakeFollowerRollerMotor, MotorType.kBrushless);
 
     this.followerConfig = new SparkFlexConfig();
-    this.followerConfig.idleMode(IdleMode.kCoast);
+    this.followerConfig.idleMode(IdleMode.kCoast).smartCurrentLimit(70);
     this.rollerFollowerFlex.configure(
         followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -84,7 +84,7 @@ public class RollerSubsystem extends SubsystemBase {
                 50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
             .withGearing(new MechanismGearing(GearBox.fromReductionStages(2)))
             .withIdleMode(MotorMode.COAST)
-            .withStatorCurrentLimit(Amps.of(80))
+            .withStatorCurrentLimit(Amps.of(70))
             .withMotorInverted(false)
             .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
             .withControlMode(ControlMode.OPEN_LOOP)
@@ -125,7 +125,8 @@ public class RollerSubsystem extends SubsystemBase {
 
   public void updateInputs() {
     rollerInputs.rollerVoltage = rollerMotor.getVoltage();
-    rollerInputs.rollerCurrent = rollerMotor.getStatorCurrent();
+    rollerInputs.rollerLeadCurrent = rollerMotor.getStatorCurrent();
+    rollerInputs.rollerFollowerCurrent = Amps.of(rollerFollowerFlex.getOutputCurrent());
     rollerInputs.rollerPosition = rollerMotor.getMechanismPosition();
     rollerInputs.rollerVelocity = rollerMotor.getMechanismVelocity();
   }
