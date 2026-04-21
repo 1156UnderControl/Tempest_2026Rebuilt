@@ -3,6 +3,7 @@ package frc.robot.subsystems.hopper.spindexer;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Volts;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkFlex;
@@ -29,8 +30,8 @@ public class SpindexerSubsystem extends SubsystemBase {
   private final SparkFlex leadSparkFlex;
   private final SparkFlex followSparkFlex;
 
-  private SparkFlexConfig leadConfig;
-  private SparkFlexConfig followerConfig;
+  private final SparkFlexConfig leadConfig;
+  private final SparkFlexConfig followerConfig;
 
   private SpindexerSubsystem() {
     this.leadSparkFlex = new SparkFlex(SpindexerConstants.LEADER_MOTOR_ID, MotorType.kBrushless);
@@ -39,17 +40,11 @@ public class SpindexerSubsystem extends SubsystemBase {
     this.leadConfig = new SparkFlexConfig();
     this.followerConfig = new SparkFlexConfig();
 
-    this.leadConfig
-    .idleMode(IdleMode.kCoast)
-    .inverted(true)
-    .smartCurrentLimit(60);
+    this.leadConfig.idleMode(IdleMode.kCoast).inverted(true).smartCurrentLimit(60);
     this.leadSparkFlex.configure(
         leadConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
-    this.followerConfig
-    .idleMode(IdleMode.kCoast)
-    .inverted(false)
-    .smartCurrentLimit(60);
+    this.followerConfig.idleMode(IdleMode.kCoast).inverted(false).smartCurrentLimit(60);
     this.followSparkFlex.configure(
         followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
   }
@@ -62,29 +57,33 @@ public class SpindexerSubsystem extends SubsystemBase {
 
   public void updateInputs() {
     spindexerInputs.spindexerLeadAppliedVolts = Volts.of(leadSparkFlex.getAppliedOutput() * 12);
-    spindexerInputs.spindexerFollowerAppliedVolts = Volts.of(followSparkFlex.getAppliedOutput() * 12);
+    spindexerInputs.spindexerFollowerAppliedVolts =
+        Volts.of(followSparkFlex.getAppliedOutput() * 12);
     spindexerInputs.spindexerLeadCurrent = Amps.of(leadSparkFlex.getOutputCurrent());
     spindexerInputs.spindexerFollowerCurrent = Amps.of(followSparkFlex.getOutputCurrent());
-    spindexerInputs.spindexerLeadVelocity = RPM.of(leadSparkFlex.getAbsoluteEncoder().getVelocity()/SpindexerConstants.GEARING);
-    spindexerInputs.spindexerFollowerVelocity = RPM.of(followSparkFlex.getAbsoluteEncoder().getVelocity()/SpindexerConstants.GEARING);
+    spindexerInputs.spindexerLeadVelocity =
+        RPM.of(leadSparkFlex.getAbsoluteEncoder().getVelocity() / SpindexerConstants.GEARING);
+    spindexerInputs.spindexerFollowerVelocity =
+        RPM.of(followSparkFlex.getAbsoluteEncoder().getVelocity() / SpindexerConstants.GEARING);
   }
 
   public Command shoot() {
-    return this.setDutyCycle(Volts.of(12.0));
+    return this.setVoltage(Volts.of(12.0));
   }
 
   public Command expell() {
-    return this.setDutyCycle(Volts.of(0));
+    return this.setVoltage(Volts.of(0));
   }
 
   public Command stop() {
-    return this.setDutyCycle(Volts.of(0));
+    return this.setVoltage(Volts.of(0));
   }
 
-  public Command setDutyCycle(Voltage voltage) {
-    return this.run(() -> {
-      leadSparkFlex.setVoltage(voltage);
-      followSparkFlex.setVoltage(voltage);
-    });
+  public Command setVoltage(Voltage voltage) {
+    return this.run(
+        () -> {
+          leadSparkFlex.setVoltage(voltage);
+          followSparkFlex.setVoltage(voltage);
+        });
   }
 }
