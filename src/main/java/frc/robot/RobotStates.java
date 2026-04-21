@@ -24,7 +24,7 @@ public class RobotStates {
 
   private static boolean shouldShootAutonomous = false;
 
-  private static boolean shouldConfigRollerAuto = true;
+  private static boolean shouldConfigRollerAuto = false;
 
   private static boolean shouldConfigRollerTeleop = false;
 
