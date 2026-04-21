@@ -9,6 +9,7 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,6 +34,7 @@ public class SpindexerSubsystem extends SubsystemBase {
   private final SparkFlexConfig leadConfig;
   private final SparkFlexConfig followerConfig;
 
+
   private SpindexerSubsystem() {
     this.leadSparkFlex = new SparkFlex(SpindexerConstants.LEADER_MOTOR_ID, MotorType.kBrushless);
     this.followSparkFlex = new SparkFlex(SpindexerConstants.FOLLOW_MOTOR_ID, MotorType.kBrushless);
@@ -43,10 +45,13 @@ public class SpindexerSubsystem extends SubsystemBase {
     this.leadConfig.idleMode(IdleMode.kCoast).inverted(true).smartCurrentLimit(60);
     this.leadSparkFlex.configure(
         leadConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        leadConfig.openLoopRampRate(0.01);
+
 
     this.followerConfig.idleMode(IdleMode.kCoast).inverted(false).smartCurrentLimit(60);
     this.followSparkFlex.configure(
         followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        followerConfig.openLoopRampRate(0.01);
   }
 
   @Override
