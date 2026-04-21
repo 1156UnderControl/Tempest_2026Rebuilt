@@ -1,0 +1,118 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.464,
+        "y": 2.539
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.6910279489436615,
+        "y": 2.558782680457745
+      },
+      "isLocked": false,
+      "linkedName": "Bump Right Alliance Zone"
+    },
+    {
+      "anchor": {
+        "x": 3.463572614069836,
+        "y": 0.5719452849911966
+      },
+      "prevControl": {
+        "x": 2.943606791203383,
+        "y": 0.5997175459109733
+      },
+      "nextControl": {
+        "x": 3.77824590118838,
+        "y": 0.555138048342136
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.433915662650602,
+        "y": 0.5719452849911966
+      },
+      "prevControl": {
+        "x": 8.028370713266797,
+        "y": 0.556263891946044
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.97,
+      "constraints": {
+        "maxVelocity": 0.35,
+        "maxAcceleration": 7.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Extend Intake",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Stop Shooting Fuels",
+      "waypointRelativePos": 1.1334987593052044,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Stop Shooting Fuels"
+        }
+      }
+    },
+    {
+      "name": "Set Drive Modules Coast",
+      "waypointRelativePos": 1.1744186046511615,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Set Drive Modules Coast"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 7.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 7.5,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Bump Right",
+  "idealStartingState": {
+    "velocity": 0.57,
+    "rotation": -143.9232673587843
+  },
+  "useDefaultConstraints": true
+}
