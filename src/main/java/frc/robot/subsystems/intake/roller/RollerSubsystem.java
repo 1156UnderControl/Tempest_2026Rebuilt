@@ -11,6 +11,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
@@ -18,6 +19,10 @@ import org.littletonrobotics.junction.Logger;
 public class RollerSubsystem extends SubsystemBase {
 
   private static RollerSubsystem instance;
+
+  private boolean shouldConfigAuto = true;
+
+  private boolean shouldConfigTeleop = false;
 
   public static RollerSubsystem getInstance() {
     if (instance == null) {
@@ -45,13 +50,13 @@ public class RollerSubsystem extends SubsystemBase {
     this.leadConfig = new SparkFlexConfig();
     this.leadConfig.idleMode(IdleMode.kCoast).inverted(true).smartCurrentLimit(70);
     this.leadSparkFlex.configure(
-        leadConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        leadConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     leadConfig.openLoopRampRate(0.01);
 
     this.followerConfig = new SparkFlexConfig();
     this.followerConfig.idleMode(IdleMode.kCoast).inverted(false).smartCurrentLimit(70);
     this.followerSparkFlex.configure(
-        followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+        followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     followerConfig.openLoopRampRate(0.01);
   }
 
@@ -59,6 +64,25 @@ public class RollerSubsystem extends SubsystemBase {
   public void periodic() {
     updateInputs();
     Logger.processInputs("Subsystems/Roller", rollerInputs);
+    if(shouldConfigAuto && DriverStation.isAutonomousEnabled()){
+      this.leadConfig.smartCurrentLimit(80);
+      this.leadSparkFlex.configure(
+        leadConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+      this.followerConfig.smartCurrentLimit(80);
+      this.followerSparkFlex.configure(
+        followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+      shouldConfigAuto = false;
+      shouldConfigTeleop = true;
+    }
+    if(shouldConfigTeleop && !shouldConfigAuto && DriverStation.isTeleopEnabled()){
+      this.leadConfig.smartCurrentLimit(70);
+      this.leadSparkFlex.configure(
+        leadConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+      this.followerConfig.smartCurrentLimit(70);
+      this.followerSparkFlex.configure(
+        followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+      shouldConfigTeleop = false;
+    }
   }
 
   public void updateInputs() {
