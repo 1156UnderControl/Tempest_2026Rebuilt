@@ -45,14 +45,14 @@ public class RollerSubsystem extends SubsystemBase {
     this.leadConfig = new SparkFlexConfig();
     this.leadConfig.idleMode(IdleMode.kCoast).inverted(true).smartCurrentLimit(70);
     this.leadSparkFlex.configure(
-        leadConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-        leadConfig.openLoopRampRate(0.01);
+        leadConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    leadConfig.openLoopRampRate(0.01);
 
     this.followerConfig = new SparkFlexConfig();
     this.followerConfig.idleMode(IdleMode.kCoast).inverted(false).smartCurrentLimit(70);
+    this.followerConfig.openLoopRampRate(0.01);
     this.followerSparkFlex.configure(
-        followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-        followerConfig.openLoopRampRate(0.01);
+        followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
@@ -90,5 +90,23 @@ public class RollerSubsystem extends SubsystemBase {
           this.leadSparkFlex.setVoltage(voltage);
           this.followerSparkFlex.setVoltage(voltage);
         });
+  }
+
+  public void configureTeleop() {
+    this.leadConfig.smartCurrentLimit(70);
+    this.leadSparkFlex.configure(
+        leadConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    this.followerConfig.smartCurrentLimit(70);
+    this.followerSparkFlex.configure(
+        followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+  }
+
+   public void configureAuto() {
+    this.leadConfig.smartCurrentLimit(80);
+    this.leadSparkFlex.configure(
+        leadConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    this.followerConfig.smartCurrentLimit(80);
+    this.followerSparkFlex.configure(
+        followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
   }
 }

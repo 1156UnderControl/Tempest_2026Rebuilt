@@ -80,12 +80,12 @@
     },
     {
       "anchor": {
-        "x": 2.8298432915199534,
-        "y": 7.4241913328931926
+        "x": 3.102779947916667,
+        "y": 7.4111637140551645
       },
       "prevControl": {
-        "x": 2.4934751215627102,
-        "y": 7.430535884578304
+        "x": 2.7664117779594237,
+        "y": 7.417508265740276
       },
       "nextControl": null,
       "isLocked": false,
@@ -142,7 +142,7 @@
       "minWaypointRelativePos": 3.2390952183350374,
       "maxWaypointRelativePos": 5.0,
       "constraints": {
-        "maxVelocity": 0.77,
+        "maxVelocity": 0.72,
         "maxAcceleration": 7.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -247,7 +247,7 @@
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 0.5,
-    "rotation": 135.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

@@ -24,6 +24,10 @@ public class RobotStates {
 
   private static boolean shouldShootAutonomous = false;
 
+  private static boolean shouldConfigRollerAuto = true;
+
+  private static boolean shouldConfigRollerTeleop = false;
+
   public static RobotStates getInstance() {
     if (instance == null) {
       instance = new RobotStates();
@@ -130,5 +134,21 @@ public class RobotStates {
 
   public boolean getShouldShootMode() {
     return shouldShootAutonomous;
+  }
+
+  public void setShouldConfigRollerAuto(boolean shouldConfig) {
+    shouldConfigRollerAuto = shouldConfig;
+  }
+
+  public void setShouldConfigRollerTeleop(boolean shouldConfig) {
+    shouldConfigRollerTeleop = shouldConfig;
+  }
+
+  public boolean getShouldConfigRollerAuto() {
+    return shouldConfigRollerAuto;
+  }
+
+  public boolean getShouldConfigRollerTeleop() {
+    return shouldConfigRollerTeleop;
   }
 }

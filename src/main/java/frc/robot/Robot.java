@@ -123,6 +123,9 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(autonomousCommand);
     }
+
+    RobotStates.getInstance().setShouldConfigRollerAuto(true);
+    RobotStates.getInstance().setShouldConfigRollerTeleop(false);
   }
 
   @Override
@@ -144,6 +147,9 @@ public class Robot extends LoggedRobot {
 
     LimelightHelpers.SetIMUMode(VisionConstants.backRightLimelightName, 0);
     LimelightHelpers.SetThrottle(VisionConstants.backRightLimelightName, 0);
+
+    RobotStates.getInstance().setShouldConfigRollerAuto(false);
+    RobotStates.getInstance().setShouldConfigRollerTeleop(true);
   }
 
   @Override

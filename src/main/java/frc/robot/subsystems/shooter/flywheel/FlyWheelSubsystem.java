@@ -5,7 +5,6 @@ import static edu.wpi.first.units.Units.RPM;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -102,13 +101,11 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
     talonConfigurationFollower.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
     talonConfiguratorFollower.apply(talonConfigurationFollower.MotorOutput);
+    talonConfiguratorFollower.apply(talonConfigurationFollower.TorqueCurrent.withPeakForwardTorqueCurrent(800).withPeakReverseTorqueCurrent(0));
 
     talonConfiguratorLead.refresh(talonConfigurationLead.Slot0);
     talonConfiguratorLead.apply(talonConfigurationLead.Slot0.withKS(3.3).withKV(0.015));
-    talonConfigurationLead.TorqueCurrent.withPeakForwardTorqueCurrent(800);
-    talonConfigurationLead.TorqueCurrent.withPeakReverseTorqueCurrent(0);
-    talonConfigurationFollower.TorqueCurrent.withPeakForwardTorqueCurrent(800);
-    talonConfigurationFollower.TorqueCurrent.withPeakReverseTorqueCurrent(0);
+    talonConfiguratorLead.apply(talonConfigurationLead.TorqueCurrent.withPeakForwardTorqueCurrent(800).withPeakReverseTorqueCurrent(0));
     this.inputs = new FlyWheelInputsAutoLogged();
 
     SmartDashboard.putNumber("Calibration/FlyWheelRPM", 0);
