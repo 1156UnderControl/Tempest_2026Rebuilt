@@ -10,6 +10,8 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
+import java.util.function.Supplier;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -18,6 +20,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import org.littletonrobotics.junction.Logger;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -55,7 +58,11 @@ public class KickerSubsystem extends SubsystemBase {
 
   private final FlyWheel kicker;
 
+  private final VelocityTorqueCurrentFOC torqueCurrentRequest;
+
   private KickerSubsystem() {
+    torqueCurrentRequest = new VelocityTorqueCurrentFOC(RPM.of(0));
+
     kickerInputs = new KickerInputsAutoLogged();
 
     kickerTalon = new TalonFX(16);
@@ -118,19 +125,22 @@ public class KickerSubsystem extends SubsystemBase {
   }
 
   public Command shoot() {
-    return kicker.setSpeed(KickerConstants.setpoints.SHOOTING);
+    return this.runKicker(
+        () -> KickerConstants.setpoints.SHOOTING);
   }
 
   public Command expell() {
-    return kicker.setSpeed(KickerConstants.setpoints.EXPEL);
+    return this.runKicker(
+        () -> KickerConstants.setpoints.EXPEL);
   }
 
   public Command stop() {
-    return kicker.setSpeed(KickerConstants.setpoints.STOPPED);
+    return this.runKicker(
+        () -> KickerConstants.setpoints.STOPPED);
   }
 
-  public Command setDutyCycle(double dutycycle) {
-    return kicker.set(dutycycle);
+  private Command runKicker(Supplier<AngularVelocity> velocity) {
+    return this.run(() -> kickerTalon.setControl(torqueCurrentRequest.withVelocity(velocity.get())));
   }
 
   public Trigger isAtVelocity() {
