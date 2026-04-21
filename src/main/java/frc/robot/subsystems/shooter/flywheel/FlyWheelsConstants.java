@@ -22,7 +22,7 @@ public class FlyWheelsConstants {
   public static final Voltage MAX_VOLTS = Volts.of(12.0);
 
   public static class Velocity {
-    public static final AngularVelocity VELOCITY_ERROR_ALLOWED_FOR_FEED = RPM.of(1000);
+    public static final AngularVelocity VELOCITY_ERROR_ALLOWED_FOR_FEED = RPM.of(3000);
     public static final AngularVelocity VELOCITY_ERROR_ALLOWED = RPM.of(300);
     public static final AngularVelocity VELOCITY_ERROR_ALLOWED_FIRST_SHOT = RPM.of(500);
   }
