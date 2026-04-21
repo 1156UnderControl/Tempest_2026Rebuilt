@@ -32,11 +32,11 @@
     },
     {
       "anchor": {
-        "x": 5.0,
+        "x": 8.396255318368544,
         "y": 7.471
       },
       "prevControl": {
-        "x": 4.594454946877456,
+        "x": 7.990710265246,
         "y": 7.48667870997247
       },
       "nextControl": null,
@@ -72,15 +72,10 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Retract Intake",
-      "waypointRelativePos": 0.6426091269841268,
+      "name": "Extend Intake",
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Retract Intake"
-        }
-      }
+      "command": null
     },
     {
       "name": "Stop Shooting Fuels",
@@ -101,17 +96,6 @@
         "type": "named",
         "data": {
           "name": "Set Drive Modules Coast"
-        }
-      }
-    },
-    {
-      "name": "Extend Intake",
-      "waypointRelativePos": 1.59125744047619,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Extend Intake"
         }
       }
     }
