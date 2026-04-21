@@ -72,8 +72,7 @@ public class FlyWheelSubsystem extends SubsystemBase {
             .withFollowers(Pair.of(this.followerMotor, true))
             .withIdleMode(MotorMode.COAST)
             .withGearing(FlyWheelsConstants.MOTOR_GEARING)
-            .withSupplyCurrentLimit(Amps.of(40
-            ))
+            .withSupplyCurrentLimit(Amps.of(60))
             .withStatorCurrentLimit(Amps.of(120))
             .withClosedLoopController(
                 FlyWheelsConstants.ClosedLoopController.kP,
