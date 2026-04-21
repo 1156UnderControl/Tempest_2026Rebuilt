@@ -60,7 +60,7 @@
       "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 0.97,
       "constraints": {
-        "maxVelocity": 0.5,
+        "maxVelocity": 0.35,
         "maxAcceleration": 7.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -79,7 +79,7 @@
     },
     {
       "name": "Stop Shooting Fuels",
-      "waypointRelativePos": 0.97,
+      "waypointRelativePos": 1.1176178660049596,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
