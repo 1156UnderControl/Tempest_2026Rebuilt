@@ -1,7 +1,9 @@
 package frc.robot;
 
 import com.ctre.phoenix6.controls.ModulateVBatOut;
+import com.ctre.phoenix6.controls.RainbowAnimation;
 import com.ctre.phoenix6.controls.SolidColor;
+import com.ctre.phoenix6.controls.StrobeAnimation;
 import com.ctre.phoenix6.signals.RGBWColor;
 import com.ctre.phoenix6.hardware.CANdle;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
@@ -16,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers;
 import frc.robot.constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.leds.LedSubsystem;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import frc.robot.util.HubShiftUtil;
 import org.littletonrobotics.junction.AutoLogOutputManager;
@@ -29,10 +32,11 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
+  private LedSubsystem leds;
 
-  CANdle candle = new CANdle(1, "light bus");
-    SolidColor color = new SolidColor(0, 7);
-
+  CANdle candle = new CANdle(0, "light bus");
+  SolidColor color = new SolidColor(0, 8);
+StrobeAnimation strobeAnimation = new StrobeAnimation(0, 8);
   
 
   public Robot() {
@@ -91,16 +95,14 @@ public class Robot extends LoggedRobot {
     }
 
     robotContainer = new RobotContainer();
+    leds = new LedSubsystem();
     LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
     LimelightHelpers.SetIMUMode(VisionConstants.backRightLimelightName, 0);
     LimelightHelpers.SetIMUAssistAlpha(VisionConstants.backRightLimelightName, 0.001);
     LimelightHelpers.SetThrottle(VisionConstants.backRightLimelightName, 200);
 
     RobotController.setBrownoutVoltage(5.9);
-      candle.setControl(new SolidColor(0, 7));
-    SolidColor color = new SolidColor(0, 7);
-    color.withColor(new RGBWColor(0, 255, 0, 0));
-    candle.setControl(color);
+      
   }
 
   @Override
@@ -115,10 +117,12 @@ public class Robot extends LoggedRobot {
         DriverStation.getAlliance().orElse(Alliance.Blue) == HubShiftUtil.getFirstActiveAlliance());
     SmartDashboard.putNumber(
         "Time Until Next Shift:", HubShiftUtil.getOfficialShiftInfo().remainingTime());
-        if (HubShiftUtil.getOfficialShiftInfo().active()){
-          candle.setControl(color);
-        }
-  }
+
+    leds.updateLEDs();
+       
+      }
+          
+  
 
   @Override
   public void disabledInit() {
@@ -173,22 +177,22 @@ public class Robot extends LoggedRobot {
   public void teleopPeriodic() {
 
 
-     if (HubShiftUtil.getOfficialShiftInfo().remainingTime() < 15 && HubShiftUtil.getOfficialShiftInfo().active())
+   if (HubShiftUtil.getOfficialShiftInfo().remainingTime() < 15 && HubShiftUtil.getOfficialShiftInfo().active())
      {
-     candle.setControl(color);
-     
+       candle.setControl(color);
     } else if
-       (HubShiftUtil.getOfficialShiftInfo().active()){
-           candle.setControl(color);
+      (HubShiftUtil.getOfficialShiftInfo().active()){
+           leds.updateLEDs();
+     System.out.println("leds working");
        }
-      else { 
-        candle.setControl(color);
+      
        
    }
       
 
-      }
-  }
+
+     
+  
 
   @Override
   public void testInit() {
@@ -203,4 +207,5 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void simulationPeriodic() {}
+
 }
