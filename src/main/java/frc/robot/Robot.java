@@ -34,9 +34,6 @@ public class Robot extends LoggedRobot {
   private RobotContainer robotContainer;
   private LedSubsystem leds;
 
-  CANdle candle = new CANdle(0, "light bus");
-  SolidColor color = new SolidColor(0, 8);
-StrobeAnimation strobeAnimation = new StrobeAnimation(0, 8);
   
 
   public Robot() {
@@ -177,17 +174,17 @@ StrobeAnimation strobeAnimation = new StrobeAnimation(0, 8);
   public void teleopPeriodic() {
 
 
-   if (HubShiftUtil.getOfficialShiftInfo().remainingTime() < 15 && HubShiftUtil.getOfficialShiftInfo().active())
-     {
-       candle.setControl(color);
-    } else if
-      (HubShiftUtil.getOfficialShiftInfo().active()){
-           leds.updateLEDs();
-     System.out.println("leds working");
+   //if (HubShiftUtil.getOfficialShiftInfo().remainingTime() < 15 && HubShiftUtil.getOfficialShiftInfo().active())
+    // {
+  //     candle.setControl(color);
+    //} else if
+    //  (HubShiftUtil.getOfficialShiftInfo().active()){
+    //       leds.updateLEDs();
+   //  System.out.println("leds working");
        }
       
        
-   }
+   
       
 
 
