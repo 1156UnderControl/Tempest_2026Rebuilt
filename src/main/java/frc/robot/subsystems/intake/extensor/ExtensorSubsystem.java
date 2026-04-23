@@ -218,4 +218,14 @@ public class ExtensorSubsystem extends SubsystemBase {
                     ExtensorConstants.setpoints.INTAKE_EXTENDED_POSITION,
                     ExtensorConstants.DEADBAND_IS_AT));
   }
+
+  public Trigger isAtTargetHeightClosed(){
+    return new Trigger(
+        () ->
+            extensor
+                .getHeight()
+                .isNear(
+                    ExtensorConstants.setpoints.INTAKE_HOMED_POSITION,
+                    ExtensorConstants.DEADBAND_IS_AT));
+  }
 }

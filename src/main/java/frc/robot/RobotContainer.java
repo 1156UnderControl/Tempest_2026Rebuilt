@@ -234,7 +234,9 @@ public class RobotContainer {
     //     .onTrue(
     //         Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrBright()).ignoringDisable(true));
 
-    this.operatorController.l2().whileTrue(this.roller.stopRoller());
+    this.operatorController.l2().and(this.extensor.isAtTargetHeightClosed().negate())
+    .whileTrue(this.roller.stopRoller())
+    .whileFalse(this.roller.runRoller());
 
     new Trigger(
             () ->
