@@ -101,11 +101,19 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
     talonConfigurationFollower.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
     talonConfiguratorFollower.apply(talonConfigurationFollower.MotorOutput);
-    talonConfiguratorFollower.apply(talonConfigurationFollower.TorqueCurrent.withPeakForwardTorqueCurrent(800).withPeakReverseTorqueCurrent(0));
+    talonConfiguratorFollower.apply(
+        talonConfigurationFollower
+            .TorqueCurrent
+            .withPeakForwardTorqueCurrent(800)
+            .withPeakReverseTorqueCurrent(0));
 
     talonConfiguratorLead.refresh(talonConfigurationLead.Slot0);
     talonConfiguratorLead.apply(talonConfigurationLead.Slot0.withKS(3.3).withKV(0.015));
-    talonConfiguratorLead.apply(talonConfigurationLead.TorqueCurrent.withPeakForwardTorqueCurrent(800).withPeakReverseTorqueCurrent(0));
+    talonConfiguratorLead.apply(
+        talonConfigurationLead
+            .TorqueCurrent
+            .withPeakForwardTorqueCurrent(800)
+            .withPeakReverseTorqueCurrent(0));
     this.inputs = new FlyWheelInputsAutoLogged();
 
     SmartDashboard.putNumber("Calibration/FlyWheelRPM", 0);

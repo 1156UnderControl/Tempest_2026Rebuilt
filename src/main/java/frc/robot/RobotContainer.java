@@ -233,7 +233,10 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrBright()).ignoringDisable(true));
 
-    new Trigger(() -> RobotStates.getInstance().getShouldConfigRollerAuto() && !RobotStates.getInstance().getShouldConfigRollerTeleop())
+    new Trigger(
+            () ->
+                RobotStates.getInstance().getShouldConfigRollerAuto()
+                    && !RobotStates.getInstance().getShouldConfigRollerTeleop())
         .onTrue(Commands.runOnce(() -> this.roller.configureAuto()))
         .onFalse(Commands.runOnce(() -> this.roller.configureTeleop()));
   }
