@@ -253,7 +253,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
     this.state = "DRIVE_ALIGN_TOWER";
 
-    if(RobotStates.getInstance().isOnAllianceZone()) {
+    if (RobotStates.getInstance().isOnAllianceZone()) {
       if (isRedAlliance) {
         if (getPose().getRotation().getDegrees() < 0) {
           nearestAngleToLock = new Rotation2d(Degrees.of(0));
@@ -285,7 +285,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
       super.driveToSpecificXinField(towerX, speed, desiredSpeeds, cosValue, sinValue);
 
-    } else if (RobotStates.getInstance().isOnOtherAllianceZone()){
+    } else if (RobotStates.getInstance().isOnOtherAllianceZone()) {
 
       if (isRedAlliance) {
         if (getPose().getRotation().getDegrees() < 0) {
@@ -315,7 +315,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
       boolean usingJoystick = !controller.notUsingJoystick();
       double cosValue = usingJoystick ? controller.getCOS_Joystick() : nearestAngleToLock.getCos();
       double sinValue = usingJoystick ? controller.getSIN_Joystick() : nearestAngleToLock.getSin();
-      
+
       super.driveToSpecificXinField(towerX, speed, desiredSpeeds, cosValue, sinValue);
     } else {
       this.idle();
