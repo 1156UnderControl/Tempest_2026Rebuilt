@@ -202,7 +202,7 @@ public class RobotContainer {
         .and(this.operatorController.square().negate())
         .whileTrue(this.states.collectState());
 
-    this.operatorController.r1().whileTrue(this.spindexer.expell());
+    this.operatorController.r1().whileTrue(this.spindexer.expell().alongWith(this.kicker.expell()));
     this.operatorController.l1().whileTrue(this.roller.expellRoller());
 
     this.operatorController
@@ -225,16 +225,18 @@ public class RobotContainer {
 
     this.driverController.leftBumper().whileTrue(new PassThroughTower(drive));
 
-    this.operatorController
-        .l2()
-        .onTrue(Commands.runOnce(() -> SwerveSubsystem.runVisionHdr()).ignoringDisable(true));
-    this.operatorController
-        .r3()
-        .onTrue(Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrDark()).ignoringDisable(true));
-    this.operatorController
-        .l3()
-        .onTrue(
-            Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrBright()).ignoringDisable(true));
+    // this.operatorController
+    //     .l2()
+    //     .onTrue(Commands.runOnce(() -> SwerveSubsystem.runVisionHdr()).ignoringDisable(true));
+    // this.operatorController
+    //     .r3()
+    //     .onTrue(Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrDark()).ignoringDisable(true));
+    // this.operatorController
+    //     .l3()
+    //     .onTrue(
+    //         Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrBright()).ignoringDisable(true));
+
+    this.operatorController.l2().whileTrue(this.roller.stopRoller());
 
     new Trigger(
             () ->
