@@ -3,6 +3,7 @@ package frc.robot;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANdleConfiguration;
 import com.ctre.phoenix6.controls.ColorFlowAnimation;
+import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.EmptyAnimation;
 import com.ctre.phoenix6.controls.FireAnimation;
 import com.ctre.phoenix6.controls.LarsonAnimation;
@@ -55,6 +56,7 @@ public class Robot extends LoggedRobot {
     private static final RGBWColor kViolet = RGBWColor.fromHSV(Degrees.of(270), 0.9, 0.8);
     private static final RGBWColor kRed = new RGBWColor(217, 0, 0, 0);
     private static final RGBWColor kBlue = new RGBWColor(0, 0, 217, 0);
+    private static final RGBWColor kOrange = new RGBWColor(255, 165, 0, 0);
 
 
     private final CANdle m_candle = new CANdle(0, CANBus.roboRIO());
@@ -170,6 +172,8 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putNumber(
         "Time Until Next Shift:", HubShiftUtil.getOfficialShiftInfo().remainingTime());
 
+     
+
 final var anim0Selection = m_anim0Chooser.getSelected();
 if (m_anim0State != anim0Selection) {
     m_anim0State = anim0Selection; 
@@ -220,7 +224,10 @@ if (m_anim0State != anim0Selection) {
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+      m_candle.setControl(
+                        new RainbowAnimation(0, 7).withSlot(0));
+  }
 
   @Override
   public void autonomousInit() {
@@ -277,7 +284,7 @@ if (m_anim0State != anim0Selection) {
                             .withColor(kGreen));
        } else {
  m_candle.setControl(
-                        new RainbowAnimation(0, 7).withSlot(0));
+                        new ColorFlowAnimation(0, 7).withSlot(0).withColor(kOrange));
        }
       }
 
