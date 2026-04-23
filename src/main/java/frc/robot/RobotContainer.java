@@ -27,7 +27,6 @@ import frc.robot.subsystems.hopper.kicker.KickerSubsystem;
 import frc.robot.subsystems.hopper.spindexer.SpindexerSubsystem;
 import frc.robot.subsystems.intake.extensor.ExtensorSubsystem;
 import frc.robot.subsystems.intake.roller.RollerSubsystem;
-
 import frc.robot.subsystems.shooter.flywheel.FlyWheelSubsystem;
 import frc.robot.subsystems.shooter.hood.HoodSubsystem;
 import frc.robot.subsystems.shooter.turret.TurretSubsystem;
@@ -111,7 +110,6 @@ public class RobotContainer {
     this.roller = RollerSubsystem.getInstance();
     this.extensor = ExtensorSubsystem.getInstance();
 
-
     this.namedCommandsRegistry =
         new NamedCommandsRegistery(drive, roller, extensor, kicker, spindexer, climber);
     this.namedCommandsRegistry.registerAllAutoCommands();
@@ -131,7 +129,6 @@ public class RobotContainer {
     configureButtonBindings();
     configAutoTriggers();
     this.autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
   }
 
   private void configureButtonBindings() {
@@ -230,7 +227,8 @@ public class RobotContainer {
     //     .onTrue(Commands.runOnce(() -> SwerveSubsystem.runVisionHdr()).ignoringDisable(true));
     // this.operatorController
     //     .r3()
-    //     .onTrue(Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrDark()).ignoringDisable(true));
+    //     .onTrue(Commands.runOnce(() ->
+    // SwerveSubsystem.stopVisionHdrDark()).ignoringDisable(true));
     // this.operatorController
     //     .l3()
     //     .onTrue(
