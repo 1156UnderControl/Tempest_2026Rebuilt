@@ -101,7 +101,7 @@ public class RollerSubsystem extends SubsystemBase {
         followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
   }
 
-   public void configureAuto() {
+  public void configureAuto() {
     this.leadConfig.smartCurrentLimit(80);
     this.leadSparkFlex.configure(
         leadConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
