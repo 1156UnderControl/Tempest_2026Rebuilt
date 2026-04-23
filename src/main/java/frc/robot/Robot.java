@@ -154,8 +154,7 @@ public class Robot extends LoggedRobot {
     LimelightHelpers.SetIMUAssistAlpha(VisionConstants.backRightLimelightName, 0.001);
     LimelightHelpers.SetThrottle(VisionConstants.backRightLimelightName, 200);
 
-    RobotController.setBrownoutVoltage(5.9);
-      
+    RobotController.setBrownoutVoltage(6.1);
   }
 
   @Override

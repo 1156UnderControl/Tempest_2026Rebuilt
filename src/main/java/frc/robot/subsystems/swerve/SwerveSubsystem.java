@@ -253,36 +253,73 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
     this.state = "DRIVE_ALIGN_TOWER";
 
-    if (isRedAlliance) {
-      if (getPose().getRotation().getDegrees() < 0) {
-        nearestAngleToLock = new Rotation2d(Degrees.of(0));
+    if(RobotStates.getInstance().isOnAllianceZone()) {
+      if (isRedAlliance) {
+        if (getPose().getRotation().getDegrees() < 0) {
+          nearestAngleToLock = new Rotation2d(Degrees.of(0));
+        } else {
+          nearestAngleToLock = new Rotation2d(Degrees.of(180));
+        }
       } else {
-        nearestAngleToLock = new Rotation2d(Degrees.of(180));
+        if (getPose().getRotation().getDegrees() < 0) {
+          nearestAngleToLock = new Rotation2d(Degrees.of(180));
+        } else {
+          nearestAngleToLock = new Rotation2d(Degrees.of(0));
+        }
       }
-    } else {
-      if (getPose().getRotation().getDegrees() < 0) {
-        nearestAngleToLock = new Rotation2d(Degrees.of(180));
+
+      double towerX;
+      if (isRedAlliance) {
+        towerX = FieldConstants.FieldStructurePoses.TOWER_POSE_RED.getX();
       } else {
-        nearestAngleToLock = new Rotation2d(Degrees.of(0));
+        towerX = FieldConstants.FieldStructurePoses.TOWER_POSE_BLUE.getX();
       }
-    }
 
-    double towerX;
-    if (isRedAlliance) {
-      towerX = FieldConstants.FieldStructurePoses.TOWER_POSE_RED.getX();
+      double speed =
+          controller.turboActivate().getAsBoolean()
+              ? TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)
+              : 2.5;
+      boolean usingJoystick = !controller.notUsingJoystick();
+      double cosValue = usingJoystick ? controller.getCOS_Joystick() : nearestAngleToLock.getCos();
+      double sinValue = usingJoystick ? controller.getSIN_Joystick() : nearestAngleToLock.getSin();
+
+      super.driveToSpecificXinField(towerX, speed, desiredSpeeds, cosValue, sinValue);
+
+    } else if (RobotStates.getInstance().isOnOtherAllianceZone()){
+
+      if (isRedAlliance) {
+        if (getPose().getRotation().getDegrees() < 0) {
+          nearestAngleToLock = new Rotation2d(Degrees.of(0));
+        } else {
+          nearestAngleToLock = new Rotation2d(Degrees.of(180));
+        }
+      } else {
+        if (getPose().getRotation().getDegrees() < 0) {
+          nearestAngleToLock = new Rotation2d(Degrees.of(180));
+        } else {
+          nearestAngleToLock = new Rotation2d(Degrees.of(0));
+        }
+      }
+
+      double towerX;
+      if (isRedAlliance) {
+        towerX = FieldConstants.FieldStructurePoses.TOWER_POSE_BLUE.getX();
+      } else {
+        towerX = FieldConstants.FieldStructurePoses.TOWER_POSE_RED.getX();
+      }
+
+      double speed =
+          controller.turboActivate().getAsBoolean()
+              ? TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)
+              : 2.5;
+      boolean usingJoystick = !controller.notUsingJoystick();
+      double cosValue = usingJoystick ? controller.getCOS_Joystick() : nearestAngleToLock.getCos();
+      double sinValue = usingJoystick ? controller.getSIN_Joystick() : nearestAngleToLock.getSin();
+      
+      super.driveToSpecificXinField(towerX, speed, desiredSpeeds, cosValue, sinValue);
     } else {
-      towerX = FieldConstants.FieldStructurePoses.TOWER_POSE_BLUE.getX();
+      this.idle();
     }
-
-    double speed =
-        controller.turboActivate().getAsBoolean()
-            ? TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)
-            : 2.5;
-    boolean usingJoystick = !controller.notUsingJoystick();
-    double cosValue = usingJoystick ? controller.getCOS_Joystick() : nearestAngleToLock.getCos();
-    double sinValue = usingJoystick ? controller.getSIN_Joystick() : nearestAngleToLock.getSin();
-
-    super.driveToSpecificXinField(towerX, speed, desiredSpeeds, cosValue, sinValue);
   }
 
   public Rotation2d getNearestBumpAngle() {
