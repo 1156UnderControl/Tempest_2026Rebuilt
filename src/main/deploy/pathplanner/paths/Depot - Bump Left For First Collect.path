@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.2490090540175838,
-        "y": 5.51
+        "x": 3.463572614069836,
+        "y": 5.504
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2418204539738427,
-        "y": 5.550135972082495
+        "x": 2.456384014026095,
+        "y": 5.544135972082495
       },
       "isLocked": false,
-      "linkedName": "Bump Left Alliance Zone First Collect"
+      "linkedName": "Bump Left Alliance Zone"
     },
     {
       "anchor": {
@@ -114,9 +114,9 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 1.8101362966601182,
-      "maxWaypointRelativePos": 3.6812316458120464,
+      "maxWaypointRelativePos": 3.3294833619842827,
       "constraints": {
-        "maxVelocity": 0.8,
+        "maxVelocity": 0.6,
         "maxAcceleration": 2.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -129,7 +129,7 @@
       "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 2.5248779047497347,
       "constraints": {
-        "maxVelocity": 0.38,
+        "maxVelocity": 0.43,
         "maxAcceleration": 7.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -269,7 +269,7 @@
   "folder": "Depot",
   "idealStartingState": {
     "velocity": 0.5,
-    "rotation": -90.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }
