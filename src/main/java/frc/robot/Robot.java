@@ -9,6 +9,7 @@ import com.ctre.phoenix6.controls.EmptyAnimation;
 import com.ctre.phoenix6.controls.FireAnimation;
 import com.ctre.phoenix6.controls.LarsonAnimation;
 import com.ctre.phoenix6.controls.RainbowAnimation;
+import com.ctre.phoenix6.controls.SolidColor;
 import com.ctre.phoenix6.controls.StrobeAnimation;
 import com.ctre.phoenix6.controls.TwinkleAnimation;
 import com.ctre.phoenix6.controls.TwinkleOffAnimation;
@@ -245,9 +246,11 @@ public class Robot extends LoggedRobot {
         && HubShiftUtil.getOfficialShiftInfo().active()) {
       m_candle.setControl(new StrobeAnimation(0, 7).withSlot(0).withColor(kGreen));
     } else if (HubShiftUtil.getOfficialShiftInfo().active()) {
-      m_candle.setControl(new ColorFlowAnimation(0, 7).withSlot(0).withColor(kGreen));
+      m_candle.clearAllAnimations();
+      m_candle.setControl(new SolidColor(0, 7).withColor(kGreen));
     } else {
-      m_candle.setControl(new ColorFlowAnimation(0, 7).withSlot(0).withColor(kOrange));
+      m_candle.clearAllAnimations();
+      m_candle.setControl(new SolidColor(0, 7).withColor(kOrange));
     }
   }
 
