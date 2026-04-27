@@ -124,7 +124,7 @@ public class Robot extends LoggedRobot {
     }
 
     var cfg = new CANdleConfiguration();
-    cfg.LED.BrightnessScalar = 0.5;
+    cfg.LED.BrightnessScalar = 1.0;
     cfg.CANdleFeatures.StatusLedWhenActive = StatusLedWhenActiveValue.Disabled;
 
     m_candle.getConfigurator().apply(cfg);
@@ -199,6 +199,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledPeriodic() {
     m_candle.setControl(new RainbowAnimation(0, 7).withSlot(0));
+    LimelightHelpers.SetThrottle(VisionConstants.backRightLimelightName, 200);
   }
 
   @Override
