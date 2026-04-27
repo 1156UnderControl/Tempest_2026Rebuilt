@@ -146,7 +146,6 @@ public class Robot extends LoggedRobot {
     LimelightHelpers.SetIMUMode(VisionConstants.backRightLimelightName, 0);
     LimelightHelpers.SetIMUAssistAlpha(VisionConstants.backRightLimelightName, 0.001);
     LimelightHelpers.SetThrottle(VisionConstants.backRightLimelightName, 200);
-
     RobotController.setBrownoutVoltage(6.1);
   }
 
@@ -194,12 +193,12 @@ public class Robot extends LoggedRobot {
   public void disabledInit() {
     LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
     LimelightHelpers.SetIMUMode(VisionConstants.backRightLimelightName, 0);
+    LimelightHelpers.SetThrottle(VisionConstants.backRightLimelightName, 200);
   }
 
   @Override
   public void disabledPeriodic() {
     m_candle.setControl(new RainbowAnimation(0, 7).withSlot(0));
-    LimelightHelpers.SetThrottle(VisionConstants.backRightLimelightName, 200);
   }
 
   @Override
