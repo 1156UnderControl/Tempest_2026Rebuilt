@@ -203,7 +203,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
-    LimelightHelpers.SetIMUMode(VisionConstants.backRightLimelightName, 0);
+    LimelightHelpers.SetIMUMode(VisionConstants.backRightLimelightName, 4);
     LimelightHelpers.SetThrottle(VisionConstants.backRightLimelightName, 0);
     autonomousCommand = robotContainer.getAutonomousCommand();
 
@@ -232,7 +232,7 @@ public class Robot extends LoggedRobot {
       autonomousCommand.cancel();
     }
 
-    LimelightHelpers.SetIMUMode(VisionConstants.backRightLimelightName, 0);
+    LimelightHelpers.SetIMUMode(VisionConstants.backRightLimelightName, 4);
     LimelightHelpers.SetThrottle(VisionConstants.backRightLimelightName, 0);
 
     RobotStates.getInstance().setShouldConfigRollerAuto(false);
