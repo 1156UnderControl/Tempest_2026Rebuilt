@@ -66,6 +66,12 @@
           "data": {
             "pathName": "Copy of Bump Right - Trench 1.1"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Coast Right"
+          }
         }
       ]
     }
