@@ -93,19 +93,19 @@ public class RollerSubsystem extends SubsystemBase {
   }
 
   public void configureTeleop() {
-    this.leadConfig.smartCurrentLimit(70);
+    this.leadConfig.smartCurrentLimit(67);
     this.leadSparkFlex.configure(
         leadConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-    this.followerConfig.smartCurrentLimit(70);
+    this.followerConfig.smartCurrentLimit(67);
     this.followerSparkFlex.configure(
         followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   public void configureAuto() {
-    this.leadConfig.smartCurrentLimit(80);
+    this.leadConfig.smartCurrentLimit(77);
     this.leadSparkFlex.configure(
         leadConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-    this.followerConfig.smartCurrentLimit(80);
+    this.followerConfig.smartCurrentLimit(77);
     this.followerSparkFlex.configure(
         followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
   }
