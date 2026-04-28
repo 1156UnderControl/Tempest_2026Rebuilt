@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.java_is_undercontrol.util.AllianceFlipUtil;
 import frc.robot.constants.FieldConstants;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class RobotStates {
@@ -67,16 +68,19 @@ public class RobotStates {
     return (robotPose.getY() < FieldConstants.fieldWidth / 2);
   }
 
+  @AutoLogOutput
   public boolean isOnAllianceZone() {
     return AllianceFlipUtil.apply(robotPose).getX()
         < FieldConstants.FieldStrategicPoses.AllianceZoneX;
   }
 
+  @AutoLogOutput
   public boolean isOnOtherAllianceZone() {
     return AllianceFlipUtil.apply(robotPose).getX()
         > FieldConstants.FieldStrategicPoses.OtherAllianceZoneX;
   }
 
+  @AutoLogOutput
   public boolean isOnNotShootZone() {
     if (!isOnAllianceZone()
         && (isOnOtherAllianceZone() || isOnShootZoneToFeed())
