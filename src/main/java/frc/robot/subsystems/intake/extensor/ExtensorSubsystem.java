@@ -219,7 +219,7 @@ public class ExtensorSubsystem extends SubsystemBase {
                     ExtensorConstants.DEADBAND_IS_AT));
   }
 
-  public Trigger isAtTargetHeightClosed(){
+  public Trigger isAtTargetHeightClosed() {
     return new Trigger(
         () ->
             extensor
