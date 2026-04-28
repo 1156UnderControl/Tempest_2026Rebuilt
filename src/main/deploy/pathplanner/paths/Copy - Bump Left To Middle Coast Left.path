@@ -1,0 +1,135 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.463572614069836,
+        "y": 5.504
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.6906005630134975,
+        "y": 5.523782680457746
+      },
+      "isLocked": false,
+      "linkedName": "Bump Left Alliance Zone"
+    },
+    {
+      "anchor": {
+        "x": 3.463572614069836,
+        "y": 7.471
+      },
+      "prevControl": {
+        "x": 2.943606616666349,
+        "y": 7.443231007040573
+      },
+      "nextControl": {
+        "x": 3.7782460068148267,
+        "y": 7.487805258942488
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.396255318368544,
+        "y": 7.471
+      },
+      "prevControl": {
+        "x": 7.990710265246,
+        "y": 7.48667870997247
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.4823915726375176,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.97,
+      "constraints": {
+        "maxVelocity": 0.405,
+        "maxAcceleration": 7.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.49685534591194574,
+      "maxWaypointRelativePos": 2.0,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 7.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Extend Intake",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Stop Shooting Fuels",
+      "waypointRelativePos": 1.099045309430255,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Stop Shooting Fuels"
+        }
+      }
+    },
+    {
+      "name": "Set Drive Modules Coast",
+      "waypointRelativePos": 1.17,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Set Drive Modules Coast"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 7.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 7.5,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Bump Left",
+  "idealStartingState": {
+    "velocity": 0.57,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": true
+}
