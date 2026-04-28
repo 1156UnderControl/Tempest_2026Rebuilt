@@ -180,21 +180,25 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   public boolean isAtTargetVelocity() {
     return !isNotAtSetpointChecker.isStableInCondition(
-            () -> {
-              if (!RobotStates.getInstance().isOnAllianceZone()) {
-                isUsingFeedDeadband = true;
-                return !flywheelMechanism
-                    .getSpeed()
-                    .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED_FOR_FEED);
-              } else {
-                isUsingFeedDeadband = false;
-                return !flywheelMechanism
-                    .getSpeed()
-                    .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED);
-              }
-            })
-        && flywheelMechanism
-            .getSpeed()
-            .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED_FIRST_SHOT);
+            () -> !flywheelMechanism.getSpeed().isNear(setpoint, this.getProperDeadband()))
+        && (flywheelMechanism
+                .getSpeed()
+                .isNear(setpoint, FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED_FIRST_SHOT)
+            || !RobotStates.getInstance().isOnAllianceZone());
+  }
+
+  private AngularVelocity getProperDeadband() {
+    if (RobotStates.getInstance().isOnOtherAllianceZone()) {
+      isUsingFeedDeadband = true;
+      return FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED_FOR_FEED_OTHER_ALLIANCE;
+    }
+
+    if (!RobotStates.getInstance().isOnAllianceZone()) {
+      isUsingFeedDeadband = true;
+      return FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED_FOR_FEED;
+    }
+
+    isUsingFeedDeadband = false;
+    return FlyWheelsConstants.Velocity.VELOCITY_ERROR_ALLOWED;
   }
 }
