@@ -1,30 +1,12 @@
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
-
-import com.ctre.phoenix6.CANBus;
-import com.ctre.phoenix6.configs.CANdleConfiguration;
-import com.ctre.phoenix6.controls.ColorFlowAnimation;
-import com.ctre.phoenix6.controls.EmptyAnimation;
-import com.ctre.phoenix6.controls.FireAnimation;
-import com.ctre.phoenix6.controls.LarsonAnimation;
-import com.ctre.phoenix6.controls.RainbowAnimation;
-import com.ctre.phoenix6.controls.SolidColor;
-import com.ctre.phoenix6.controls.StrobeAnimation;
-import com.ctre.phoenix6.controls.TwinkleAnimation;
-import com.ctre.phoenix6.controls.TwinkleOffAnimation;
-import com.ctre.phoenix6.hardware.CANdle;
-import com.ctre.phoenix6.signals.RGBWColor;
-import com.ctre.phoenix6.signals.StatusLedWhenActiveValue;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.java_is_undercontrol.vision.Cameras.LimelightHelpers;
@@ -43,30 +25,6 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
-
-  private static final RGBWColor kGreen = new RGBWColor(0, 217, 0, 0);
-  private static final RGBWColor kWhite = new RGBWColor(Color.kWhite).scaleBrightness(0.5);
-  private static final RGBWColor kViolet = RGBWColor.fromHSV(Degrees.of(270), 0.9, 0.8);
-  private static final RGBWColor kRed = new RGBWColor(217, 0, 0, 0);
-  private static final RGBWColor kBlue = new RGBWColor(0, 0, 217, 0);
-  private static final RGBWColor kOrange = new RGBWColor(255, 165, 0, 0);
-
-  private final CANdle m_candle = new CANdle(0, CANBus.roboRIO());
-
-  private enum AnimationType {
-    None,
-    ColorFlow,
-    Fire,
-    Larson,
-    Rainbow,
-    Strobe,
-    Twinkle,
-    TwinkleOff,
-  }
-
-  private AnimationType m_anim0State = AnimationType.ColorFlow;
-  private final SendableChooser<AnimationType> m_anim0Chooser =
-      new SendableChooser<AnimationType>();
 
   public Robot() {
     AutoLogOutputManager.addPackage("frc.java_is_undercontrol");
@@ -122,24 +80,6 @@ public class Robot extends LoggedRobot {
             "You are using an unsupported swerve configuration, which this template does not support without manual customization. The 2025 release of Phoenix supports some swerve configurations which were not available during 2025 beta testing, preventing any development and support from the AdvantageKit developers.");
       }
     }
-
-    var cfg = new CANdleConfiguration();
-    cfg.LED.BrightnessScalar = 1.0;
-    cfg.CANdleFeatures.StatusLedWhenActive = StatusLedWhenActiveValue.Disabled;
-
-    m_candle.getConfigurator().apply(cfg);
-
-    for (int i = 0; i < 8; ++i) {
-      m_candle.setControl(new EmptyAnimation(i));
-    }
-    m_anim0Chooser.setDefaultOption("Rainbow", AnimationType.Rainbow);
-    m_anim0Chooser.addOption("Color Flow", AnimationType.ColorFlow);
-    m_anim0Chooser.addOption("Twinkle", AnimationType.Twinkle);
-    m_anim0Chooser.addOption("Twinkle Off", AnimationType.TwinkleOff);
-    m_anim0Chooser.addOption("Fire", AnimationType.Fire);
-
-    SmartDashboard.putData("Animation 0", m_anim0Chooser);
-
     robotContainer = new RobotContainer();
 
     LimelightHelpers.setLEDMode_ForceOff(VisionConstants.backRightLimelightName);
@@ -161,32 +101,6 @@ public class Robot extends LoggedRobot {
         DriverStation.getAlliance().orElse(Alliance.Blue) == HubShiftUtil.getFirstActiveAlliance());
     SmartDashboard.putNumber(
         "Time Until Next Shift:", HubShiftUtil.getOfficialShiftInfo().remainingTime());
-
-    final var anim0Selection = m_anim0Chooser.getSelected();
-    if (m_anim0State != anim0Selection) {
-      m_anim0State = anim0Selection;
-      switch (m_anim0State) {
-        default:
-        case ColorFlow:
-          m_candle.setControl(new ColorFlowAnimation(0, 7).withSlot(0).withColor(kViolet));
-          break;
-        case Rainbow:
-          m_candle.setControl(new RainbowAnimation(0, 7).withSlot(0));
-          break;
-        case Twinkle:
-          m_candle.setControl(new TwinkleAnimation(0, 7).withSlot(0).withColor(kWhite));
-          break;
-        case TwinkleOff:
-          m_candle.setControl(new TwinkleOffAnimation(0, 7).withSlot(0).withColor(kRed));
-          break;
-        case Fire:
-          m_candle.setControl(new FireAnimation(0, 7).withSlot(0));
-          break;
-        case Larson:
-          m_candle.setControl(new LarsonAnimation(0, 7).withSlot(0).withColor(kBlue));
-          break;
-      }
-    }
   }
 
   @Override
@@ -197,9 +111,7 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void disabledPeriodic() {
-    m_candle.setControl(new RainbowAnimation(0, 7).withSlot(0));
-  }
+  public void disabledPeriodic() {}
 
   @Override
   public void autonomousInit() {
@@ -216,13 +128,7 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() {
-    if (RobotStates.getInstance().isShootingMode()) {
-      m_candle.setControl(new FireAnimation(0, 7).withSlot(0));
-    } else {
-      m_candle.setControl(new RainbowAnimation(0, 7).withSlot(0));
-    }
-  }
+  public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
@@ -240,19 +146,7 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {
-
-    if (HubShiftUtil.getOfficialShiftInfo().remainingTime() < 15
-        && HubShiftUtil.getOfficialShiftInfo().active()) {
-      m_candle.setControl(new StrobeAnimation(0, 7).withSlot(0).withColor(kGreen));
-    } else if (HubShiftUtil.getOfficialShiftInfo().active()) {
-      m_candle.clearAllAnimations();
-      m_candle.setControl(new SolidColor(0, 7).withColor(kGreen));
-    } else {
-      m_candle.clearAllAnimations();
-      m_candle.setControl(new SolidColor(0, 7).withColor(kOrange));
-    }
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {
