@@ -29,18 +29,32 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.4821558347176075,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "Retract Intake",
-      "waypointRelativePos": 0.5867373511904759,
+      "waypointRelativePos": 0.45087987956810616,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "Raise Climber",
-      "waypointRelativePos": 0.5895771329365079,
+      "waypointRelativePos": 0.5925171303986726,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
