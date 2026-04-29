@@ -271,14 +271,12 @@ public class RobotContainer {
     new Trigger(
             () ->
                 DriverStation.isAutonomousEnabled()
-                    && RobotStates.getInstance().isOnAllianceZone()
-                    && !RobotStates.getInstance().isOnNotShootZone())
+                    && RobotStates.getInstance().isOnAllianceZone())
         .whileTrue(this.flyWheel.shootHub());
     new Trigger(
             () ->
                 DriverStation.isAutonomousEnabled()
-                    && !RobotStates.getInstance().isOnAllianceZone()
-                    && !RobotStates.getInstance().isOnNotShootZone())
+                    && !RobotStates.getInstance().isOnAllianceZone())
         .whileTrue(this.flyWheel.shootPass());
 
     new Trigger(() -> DriverStation.isTeleopEnabled())

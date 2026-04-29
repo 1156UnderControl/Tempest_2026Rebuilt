@@ -78,7 +78,7 @@ public class NamedCommandsRegistery {
         "Extend Intake", this.extensor.extend().andThen(this.roller.runRoller()));
     NamedCommands.registerCommand(
         "Retract Intake", this.extensor.retractAuto().alongWith(roller.stopRoller()));
-
+    NamedCommands.registerCommand("Retract Safe", this.extensor.shake());
     NamedCommands.registerCommand(
         "Home Intake", this.extensor.home().withTimeout(2.0).alongWith(this.roller.runRoller()));
   }

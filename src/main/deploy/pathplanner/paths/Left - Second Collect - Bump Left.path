@@ -210,7 +210,7 @@
     },
     {
       "name": "Shoot Fuels",
-      "waypointRelativePos": 5.75356090373281,
+      "waypointRelativePos": 5.298276578073087,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

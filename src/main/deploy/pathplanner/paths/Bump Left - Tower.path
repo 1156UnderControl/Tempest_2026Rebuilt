@@ -33,9 +33,9 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.4821558347176075,
+      "maxWaypointRelativePos": 0.42905159883720956,
       "constraints": {
-        "maxVelocity": 1.5,
+        "maxVelocity": 0.75,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -47,14 +47,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Retract Intake",
-      "waypointRelativePos": 0.45087987956810616,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
       "name": "Raise Climber",
-      "waypointRelativePos": 0.5925171303986726,
+      "waypointRelativePos": 0.6819326204318935,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -62,10 +56,21 @@
           "name": "Raise Climber"
         }
       }
+    },
+    {
+      "name": "Retract Intake",
+      "waypointRelativePos": 0.8983985672757483,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Retract Safe"
+        }
+      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 0.58,
+    "maxVelocity": 0.6,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,

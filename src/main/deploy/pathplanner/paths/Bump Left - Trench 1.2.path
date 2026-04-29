@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 6.139679715302492,
-        "y": 7.305999999999999
+        "x": 5.424405598958334,
+        "y": 7.467999999999999
       },
       "prevControl": {
-        "x": 6.483973213758081,
-        "y": 7.585739875244787
+        "x": 5.128645226827138,
+        "y": 7.481660083912037
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Go Middle Left"
     }
   ],
   "rotationTargets": [
@@ -52,10 +52,6 @@
     {
       "waypointRelativePos": 1,
       "rotationDegrees": 0.0
-    },
-    {
-      "waypointRelativePos": 1.6305084745762806,
-      "rotationDegrees": 14.0
     }
   ],
   "constraintZones": [
@@ -64,7 +60,7 @@
       "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 0.95,
       "constraints": {
-        "maxVelocity": 0.405,
+        "maxVelocity": 0.45,
         "maxAcceleration": 7.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -105,8 +101,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.5,
-    "maxAcceleration": 7.5,
+    "maxVelocity": 7.5,
+    "maxAcceleration": 8.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -114,7 +110,7 @@
   },
   "goalEndState": {
     "velocity": 7.5,
-    "rotation": 17.0
+    "rotation": -3.0951961933163985
   },
   "reversed": false,
   "folder": "Bump Left",
@@ -122,5 +118,5 @@
     "velocity": 0.57,
     "rotation": 90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
