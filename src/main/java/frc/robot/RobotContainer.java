@@ -270,8 +270,7 @@ public class RobotContainer {
 
     new Trigger(
             () ->
-                DriverStation.isAutonomousEnabled()
-                    && RobotStates.getInstance().isOnAllianceZone())
+                DriverStation.isAutonomousEnabled() && RobotStates.getInstance().isOnAllianceZone())
         .whileTrue(this.flyWheel.shootHub());
     new Trigger(
             () ->
