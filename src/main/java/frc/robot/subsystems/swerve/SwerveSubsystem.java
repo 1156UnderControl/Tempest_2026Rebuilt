@@ -52,7 +52,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
 
   private Matrix<N3, N1> defaultOdometryStandardDeviation;
 
-  private double goToPoseTranslationDeadband = 0.03;
+  private double goToPoseTranslationDeadband = 0.045;
 
   private double goToPoseHeadingDeadband = 1;
 
@@ -389,6 +389,7 @@ public class SwerveSubsystem extends OdometryEnabledSwerveSubsystem {
     // this.verifyClimbPoseEstimation();
   }
 
+  @AutoLogOutput
   public boolean isAtTargetPositionWithHeading() {
     return stableAtTargetPose.isStableInCondition(
         () ->
