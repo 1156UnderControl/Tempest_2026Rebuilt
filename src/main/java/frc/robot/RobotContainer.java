@@ -246,6 +246,19 @@ public class RobotContainer {
                     && !RobotStates.getInstance().getShouldConfigRollerTeleop())
         .onTrue(Commands.runOnce(() -> this.roller.configureAuto()))
         .onFalse(Commands.runOnce(() -> this.roller.configureTeleop()));
+
+    new Trigger(() -> RobotStates.getInstance().isShootingMode() && !DriverStation.isAutonomous())
+        .onTrue(Commands.runOnce(() -> this.roller.configureShooting()))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  if (RobotStates.getInstance().getShouldConfigRollerAuto()
+                      && !RobotStates.getInstance().getShouldConfigRollerTeleop()) {
+                    this.roller.configureAuto();
+                  } else {
+                    this.roller.configureTeleop();
+                  }
+                }));
   }
 
   public Command getAutonomousCommand() {
