@@ -67,6 +67,8 @@ public class TurretConstants {
 
   public static final Current STATOR_CURRENT_LIMIT = Amps.of(80);
 
+  public static final Current SUPPLY_CURRENT_LIMIT = Amps.of(30);
+
   public static final AngularVelocity MAX_VELOCITY = RotationsPerSecond.of(4);
 
   public static final AngularAcceleration MAX_ACCELERATION = RotationsPerSecondPerSecond.of(250);

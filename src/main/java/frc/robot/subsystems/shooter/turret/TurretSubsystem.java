@@ -51,6 +51,7 @@ public class TurretSubsystem extends SubsystemBase {
             .withMotorInverted(TurretConstants.INVERTED)
             .withSoftLimit(TurretConstants.TURRET_MIN_ANGLE, TurretConstants.TURRET_MAX_ANGLE)
             .withStatorCurrentLimit(TurretConstants.STATOR_CURRENT_LIMIT)
+            .withSupplyCurrentLimit(TurretConstants.SUPPLY_CURRENT_LIMIT)
             .withClosedLoopController(
                 TurretConstants.FeedBackController.kP,
                 TurretConstants.FeedBackController.kI,
