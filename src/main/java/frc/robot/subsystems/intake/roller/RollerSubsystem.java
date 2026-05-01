@@ -46,7 +46,7 @@ public class RollerSubsystem extends SubsystemBase {
 
     TalonFXConfiguration leadConfig = new TalonFXConfiguration();
     leadConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    leadConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    leadConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     leadConfig.CurrentLimits
         .withStatorCurrentLimit(statorLimit)
         .withStatorCurrentLimitEnable(true)
@@ -56,7 +56,7 @@ public class RollerSubsystem extends SubsystemBase {
 
     TalonFXConfiguration followerConfig = new TalonFXConfiguration();
     followerConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    followerConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    followerConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     followerConfig.CurrentLimits
         .withStatorCurrentLimit(statorLimit)
         .withStatorCurrentLimitEnable(true)
