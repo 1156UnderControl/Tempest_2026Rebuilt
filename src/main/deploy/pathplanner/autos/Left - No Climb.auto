@@ -64,7 +64,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Go Other Alliance Left"
+            "pathName": "First Path For Middle Coast Left"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Second Path For Middle Coast Left"
           }
         }
       ]

@@ -1,0 +1,126 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.463572614069836,
+        "y": 5.504
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.6906005452830852,
+        "y": 5.52378198766218
+      },
+      "isLocked": false,
+      "linkedName": "Bump Left Alliance Zone"
+    },
+    {
+      "anchor": {
+        "x": 3.463572614069836,
+        "y": 7.468
+      },
+      "prevControl": {
+        "x": 2.943606616666349,
+        "y": 7.440231007040573
+      },
+      "nextControl": {
+        "x": 3.7782460068148267,
+        "y": 7.484805258942488
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.139679715302492,
+        "y": 7.306
+      },
+      "prevControl": {
+        "x": 5.795386216846902,
+        "y": 7.585739875244789
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Trench Left Middle Coast Start"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.4823915726375176,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1.6305084745762806,
+      "rotationDegrees": -14.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.95,
+      "constraints": {
+        "maxVelocity": 0.405,
+        "maxAcceleration": 7.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Extend Intake",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Stop Shooting Fuels",
+      "waypointRelativePos": 1.1,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Stop Shooting Fuels"
+        }
+      }
+    },
+    {
+      "name": "Set Drive Modules Coast",
+      "waypointRelativePos": 1.2,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Set Drive Modules Coast"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 7.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 7.5,
+    "rotation": -17.0
+  },
+  "reversed": false,
+  "folder": "Bump Left",
+  "idealStartingState": {
+    "velocity": 0.57,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": true
+}
