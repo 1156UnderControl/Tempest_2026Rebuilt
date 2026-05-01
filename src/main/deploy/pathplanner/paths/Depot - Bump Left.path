@@ -129,7 +129,7 @@
       "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 2.5248779047497347,
       "constraints": {
-        "maxVelocity": 0.44,
+        "maxVelocity": 0.335,
         "maxAcceleration": 7.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -187,17 +187,6 @@
       }
     },
     {
-      "name": "Stop Shooting Fuels",
-      "waypointRelativePos": 1.9634392556179816,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Stop Shooting Fuels"
-        }
-      }
-    },
-    {
       "name": "Home Intake",
       "waypointRelativePos": 2.7766095824821075,
       "endWaypointRelativePos": null,
@@ -205,17 +194,6 @@
         "type": "named",
         "data": {
           "name": "Home Intake"
-        }
-      }
-    },
-    {
-      "name": "Shoot Fuels",
-      "waypointRelativePos": 3.629520716292131,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Shoot Fuels"
         }
       }
     },
