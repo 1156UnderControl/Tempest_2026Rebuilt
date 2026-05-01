@@ -4,12 +4,13 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Volts;
 
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkFlexConfig;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,31 +29,40 @@ public class RollerSubsystem extends SubsystemBase {
 
   private final RollerInputsAutoLogged rollerInputs;
 
-  private final SparkFlex leadSparkFlex;
-  private final SparkFlex followerSparkFlex;
+  private final TalonFX leadMotor;
+  private final TalonFX followerMotor;
 
-  private final SparkFlexConfig leadConfig;
-  private final SparkFlexConfig followerConfig;
+  private final VoltageOut leadRequest = new VoltageOut(0).withEnableFOC(true);
+  private final VoltageOut followerRequest = new VoltageOut(0).withEnableFOC(true);
+
+  private Current statorLimit = RollerConstants.STATOR_LIMIT_TELEOP;
+  private Current supplyLimit = RollerConstants.SUPPLY_LIMIT_TELEOP;
 
   private RollerSubsystem() {
     this.rollerInputs = new RollerInputsAutoLogged();
 
-    this.leadSparkFlex =
-        new SparkFlex(RollerConstants.ID_intakeLeaderRollerMotor, MotorType.kBrushless);
-    this.followerSparkFlex =
-        new SparkFlex(RollerConstants.ID_intakeFollowerRollerMotor, MotorType.kBrushless);
+    this.leadMotor = new TalonFX(RollerConstants.ID_intakeLeaderRollerMotor);
+    this.followerMotor = new TalonFX(RollerConstants.ID_intakeFollowerRollerMotor);
 
-    this.leadConfig = new SparkFlexConfig();
-    this.leadConfig.idleMode(IdleMode.kCoast).inverted(true).smartCurrentLimit(70);
-    this.leadSparkFlex.configure(
-        leadConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    leadConfig.openLoopRampRate(0.01);
+    TalonFXConfiguration leadConfig = new TalonFXConfiguration();
+    leadConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    leadConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    leadConfig.CurrentLimits
+        .withStatorCurrentLimit(statorLimit)
+        .withStatorCurrentLimitEnable(true)
+        .withSupplyCurrentLimit(supplyLimit)
+        .withSupplyCurrentLimitEnable(true);
+    leadMotor.getConfigurator().apply(leadConfig);
 
-    this.followerConfig = new SparkFlexConfig();
-    this.followerConfig.idleMode(IdleMode.kCoast).inverted(false).smartCurrentLimit(70);
-    this.followerConfig.openLoopRampRate(0.01);
-    this.followerSparkFlex.configure(
-        followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    TalonFXConfiguration followerConfig = new TalonFXConfiguration();
+    followerConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    followerConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    followerConfig.CurrentLimits
+        .withStatorCurrentLimit(statorLimit)
+        .withStatorCurrentLimitEnable(true)
+        .withSupplyCurrentLimit(supplyLimit)
+        .withSupplyCurrentLimitEnable(true);
+    followerMotor.getConfigurator().apply(followerConfig);
   }
 
   @Override
@@ -62,60 +72,64 @@ public class RollerSubsystem extends SubsystemBase {
   }
 
   public void updateInputs() {
-    rollerInputs.rollerLeadAppliedVolts = Volts.of(leadSparkFlex.getAppliedOutput() * 12);
-    rollerInputs.rollerFollowerAppliedVolts = Volts.of(followerSparkFlex.getAppliedOutput() * 12);
-    rollerInputs.rollerLeadCurrent = Amps.of(leadSparkFlex.getOutputCurrent());
-    rollerInputs.rollerFollowerCurrent = Amps.of(followerSparkFlex.getOutputCurrent());
+    rollerInputs.rollerLeadAppliedVolts = Volts.of(leadMotor.getMotorVoltage().getValueAsDouble());
+    rollerInputs.rollerFollowerAppliedVolts =
+        Volts.of(followerMotor.getMotorVoltage().getValueAsDouble());
+    rollerInputs.rollerLeadCurrent = Amps.of(leadMotor.getStatorCurrent().getValueAsDouble());
+    rollerInputs.rollerFollowerCurrent =
+        Amps.of(followerMotor.getStatorCurrent().getValueAsDouble());
     rollerInputs.rollerLeadVelocity =
-        RPM.of(leadSparkFlex.getAbsoluteEncoder().getVelocity() / RollerConstants.GEARING);
+        RPM.of(leadMotor.getVelocity().getValueAsDouble() * 60.0 / RollerConstants.GEARING);
     rollerInputs.rollerFollowerVelocity =
-        RPM.of(followerSparkFlex.getAbsoluteEncoder().getVelocity() / RollerConstants.GEARING);
+        RPM.of(followerMotor.getVelocity().getValueAsDouble() * 60.0 / RollerConstants.GEARING);
   }
 
   public Command runRoller() {
-    return this.setVoltage(Volts.of(12.0));
+    return setVoltage(Volts.of(12.0));
   }
 
   public Command expellRoller() {
-    return this.setVoltage(Volts.of(-12.0));
+    return setVoltage(Volts.of(-12.0));
   }
 
   public Command stopRoller() {
-    return this.setVoltage(Volts.of(0));
+    return setVoltage(Volts.of(0));
   }
 
   private Command setVoltage(Voltage voltage) {
     return this.run(
         () -> {
-          this.leadSparkFlex.setVoltage(voltage);
-          this.followerSparkFlex.setVoltage(voltage);
+          leadMotor.setControl(leadRequest.withOutput(voltage));
+          followerMotor.setControl(followerRequest.withOutput(voltage));
         });
   }
 
+  private void applyCurrentLimits() {
+    CurrentLimitsConfigs limits =
+        new CurrentLimitsConfigs()
+            .withStatorCurrentLimit(statorLimit)
+            .withStatorCurrentLimitEnable(true)
+            .withSupplyCurrentLimit(supplyLimit)
+            .withSupplyCurrentLimitEnable(true);
+    leadMotor.getConfigurator().apply(limits);
+    followerMotor.getConfigurator().apply(limits);
+  }
+
   public void configureTeleop() {
-    this.leadConfig.smartCurrentLimit(60);
-    this.leadSparkFlex.configure(
-        leadConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-    this.followerConfig.smartCurrentLimit(60);
-    this.followerSparkFlex.configure(
-        followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    statorLimit = RollerConstants.STATOR_LIMIT_TELEOP;
+    supplyLimit = RollerConstants.SUPPLY_LIMIT_TELEOP;
+    applyCurrentLimits();
   }
 
   public void configureAuto() {
-    this.leadConfig.smartCurrentLimit(70);
-    this.leadSparkFlex.configure(
-        leadConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-    this.followerConfig.smartCurrentLimit(70);
-    this.followerSparkFlex.configure(
-        followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    statorLimit = RollerConstants.STATOR_LIMIT_AUTO;
+    supplyLimit = RollerConstants.SUPPLY_LIMIT_AUTO;
+    applyCurrentLimits();
   }
 
   public void configureShooting() {
-    this.leadConfig.smartCurrentLimit(35);
-    this.leadSparkFlex.configure(
-        leadConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-    this.followerConfig.smartCurrentLimit(35);
-    this.followerSparkFlex.configure(
-        followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    statorLimit = RollerConstants.STATOR_LIMIT_SHOOTING;
+    supplyLimit = RollerConstants.SUPPLY_LIMIT_SHOOTING;
+    applyCurrentLimits();
   }
 }
