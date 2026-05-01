@@ -109,4 +109,13 @@ public class RollerSubsystem extends SubsystemBase {
     this.followerSparkFlex.configure(
         followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
   }
+
+  public void configureShooting() {
+    this.leadConfig.smartCurrentLimit(35);
+    this.leadSparkFlex.configure(
+        leadConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    this.followerConfig.smartCurrentLimit(35);
+    this.followerSparkFlex.configure(
+        followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+  }
 }

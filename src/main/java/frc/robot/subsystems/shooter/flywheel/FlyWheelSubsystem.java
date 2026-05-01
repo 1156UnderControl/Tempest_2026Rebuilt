@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -61,6 +62,10 @@ public class FlyWheelSubsystem extends SubsystemBase {
 
   private TalonFXConfigurator talonConfiguratorFollower;
 
+  private Current statorLimit = Amps.of(60);
+
+  private Current supplyLimit = Amps.of(40);
+
   private FlyWheelSubsystem() {
     this.calculator = ShooterCalculator.getInstance();
     this.leadMotor = new TalonFX(19);
@@ -72,8 +77,8 @@ public class FlyWheelSubsystem extends SubsystemBase {
             .withFollowers(Pair.of(this.followerMotor, true))
             .withIdleMode(MotorMode.COAST)
             .withGearing(FlyWheelsConstants.MOTOR_GEARING)
-            .withSupplyCurrentLimit(Amps.of(60))
-            .withStatorCurrentLimit(Amps.of(120))
+            .withSupplyCurrentLimit(supplyLimit)
+            .withStatorCurrentLimit(statorLimit)
             .withClosedLoopController(
                 FlyWheelsConstants.ClosedLoopController.kP,
                 FlyWheelsConstants.ClosedLoopController.kI,
@@ -106,6 +111,11 @@ public class FlyWheelSubsystem extends SubsystemBase {
             .TorqueCurrent
             .withPeakForwardTorqueCurrent(800)
             .withPeakReverseTorqueCurrent(0));
+    talonConfiguratorFollower.apply(
+        talonConfigurationFollower
+            .CurrentLimits
+            .withStatorCurrentLimit(statorLimit)
+            .withSupplyCurrentLimit(supplyLimit));
 
     talonConfiguratorLead.refresh(talonConfigurationLead.Slot0);
     talonConfiguratorLead.apply(talonConfigurationLead.Slot0.withKS(3.3).withKV(0.015));
