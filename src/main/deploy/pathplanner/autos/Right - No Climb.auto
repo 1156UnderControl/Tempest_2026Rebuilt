@@ -64,13 +64,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "First Path For Middle Coast"
+            "pathName": "First Path For Middle Coast Right"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Second Path For Middle Coast"
+            "pathName": "Second Path For Middle Coast Right"
           }
         }
       ]
