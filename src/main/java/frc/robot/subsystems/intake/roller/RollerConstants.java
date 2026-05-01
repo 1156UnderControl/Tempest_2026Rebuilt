@@ -16,5 +16,5 @@ public class RollerConstants {
   public static final Current SUPPLY_LIMIT_AUTO = Amps.of(50);
 
   public static final Current STATOR_LIMIT_SHOOTING = Amps.of(60);
-  public static final Current SUPPLY_LIMIT_SHOOTING = Amps.of(25);
+  public static final Current SUPPLY_LIMIT_SHOOTING = Amps.of(30);
 }
