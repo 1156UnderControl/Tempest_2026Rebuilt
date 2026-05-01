@@ -3,55 +3,64 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.464,
-        "y": 2.539
+        "x": 3.463572614069836,
+        "y": 5.504
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.351641221024061,
-        "y": 2.5758664814407273
+        "x": 2.6906005452830852,
+        "y": 5.52378198766218
       },
       "isLocked": false,
-      "linkedName": "Bump Right Alliance Zone For Second Collection"
+      "linkedName": "Bump Left Alliance Zone"
     },
     {
       "anchor": {
-        "x": 3.089350242077465,
-        "y": 0.5
+        "x": 3.464,
+        "y": 7.471
       },
       "prevControl": {
-        "x": 2.457509670956985,
-        "y": 0.5760931186728058
+        "x": 2.944034002596513,
+        "y": 7.443231007040573
       },
       "nextControl": {
-        "x": 3.5506646585240613,
-        "y": 0.44444349691901375
+        "x": 3.7786733927449907,
+        "y": 7.487805258942488
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.095614457831325,
-        "y": 0.4725662650602419
+        "x": 4.2,
+        "y": 7.471
       },
       "prevControl": {
-        "x": 3.3905512792808556,
-        "y": 0.4859241270760866
+        "x": 3.7944549468774564,
+        "y": 7.48667870997247
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Trench Right SideWays"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.4823915726375176,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": -0.0
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.0,
+      "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 0.672,
+        "maxVelocity": 0.4,
         "maxAcceleration": 7.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -61,7 +70,14 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Extend Intake",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.5,
     "maxAcceleration": 7.5,
@@ -71,14 +87,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.672,
-    "rotation": 90.0
+    "velocity": 0.0,
+    "rotation": -0.0
   },
   "reversed": false,
-  "folder": "Bump Right",
+  "folder": "Bump Left",
   "idealStartingState": {
-    "velocity": 0.672,
-    "rotation": 135.0
+    "velocity": 0.57,
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

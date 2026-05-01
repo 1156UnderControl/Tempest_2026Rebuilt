@@ -8,50 +8,50 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1045438490316903,
-        "y": 2.812073349944548
+        "x": 2.6910279489436615,
+        "y": 2.5192173195422534
       },
       "isLocked": false,
-      "linkedName": "Bump Right Alliance Zone"
+      "linkedName": "Bump Right Alliance Zone 90"
     },
     {
       "anchor": {
-        "x": 1.5776237437646712,
-        "y": 0.6874817937973399
+        "x": 3.463572614069836,
+        "y": 0.5719999999999992
       },
       "prevControl": {
-        "x": 1.9513330228472747,
-        "y": 0.6743970528902572
+        "x": 2.943606616666349,
+        "y": 0.5997689929594259
       },
       "nextControl": {
-        "x": 1.1599403373655381,
-        "y": 0.7021062076393958
+        "x": 3.7782460068148267,
+        "y": 0.5551947410575115
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.7,
-        "y": 0.6874817937973399
+        "x": 4.2,
+        "y": 0.5719999999999992
       },
       "prevControl": {
-        "x": 1.5007207133259395,
-        "y": 0.6970827991751765
+        "x": 3.7944549468774564,
+        "y": 0.5563212900275296
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Outpost"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 180.0
+      "waypointRelativePos": 0.4823915726375176,
+      "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 1.7465322066326525,
-      "rotationDegrees": 180.0
+      "waypointRelativePos": 1,
+      "rotationDegrees": -0.0
     }
   ],
   "constraintZones": [
@@ -60,8 +60,8 @@
       "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 2.1,
-        "maxAcceleration": 3.0,
+        "maxVelocity": 0.4,
+        "maxAcceleration": 7.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -72,34 +72,29 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Home Intake",
-      "waypointRelativePos": 0.0,
+      "name": "Extend Intake",
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Home Intake"
-        }
-      }
+      "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.5,
+    "maxAcceleration": 7.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -179.732927652521
+    "velocity": 0.0,
+    "rotation": -0.0
   },
   "reversed": false,
   "folder": "Bump Right",
   "idealStartingState": {
-    "velocity": 2.0,
-    "rotation": -143.9232673587843
+    "velocity": 0.57,
+    "rotation": -90.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

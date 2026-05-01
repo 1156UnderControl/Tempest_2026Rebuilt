@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.424405598958334,
-        "y": 7.467999999999999
+        "x": 6.139679715302492,
+        "y": 7.306
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.230655850956159,
-        "y": 6.6617497480021735
+        "x": 6.534794038320293,
+        "y": 6.346905710158547
       },
       "isLocked": false,
-      "linkedName": "Go Middle Left"
+      "linkedName": "Trench Left Middle Coast Start"
     },
     {
       "anchor": {
-        "x": 6.802,
-        "y": 6.053
+        "x": 6.602325029655992,
+        "y": 5.853
       },
       "prevControl": {
-        "x": 6.109035354437183,
-        "y": 6.745964645562816
+        "x": 6.450571208835939,
+        "y": 6.051672539286423
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -53.89075148229876
+    "rotation": -48.814
   },
   "reversed": false,
   "folder": "Bump Left",
   "idealStartingState": {
     "velocity": 7.5,
-    "rotation": -3.0951961933163985
+    "rotation": -17.0
   },
   "useDefaultConstraints": true
 }

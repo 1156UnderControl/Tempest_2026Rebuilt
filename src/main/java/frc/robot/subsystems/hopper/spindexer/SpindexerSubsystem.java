@@ -40,12 +40,12 @@ public class SpindexerSubsystem extends SubsystemBase {
     this.leadConfig = new SparkFlexConfig();
     this.followerConfig = new SparkFlexConfig();
 
-    this.leadConfig.idleMode(IdleMode.kCoast).inverted(false).smartCurrentLimit(55);
+    this.leadConfig.idleMode(IdleMode.kCoast).inverted(false).smartCurrentLimit(60);
     this.leadConfig.openLoopRampRate(0.01);
     this.leadSparkFlex.configure(
         leadConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
-    this.followerConfig.idleMode(IdleMode.kCoast).inverted(true).smartCurrentLimit(55);
+    this.followerConfig.idleMode(IdleMode.kCoast).inverted(true).smartCurrentLimit(60);
     this.followerConfig.openLoopRampRate(0.01);
     this.followSparkFlex.configure(
         followerConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.1,
-        "y": 7.562999999999999
+        "x": 4.0,
+        "y": 7.563
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.535565215953765,
-        "y": 7.502306808280299
+        "x": 4.4355652159537655,
+        "y": 7.5023068082802995
       },
       "isLocked": false,
       "linkedName": "Trench Left Head Middle"

@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.463572614069836,
-        "y": 2.5389999999999997
+        "x": 3.464,
+        "y": 2.539
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6906005630134975,
+        "x": 2.6910279489436615,
         "y": 2.5192173195422534
       },
       "isLocked": false,
@@ -17,31 +17,31 @@
     {
       "anchor": {
         "x": 3.463572614069836,
-        "y": 0.5719999999999992
+        "y": 0.575
       },
       "prevControl": {
         "x": 2.943606616666349,
-        "y": 0.5997689929594259
+        "y": 0.6027689929594267
       },
       "nextControl": {
         "x": 3.7782460068148267,
-        "y": 0.5551947410575115
+        "y": 0.5581947410575123
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.396255318368544,
-        "y": 0.5719999999999992
+        "x": 6.139679715302492,
+        "y": 0.7373072360616835
       },
       "prevControl": {
-        "x": 7.990710265246,
-        "y": 0.5563212900275296
+        "x": 5.795385527876632,
+        "y": 0.45756820877817195
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Coast Right"
     }
   ],
   "rotationTargets": [
@@ -52,28 +52,19 @@
     {
       "waypointRelativePos": 1,
       "rotationDegrees": -0.0
+    },
+    {
+      "waypointRelativePos": 1.6305084745762806,
+      "rotationDegrees": 14.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.97,
+      "maxWaypointRelativePos": 0.95,
       "constraints": {
         "maxVelocity": 0.405,
-        "maxAcceleration": 7.5,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    },
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.49685534591194574,
-      "maxWaypointRelativePos": 2.0,
-      "constraints": {
-        "maxVelocity": 3.0,
         "maxAcceleration": 7.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -92,7 +83,7 @@
     },
     {
       "name": "Stop Shooting Fuels",
-      "waypointRelativePos": 1.099045309430255,
+      "waypointRelativePos": 1.1,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -103,7 +94,7 @@
     },
     {
       "name": "Set Drive Modules Coast",
-      "waypointRelativePos": 1.17,
+      "waypointRelativePos": 1.2,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -123,7 +114,7 @@
   },
   "goalEndState": {
     "velocity": 7.5,
-    "rotation": -0.0
+    "rotation": 17.0
   },
   "reversed": false,
   "folder": "Bump Right",
