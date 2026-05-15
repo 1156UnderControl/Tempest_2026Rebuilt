@@ -138,8 +138,8 @@ public class RobotContainer {
         .onTrue(this.drive.boostRobotJoystickControlVelocity().ignoringDisable(true))
         .onFalse(this.drive.limitRobotJoystickControlVelocity().ignoringDisable(true));
 
-    this.operatorController
-        .r2()
+    this.driverController
+        .rightBumper()
         .and(
             () ->
                 !RobotStates.getInstance().isOnNonOdometryMode()
@@ -153,63 +153,36 @@ public class RobotContainer {
                 Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
         .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
 
-    this.operatorController
-        .r2()
-        .and(() -> RobotStates.getInstance().isOnNonOdometryMode())
-        .whileTrue(
-            Commands.parallel(
-                this.flyWheel.shootNonOdometry(),
-                this.states.shootState(),
-                Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(true))))
-        .onFalse(Commands.runOnce(() -> RobotStates.getInstance().setShootingMode(false)));
 
-    this.operatorController
-        .r2()
-        .and(
-            () ->
-                RobotStates.getInstance().isOnAllianceZone()
-                    && !RobotStates.getInstance().isOnNonOdometryMode())
-        .whileTrue(this.flyWheel.shootHub());
+    this.driverController
+        .leftBumper()
+        .whileTrue(Commands.parallel(this.states.shootState(), this.flyWheel.runLowVelocity(), this.hood.trackNonOdometry(), this.turret.trackNonOdometry()));
 
-    this.operatorController
-        .r2()
-        .and(
-            () ->
-                !RobotStates.getInstance().isOnAllianceZone()
-                    && !RobotStates.getInstance().isOnNonOdometryMode())
-        .whileTrue(this.flyWheel.shootPass());
 
-    this.operatorController
-        .cross()
+    this.driverController
+        .a()
         .onTrue(
             Commands.parallel(
                 this.states.collectState(),
                 Commands.runOnce(() -> RobotStates.getInstance().setExtendedMode(true))));
 
-    this.operatorController.square().whileTrue(this.states.shakeState());
+    this.driverController.x().whileTrue(this.states.shakeState());
 
-    this.operatorController
-        .triangle()
+    this.driverController
+        .y()
         .onTrue(
             Commands.parallel(
                 this.states.retractState(),
                 Commands.runOnce(() -> RobotStates.getInstance().setExtendedMode(false))));
 
     new Trigger(() -> RobotStates.getInstance().isExtendedMode())
-        .and(this.operatorController.square().negate())
+        .and(this.driverController.x().negate())
         .whileTrue(this.states.collectState());
 
-    this.operatorController.r1().whileTrue(this.spindexer.expell().alongWith(this.kicker.expell()));
-    this.operatorController.l1().whileTrue(this.roller.expellRoller());
+    this.driverController.upArrow().onTrue(this.states.climbState());
+    this.driverController.downArrow().onTrue(this.states.defaultClimberState());
 
-    this.operatorController.upArrow().onTrue(this.states.climbState());
-    this.operatorController.downArrow().onTrue(this.states.defaultClimberState());
 
-    this.operatorController
-        .leftArrow()
-        .or(this.driverController.leftStick())
-        .whileTrue(this.extensor.home())
-        .onTrue(this.roller.runRoller());
 
     // this.operatorController
     //     .l2()
@@ -223,11 +196,7 @@ public class RobotContainer {
     //     .onTrue(
     //         Commands.runOnce(() -> SwerveSubsystem.stopVisionHdrBright()).ignoringDisable(true));
 
-    this.operatorController
-        .l2()
-        .and(this.extensor.isAtTargetHeightClosed().negate())
-        .whileTrue(this.roller.stopRoller())
-        .whileFalse(this.roller.runRoller());
+
 
     new Trigger(
             () ->
