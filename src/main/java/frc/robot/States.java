@@ -241,7 +241,7 @@ public class States {
             Commands.runOnce(() -> this.hoodState = "Tracking Hub")));
     this.flyWheel.setDefaultCommand(
         Commands.parallel(
-            this.flyWheel.runLowVelocity(),
+            this.flyWheel.stoppedVelocity(),
             Commands.runOnce(() -> this.flyWheelState = "Running Low Velocity")));
 
     new Trigger(
