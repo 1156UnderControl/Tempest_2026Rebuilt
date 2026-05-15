@@ -216,13 +216,6 @@ public class States {
   }
 
   private void setShooterDefaultStates() {
-    this.turret.setDefaultCommand(
-        Commands.parallel(
-            Commands.either(
-                this.turret.trackHub(),
-                this.turret.trackPass(),
-                () -> RobotStates.getInstance().isOnAllianceZone()),
-            Commands.runOnce(() -> this.turretState = "Tracking Hub")));
     this.hood.setDefaultCommand(
         Commands.parallel(
             Commands.either(
