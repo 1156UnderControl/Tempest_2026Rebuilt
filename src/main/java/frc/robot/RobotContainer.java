@@ -202,11 +202,6 @@ public class RobotContainer {
     this.operatorController.r1().whileTrue(this.spindexer.expell().alongWith(this.kicker.expell()));
     this.operatorController.l1().whileTrue(this.roller.expellRoller());
 
-    this.operatorController
-        .l3()
-        .whileTrue(Commands.runOnce(() -> this.states.enableNoNOdometryShootState()))
-        .whileFalse(Commands.runOnce(() -> this.states.disableNoNOdometryShootState()));
-
     this.operatorController.upArrow().onTrue(this.states.climbState());
     this.operatorController.downArrow().onTrue(this.states.defaultClimberState());
 
@@ -215,12 +210,6 @@ public class RobotContainer {
         .or(this.driverController.leftStick())
         .whileTrue(this.extensor.home())
         .onTrue(this.roller.runRoller());
-
-    this.driverController.y().onTrue(this.states.climbState());
-
-    this.driverController.leftTrigger().whileTrue(new PassThroughTrenchLeftAlliance(drive));
-
-    this.driverController.leftBumper().whileTrue(new PassThroughTower(drive));
 
     // this.operatorController
     //     .l2()
