@@ -48,7 +48,7 @@ public class SpindexerSubsystem extends SubsystemBase {
   }
 
   public Command shoot() {
-    return this.setVoltage(Volts.of(12.0));
+    return this.setVoltage(Volts.of(10.0));
   }
 
   public Command expell() {
